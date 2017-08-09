@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/background_color"
+              android:orientation="vertical">
+
+    <include layout="@layout/title_bar"/>
+
+    <EditText
+        android:id="@+id/et_account_login"
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="55dp"
+        android:background="@null"
+        android:hint="@string/et_input_account"
+        android:inputType="text"
+        android:maxLength="16"
+        android:maxLines="1"
+        android:textColorHint="@color/btn_no_enable_color"
+        android:textSize="16sp"/>
+
+    <View
+        android:layout_width="280dp"
+        android:layout_height="1dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp"
+        android:background="@color/divider_color"/>
+
+    <EditText
+        android:id="@+id/et_password_login"
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="22dp"
+        android:background="@null"
+        android:hint="@string/et_input_password"
+        android:inputType="textPassword"
+        android:maxLength="25"
+        android:maxLines="1"
+        android:textColorHint="@color/btn_no_enable_color"
+        android:textSize="16sp"/>
+
+    <View
+        android:layout_width="280dp"
+        android:layout_height="1dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp"
+        android:background="@color/divider_color"/>
+
+    <LinearLayout
+        android:layout_width="280dp"
+        android:layout_height="17dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="点击登录，即表示您同意"
+            android:textColor="#A2A2A2"
+            android:textSize="14sp"/>
+
+        <Button
+            android:id="@+id/btn_user_protocol"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:clickable="true"
+            android:text="用户协议"
+            android:textColor="@drawable/btn_text_user_protocol_selector"
+            android:textSize="14sp"/>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_login"
+        android:layout_width="280dp"
+        android:layout_height="45dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/btn_enable_selector"
+        android:enabled="false"
+        android:text="登录"
+        android:textColor="@drawable/btn_text_background_selector"
+        android:textSize="16sp"/>
+
+    <Button
+        android:id="@+id/btn_forget_password"
+        android:layout_width="60dp"
+        android:layout_height="17dp"
+        android:layout_marginLeft="55dp"
+        android:layout_marginTop="18dp"
+        android:background="@null"
+        android:text="忘记密码"
+        android:textColor="@drawable/text_color_selector_for_forget_password"
+        android:textSize="15sp"/>
+
+    <TextView
+        android:layout_width="186dp"
+        android:layout_height="17dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="100dp"
+        android:text="使用社交账号快速登录或注册"
+        android:textColor="#bbbbbb"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="35dp"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/image_btn_weixin_login"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/weixin_register_selector"/>
+
+        <ImageButton
+            android:id="@+id/image_btn_weibo_login"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginLeft="50dp"
+            android:background="@drawable/weibo_register_selector"/>
+
+    </LinearLayout>
+
+</LinearLayout>

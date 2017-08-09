@@ -26,4 +26,13 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:24.2.1'
     testCompile 'junit:junit:4.12'
+
+    compile 'com.blankj:utilcode:1.7.1'
+    compile 'com.zhy:okhttputils:2.6.2'
+    //Glide
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile 'jp.wasabeef:glide-transformations:2.0.1'
+    compile 'pl.droidsonroids.gif:android-gif-drawable:1.2.3'
+    compile 'com.jph.takephoto:takephoto_library:4.0.3'
+    compile 'com.google.code.gson:gson:2.4'
 }

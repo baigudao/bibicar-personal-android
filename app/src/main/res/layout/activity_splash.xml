@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/pure_white_color">
+
+    <ImageView
+        android:id="@+id/iv_advertisement"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/start_pic"
+        android:scaleType="fitXY"/>
+
+    <com.wiserz.pbibi.view.CountDownView
+        android:id="@+id/countDownView"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:visibility="gone"
+        app:background_color="#f4f4f4"
+        app:border_color="#e3af5e"
+        app:border_width="1dp"
+        app:text_color="#e3af5e"
+        app:text_size="12dp"/>
+
+</RelativeLayout>
