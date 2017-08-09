@@ -13,7 +13,7 @@ import android.view.ViewGroup;
  * QQ : 971060378
  * Used as : xxx
  */
-public abstract class BaseFragment extends Fragment {
+public abstract class BaseFragment extends Fragment implements View.OnClickListener{
     /**
      * 上下文
      */
@@ -41,7 +41,7 @@ public abstract class BaseFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
+//        super.onCreateView(inflater, container, savedInstanceState);
         return inflater.inflate(getLayoutId(), null);
     }
 
@@ -59,7 +59,7 @@ public abstract class BaseFragment extends Fragment {
         initView(view);
     }
 
-    protected abstract View initView(View view);
+    protected abstract void initView(View view);
 
     /**
      * 当界面被创建时调用

@@ -1,9 +1,8 @@
 package com.wiserz.pbibi.fragment;
 
-import android.graphics.Color;
-import android.view.Gravity;
 import android.view.View;
-import android.widget.TextView;
+
+import com.wiserz.pbibi.R;
 
 /**
  * Created by jackie on 2017/8/9 17:58.
@@ -14,16 +13,16 @@ public class RecommendFragment extends BaseFragment {
 
     @Override
     protected int getLayoutId() {
-        return 0;
+        return R.layout.fragment_recommend;
     }
 
     @Override
-    protected View initView(View view) {
-        TextView textView = new TextView(mContext);
-        textView.setText("推荐");
-        textView.setGravity(Gravity.CENTER);
-        textView.setTextSize(20);
-        textView.setTextColor(Color.RED);
-        return textView;
+    protected void initView(View view) {
+
+    }
+
+    @Override
+    public void onClick(View view) {
+
     }
 }

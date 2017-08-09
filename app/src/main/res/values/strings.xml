@@ -11,4 +11,8 @@
     <string name="rb_community">圈子</string>
     <string name="rb_message">消息</string>
     <string name="rb_mine">我的</string>
+
+    <string name="system_message">系统消息</string>
+    <string name="comment_me">评论我的</string>
+    <string name="like_me">赞我的</string>
 </resources>
