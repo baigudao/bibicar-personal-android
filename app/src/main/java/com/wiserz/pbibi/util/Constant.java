@@ -52,8 +52,13 @@ public class Constant {
     public static final String userProtocolUrl = "https://api.bibicar.cn/protocol.html";//用户协议
 
     private static final String userLoginUrl = hostUrl + "v3/user/login";//用户登录
+    private static final String newHomeUrl = hostUrl + "v3/theme/homepage";//首页
 
     public static String getUserLoginUrl() {
         return userLoginUrl;
+    }
+
+    public static String getNewHomeUrl() {
+        return newHomeUrl;
     }
 }

@@ -20,6 +20,7 @@
     <color name="btn_text_press_no_color">#fffafa</color>
 
     <color name="btn_no_enable_color">#bdbdbd</color>
+    <color name="btn_no_enable_color1">#88bdbdbd</color>
 
     <color name="bottom_text_color">#99363636</color>
 </resources>
