@@ -11,9 +11,9 @@ import android.view.ViewGroup;
 /**
  * Created by jackie on 2017/8/9 17:22.
  * QQ : 971060378
- * Used as : xxx
+ * Used as : 基类的Fragment
  */
-public abstract class BaseFragment extends Fragment implements View.OnClickListener{
+public abstract class BaseFragment extends Fragment implements View.OnClickListener {
     /**
      * 上下文
      */

@@ -7,6 +7,7 @@ import android.content.Context;
 import com.blankj.utilcode.util.Utils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.MemoryCategory;
+import com.wiserz.pbibi.fragment.BaseFragment;
 import com.zhy.http.okhttp.OkHttpUtils;
 
 import java.util.concurrent.TimeUnit;
@@ -20,6 +21,8 @@ import okhttp3.OkHttpClient;
  * Used as : 应用的基类
  */
 public class BaseApplication extends Application {
+
+    private static BaseFragment curFragment;
 
     @Override
     public void onCreate() {
@@ -55,5 +58,13 @@ public class BaseApplication extends Application {
             }
         }
         return null;
+    }
+
+    public static void setCurFragment(BaseFragment fragment) {
+        curFragment = fragment;
+    }
+
+    public static BaseFragment getCurFragment() {
+        return curFragment;
     }
 }

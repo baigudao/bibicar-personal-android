@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.wiserz.pbibi">
+    package="com.wiserz.pbibi">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:name=".BaseApplication"
@@ -16,48 +16,43 @@
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
             android:name=".activity.SplashActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".activity.MainActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"/>
-
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activity.RegisterAndLoginActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"/>
-
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activity.GuideActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"/>
+            android:windowSoftInputMode="stateHidden" />
 
-        <!--会话界面-->
+        <!-- 会话界面 -->
         <activity
             android:name=".activity.ConversationActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize">
-
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.DEFAULT" />
 
                 <data
                     android:host="com.wiserz.pbibi"
                     android:pathPrefix="/conversation/"
-                    android:scheme="rong"/>
+                    android:scheme="rong" />
             </intent-filter>
         </activity>
 
@@ -68,9 +63,10 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/rc_file_path"/>
+                android:resource="@xml/rc_file_path" />
         </provider>
 
+        <activity android:name=".activity.EmptyActivity"></activity>
     </application>
 
 </manifest>

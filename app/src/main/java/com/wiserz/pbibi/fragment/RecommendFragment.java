@@ -33,14 +33,23 @@ public class RecommendFragment extends BaseFragment {
 
     @Override
     protected void initView(View view) {
-        view.findViewById(R.id.et_search).setOnClickListener(this);
+        view.findViewById(R.id.tv_search).setOnClickListener(this);
         view.findViewById(R.id.iv_search_history).setOnClickListener(this);
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
     }
 
     @Override
     public void onClick(View view) {
-
+        switch (view.getId()) {
+            case R.id.tv_search:
+                ToastUtils.showShort("搜索");
+                break;
+            case R.id.iv_search_history:
+                ToastUtils.showShort("搜索历史");
+                break;
+            default:
+                break;
+        }
     }
 
     @Override

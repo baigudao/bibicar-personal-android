@@ -1,32 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="@android:color/white">
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:background="@color/background_color">
 
-    <EditText
-        android:id="@+id/et_search"
+    <TextView
+        android:id="@+id/tv_search"
         android:layout_width="270dp"
-        android:layout_height="28dp"
+        android:layout_height="30dp"
         android:layout_centerInParent="true"
         android:background="@drawable/search_bar_background"
         android:clickable="true"
-        android:cursorVisible="false"
         android:drawableLeft="@drawable/v1_search3x"
-        android:hint="  搜索车辆、文章、视频、用户"
+        android:gravity="center_vertical"
         android:paddingLeft="12dp"
-        android:textColorHint="@color/third_text_color"
-        android:textSize="14sp"/>
+        android:text="  搜索车辆、文章、视频、用户"
+        android:textColor="@color/second_text_color"
+        android:textSize="14sp" />
 
     <ImageView
         android:id="@+id/iv_search_history"
-        android:layout_width="18dp"
-        android:layout_height="18dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="15dp"
         android:clickable="true"
         android:scaleType="fitXY"
-        android:src="@drawable/search_history3x"/>
+        android:src="@drawable/search_history3x" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/divider_color" />
 
 </RelativeLayout>

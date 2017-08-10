@@ -3,7 +3,6 @@ package com.wiserz.pbibi.activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.RadioGroup;
 
 import com.wiserz.pbibi.R;
@@ -17,7 +16,7 @@ import com.wiserz.pbibi.fragment.RecommendFragment;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     private RadioGroup mRg_main;
     /**

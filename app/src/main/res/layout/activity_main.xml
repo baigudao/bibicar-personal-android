@@ -1,12 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_color"
     tools:context="com.wiserz.pbibi.activity.MainActivity">
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/background_color" />
+
+    <!--FrameLayout-->
+    <FrameLayout
+        android:id="@+id/fl_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/view" />
 
     <!--底部：RadioGroup-->
     <RadioGroup
@@ -21,38 +34,31 @@
             android:id="@+id/rb_recommend"
             style="@style/bottom_tag_style"
             android:drawableTop="@drawable/rb_recommend_selector"
-            android:text="@string/rb_recommend"/>
+            android:text="@string/rb_recommend" />
 
         <RadioButton
             android:id="@+id/rb_community"
             style="@style/bottom_tag_style"
             android:drawableTop="@drawable/rb_community_selector"
-            android:text="@string/rb_community"/>
+            android:text="@string/rb_community" />
 
         <RadioButton
             android:id="@+id/rb_car_center"
             style="@style/bottom_tag_style"
-            android:drawableTop="@drawable/car_center"/>
+            android:drawableTop="@drawable/car_center" />
 
         <RadioButton
             android:id="@+id/rb_message"
             style="@style/bottom_tag_style"
             android:drawableTop="@drawable/rb_message_selector"
-            android:text="@string/rb_message"/>
+            android:text="@string/rb_message" />
 
         <RadioButton
             android:id="@+id/rb_mine"
             style="@style/bottom_tag_style"
             android:drawableTop="@drawable/rb_my_selector"
-            android:text="@string/rb_mine"/>
+            android:text="@string/rb_mine" />
 
     </RadioGroup>
-
-    <!--FrameLayout-->
-    <FrameLayout
-        android:id="@+id/fl_content"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/rg_main"/>
 
 </RelativeLayout>

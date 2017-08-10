@@ -22,6 +22,7 @@ import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wiserz.pbibi.R;
+import com.wiserz.pbibi.activity.MainActivity;
 import com.wiserz.pbibi.bean.ArticleBean;
 import com.wiserz.pbibi.bean.BannerBean;
 import com.wiserz.pbibi.bean.CarInfoBean;
@@ -29,6 +30,7 @@ import com.wiserz.pbibi.bean.CheHangBean;
 import com.wiserz.pbibi.bean.LampBean;
 import com.wiserz.pbibi.bean.TopLineBean;
 import com.wiserz.pbibi.bean.VideoBean;
+import com.wiserz.pbibi.fragment.CarCheckServiceFragment;
 import com.wiserz.pbibi.view.BaseAutoScrollView;
 import com.wiserz.pbibi.view.VerticalLampView;
 
@@ -125,7 +127,7 @@ public class RecommendRecyclerViewAdapter extends RecyclerView.Adapter implement
                 @Override
                 public void onClick(View v) {
                     ToastUtils.showShort("车辆检测");
-
+                    ((MainActivity) mContext).gotoPager(CarCheckServiceFragment.class, null);
                 }
             });
             twoBigButtonViewHolder.btn_rent_car.setOnClickListener(new View.OnClickListener() {
