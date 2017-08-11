@@ -22,7 +22,7 @@ import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wiserz.pbibi.R;
-import com.wiserz.pbibi.activity.MainActivity;
+import com.wiserz.pbibi.activity.BaseActivity;
 import com.wiserz.pbibi.bean.ArticleBean;
 import com.wiserz.pbibi.bean.BannerBean;
 import com.wiserz.pbibi.bean.CarInfoBean;
@@ -31,6 +31,7 @@ import com.wiserz.pbibi.bean.LampBean;
 import com.wiserz.pbibi.bean.TopLineBean;
 import com.wiserz.pbibi.bean.VideoBean;
 import com.wiserz.pbibi.fragment.CarCheckServiceFragment;
+import com.wiserz.pbibi.fragment.CarRentFragment;
 import com.wiserz.pbibi.view.BaseAutoScrollView;
 import com.wiserz.pbibi.view.VerticalLampView;
 
@@ -126,14 +127,17 @@ public class RecommendRecyclerViewAdapter extends RecyclerView.Adapter implement
             twoBigButtonViewHolder.btn_car_check.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ToastUtils.showShort("车辆检测");
-                    ((MainActivity) mContext).gotoPager(CarCheckServiceFragment.class, null);
+                    ((BaseActivity) mContext).gotoPager(CarCheckServiceFragment.class, null);
+                    //这样也可以
+                    //                    Intent intent = new Intent(mContext, EmptyActivity.class);
+                    //                    intent.putExtra(Constant.FRAGMENT_NAME, CarCheckServiceFragment.class.getName());
+                    //                    mContext.startActivity(intent);
                 }
             });
             twoBigButtonViewHolder.btn_rent_car.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ToastUtils.showShort("豪车租赁");
+                    ((BaseActivity)mContext).gotoPager(CarRentFragment.class,null);
                 }
             });
         } else if (currentType == TOP_LINE) {

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.view.KeyEvent;
 
 import com.wiserz.pbibi.BaseApplication;
 import com.wiserz.pbibi.R;
@@ -35,5 +36,18 @@ public class EmptyActivity extends BaseActivity {
         ft.addToBackStack(null);
         ft.commitAllowingStateLoss();
         BaseApplication.setCurFragment(fragment);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (getVisibleFragment() != null) {
+                getVisibleFragment().goBack();
+            } else {
+                finish();
+            }
+            return false;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

@@ -38,4 +38,6 @@ dependencies {
     compile project(':IMKit')
 
     compile 'com.bigkoo:convenientbanner:2.0.5'
+
+    compile 'com.jcodecraeer:xrecyclerview:1.3.2'
 }

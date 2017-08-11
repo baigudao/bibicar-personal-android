@@ -35,7 +35,10 @@ public class CarCheckServiceFragment extends BaseFragment {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_back:
-                ToastUtils.showShort("返回");
+                goBack();
+                break;
+            case R.id.btn_check_peccancy:
+                ToastUtils.showShort("查违章");
                 break;
             default:
                 break;

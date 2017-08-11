@@ -136,4 +136,25 @@ public class MainActivity extends BaseActivity {
         BaseFragment fragment = mBaseFragment.get(position);
         return fragment;
     }
+
+    //    private long startTime = 0;
+    //    private Toast toast = null;
+    //
+    //    @Override
+    //    public boolean onKeyDown(int keyCode, KeyEvent event) {
+    //        if (keyCode == KeyEvent.KEYCODE_BACK) {
+    //            long currentTime = System.currentTimeMillis();
+    //            if ((currentTime - startTime) > 2000) {
+    //                toast = Toast.makeText(MainActivity.this, "再按一次退出程序", Toast.LENGTH_SHORT);
+    //                toast.show();
+    //                startTime = currentTime;
+    //            } else {
+    //                finish();
+    //                if (toast != null) {
+    //                    toast.cancel();
+    //                }
+    //            }
+    //        }
+    //        return super.onKeyDown(keyCode, event);
+    //    }
 }

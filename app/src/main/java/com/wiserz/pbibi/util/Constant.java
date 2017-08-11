@@ -54,11 +54,17 @@ public class Constant {
     private static final String userLoginUrl = hostUrl + "v3/user/login";//用户登录
     private static final String newHomeUrl = hostUrl + "v3/theme/homepage";//首页
 
+    private final static String carRentListUrl = hostUrl + "v3/rentalcar/list";//可租车辆列表
+
     public static String getUserLoginUrl() {
         return userLoginUrl;
     }
 
     public static String getNewHomeUrl() {
         return newHomeUrl;
+    }
+
+    public static String getCarRentListUrl() {
+        return carRentListUrl;
     }
 }

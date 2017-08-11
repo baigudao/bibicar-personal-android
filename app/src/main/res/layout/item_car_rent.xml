@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:gravity="center_horizontal"
+    android:orientation="horizontal">
+
+    <View
+        android:layout_width="7.5dp"
+        android:layout_height="120dp"
+        android:background="@android:color/white"/>
+
+    <LinearLayout
+        android:layout_width="165dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="165dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/border_car_detail1"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="165dp"
+                android:layout_height="120dp"
+                android:layout_gravity="center_horizontal">
+
+                <ImageView
+                    android:id="@+id/iv_image"
+                    android:layout_width="165dp"
+                    android:layout_height="120dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/default_bg_ratio_1"/>
+
+                <ImageView
+                    android:id="@+id/iv_rent_able"
+                    android:layout_width="46dp"
+                    android:layout_height="24dp"
+                    android:layout_marginTop="10dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/b_zu_status3x"/>
+
+                <ImageView
+                    android:id="@+id/iv_renting"
+                    android:layout_width="46dp"
+                    android:layout_height="24dp"
+                    android:layout_marginTop="10dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/g_zu_status3x"/>
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:text="奔驰C级轿车-1989复刻"
+                android:textColor="#4C4C4C"
+                android:textSize="15sp"/>
+
+            <RelativeLayout
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="租金："
+                    android:textColor="#929292"
+                    android:textSize="13sp"/>
+
+                <TextView
+                    android:id="@+id/tv_money"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:text="1000/天"
+                    android:textColor="#929292"
+                    android:textSize="13sp"/>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="165dp"
+            android:layout_height="15dp"
+            android:background="@android:color/white"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="7.5dp"
+        android:layout_height="120dp"
+        android:background="@android:color/white"/>
+
+</LinearLayout>

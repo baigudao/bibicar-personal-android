@@ -1,6 +1,5 @@
 package com.wiserz.pbibi.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -33,7 +32,7 @@ import okhttp3.Call;
 /**
  * 注册登录界面
  */
-public class RegisterAndLoginActivity extends Activity implements View.OnClickListener {
+public class RegisterAndLoginActivity extends BaseActivity implements View.OnClickListener {
 
     private EditText et_account_login;
     private EditText et_password_login;

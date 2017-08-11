@@ -13,6 +13,7 @@ import com.blankj.utilcode.util.SizeUtils;
 import com.bumptech.glide.Glide;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.bean.CarInfoBean;
+import com.wiserz.pbibi.bean.CarRentInfoBean;
 import com.wiserz.pbibi.bean.CheHangBean;
 import com.wiserz.pbibi.bean.VideoBean;
 
@@ -36,6 +37,8 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
     private static final int CAR_VIDEO_DATA_TYPE = 65;
     private static final int CHE_HANG_DATA_TYPE = 75;
 
+    private static final int CAR_RENT_DATA_TYPE = 77;
+
     public BaseRecyclerViewAdapter(Context context, List<T> tList, int dataType) {
         this.mContext = context;
         this.mList = tList;
@@ -51,6 +54,8 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
             viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_car_video, null));
         } else if (dataType == CHE_HANG_DATA_TYPE) {
             viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_che_hang, null));
+        } else if (dataType == CAR_RENT_DATA_TYPE) {
+            viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_car_rent, null));
         } else {
             viewHolder = null;
         }
@@ -108,6 +113,30 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                     holder.tv_item2.setText(cheHangBean.getSignature());
                 }
                 holder.tv_item3.setText("在售" + cheHangBean.getSaling_num() + "辆丨已售" + cheHangBean.getSold_num() + "辆");
+            }
+        } else if (dataType == CAR_RENT_DATA_TYPE) {
+            ArrayList<CarRentInfoBean> carRentInfoBeanArrayList = (ArrayList<CarRentInfoBean>) mList;
+
+            if (EmptyUtils.isNotEmpty(carRentInfoBeanArrayList)) {
+                CarRentInfoBean carRentInfoBean = carRentInfoBeanArrayList.get(position);
+
+                Glide.with(mContext)
+                        .load(carRentInfoBean.getFiles().get(0).getFile_url())
+                        .placeholder(R.drawable.default_bg_ratio_1)
+                        .bitmapTransform(new RoundedCornersTransformation(mContext, SizeUtils.dp2px(8), 0, RoundedCornersTransformation.CornerType.ALL))
+                        .into(holder.iv_item1);
+
+                int status = carRentInfoBean.getRental_info().getStatus(); //1:可租 2已租
+                if (status == 2) {
+                    holder.iv_item2.setVisibility(View.INVISIBLE);
+                    holder.iv_item3.setVisibility(View.VISIBLE);
+                } else {
+                    holder.iv_item2.setVisibility(View.VISIBLE);
+                    holder.iv_item3.setVisibility(View.INVISIBLE);
+                }
+
+                holder.tv_item1.setText(carRentInfoBean.getCar_name());
+                holder.tv_item2.setText(carRentInfoBean.getRental_info().getOne() + "/天");
             }
         }
     }
@@ -172,6 +201,13 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                         }
                     }
                 });
+            } else if (dataType == CAR_RENT_DATA_TYPE) {
+                iv_item1 = (ImageView) itemView.findViewById(R.id.iv_image);
+                iv_item2 = (ImageView) itemView.findViewById(R.id.iv_rent_able);
+                iv_item3 = (ImageView) itemView.findViewById(R.id.iv_renting);
+
+                tv_item1 = (TextView) itemView.findViewById(R.id.tv_name);
+                tv_item2 = (TextView) itemView.findViewById(R.id.tv_money);
             }
         }
     }
