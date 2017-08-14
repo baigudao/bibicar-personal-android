@@ -15,6 +15,7 @@ import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.bean.CarInfoBean;
 import com.wiserz.pbibi.bean.CarRentInfoBean;
 import com.wiserz.pbibi.bean.CheHangBean;
+import com.wiserz.pbibi.bean.FuLiBean;
 import com.wiserz.pbibi.bean.VideoBean;
 
 import java.util.ArrayList;
@@ -39,6 +40,11 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
 
     private static final int CAR_RENT_DATA_TYPE = 77;
 
+    private static final int RECOMMEND_TOPIC_DATA_TYPE = 88;
+    private static final int MY_TOPIC_DATA_TYPE = 98;
+
+    private static final int ALL_TOPIC_DATA_TYPE = 23;
+
     public BaseRecyclerViewAdapter(Context context, List<T> tList, int dataType) {
         this.mContext = context;
         this.mList = tList;
@@ -56,6 +62,12 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
             viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_che_hang, null));
         } else if (dataType == CAR_RENT_DATA_TYPE) {
             viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_car_rent, null));
+        } else if (dataType == RECOMMEND_TOPIC_DATA_TYPE) {
+            viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_recommend_topic_recycler_view, null));
+        } else if (dataType == MY_TOPIC_DATA_TYPE) {
+            viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_my_topic_recycler_view, null));
+        } else if (dataType == ALL_TOPIC_DATA_TYPE) {
+            viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_all_topic, null));
         } else {
             viewHolder = null;
         }
@@ -138,6 +150,49 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                 holder.tv_item1.setText(carRentInfoBean.getCar_name());
                 holder.tv_item2.setText(carRentInfoBean.getRental_info().getOne() + "/天");
             }
+        } else if (dataType == RECOMMEND_TOPIC_DATA_TYPE) {
+            ArrayList<FuLiBean> fuLiBeanArrayList = (ArrayList<FuLiBean>) mList;
+
+            if (EmptyUtils.isNotEmpty(fuLiBeanArrayList)) {
+                FuLiBean fuLiBean = fuLiBeanArrayList.get(position);
+
+                Glide.with(mContext)
+                        .load(fuLiBean.getUrl())
+                        .placeholder(R.drawable.default_bg_ratio_1)
+                        .bitmapTransform(new RoundedCornersTransformation(mContext, SizeUtils.dp2px(8), 0, RoundedCornersTransformation.CornerType.ALL))
+                        .into(holder.iv_item1);
+                holder.tv_item1.setText(fuLiBean.getDesc());
+            }
+        } else if (dataType == MY_TOPIC_DATA_TYPE) {
+            ArrayList<FuLiBean> fuLiBeanArrayList = (ArrayList<FuLiBean>) mList;
+
+            if (EmptyUtils.isNotEmpty(fuLiBeanArrayList)) {
+                FuLiBean fuLiBean = fuLiBeanArrayList.get(position);
+
+                Glide.with(mContext)
+                        .load(fuLiBean.getUrl())
+                        .placeholder(R.drawable.user_photo)
+                        .bitmapTransform(new RoundedCornersTransformation(mContext, SizeUtils.dp2px(8), 0, RoundedCornersTransformation.CornerType.ALL))
+                        .into(holder.iv_item1);
+                holder.tv_item1.setText(fuLiBean.getWho());
+                holder.tv_item2.setText(fuLiBean.getDesc());
+                holder.tv_item3.setText(fuLiBean.getDesc());
+            }
+        } else if (dataType == ALL_TOPIC_DATA_TYPE) {
+            ArrayList<FuLiBean> fuLiBeanArrayList = (ArrayList<FuLiBean>) mList;
+
+            if (EmptyUtils.isNotEmpty(fuLiBeanArrayList)) {
+                FuLiBean fuLiBean = fuLiBeanArrayList.get(position);
+
+                Glide.with(mContext)
+                        .load(fuLiBean.getUrl())
+                        .placeholder(R.drawable.user_photo)
+                        .bitmapTransform(new RoundedCornersTransformation(mContext, SizeUtils.dp2px(8), 0, RoundedCornersTransformation.CornerType.ALL))
+                        .into(holder.iv_item1);
+                holder.tv_item1.setText(fuLiBean.getWho());
+                holder.tv_item2.setText(fuLiBean.getDesc());
+                holder.tv_item3.setText(fuLiBean.getDesc());
+            }
         }
     }
 
@@ -208,6 +263,49 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
 
                 tv_item1 = (TextView) itemView.findViewById(R.id.tv_name);
                 tv_item2 = (TextView) itemView.findViewById(R.id.tv_money);
+            } else if (dataType == RECOMMEND_TOPIC_DATA_TYPE) {
+                iv_item1 = (ImageView) itemView.findViewById(R.id.iv_recommend_item);
+                tv_item1 = (TextView) itemView.findViewById(R.id.tv_recommend_item);
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnItemClickListener != null) {
+                            int position = getLayoutPosition();
+                            mOnItemClickListener.onItemClick(mList.get(position), position);
+                        }
+                    }
+                });
+            } else if (dataType == MY_TOPIC_DATA_TYPE) {
+                iv_item1 = (ImageView) itemView.findViewById(R.id.iv_image);
+                tv_item1 = (TextView) itemView.findViewById(R.id.tv_name);
+                tv_item2 = (TextView) itemView.findViewById(R.id.tv_num);
+                tv_item3 = (TextView) itemView.findViewById(R.id.tv_update);
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnItemClickListener != null) {
+                            int position = getLayoutPosition();
+                            mOnItemClickListener.onItemClick(mList.get(position), position);
+                        }
+                    }
+                });
+            } else if (dataType == ALL_TOPIC_DATA_TYPE) {
+                iv_item1 = (ImageView) itemView.findViewById(R.id.iv_image);
+                tv_item1 = (TextView) itemView.findViewById(R.id.tv_name);
+                tv_item2 = (TextView) itemView.findViewById(R.id.tv_content);
+                tv_item3 = (TextView) itemView.findViewById(R.id.tv_num);
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnItemClickListener != null) {
+                            int position = getLayoutPosition();
+                            mOnItemClickListener.onItemClick(mList.get(position), position);
+                        }
+                    }
+                });
             }
         }
     }
@@ -219,7 +317,7 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
         void onItemClick(Object data, int position);
     }
 
-    private OnItemClickListener mOnItemClickListener;
+    public OnItemClickListener mOnItemClickListener;
 
     public void setOnItemClickListener(OnItemClickListener mOnItemClickListener) {
         this.mOnItemClickListener = mOnItemClickListener;

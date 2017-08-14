@@ -348,12 +348,12 @@
         "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_fragment_base_setting.xml"
     },
     {
-        "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\debug\\layout\\rc_refresh_list_view.xml",
-        "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_refresh_list_view.xml"
-    },
-    {
         "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\debug\\layout\\rc_item_text_message_evaluate.xml",
         "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_item_text_message_evaluate.xml"
+    },
+    {
+        "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\debug\\layout\\rc_refresh_list_view.xml",
+        "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_refresh_list_view.xml"
     },
     {
         "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\debug\\layout\\rc_ac_file_manager.xml",

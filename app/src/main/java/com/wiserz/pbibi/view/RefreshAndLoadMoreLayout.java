@@ -247,10 +247,7 @@ public class RefreshAndLoadMoreLayout extends ViewGroup {
 
         // header放到contentView的上方，水平居中
         int refreshViewWidth = refreshHeaderView.getMeasuredWidth();
-        refreshHeaderView.layout((width / 2 - refreshViewWidth / 2),
-                -headerViewHeight + currentOffsetTop,
-                (width / 2 + refreshViewWidth / 2),
-                currentOffsetTop);
+        refreshHeaderView.layout((width / 2 - refreshViewWidth / 2), -headerViewHeight + currentOffsetTop, (width / 2 + refreshViewWidth / 2), currentOffsetTop);
 
         //loadMoreView 放到contentView 下方
         int loadMoreViewWidth = mLoadMoreView.getMeasuredWidth();

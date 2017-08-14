@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="160dp"
+                android:layout_height="90dp"
+                android:background="@color/background_color">
+
+    <View
+        android:id="@+id/view_left"
+        android:layout_width="5dp"
+        android:layout_height="90dp"
+        android:background="@color/background_color"/>
+
+    <ImageView
+        android:id="@+id/iv_recommend_item"
+        android:layout_width="150dp"
+        android:layout_height="90dp"
+        android:layout_toRightOf="@id/view_left"
+        android:scaleType="fitXY"
+        android:src="@drawable/default_bg_ratio_1"/>
+
+    <TextView
+        android:id="@+id/tv_recommend_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:maxLines="1"
+        android:text="#我的眼里只有钱"
+        android:textColor="@color/pure_white_color"
+        android:textSize="14sp"/>
+
+    <View
+        android:id="@+id/view_right"
+        android:layout_width="5dp"
+        android:layout_height="90dp"
+        android:layout_toRightOf="@id/iv_recommend_item"
+        android:background="@color/background_color"/>
+
+</RelativeLayout>
