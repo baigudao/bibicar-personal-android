@@ -2,7 +2,6 @@ package com.wiserz.pbibi.fragment;
 
 import android.view.View;
 
-import com.blankj.utilcode.util.ToastUtils;
 import com.wiserz.pbibi.R;
 
 /**
@@ -27,7 +26,9 @@ public class CarCenterFragment extends BaseFragment {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ivRight:
-                gotoPager(LoanPlanFragment.class,null);
+//                gotoPager(LoanPlanFragment.class,null);//贷款方案
+
+                gotoPager(ConcreteParameterFragment.class, null);//具体参数
                 break;
             default:
                 break;
