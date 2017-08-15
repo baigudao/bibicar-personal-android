@@ -52,6 +52,7 @@ public class CarRentDetailFragment extends BaseFragment {
                 break;
             case R.id.iv_image:
                 ToastUtils.showShort("分享");
+
                 break;
             case R.id.btn_custom_service:
                 ToastUtils.showShort("联系客服");

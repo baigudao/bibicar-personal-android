@@ -86,7 +86,6 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-
     /**
      * @param from 刚显示的Fragment,马上就要被隐藏了
      * @param to   马上要切换到的Fragment，一会要显示

@@ -23,4 +23,11 @@
     <string name="like_me">赞我的</string>
     <string name="rb_hall">大厅</string>
     <string name="rb_follow">关注</string>
+
+    <string name="errcode_success">发送成功</string>
+    <string name="errcode_cancel">发送取消</string>
+    <string name="errcode_deny">发送被拒绝</string>
+    <string name="errcode_unsupported">不支持错误</string>
+    <string name="errcode_unknown">发送返回</string>
+
 </resources>

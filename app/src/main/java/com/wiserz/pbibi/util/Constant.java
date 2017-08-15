@@ -8,6 +8,7 @@ package com.wiserz.pbibi.util;
 public class Constant {
 
     //一般常量
+    public static final String APP_ID = "wx8bac6dd603d47d15";
     public static final String DEVICE_IDENTIFIER = "device_identifier";
     public static final String DEVICE_ID = "device_id";
     public static final String FRAGMENT_NAME = "fragment_name";

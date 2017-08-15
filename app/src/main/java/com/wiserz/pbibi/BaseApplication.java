@@ -8,6 +8,7 @@ import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.Utils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.MemoryCategory;
+import com.mob.MobSDK;
 import com.wiserz.pbibi.fragment.BaseFragment;
 import com.zhy.http.okhttp.OkHttpUtils;
 
@@ -42,6 +43,9 @@ public class BaseApplication extends Application {
 
         //对LogUtils的配置
         configLogUtils();
+
+        //初始社会化组件
+        MobSDK.init(this,"174e89a173460","");
     }
 
     private void configLogUtils() {
