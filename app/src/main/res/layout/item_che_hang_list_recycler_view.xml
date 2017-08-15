@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="140dp"
+                android:layout_height="90dp"
+                android:background="@color/background_color">
+
+    <ImageView
+        android:id="@+id/iv_image"
+        android:layout_width="140dp"
+        android:layout_height="90dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/default_bg_ratio_1"/>
+
+    <TextView
+        android:id="@+id/tv_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="5dp"
+        android:text="成交价：126.6万"
+        android:textColor="@color/pure_white_color"
+        android:textSize="10sp"/>
+
+</RelativeLayout>

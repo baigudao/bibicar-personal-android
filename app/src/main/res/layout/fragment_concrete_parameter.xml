@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/pure_white_color"
-    android:orientation="vertical">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/pure_white_color"
+              android:orientation="vertical">
 
-    <include layout="@layout/title_bar" />
+    <include layout="@layout/title_bar"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -22,7 +22,7 @@
             android:layout_marginLeft="15dp"
             android:text="厂家指导价"
             android:textColor="@color/main_text_color"
-            android:textSize="14sp" />
+            android:textSize="14sp"/>
 
         <TextView
             android:id="@+id/tv_price"
@@ -33,7 +33,7 @@
             android:layout_marginRight="15dp"
             android:text="84.40万"
             android:textColor="@color/second_text_color"
-            android:textSize="14sp" />
+            android:textSize="14sp"/>
 
     </RelativeLayout>
 
@@ -51,7 +51,7 @@
             android:layout_marginLeft="15dp"
             android:text="保修政策"
             android:textColor="@color/main_text_color"
-            android:textSize="14sp" />
+            android:textSize="14sp"/>
 
         <TextView
             android:id="@+id/tv_guarantee"
@@ -62,7 +62,7 @@
             android:layout_marginRight="15dp"
             android:text="三年或10万公里"
             android:textColor="@color/second_text_color"
-            android:textSize="14sp" />
+            android:textSize="14sp"/>
 
     </RelativeLayout>
 
@@ -80,7 +80,7 @@
             android:layout_marginLeft="15dp"
             android:text="排量"
             android:textColor="@color/main_text_color"
-            android:textSize="14sp" />
+            android:textSize="14sp"/>
 
         <TextView
             android:id="@+id/tv_output"
@@ -91,7 +91,7 @@
             android:layout_marginRight="15dp"
             android:text="3.6L"
             android:textColor="@color/second_text_color"
-            android:textSize="14sp" />
+            android:textSize="14sp"/>
 
     </RelativeLayout>
 
@@ -109,7 +109,7 @@
             android:layout_marginLeft="15dp"
             android:text="变速箱"
             android:textColor="@color/main_text_color"
-            android:textSize="14sp" />
+            android:textSize="14sp"/>
 
         <TextView
             android:id="@+id/tv_auto"
@@ -120,7 +120,7 @@
             android:layout_marginRight="15dp"
             android:text="手自一体"
             android:textColor="@color/second_text_color"
-            android:textSize="14sp" />
+            android:textSize="14sp"/>
 
     </RelativeLayout>
 
@@ -138,7 +138,7 @@
             android:layout_marginLeft="15dp"
             android:text="综合工况油耗"
             android:textColor="@color/main_text_color"
-            android:textSize="14sp" />
+            android:textSize="14sp"/>
 
         <TextView
             android:id="@+id/tv_oil"
@@ -149,7 +149,7 @@
             android:layout_marginRight="15dp"
             android:text="10.9L"
             android:textColor="@color/second_text_color"
-            android:textSize="14sp" />
+            android:textSize="14sp"/>
 
     </RelativeLayout>
 

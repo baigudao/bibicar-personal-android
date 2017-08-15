@@ -42,10 +42,10 @@ public class RecommendFragment extends BaseFragment {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_search:
-                ToastUtils.showShort("搜索");
+                gotoPager(SearchFragment.class,null);
                 break;
             case R.id.iv_search_history:
-                ToastUtils.showShort("搜索历史");
+                gotoPager(SearchHistoryFragment.class,null);
                 break;
             default:
                 break;

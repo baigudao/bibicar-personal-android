@@ -1,15 +1,19 @@
 package com.wiserz.pbibi.adapter;
 
 import android.content.Context;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.EmptyUtils;
 import com.blankj.utilcode.util.SizeUtils;
+import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.bean.CarInfoBean;
@@ -45,6 +49,13 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
 
     private static final int ALL_TOPIC_DATA_TYPE = 23;
 
+    private static final int ARTICLE_LIST_DATA_TYPE = 76;
+
+    private static final int VIDEO_LIST_DATA_TYPE = 99;
+
+    private static final int CHE_HANG_LIST_DATA_TYPE = 14;
+    private static final int CHE_HANG_LIST_ITEM_DATA_TYPE = 15;
+
     public BaseRecyclerViewAdapter(Context context, List<T> tList, int dataType) {
         this.mContext = context;
         this.mList = tList;
@@ -68,6 +79,14 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
             viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_my_topic_recycler_view, null));
         } else if (dataType == ALL_TOPIC_DATA_TYPE) {
             viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_all_topic, null));
+        } else if (dataType == ARTICLE_LIST_DATA_TYPE) {
+            viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_article_list, null));
+        } else if (dataType == VIDEO_LIST_DATA_TYPE) {
+            viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_video_list, null));
+        } else if (dataType == CHE_HANG_LIST_DATA_TYPE) {
+            viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_che_hang_list, null));
+        } else if (dataType == CHE_HANG_LIST_ITEM_DATA_TYPE) {
+            viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_che_hang_list_recycler_view, null));
         } else {
             viewHolder = null;
         }
@@ -193,6 +212,102 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                 holder.tv_item2.setText(fuLiBean.getDesc());
                 holder.tv_item3.setText(fuLiBean.getDesc());
             }
+        } else if (dataType == ARTICLE_LIST_DATA_TYPE) {
+            ArrayList<FuLiBean> fuLiBeanArrayList = (ArrayList<FuLiBean>) mList;
+
+            if (EmptyUtils.isNotEmpty(fuLiBeanArrayList)) {
+                FuLiBean fuLiBean = fuLiBeanArrayList.get(position);
+
+                Glide.with(mContext)
+                        .load(fuLiBean.getUrl())
+                        .placeholder(R.drawable.default_bg_ratio_1)
+                        .bitmapTransform(new RoundedCornersTransformation(mContext, SizeUtils.dp2px(8), 0, RoundedCornersTransformation.CornerType.ALL))
+                        .into(holder.iv_item1);
+                holder.tv_item1.setText(fuLiBean.getWho());
+                holder.tv_item2.setText(fuLiBean.getDesc());
+            }
+        } else if (dataType == VIDEO_LIST_DATA_TYPE) {
+            ArrayList<FuLiBean> fuLiBeanArrayList = (ArrayList<FuLiBean>) mList;
+
+            if (EmptyUtils.isNotEmpty(fuLiBeanArrayList)) {
+                FuLiBean fuLiBean = fuLiBeanArrayList.get(position);
+
+                Glide.with(mContext)
+                        .load(fuLiBean.getUrl())
+                        .placeholder(R.drawable.default_bg_ratio_1)
+                        .bitmapTransform(new RoundedCornersTransformation(mContext, SizeUtils.dp2px(8), 0, RoundedCornersTransformation.CornerType.ALL))
+                        .into(holder.iv_item1);
+                holder.iv_item2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ToastUtils.showShort("开始播放");
+                    }
+                });
+                holder.tv_item1.setText(fuLiBean.getWho());
+                holder.tv_item2.setText(fuLiBean.getDesc());
+                holder.tv_item3.setText(fuLiBean.getDesc());
+            }
+        } else if (dataType == CHE_HANG_LIST_DATA_TYPE) {
+            ArrayList<FuLiBean> fuLiBeanArrayList = (ArrayList<FuLiBean>) mList;
+
+            if (EmptyUtils.isNotEmpty(fuLiBeanArrayList)) {
+                final FuLiBean fuLiBean = fuLiBeanArrayList.get(position);
+
+                Glide.with(mContext)
+                        .load(fuLiBean.getUrl())
+                        .placeholder(R.drawable.user_photo)
+                        .bitmapTransform(new RoundedCornersTransformation(mContext, SizeUtils.dp2px(8), 0, RoundedCornersTransformation.CornerType.ALL))
+                        .into(holder.iv_item1);
+                holder.tv_item1.setText(fuLiBean.getWho());
+                holder.tv_item2.setText(fuLiBean.getDesc());
+                holder.tv_item3.setText(fuLiBean.getDesc());
+
+                holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ToastUtils.showShort(fuLiBean.getWho());
+                    }
+                });
+
+                BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, fuLiBeanArrayList, CHE_HANG_LIST_ITEM_DATA_TYPE);
+                holder.recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
+                holder.recyclerView.setAdapter(baseRecyclerViewAdapter);
+                baseRecyclerViewAdapter.setOnItemClickListener(new OnItemClickListener() {
+                    @Override
+                    public void onItemClick(Object data, int position) {
+                        if (data.getClass().getSimpleName().equals("FuLiBean")) {
+                            FuLiBean fuLiBean1 = (FuLiBean) data;
+                            ToastUtils.showShort(fuLiBean1.getWho());
+                        }
+                    }
+                });
+
+                holder.linearLayout1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ToastUtils.showShort("拨打电话");
+                    }
+                });
+                holder.linearLayout2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ToastUtils.showShort("查看位置");
+                    }
+                });
+            }
+        } else if (dataType == CHE_HANG_LIST_ITEM_DATA_TYPE) {
+            ArrayList<FuLiBean> fuLiBeanArrayList = (ArrayList<FuLiBean>) mList;
+
+            if (EmptyUtils.isNotEmpty(fuLiBeanArrayList)) {
+                FuLiBean fuLiBean = fuLiBeanArrayList.get(position);
+
+                Glide.with(mContext)
+                        .load(fuLiBean.getUrl())
+                        .placeholder(R.drawable.default_bg_ratio_1)
+                        .bitmapTransform(new RoundedCornersTransformation(mContext, SizeUtils.dp2px(8), 0, RoundedCornersTransformation.CornerType.ALL))
+                        .into(holder.iv_item1);
+                holder.tv_item1.setText(fuLiBean.getDesc());
+            }
         }
     }
 
@@ -210,6 +325,13 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
         private TextView tv_item1;
         private TextView tv_item2;
         private TextView tv_item3;
+
+        private RecyclerView recyclerView;
+
+        private LinearLayout linearLayout1;
+        private LinearLayout linearLayout2;
+
+        private RelativeLayout relativeLayout;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -263,6 +385,16 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
 
                 tv_item1 = (TextView) itemView.findViewById(R.id.tv_name);
                 tv_item2 = (TextView) itemView.findViewById(R.id.tv_money);
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnItemClickListener != null) {
+                            int position = getLayoutPosition();
+                            mOnItemClickListener.onItemClick(mList.get(position), position);
+                        }
+                    }
+                });
             } else if (dataType == RECOMMEND_TOPIC_DATA_TYPE) {
                 iv_item1 = (ImageView) itemView.findViewById(R.id.iv_recommend_item);
                 tv_item1 = (TextView) itemView.findViewById(R.id.tv_recommend_item);
@@ -296,6 +428,58 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                 tv_item1 = (TextView) itemView.findViewById(R.id.tv_name);
                 tv_item2 = (TextView) itemView.findViewById(R.id.tv_content);
                 tv_item3 = (TextView) itemView.findViewById(R.id.tv_num);
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnItemClickListener != null) {
+                            int position = getLayoutPosition();
+                            mOnItemClickListener.onItemClick(mList.get(position), position);
+                        }
+                    }
+                });
+            } else if (dataType == ARTICLE_LIST_DATA_TYPE) {
+                iv_item1 = (ImageView) itemView.findViewById(R.id.iv_image);
+                tv_item1 = (TextView) itemView.findViewById(R.id.tv_name);
+                tv_item2 = (TextView) itemView.findViewById(R.id.tv_che_hang);
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnItemClickListener != null) {
+                            int position = getLayoutPosition();
+                            mOnItemClickListener.onItemClick(mList.get(position), position);
+                        }
+                    }
+                });
+            } else if (dataType == VIDEO_LIST_DATA_TYPE) {
+                iv_item1 = (ImageView) itemView.findViewById(R.id.iv_image);
+                iv_item2 = (ImageView) itemView.findViewById(R.id.iv_video_play);
+                tv_item1 = (TextView) itemView.findViewById(R.id.tv_name);
+                tv_item2 = (TextView) itemView.findViewById(R.id.tv_che_hang);
+                tv_item3 = (TextView) itemView.findViewById(R.id.tv_update_time);
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnItemClickListener != null) {
+                            int position = getLayoutPosition();
+                            mOnItemClickListener.onItemClick(mList.get(position), position);
+                        }
+                    }
+                });
+            } else if (dataType == CHE_HANG_LIST_DATA_TYPE) {
+                iv_item1 = (ImageView) itemView.findViewById(R.id.iv_che_hang);
+                tv_item1 = (TextView) itemView.findViewById(R.id.tv_che_hang_name);
+                tv_item2 = (TextView) itemView.findViewById(R.id.tv_selling_num);
+                tv_item3 = (TextView) itemView.findViewById(R.id.tv_sold_num);
+                recyclerView = (RecyclerView) itemView.findViewById(R.id.recyclerView);
+                linearLayout1 = (LinearLayout) itemView.findViewById(R.id.ll_phone);
+                linearLayout2 = (LinearLayout) itemView.findViewById(R.id.ll_location);
+                relativeLayout = (RelativeLayout) itemView.findViewById(R.id.rl_che_hang);
+            } else if (dataType == CHE_HANG_LIST_ITEM_DATA_TYPE) {
+                iv_item1 = (ImageView) itemView.findViewById(R.id.iv_image);
+                tv_item1 = (TextView) itemView.findViewById(R.id.tv_price);
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override

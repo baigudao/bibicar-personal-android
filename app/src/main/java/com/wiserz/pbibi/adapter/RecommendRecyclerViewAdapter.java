@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -23,6 +24,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.activity.BaseActivity;
+import com.wiserz.pbibi.activity.MainActivity;
 import com.wiserz.pbibi.bean.ArticleBean;
 import com.wiserz.pbibi.bean.BannerBean;
 import com.wiserz.pbibi.bean.CarInfoBean;
@@ -30,8 +32,11 @@ import com.wiserz.pbibi.bean.CheHangBean;
 import com.wiserz.pbibi.bean.LampBean;
 import com.wiserz.pbibi.bean.TopLineBean;
 import com.wiserz.pbibi.bean.VideoBean;
+import com.wiserz.pbibi.fragment.ArticleListFragment;
 import com.wiserz.pbibi.fragment.CarCheckServiceFragment;
 import com.wiserz.pbibi.fragment.CarRentFragment;
+import com.wiserz.pbibi.fragment.CheHangListFragment;
+import com.wiserz.pbibi.fragment.VideoListFragment;
 import com.wiserz.pbibi.view.BaseAutoScrollView;
 import com.wiserz.pbibi.view.VerticalLampView;
 
@@ -137,7 +142,7 @@ public class RecommendRecyclerViewAdapter extends RecyclerView.Adapter implement
             twoBigButtonViewHolder.btn_rent_car.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ((BaseActivity)mContext).gotoPager(CarRentFragment.class,null);
+                    ((BaseActivity) mContext).gotoPager(CarRentFragment.class, null);
                 }
             });
         } else if (currentType == TOP_LINE) {
@@ -168,7 +173,7 @@ public class RecommendRecyclerViewAdapter extends RecyclerView.Adapter implement
             newCarViewHolder.tv_more_new_car.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ToastUtils.showShort("新车更多");
+                    ((MainActivity) mContext).setCheck((RadioButton) ((MainActivity) mContext).findViewById(R.id.rb_car_center));
                 }
             });
 
@@ -182,7 +187,7 @@ public class RecommendRecyclerViewAdapter extends RecyclerView.Adapter implement
             carVideoViewHolder.tv_more_car_video.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ToastUtils.showShort("视频更多");
+                    ((BaseActivity) mContext).gotoPager(VideoListFragment.class, null);
                 }
             });
 
@@ -198,7 +203,7 @@ public class RecommendRecyclerViewAdapter extends RecyclerView.Adapter implement
             carArticleViewHolder.tv_more_article_video.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ToastUtils.showShort("文章更多");
+                    ((BaseActivity) mContext).gotoPager(ArticleListFragment.class, null);
                 }
             });
 
@@ -258,7 +263,7 @@ public class RecommendRecyclerViewAdapter extends RecyclerView.Adapter implement
             cheHangViewHolder.tv_more_car_company.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ToastUtils.showShort("车行更多");
+                    ((BaseActivity) mContext).gotoPager(CheHangListFragment.class, null);
                 }
             });
 

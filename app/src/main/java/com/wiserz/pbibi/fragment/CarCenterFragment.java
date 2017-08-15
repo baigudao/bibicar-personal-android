@@ -26,7 +26,7 @@ public class CarCenterFragment extends BaseFragment {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ivRight:
-//                gotoPager(LoanPlanFragment.class,null);//贷款方案
+                //                gotoPager(LoanPlanFragment.class,null);//贷款方案
 
                 gotoPager(ConcreteParameterFragment.class, null);//具体参数
                 break;

@@ -2,17 +2,18 @@ package com.wiserz.pbibi.fragment;
 
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.google.gson.Gson;
-import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
 import com.wiserz.pbibi.bean.CarRentInfoBean;
 import com.wiserz.pbibi.util.Constant;
+import com.wiserz.pbibi.util.DataManager;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -29,10 +30,10 @@ import okhttp3.Call;
  * QQ : 971060378
  * Used as : 豪车租赁的页面
  */
-public class CarRentFragment extends BaseFragment {
+public class CarRentFragment extends BaseFragment implements BaseRecyclerViewAdapter.OnItemClickListener {
 
     private static final int CAR_RENT_DATA_TYPE = 77;
-    private XRecyclerView x_recycler_view;
+    private RecyclerView recyclerView;
     private int page;
 
     @Override
@@ -44,7 +45,7 @@ public class CarRentFragment extends BaseFragment {
     protected void initView(View view) {
         view.findViewById(R.id.iv_back).setOnClickListener(this);
         ((TextView) view.findViewById(R.id.tv_title)).setText("豪车租赁");
-        x_recycler_view = (XRecyclerView) view.findViewById(R.id.x_recycler_view);
+        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
 
         page = 0;
     }
@@ -100,22 +101,9 @@ public class CarRentFragment extends BaseFragment {
         ArrayList<CarRentInfoBean> carRentInfoBeanArrayList = getCarRentData(jsonObjectData);
 
         BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, carRentInfoBeanArrayList, CAR_RENT_DATA_TYPE);
-        x_recycler_view.setLayoutManager(new GridLayoutManager(mContext, 2, LinearLayoutManager.VERTICAL, false));
-        x_recycler_view.setAdapter(baseRecyclerViewAdapter);
-        x_recycler_view.setLoadingMoreEnabled(true);
-        x_recycler_view.setPullRefreshEnabled(true);
-
-        x_recycler_view.setLoadingListener(new XRecyclerView.LoadingListener() {
-            @Override
-            public void onRefresh() {
-                ToastUtils.showShort("hehe");
-            }
-
-            @Override
-            public void onLoadMore() {
-                ToastUtils.showShort("haha");
-            }
-        });
+        recyclerView.setLayoutManager(new GridLayoutManager(mContext, 2, LinearLayoutManager.VERTICAL, false));
+        recyclerView.setAdapter(baseRecyclerViewAdapter);
+        baseRecyclerViewAdapter.setOnItemClickListener(this);
     }
 
     private ArrayList<CarRentInfoBean> getCarRentData(JSONObject jsonObjectData) {
@@ -128,5 +116,15 @@ public class CarRentFragment extends BaseFragment {
             list.add(carRentInfoBean);
         }
         return list;
+    }
+
+    @Override
+    public void onItemClick(Object data, int position) {
+        if (data.getClass().getSimpleName().equals("CarRentInfoBean")) {
+            CarRentInfoBean carRentInfoBean = (CarRentInfoBean) data;
+
+            DataManager.getInstance().setData1(carRentInfoBean);
+            gotoPager(CarRentDetailFragment.class, null);//汽车租赁详情
+        }
     }
 }

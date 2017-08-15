@@ -51,4 +51,44 @@ public class DataManager {
         LoginBean.UserInfoBean userInfoBean = CommonUtil.fromJson(LoginBean.UserInfoBean.class, userInfo);
         return userInfoBean;
     }
+
+    public void setData1(Object data1) {
+        mData1 = data1;
+    }
+
+    public Object getData1() {
+        return mData1;
+    }
+
+    public void setData2(Object data2) {
+        mData2 = data2;
+    }
+
+    public Object getData2() {
+        return mData2;
+    }
+
+    public void setData3(Object data3) {
+        mData3 = data3;
+    }
+
+    public Object getData3() {
+        return mData3;
+    }
+
+    public void setData4(Object data4) {
+        mData4 = data4;
+    }
+
+    public Object getData4() {
+        return mData4;
+    }
+
+    public void setData5(Object data5) {
+        mData5 = data5;
+    }
+
+    public Object getData5() {
+        return mData5;
+    }
 }

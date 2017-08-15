@@ -3,6 +3,7 @@ package com.wiserz.pbibi.activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.wiserz.pbibi.R;
@@ -19,19 +20,8 @@ import java.util.List;
 public class MainActivity extends BaseActivity {
 
     private RadioGroup mRg_main;
-    /**
-     * 装Fragment的集合
-     */
     private List<BaseFragment> mBaseFragment;
-
-    /**
-     * 选中Fragment对应的位置
-     */
     private int position;
-
-    /**
-     * 上次的Fragment
-     */
     private Fragment fromFragment;
 
     @Override
@@ -135,6 +125,15 @@ public class MainActivity extends BaseActivity {
     private BaseFragment getFragment() {
         BaseFragment fragment = mBaseFragment.get(position);
         return fragment;
+    }
+
+    public void setCheck(RadioButton radioButton) {
+        ((RadioButton) findViewById(R.id.rb_recommend)).setChecked(false);
+        ((RadioButton) findViewById(R.id.rb_community)).setChecked(false);
+        ((RadioButton) findViewById(R.id.rb_car_center)).setChecked(false);
+        ((RadioButton) findViewById(R.id.rb_message)).setChecked(false);
+        ((RadioButton) findViewById(R.id.rb_mine)).setChecked(false);
+        radioButton.setChecked(true);
     }
 
     //    private long startTime = 0;

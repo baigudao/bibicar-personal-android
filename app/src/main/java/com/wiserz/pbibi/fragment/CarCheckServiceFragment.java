@@ -3,7 +3,6 @@ package com.wiserz.pbibi.fragment;
 import android.view.View;
 import android.widget.TextView;
 
-import com.blankj.utilcode.util.ToastUtils;
 import com.wiserz.pbibi.R;
 
 /**
@@ -38,7 +37,19 @@ public class CarCheckServiceFragment extends BaseFragment {
                 goBack();
                 break;
             case R.id.btn_check_peccancy:
-                ToastUtils.showShort("查违章");
+                gotoPager(CheckPeccancyFragment.class, null);//查违章
+                break;
+            case R.id.btn_check_insurance:
+                gotoPager(CheckInsuranceFragment.class, null);//查保险
+                break;
+            case R.id.btn_check_guarantee:
+                gotoPager(CheckGuaranteeFragment.class, null);//查维保
+                break;
+            case R.id.btn_check_sum:
+                gotoPager(CheckSumFragment.class, null);//查出险
+                break;
+            case R.id.btn_check_history:
+                gotoPager(CheckHistoryFragment.class, null);//查询历史
                 break;
             default:
                 break;

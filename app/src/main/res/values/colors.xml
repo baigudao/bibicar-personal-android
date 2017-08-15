@@ -14,6 +14,7 @@
     <color name="second_text_color">#929292</color>
     <color name="third_text_color">#bbbbbb</color>
     <color name="fourth_text_color">#bababa</color>
+    <color name="fifth_text_color">#979797</color>
 
     <color name="btn_press_yes_color">#cd9b1d</color>
     <color name="btn_press_no_color">#e3af5e</color>
