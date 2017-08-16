@@ -25,10 +25,21 @@ import okhttp3.OkHttpClient;
 public class BaseApplication extends Application {
 
     private static BaseFragment curFragment;
+    private static Context appContext ;
+
+    public static Context getAppContext() {
+        return appContext;
+    }
+
+    public static void setAppContext(Context appContext) {
+        BaseApplication.appContext = appContext;
+    }
 
     @Override
     public void onCreate() {
         super.onCreate();
+        BaseApplication.setAppContext(getApplicationContext());
+
         //AndroidUtilCode库的初始化
         Utils.init(this);
 
