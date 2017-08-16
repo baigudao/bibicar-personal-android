@@ -17,6 +17,7 @@ import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.bean.CarInfoBean;
+import com.wiserz.pbibi.bean.CarInfoBeanForCarCenter;
 import com.wiserz.pbibi.bean.CarRentInfoBean;
 import com.wiserz.pbibi.bean.CheHangBean;
 import com.wiserz.pbibi.bean.FuLiBean;
@@ -56,6 +57,8 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
     private static final int CHE_HANG_LIST_DATA_TYPE = 14;
     private static final int CHE_HANG_LIST_ITEM_DATA_TYPE = 15;
 
+    private static final int CAR_LIST_FOR_CAR_CENTER = 100;//汽车中心的汽车列表
+
     public BaseRecyclerViewAdapter(Context context, List<T> tList, int dataType) {
         this.mContext = context;
         this.mList = tList;
@@ -87,6 +90,8 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
             viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_che_hang_list, null));
         } else if (dataType == CHE_HANG_LIST_ITEM_DATA_TYPE) {
             viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_che_hang_list_recycler_view, null));
+        } else if (dataType == CAR_LIST_FOR_CAR_CENTER) {
+            viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_car_center_car_list, null));
         } else {
             viewHolder = null;
         }
@@ -308,6 +313,25 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                         .into(holder.iv_item1);
                 holder.tv_item1.setText(fuLiBean.getDesc());
             }
+        } else if (dataType == CAR_LIST_FOR_CAR_CENTER) {
+            ArrayList<CarInfoBeanForCarCenter> carInfoBeanForCarCenterArrayList = (ArrayList<CarInfoBeanForCarCenter>) mList;
+
+            if (EmptyUtils.isNotEmpty(carInfoBeanForCarCenterArrayList)) {
+                CarInfoBeanForCarCenter carInfoBeanForCarCenter = carInfoBeanForCarCenterArrayList.get(position);
+
+                Glide.with(mContext)
+                        .load(carInfoBeanForCarCenter.getFiles().get(0).getFile_url())
+                        .placeholder(R.drawable.default_bg_ratio_1)
+                        .bitmapTransform(new RoundedCornersTransformation(mContext, SizeUtils.dp2px(8), 0, RoundedCornersTransformation.CornerType.ALL))
+                        .into(holder.iv_item1);
+                holder.tv_item1.setText(carInfoBeanForCarCenter.getCar_name());
+                if (carInfoBeanForCarCenter.getCar_type() == 0) {
+                    holder.tv_item2.setText(mContext.getResources().getString(R.string.car_sales_volume, String.valueOf(carInfoBeanForCarCenter.getSales_volume())));
+                } else {
+                    holder.tv_item2.setText(mContext.getResources().getString(R.string.time_wan_kilo, carInfoBeanForCarCenter.getBoard_time(), String.valueOf(carInfoBeanForCarCenter.getMileage())));
+                }
+                holder.tv_item3.setText(mContext.getResources().getString(R.string._wan, String.valueOf(carInfoBeanForCarCenter.getPrice())));
+            }
         }
     }
 
@@ -480,6 +504,21 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
             } else if (dataType == CHE_HANG_LIST_ITEM_DATA_TYPE) {
                 iv_item1 = (ImageView) itemView.findViewById(R.id.iv_image);
                 tv_item1 = (TextView) itemView.findViewById(R.id.tv_price);
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnItemClickListener != null) {
+                            int position = getLayoutPosition();
+                            mOnItemClickListener.onItemClick(mList.get(position), position);
+                        }
+                    }
+                });
+            } else if (dataType == CAR_LIST_FOR_CAR_CENTER) {
+                iv_item1 = (ImageView) itemView.findViewById(R.id.ivCarIcon);
+                tv_item1 = (TextView) itemView.findViewById(R.id.tvCarName);
+                tv_item2 = (TextView) itemView.findViewById(R.id.tvCarDistance);
+                tv_item3 = (TextView) itemView.findViewById(R.id.tvPrice);
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override

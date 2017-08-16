@@ -2,10 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
+              android:background="@color/background_color"
               android:orientation="vertical">
 
     <View
-        android:layout_width="350dp"
+        android:layout_width="345dp"
         android:layout_height="1dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="15dp"
@@ -42,7 +43,7 @@
     </RelativeLayout>
 
     <View
-        android:layout_width="350dp"
+        android:layout_width="345dp"
         android:layout_height="1dp"
         android:layout_gravity="center_horizontal"
         android:background="@color/divider_color"/>

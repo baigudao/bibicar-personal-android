@@ -1,24 +1,64 @@
 package com.wiserz.pbibi.fragment;
 
+import android.os.Handler;
+import android.os.Message;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.TextView;
 
 import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
-import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.SPUtils;
+import com.blankj.utilcode.util.ToastUtils;
+import com.google.gson.Gson;
 import com.wiserz.pbibi.BaseApplication;
 import com.wiserz.pbibi.R;
+import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
+import com.wiserz.pbibi.bean.CarInfoBeanForCarCenter;
+import com.wiserz.pbibi.util.Constant;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
+import okhttp3.Call;
 
 /**
  * Created by jackie on 2017/8/9 18:00.
  * QQ : 971060378
  * Used as : 汽车中心页面
  */
-public class CarCenterFragment extends BaseFragment {
+public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewAdapter.OnItemClickListener {
 
     public LocationClient mLocationClient;
     public BDAbstractLocationListener myListener = new MyLocationListener();//BDAbstractLocationListener为7.2版本新增的Abstract类型的监听接口，原有BDLocationListener接口暂时同步保留。具体介绍请参考后文中的说明
+
+    private TextView tvLocation;
+
+    private RecyclerView recyclerView;
+    private int mPage;
+
+    private static final int CAR_LIST_FOR_CAR_CENTER = 100;
+
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            if (msg.what == 0x0001) {
+                String city = (String) msg.obj;
+                tvLocation.setText(city);
+            } else if (msg.what == 0x0002) {
+                tvLocation.setText("深圳");
+                ToastUtils.showShort("定位失败，请检查网络是否通畅");
+            }
+        }
+    };
 
     @Override
     protected int getLayoutId() {
@@ -27,12 +67,16 @@ public class CarCenterFragment extends BaseFragment {
 
     @Override
     protected void initView(View view) {
+        tvLocation = (TextView) view.findViewById(R.id.tvLocation);
         mLocationClient = new LocationClient(BaseApplication.getAppContext());//声明LocationClient类
         mLocationClient.registerLocationListener(myListener);//注册监听函数
         initLocation();
         mLocationClient.start();//开始定位
 
         view.findViewById(R.id.ivRight).setOnClickListener(this);
+
+        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        mPage = 0;
     }
 
     @Override
@@ -45,6 +89,103 @@ public class CarCenterFragment extends BaseFragment {
                 break;
             default:
                 break;
+        }
+    }
+
+    @Override
+    protected void initData() {
+        super.initData();
+        getCarListDataFromNet(null, null, null, null, null, null, null, null, null, null, null, null, null);
+    }
+
+    private void getCarListDataFromNet(String keyword, String order_id, String brand_id, String series_id,
+                                       String min_price, String max_price, String min_mileage, String max_mileage,
+                                       String min_board_time, String max_board_time, String has_vr, String old, String source) {
+        OkHttpUtils.post()
+                .url(Constant.getCarListUrl())
+                .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
+                .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
+                .addParams(Constant.KEY_WORD, keyword == null ? "" : keyword)//关键字
+                .addParams(Constant.ORDER_ID, order_id == null ? "" : order_id)//排序id
+                .addParams(Constant.BRAND_ID, brand_id == null ? "" : brand_id)//车品牌id
+                .addParams(Constant.SERIES_ID, series_id == null ? "" : series_id)//车系列id
+                .addParams(Constant.PAGE, String.valueOf(mPage))
+                .addParams(Constant.MIN_PRICE, min_price == null ? "" : min_price)//最低价格
+                .addParams(Constant.MAX_PRICE, max_price == null ? "" : max_price)//最高价格
+                .addParams(Constant.MIN_MILEAGE, min_mileage == null ? "" : min_mileage)//最低里程
+                .addParams(Constant.MAX_MILEAGE, max_mileage == null ? "" : max_mileage)//最高里程
+                .addParams(Constant.MIN_BOARD_TIME, min_board_time == null ? "" : min_board_time)//最短上牌时间
+                .addParams(Constant.MAX_BOARD_TIME, max_board_time == null ? "" : max_board_time)//最长上牌时间
+                .addParams(Constant.HAS_VR, has_vr == null ? "" : has_vr)//是否有VR看车功能  1:是
+                .addParams(Constant.OLD, old == null ? "" : old)//是否新车二手车 1:新车 2 二手车
+                .addParams(Constant.SOURCE, source == null ? "" : source)//车辆来源 1:个人 2 商家
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+                        JSONObject jsonObject = null;
+                        try {
+                            jsonObject = new JSONObject(response);
+                            int status = jsonObject.optInt("status");
+                            JSONObject jsonObjectData = jsonObject.optJSONObject("data");
+                            if (status == 1) {
+                                handlerCarListData(jsonObjectData);
+                            } else {
+                                String code = jsonObject.optString("code");
+                                String msg = jsonObjectData.optString("msg");
+                                ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+    }
+
+    private void handlerCarListData(JSONObject jsonObjectData) {
+        ArrayList<CarInfoBeanForCarCenter> carInfoBeanForCarCenterArrayList = getCarListData(jsonObjectData);
+        BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, carInfoBeanForCarCenterArrayList, CAR_LIST_FOR_CAR_CENTER);
+        recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
+        recyclerView.setAdapter(baseRecyclerViewAdapter);
+        baseRecyclerViewAdapter.setOnItemClickListener(this);
+    }
+
+    private ArrayList<CarInfoBeanForCarCenter> getCarListData(JSONObject jsonObjectData) {
+        ArrayList<CarInfoBeanForCarCenter> list = null;
+        if (jsonObjectData == null) {
+            return new ArrayList<>();
+        } else {
+            list = new ArrayList<>();
+            JSONArray jsonArray = jsonObjectData.optJSONArray("car_list");
+            Gson gson = new Gson();
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObjectCarInfo = jsonArray.optJSONObject(i).optJSONObject("car_info");
+                CarInfoBeanForCarCenter carInfoBeanForCarCenter = gson.fromJson(jsonObjectCarInfo.toString(), CarInfoBeanForCarCenter.class);
+                list.add(carInfoBeanForCarCenter);
+            }
+
+
+            //            int size = jsonArray.length();
+            //            for (int i = 0; i < size; i++) {
+            //                JSONObject jsonObject = jsonArray.optJSONObject(i).optJSONObject("car_info");
+            //                Gson gson = new Gson();
+            //                CarInfoBean carInfoBean = gson.fromJson(jsonObject.toString(), CarInfoBean.class);
+            //                list.add(carInfoBean);
+            //            }
+        }
+        return list;
+    }
+
+    @Override
+    public void onItemClick(Object data, int position) {
+        if (data.getClass().getSimpleName().equals("CarInfoBeanForCarCenter")) {
+            CarInfoBeanForCarCenter carInfoBeanForCarCenter = (CarInfoBeanForCarCenter) data;
+            ToastUtils.showShort(carInfoBeanForCarCenter.getCar_name());
         }
     }
 
@@ -127,34 +268,42 @@ public class CarCenterFragment extends BaseFragment {
                 location.getSatelliteNumber();    //获取当前卫星数
                 location.getAltitude();    //获取海拔高度信息，单位米
                 location.getDirection();    //获取方向信息，单位度
-                location.getCity();
-                LogUtils.e(location.getCity());
 
+                Message msg = Message.obtain();
+                msg.what = 0x0001;
+                msg.obj = location.getCity();
+                handler.sendMessage(msg);
             } else if (location.getLocType() == BDLocation.TypeNetWorkLocation) {
 
                 //当前为网络定位结果，可获取以下信息
                 location.getOperators();    //获取运营商信息
-                LogUtils.e(location.getCity() + "TypeNetWorkLocation");
 
+                Message msg = Message.obtain();
+                msg.what = 0x0001;
+                msg.obj = location.getAddress().city;
+                handler.sendMessage(msg);
             } else if (location.getLocType() == BDLocation.TypeOffLineLocation) {
 
                 //当前为网络定位结果
-                LogUtils.e(location.getCity() + "TypeOffLineLocation");
 
+                Message msg = Message.obtain();
+                msg.what = 0x0001;
+                msg.obj = location.getAddress().city;
+                handler.sendMessage(msg);
             } else if (location.getLocType() == BDLocation.TypeServerError) {
 
                 //当前网络定位失败
                 //可将定位唯一ID、IMEI、定位失败时间反馈至loc-bugs@baidu.com
-
+                handler.sendEmptyMessage(0x0002);
             } else if (location.getLocType() == BDLocation.TypeNetWorkException) {
 
                 //当前网络不通
-
+                handler.sendEmptyMessage(0x0002);
             } else if (location.getLocType() == BDLocation.TypeCriteriaException) {
 
                 //当前缺少定位依据，可能是用户没有授权，建议弹出提示框让用户开启权限
                 //可进一步参考onLocDiagnosticMessage中的错误返回码
-
+                handler.sendEmptyMessage(0x0002);
             }
         }
 

@@ -18,6 +18,10 @@ android {
         }
     }
 
+    lintOptions {
+        disable 'MissingTranslation'
+    }
+
     sourceSets {
         main {
             jniLibs.srcDirs = ['libs']
@@ -48,6 +52,7 @@ dependencies {
     compile 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:1.3.4'
     //支付宝支付的库文件
     compile files('libs/alipaySdk-20170725.jar')
+    //分享
     compile files('libs/MobCommons-2017.0801.1522.jar')
     compile files('libs/MobTools-2017.0801.1522.jar')
     compile files('libs/ShareSDK-Core-3.0.1.jar')
@@ -55,5 +60,9 @@ dependencies {
     compile files('libs/ShareSDK-Wechat-3.0.1.jar')
     compile files('libs/ShareSDK-Wechat-Core-3.0.1.jar')
     compile files('libs/ShareSDK-Wechat-Moments-3.0.1.jar')
+    compile files('libs/ShareSDK-Wechat-Favorite-3.0.1.jar')
+    //百度定位
     compile files('libs/BaiduLBS_Android.jar')
+    //七牛云存储
+    compile 'com.qiniu:qiniu-android-sdk:7.3.9'
 }

@@ -53,8 +53,8 @@ public class CreateCarRentOrderFragment extends BaseFragment {
                     // 判断resultStatus 为9000则代表支付成功
                     if (TextUtils.equals(resultStatus, "9000")) {
                         // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
-                        ToastUtils.showShort("支付成功");
                         goBack();
+                        ToastUtils.showShort("支付成功");
                     } else {
                         // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
                         ToastUtils.showShort("支付失败");
@@ -79,7 +79,7 @@ public class CreateCarRentOrderFragment extends BaseFragment {
 
         view.findViewById(R.id.btn_pay).setOnClickListener(this);
 
-        registerWXPay();
+        regToWx();
     }
 
     @Override
@@ -151,7 +151,7 @@ public class CreateCarRentOrderFragment extends BaseFragment {
                 .url(Constant.getCreateCarRentPayUrl())
                 .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
                 .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
-                .addParams(Constant.PAY_TYPE, "1")
+                .addParams(Constant.PAY_TYPE, "2")
                 .addParams(Constant.ORDER_SN, order_sn)
                 .build()
                 .execute(new StringCallback() {
@@ -228,7 +228,7 @@ public class CreateCarRentOrderFragment extends BaseFragment {
     /**
      * 注册微信支付
      */
-    private void registerWXPay() {
+    private void regToWx() {
         iwxapi = WXAPIFactory.createWXAPI(mContext, Constant.APP_ID, false);//false：表示checkSignature
         iwxapi.registerApp(Constant.APP_ID);
     }

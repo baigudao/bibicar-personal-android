@@ -100,16 +100,16 @@
         "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\bundles\\debug\\res\\drawable\\rc_read_receipt_request_button.xml"
     },
     {
-        "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\rc_bg_sidebar.xml",
-        "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\bundles\\debug\\res\\drawable\\rc_bg_sidebar.xml"
+        "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\rc_cs_leave_message_btn.xml",
+        "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\bundles\\debug\\res\\drawable\\rc_cs_leave_message_btn.xml"
     },
     {
         "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\rc_unread_msg_bg_style.xml",
         "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\bundles\\debug\\res\\drawable\\rc_unread_msg_bg_style.xml"
     },
     {
-        "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\rc_cs_leave_message_btn.xml",
-        "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\bundles\\debug\\res\\drawable\\rc_cs_leave_message_btn.xml"
+        "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\rc_bg_sidebar.xml",
+        "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\bundles\\debug\\res\\drawable\\rc_bg_sidebar.xml"
     },
     {
         "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\rc_bg_menu.xml",

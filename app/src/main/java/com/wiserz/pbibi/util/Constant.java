@@ -47,6 +47,19 @@ public class Constant {
     public static final String RENTAL_TIME_END = "rental_time_end";
     public static final String PAY_TYPE = "pay_type";
     public static final String ORDER_SN = "order_sn";
+    public static final String KEY_WORD = "keyword";
+    public static final String ORDER_ID = "order_id";
+    public static final String BRAND_ID = "brand_id";
+    public static final String SERIES_ID = "series_id";
+    public static final String MIN_PRICE = "min_price";
+    public static final String MAX_PRICE = "max_price";
+    public static final String MIN_MILEAGE = "min_mileage";
+    public static final String MAX_MILEAGE = "max_mileage";
+    public static final String MIN_BOARD_TIME = "min_board_time";
+    public static final String MAX_BOARD_TIME = "max_board_time";
+    public static final String HAS_VR = "has_vr";
+    public static final String OLD = "old";
+    public static final String SOURCE = "source";
 
     //URL常量
     //    private final static String hostUrl = "https://api.bibicar.cn/";//正式环境
@@ -63,6 +76,10 @@ public class Constant {
     private final static String carRentListUrl = hostUrl + "v3/rentalcar/list";//可租车辆列表
     private final static String createCarRentOrderUrl = hostUrl + "v3/rentalcar/createrentalorder";//创建租车订单
     private final static String createCarRentPayUrl = hostUrl + "v3/rentalcar/rentalorderpay";//创建租车支付
+
+    private final static String uploadTokenUrl = hostUrl + "app/uploadtoken";//上传文件的Token
+
+    private final static String carListUrl = hostUrl + "v3/car/list";//车辆列表
 
     public static String getUserLoginUrl() {
         return userLoginUrl;
@@ -82,5 +99,13 @@ public class Constant {
 
     public static String getCreateCarRentPayUrl() {
         return createCarRentPayUrl;
+    }
+
+    public static String getUploadTokenUrl() {
+        return uploadTokenUrl;
+    }
+
+    public static String getCarListUrl() {
+        return carListUrl;
     }
 }

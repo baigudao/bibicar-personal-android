@@ -24,13 +24,16 @@
     <string name="rb_hall">大厅</string>
     <string name="rb_follow">关注</string>
 
-    <string name="errcode_success">发送成功</string>
-    <string name="errcode_cancel">发送取消</string>
-    <string name="errcode_deny">发送被拒绝</string>
+    <string name="errcode_success">支付成功</string>
+    <string name="errcode_cancel">取消支付</string>
+    <string name="errcode_deny">支付被拒绝</string>
     <string name="errcode_unsupported">不支持错误</string>
-    <string name="errcode_unknown">发送返回</string>
+    <string name="errcode_unknown">未知错误</string>
     <string name="share_to">分享到</string>
     <string name="cancel">取消</string>
     <string name="share">分享</string>
+    <string name="car_sales_volume">销量：%1$s</string>
+    <string name="time_wan_kilo">%1$s/%2$s万公里</string>
+    <string name="_wan">%1$s万</string>
 
 </resources>
