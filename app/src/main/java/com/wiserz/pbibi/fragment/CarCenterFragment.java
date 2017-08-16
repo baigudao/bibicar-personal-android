@@ -85,7 +85,9 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
             case R.id.ivRight:
                 //                gotoPager(LoanPlanFragment.class,null);//贷款方案
 
-                gotoPager(ConcreteParameterFragment.class, null);//具体参数
+//                gotoPager(ConcreteParameterFragment.class, null);//具体参数
+
+                gotoPager(TestFragment.class, null);
                 break;
             default:
                 break;

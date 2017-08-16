@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/pure_white_color"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv1"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/setting_background_selector"
+        android:clickable="true"
+        android:gravity="center_vertical"
+        android:paddingLeft="30dp"
+        android:text="默认排序"
+        android:textColor="@drawable/text_color_checked"
+        android:textSize="14sp" />
+
+    <View
+        android:layout_width="345dp"
+        android:layout_height="1dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/divider_color" />
+
+    <TextView
+        android:id="@+id/tv2"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/setting_background_selector"
+        android:clickable="true"
+        android:gravity="center_vertical"
+        android:paddingLeft="30dp"
+        android:text="价格最低"
+        android:textColor="@drawable/text_color_checked"
+        android:textSize="14sp" />
+
+    <View
+        android:layout_width="345dp"
+        android:layout_height="1dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/divider_color" />
+
+    <TextView
+        android:id="@+id/tv3"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/setting_background_selector"
+        android:clickable="true"
+        android:gravity="center_vertical"
+        android:paddingLeft="30dp"
+        android:text="价格最高"
+        android:textColor="@drawable/text_color_checked"
+        android:textSize="14sp" />
+
+    <View
+        android:layout_width="345dp"
+        android:layout_height="1dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/divider_color" />
+
+    <TextView
+        android:id="@+id/tv4"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/setting_background_selector"
+        android:clickable="true"
+        android:gravity="center_vertical"
+        android:paddingLeft="30dp"
+        android:text="车程最短"
+        android:textColor="@drawable/text_color_checked"
+        android:textSize="14sp" />
+
+    <View
+        android:layout_width="345dp"
+        android:layout_height="1dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/divider_color" />
+
+</LinearLayout>
