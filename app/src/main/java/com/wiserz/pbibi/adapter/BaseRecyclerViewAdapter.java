@@ -13,9 +13,11 @@ import android.widget.TextView;
 
 import com.blankj.utilcode.util.EmptyUtils;
 import com.blankj.utilcode.util.SizeUtils;
+import com.blankj.utilcode.util.TimeUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
 import com.wiserz.pbibi.R;
+import com.wiserz.pbibi.bean.ArticleBean;
 import com.wiserz.pbibi.bean.CarInfoBean;
 import com.wiserz.pbibi.bean.CarInfoBeanForCarCenter;
 import com.wiserz.pbibi.bean.CarRentInfoBean;
@@ -23,7 +25,9 @@ import com.wiserz.pbibi.bean.CheHangBean;
 import com.wiserz.pbibi.bean.FuLiBean;
 import com.wiserz.pbibi.bean.VideoBean;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
@@ -218,27 +222,27 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                 holder.tv_item3.setText(fuLiBean.getDesc());
             }
         } else if (dataType == ARTICLE_LIST_DATA_TYPE) {
-            ArrayList<FuLiBean> fuLiBeanArrayList = (ArrayList<FuLiBean>) mList;
+            ArrayList<ArticleBean> articleBeanArrayList = (ArrayList<ArticleBean>) mList;
 
-            if (EmptyUtils.isNotEmpty(fuLiBeanArrayList)) {
-                FuLiBean fuLiBean = fuLiBeanArrayList.get(position);
+            if (EmptyUtils.isNotEmpty(articleBeanArrayList)) {
+                ArticleBean articleBean = articleBeanArrayList.get(position);
 
                 Glide.with(mContext)
-                        .load(fuLiBean.getUrl())
+                        .load(articleBean.getImage_url().get(0))
                         .placeholder(R.drawable.default_bg_ratio_1)
                         .bitmapTransform(new RoundedCornersTransformation(mContext, SizeUtils.dp2px(8), 0, RoundedCornersTransformation.CornerType.ALL))
                         .into(holder.iv_item1);
-                holder.tv_item1.setText(fuLiBean.getWho());
-                holder.tv_item2.setText(fuLiBean.getDesc());
+                holder.tv_item1.setText(articleBean.getPost_content());
+                holder.tv_item2.setText(articleBean.getPost_user_info().getProfile().getNickname());
             }
         } else if (dataType == VIDEO_LIST_DATA_TYPE) {
-            ArrayList<FuLiBean> fuLiBeanArrayList = (ArrayList<FuLiBean>) mList;
+            ArrayList<VideoBean> videoBeanArrayList = (ArrayList<VideoBean>) mList;
 
-            if (EmptyUtils.isNotEmpty(fuLiBeanArrayList)) {
-                FuLiBean fuLiBean = fuLiBeanArrayList.get(position);
+            if (EmptyUtils.isNotEmpty(videoBeanArrayList)) {
+                VideoBean videoBean = videoBeanArrayList.get(position);
 
                 Glide.with(mContext)
-                        .load(fuLiBean.getUrl())
+                        .load(videoBean.getImage_url())
                         .placeholder(R.drawable.default_bg_ratio_1)
                         .bitmapTransform(new RoundedCornersTransformation(mContext, SizeUtils.dp2px(8), 0, RoundedCornersTransformation.CornerType.ALL))
                         .into(holder.iv_item1);
@@ -248,9 +252,9 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                         ToastUtils.showShort("开始播放");
                     }
                 });
-                holder.tv_item1.setText(fuLiBean.getWho());
-                holder.tv_item2.setText(fuLiBean.getDesc());
-                holder.tv_item3.setText(fuLiBean.getDesc());
+                holder.tv_item1.setText(videoBean.getPost_content());
+                holder.tv_item2.setText(videoBean.getPost_user_info().getProfile().getNickname());
+                holder.tv_item3.setText(TimeUtils.date2String(new Date(Long.valueOf(videoBean.getCreated()) * 1000), new SimpleDateFormat("yyyy-MM-dd")) + "更新");//time为秒，换算成毫秒
             }
         } else if (dataType == CHE_HANG_LIST_DATA_TYPE) {
             ArrayList<FuLiBean> fuLiBeanArrayList = (ArrayList<FuLiBean>) mList;

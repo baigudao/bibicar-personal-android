@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/background_color"
+              android:orientation="vertical">
+
+    <include layout="@layout/title_bar"/>
+
+    <ImageView
+        android:id="@+id/iv_article_image"
+        android:layout_width="match_parent"
+        android:layout_height="230dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/default_bg_ratio_1"/>
+
+    <TextView
+        android:id="@+id/tv_big_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="30dp"
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:text="蝙蝠侠电影里到底有没有撞坏那辆兰博基尼？快来看看吧"
+        android:textColor="@color/main_text_color"
+        android:textSize="20sp"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp">
+
+        <com.wiserz.pbibi.view.CircleImageView
+            android:id="@+id/iv_circle_image"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="15dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/user_photo"/>
+
+        <TextView
+            android:id="@+id/tv_author_and_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:layout_toRightOf="@id/iv_circle_image"
+            android:text="鱼唇的蓝星人 · 2016/12/06"
+            android:textColor="@color/second_text_color"
+            android:textSize="15sp"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical">
+
+
+    </LinearLayout>
+
+</LinearLayout>

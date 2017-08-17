@@ -60,6 +60,7 @@ public class Constant {
     public static final String HAS_VR = "has_vr";
     public static final String OLD = "old";
     public static final String SOURCE = "source";
+    public static final String FEED_ID = "feed_id";
 
     //URL常量
     //    private final static String hostUrl = "https://api.bibicar.cn/";//正式环境
@@ -80,6 +81,12 @@ public class Constant {
     private final static String uploadTokenUrl = hostUrl + "app/uploadtoken";//上传文件的Token
 
     private final static String carListUrl = hostUrl + "v3/car/list";//车辆列表
+    private final static String carDetailUrl = hostUrl + "v3/car/index";//车辆详情  v3接口
+
+    private final static String videoListUrl = hostUrl + "v3/Video/list";//视频列表
+
+    private final static String articleListUrl = hostUrl + "v3/article/list";//文章列表
+    private final static String articleIndexUrl = hostUrl + "v3/article/index";
 
     public static String getUserLoginUrl() {
         return userLoginUrl;
@@ -107,5 +114,21 @@ public class Constant {
 
     public static String getCarListUrl() {
         return carListUrl;
+    }
+
+    public static String getCarDetailUrl() {
+        return carDetailUrl;
+    }
+
+    public static String getVideoListUrl() {
+        return videoListUrl;
+    }
+
+    public static String getArticleListUrl() {
+        return articleListUrl;
+    }
+
+    public static String getArticleIndexUrl() {
+        return articleIndexUrl;
     }
 }

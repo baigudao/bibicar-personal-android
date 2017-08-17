@@ -5,16 +5,18 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
-import com.blankj.utilcode.util.EmptyUtils;
+import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
-import com.wiserz.pbibi.bean.FuLiBean;
+import com.wiserz.pbibi.bean.VideoBean;
+import com.wiserz.pbibi.util.Constant;
+import com.wiserz.pbibi.util.DataManager;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -32,6 +34,8 @@ public class VideoListFragment extends BaseFragment implements BaseRecyclerViewA
     private RecyclerView recyclerView;
     private static final int VIDEO_LIST_DATA_TYPE = 99;
 
+    private int mPage;
+
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_video_list;
@@ -43,6 +47,8 @@ public class VideoListFragment extends BaseFragment implements BaseRecyclerViewA
         ((TextView) view.findViewById(R.id.tv_title)).setText("视频列表");
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+
+        mPage = 0;
     }
 
     @Override
@@ -59,8 +65,11 @@ public class VideoListFragment extends BaseFragment implements BaseRecyclerViewA
     @Override
     protected void initData() {
         super.initData();
-        OkHttpUtils.get()
-                .url("http://gank.io/api/data/福利/10/1")
+        OkHttpUtils.post()
+                .url(Constant.getVideoListUrl())
+                .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
+                .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
+                .addParams(Constant.PAGE, String.valueOf(mPage))
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -73,8 +82,14 @@ public class VideoListFragment extends BaseFragment implements BaseRecyclerViewA
                         JSONObject jsonObject = null;
                         try {
                             jsonObject = new JSONObject(response);
-                            if (EmptyUtils.isNotEmpty(jsonObject)) {
-                                handlerVideoListData(jsonObject);
+                            int status = jsonObject.optInt("status");
+                            JSONObject jsonObjectData = jsonObject.optJSONObject("data");
+                            if (status == 1) {
+                                handlerVideoListData(jsonObjectData);
+                            } else {
+                                String code = jsonObject.optString("code");
+                                String msg = jsonObjectData.optString("msg");
+                                ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -84,10 +99,16 @@ public class VideoListFragment extends BaseFragment implements BaseRecyclerViewA
     }
 
     private void handlerVideoListData(JSONObject jsonObject) {
+        ArrayList<VideoBean> videoBeanArrayList = new ArrayList<>();
+        JSONArray jsonArray = jsonObject.optJSONArray("list");
         Gson gson = new Gson();
-        ArrayList<FuLiBean> fuLiBeanArrayList = gson.fromJson(jsonObject.optJSONArray("results").toString(), new TypeToken<ArrayList<FuLiBean>>() {
-        }.getType());
-        BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, fuLiBeanArrayList, VIDEO_LIST_DATA_TYPE);
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject jsonObjectForVideoList = jsonArray.optJSONObject(i);
+            VideoBean videoBean = gson.fromJson(jsonObjectForVideoList.toString(), VideoBean.class);
+            videoBeanArrayList.add(videoBean);
+        }
+
+        BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, videoBeanArrayList, VIDEO_LIST_DATA_TYPE);
         recyclerView.setAdapter(baseRecyclerViewAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
         baseRecyclerViewAdapter.setOnItemClickListener(this);
@@ -95,9 +116,10 @@ public class VideoListFragment extends BaseFragment implements BaseRecyclerViewA
 
     @Override
     public void onItemClick(Object data, int position) {
-        if (data.getClass().getSimpleName().equals("FuLiBean")) {
-            FuLiBean fuLiBean = (FuLiBean) data;
-            ToastUtils.showShort(fuLiBean.getWho());
+        if (data.getClass().getSimpleName().equals("VideoBean")) {
+            VideoBean videoBean = (VideoBean) data;
+            DataManager.getInstance().setData1(videoBean);
+            gotoPager(VideoDetailFragment.class,null);
         }
     }
 }

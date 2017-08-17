@@ -1,5 +1,6 @@
 package com.wiserz.pbibi.fragment;
 
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,6 +12,7 @@ import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
+import com.blankj.utilcode.util.EmptyUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.google.gson.Gson;
@@ -85,7 +87,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
             case R.id.ivRight:
                 //                gotoPager(LoanPlanFragment.class,null);//贷款方案
 
-//                gotoPager(ConcreteParameterFragment.class, null);//具体参数
+                //                gotoPager(ConcreteParameterFragment.class, null);//具体参数
 
                 gotoPager(TestFragment.class, null);
                 break;
@@ -170,15 +172,6 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                 CarInfoBeanForCarCenter carInfoBeanForCarCenter = gson.fromJson(jsonObjectCarInfo.toString(), CarInfoBeanForCarCenter.class);
                 list.add(carInfoBeanForCarCenter);
             }
-
-
-            //            int size = jsonArray.length();
-            //            for (int i = 0; i < size; i++) {
-            //                JSONObject jsonObject = jsonArray.optJSONObject(i).optJSONObject("car_info");
-            //                Gson gson = new Gson();
-            //                CarInfoBean carInfoBean = gson.fromJson(jsonObject.toString(), CarInfoBean.class);
-            //                list.add(carInfoBean);
-            //            }
         }
         return list;
     }
@@ -187,7 +180,11 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
     public void onItemClick(Object data, int position) {
         if (data.getClass().getSimpleName().equals("CarInfoBeanForCarCenter")) {
             CarInfoBeanForCarCenter carInfoBeanForCarCenter = (CarInfoBeanForCarCenter) data;
-            ToastUtils.showShort(carInfoBeanForCarCenter.getCar_name());
+            if (EmptyUtils.isNotEmpty(carInfoBeanForCarCenter)) {
+                Bundle bundle = new Bundle();
+                bundle.putString(Constant.CAR_ID, carInfoBeanForCarCenter.getCar_id());
+                gotoPager(CarDetailFragment.class, bundle);
+            }
         }
     }
 

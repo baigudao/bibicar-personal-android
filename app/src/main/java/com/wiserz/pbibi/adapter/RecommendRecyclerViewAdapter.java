@@ -1,6 +1,7 @@
 package com.wiserz.pbibi.adapter;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -34,9 +35,11 @@ import com.wiserz.pbibi.bean.TopLineBean;
 import com.wiserz.pbibi.bean.VideoBean;
 import com.wiserz.pbibi.fragment.ArticleListFragment;
 import com.wiserz.pbibi.fragment.CarCheckServiceFragment;
+import com.wiserz.pbibi.fragment.CarDetailFragment;
 import com.wiserz.pbibi.fragment.CarRentFragment;
 import com.wiserz.pbibi.fragment.CheHangListFragment;
 import com.wiserz.pbibi.fragment.VideoListFragment;
+import com.wiserz.pbibi.util.Constant;
 import com.wiserz.pbibi.view.BaseAutoScrollView;
 import com.wiserz.pbibi.view.VerticalLampView;
 
@@ -317,7 +320,9 @@ public class RecommendRecyclerViewAdapter extends RecyclerView.Adapter implement
     public void onItemClick(Object data, int position) {
         if (data.getClass().getSimpleName().equals("CarInfoBean")) {
             CarInfoBean carInfoBean = (CarInfoBean) data;
-            ToastUtils.showShort("点击了第" + position + "个数据。car_name= " + carInfoBean.getCar_name());
+            Bundle bundle = new Bundle();
+            bundle.putString(Constant.CAR_ID, carInfoBean.getCar_id());
+            ((BaseActivity) mContext).gotoPager(CarDetailFragment.class, bundle);
         } else if (data.getClass().getSimpleName().equals("VideoBean")) {
             VideoBean videoBean = (VideoBean) data;
             ToastUtils.showShort(videoBean.getPost_content());

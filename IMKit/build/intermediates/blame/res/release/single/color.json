@@ -2,9 +2,5 @@
     {
         "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\release\\color\\rc_btn_file_list_send.xml",
         "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\src\\main\\res\\color\\rc_btn_file_list_send.xml"
-    },
-    {
-        "merged": "E:\\android-as-ws\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\release\\color\\rc_btn_file_list_send.xml",
-        "source": "E:\\android-as-ws\\bibicar-personal-android\\IMKit\\src\\main\\res\\color\\rc_btn_file_list_send.xml"
     }
 ]
