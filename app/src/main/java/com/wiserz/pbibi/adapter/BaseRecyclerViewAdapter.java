@@ -23,6 +23,7 @@ import com.wiserz.pbibi.bean.CarInfoBeanForCarCenter;
 import com.wiserz.pbibi.bean.CarRentInfoBean;
 import com.wiserz.pbibi.bean.CheHangBean;
 import com.wiserz.pbibi.bean.FuLiBean;
+import com.wiserz.pbibi.bean.UserBean;
 import com.wiserz.pbibi.bean.VideoBean;
 
 import java.text.SimpleDateFormat;
@@ -63,6 +64,8 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
 
     private static final int CAR_LIST_FOR_CAR_CENTER = 100;//汽车中心的汽车列表
 
+    private static final int USER_SEARCH_DATA_TYPE = 12;
+
     public BaseRecyclerViewAdapter(Context context, List<T> tList, int dataType) {
         this.mContext = context;
         this.mList = tList;
@@ -96,6 +99,8 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
             viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_che_hang_list_recycler_view, null));
         } else if (dataType == CAR_LIST_FOR_CAR_CENTER) {
             viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_car_center_car_list, null));
+        } else if (dataType == USER_SEARCH_DATA_TYPE) {
+            viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_user, null));
         } else {
             viewHolder = null;
         }
@@ -336,6 +341,20 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                 }
                 holder.tv_item3.setText(mContext.getResources().getString(R.string._wan, String.valueOf(carInfoBeanForCarCenter.getPrice())));
             }
+        } else if (dataType == USER_SEARCH_DATA_TYPE) {
+            ArrayList<UserBean> userBeanArrayList = (ArrayList<UserBean>) mList;
+
+            if (EmptyUtils.isNotEmpty(userBeanArrayList)) {
+                UserBean userBean = userBeanArrayList.get(position);
+
+                Glide.with(mContext)
+                        .load(userBean.getAvatar())
+                        .placeholder(R.drawable.user_photo)
+                        .error(R.drawable.user_photo)
+                        .into(holder.iv_item1);
+                holder.tv_item1.setText(userBean.getNickname());
+                holder.tv_item2.setText("粉丝 " + userBean.getFans_num() + " | 关注" + userBean.getFriend_num());
+            }
         }
     }
 
@@ -523,6 +542,20 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                 tv_item1 = (TextView) itemView.findViewById(R.id.tvCarName);
                 tv_item2 = (TextView) itemView.findViewById(R.id.tvCarDistance);
                 tv_item3 = (TextView) itemView.findViewById(R.id.tvPrice);
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnItemClickListener != null) {
+                            int position = getLayoutPosition();
+                            mOnItemClickListener.onItemClick(mList.get(position), position);
+                        }
+                    }
+                });
+            } else if (dataType == USER_SEARCH_DATA_TYPE) {
+                iv_item1 = (ImageView) itemView.findViewById(R.id.iv_circle_image);
+                tv_item1 = (TextView) itemView.findViewById(R.id.tv_name);
+                tv_item2 = (TextView) itemView.findViewById(R.id.tv_fan_and_follow);
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override

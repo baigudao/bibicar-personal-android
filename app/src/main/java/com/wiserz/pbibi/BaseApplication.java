@@ -25,7 +25,7 @@ import okhttp3.OkHttpClient;
 public class BaseApplication extends Application {
 
     private static BaseFragment curFragment;
-    private static Context appContext ;
+    private static Context appContext;
 
     public static Context getAppContext() {
         return appContext;
@@ -33,6 +33,14 @@ public class BaseApplication extends Application {
 
     public static void setAppContext(Context appContext) {
         BaseApplication.appContext = appContext;
+    }
+
+    public static void setCurFragment(BaseFragment fragment) {
+        curFragment = fragment;
+    }
+
+    public static BaseFragment getCurFragment() {
+        return curFragment;
     }
 
     @Override
@@ -56,7 +64,7 @@ public class BaseApplication extends Application {
         configLogUtils();
 
         //初始社会化组件
-        MobSDK.init(this,"174e89a173460","");
+        MobSDK.init(this, "174e89a173460", "");
     }
 
     private void configLogUtils() {
@@ -88,13 +96,5 @@ public class BaseApplication extends Application {
             }
         }
         return null;
-    }
-
-    public static void setCurFragment(BaseFragment fragment) {
-        curFragment = fragment;
-    }
-
-    public static BaseFragment getCurFragment() {
-        return curFragment;
     }
 }

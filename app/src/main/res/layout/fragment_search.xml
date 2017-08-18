@@ -5,4 +5,45 @@
               android:background="@color/background_color"
               android:orientation="vertical">
 
+    <include layout="@layout/real_search_bar"/>
+
+    <RadioGroup
+        android:id="@+id/rg_main"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/rb_car"
+            style="@style/top_search_tag_style"
+            android:text="车辆"/>
+
+        <RadioButton
+            android:id="@+id/rb_article"
+            style="@style/top_search_tag_style"
+            android:text="文章"/>
+
+        <RadioButton
+            android:id="@+id/rb_user"
+            style="@style/top_search_tag_style"
+            android:text="用户"/>
+
+        <RadioButton
+            android:id="@+id/rb_topic"
+            style="@style/top_search_tag_style"
+            android:text="话题"/>
+
+    </RadioGroup>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider_color"/>
+
+    <!--FrameLayout-->
+    <FrameLayout
+        android:id="@+id/fl_search_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
 </LinearLayout>

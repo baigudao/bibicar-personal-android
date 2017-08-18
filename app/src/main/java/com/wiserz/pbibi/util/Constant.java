@@ -77,6 +77,8 @@ public class Constant {
     private final static String carRentListUrl = hostUrl + "v3/rentalcar/list";//可租车辆列表
     private final static String createCarRentOrderUrl = hostUrl + "v3/rentalcar/createrentalorder";//创建租车订单
     private final static String createCarRentPayUrl = hostUrl + "v3/rentalcar/rentalorderpay";//创建租车支付
+    private static final String rentCarDetailUrl = hostUrl + "v3/rentalcar/index";//租车详情
+    private static final String myCarRentUrl = hostUrl + "v3/rentalcar/rentalorderlist";//我的租车
 
     private final static String uploadTokenUrl = hostUrl + "app/uploadtoken";//上传文件的Token
 
@@ -87,6 +89,11 @@ public class Constant {
 
     private final static String articleListUrl = hostUrl + "v3/article/list";//文章列表
     private final static String articleIndexUrl = hostUrl + "v3/article/index";
+    private final static String articleSearchUrl = hostUrl + "v3/Article/searcharticlelist";//搜索文章
+
+    private final static String userSearchUrl = hostUrl + "v3/user/search";//用户搜索
+
+    private final static String topicSearchUrl = hostUrl + "v3/theme/searchtheme";//话题搜索
 
     public static String getUserLoginUrl() {
         return userLoginUrl;
@@ -130,5 +137,25 @@ public class Constant {
 
     public static String getArticleIndexUrl() {
         return articleIndexUrl;
+    }
+
+    public static String getArticleSearchUrl() {
+        return articleSearchUrl;
+    }
+
+    public static String getUserSearchUrl() {
+        return userSearchUrl;
+    }
+
+    public static String getTopicSearchUrl() {
+        return topicSearchUrl;
+    }
+
+    public static String getRentCarDetailUrl() {
+        return rentCarDetailUrl;
+    }
+
+    public static String getMyCarRentUrl() {
+        return myCarRentUrl;
     }
 }

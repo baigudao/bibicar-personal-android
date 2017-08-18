@@ -37,5 +37,6 @@
     <string name="_wan">%1$s万</string>
     <string name="tv_car_name1">丰田 埃尔法（进口）2015 3.5L 自动尊贵版</string>
     <string name="car_detail_text">这款车大气时尚，开起来很稳重大方，很有商务的严谨，又有运动的动感，适合多种需求，用车人不要在车内吸烟！保持车内整洁…</string>
+    <string name="tv_car_brief">这款车大气时尚，开起来很稳重大方，很有商务的严谨，又有运动的动感，适合多种需求，请用车人不要在车内吸烟！保持车内整洁…</string>
 
 </resources>

@@ -1,9 +1,11 @@
 package com.wiserz.pbibi.fragment;
 
+import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.SPUtils;
@@ -13,7 +15,6 @@ import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
 import com.wiserz.pbibi.bean.CarRentInfoBean;
 import com.wiserz.pbibi.util.Constant;
-import com.wiserz.pbibi.util.DataManager;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -45,6 +46,12 @@ public class CarRentFragment extends BaseFragment implements BaseRecyclerViewAda
     protected void initView(View view) {
         view.findViewById(R.id.iv_back).setOnClickListener(this);
         ((TextView) view.findViewById(R.id.tv_title)).setText("豪车租赁");
+        Button btn_register = (Button) view.findViewById(R.id.btn_register);
+        btn_register.setVisibility(View.VISIBLE);
+        btn_register.setText("我的租车");
+        btn_register.setTextSize(15);
+        btn_register.setOnClickListener(this);
+
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
 
         page = 0;
@@ -55,6 +62,9 @@ public class CarRentFragment extends BaseFragment implements BaseRecyclerViewAda
         switch (v.getId()) {
             case R.id.iv_back:
                 goBack();
+                break;
+            case R.id.btn_register:
+                gotoPager(MyCarRentFragment.class,null);
                 break;
             default:
                 break;
@@ -122,9 +132,9 @@ public class CarRentFragment extends BaseFragment implements BaseRecyclerViewAda
     public void onItemClick(Object data, int position) {
         if (data.getClass().getSimpleName().equals("CarRentInfoBean")) {
             CarRentInfoBean carRentInfoBean = (CarRentInfoBean) data;
-
-            DataManager.getInstance().setData1(carRentInfoBean);
-            gotoPager(CarRentDetailFragment.class, null);//汽车租赁详情
+            Bundle bundle = new Bundle();
+            bundle.putString(Constant.CAR_ID, carRentInfoBean.getCar_id());
+            gotoPager(CarRentDetailFragment.class, bundle);//汽车租赁详情
         }
     }
 }

@@ -16,10 +16,8 @@ import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.alipay.PayResult;
-import com.wiserz.pbibi.bean.CarRentInfoBean;
 import com.wiserz.pbibi.bean.CarRentOrderBean;
 import com.wiserz.pbibi.util.Constant;
-import com.wiserz.pbibi.util.DataManager;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -37,7 +35,7 @@ import okhttp3.Call;
  */
 public class CreateCarRentOrderFragment extends BaseFragment {
 
-    private CarRentInfoBean carRentInfoBean;
+    private String car_id;
     private IWXAPI iwxapi;
 
     private static final int SDK_PAY_FLAG = 1;
@@ -72,8 +70,7 @@ public class CreateCarRentOrderFragment extends BaseFragment {
 
     @Override
     protected void initView(View view) {
-        carRentInfoBean = (CarRentInfoBean) DataManager.getInstance().getData1();
-        DataManager.getInstance().setData1(null);
+        car_id = getArguments().getString(Constant.CAR_ID);
         view.findViewById(R.id.iv_back).setOnClickListener(this);
         ((TextView) view.findViewById(R.id.tv_title)).setText("创建订单");
 
@@ -104,7 +101,7 @@ public class CreateCarRentOrderFragment extends BaseFragment {
                 .url(Constant.getCreateCarRentOrderUrl())
                 .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
                 .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
-                .addParams(Constant.CAR_ID, carRentInfoBean.getCar_id())
+                .addParams(Constant.CAR_ID, car_id)
                 .addParams(Constant.RENTAL_TIME_START, "450")
                 .addParams(Constant.RENTAL_TIME_END, "9854")
                 .addParams(Constant.MOBILE, "13325458956")

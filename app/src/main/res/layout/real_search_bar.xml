@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/background_color">
+
+    <ImageView
+        android:id="@+id/iv_back"
+        android:layout_width="22dp"
+        android:layout_height="18dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="14dp"
+        android:clickable="true"
+        android:scaleType="fitXY"
+        android:src="@drawable/back_image_selector"/>
+
+    <EditText
+        android:id="@+id/et_search"
+        android:layout_width="250dp"
+        android:layout_height="30dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="15dp"
+        android:layout_toRightOf="@id/iv_back"
+        android:background="@drawable/search_bar_background"
+        android:clickable="true"
+        android:drawableLeft="@drawable/v1_search3x"
+        android:hint="  搜索车辆、文章、视频、用户"
+        android:paddingLeft="12dp"
+        android:textColor="@color/main_text_color"
+        android:textColorHint="@color/second_text_color"
+        android:textSize="14sp"/>
+
+    <Button
+        android:id="@+id/btn_search"
+        android:layout_width="40dp"
+        android:layout_height="25dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/btn_background_selector"
+        android:text="搜索"
+        android:textColor="@drawable/btn_text_background_selector"
+        android:textSize="12sp"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/divider_color"/>
+
+</RelativeLayout>
