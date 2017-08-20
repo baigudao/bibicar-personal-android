@@ -61,6 +61,7 @@ public class Constant {
     public static final String OLD = "old";
     public static final String SOURCE = "source";
     public static final String FEED_ID = "feed_id";
+    public static final String IS_AUTH = "is_auth";//是否身份验证 1:是 2:否
 
     //URL常量
     //    private final static String hostUrl = "https://api.bibicar.cn/";//正式环境
@@ -94,6 +95,8 @@ public class Constant {
     private final static String userSearchUrl = hostUrl + "v3/user/search";//用户搜索
 
     private final static String topicSearchUrl = hostUrl + "v3/theme/searchtheme";//话题搜索
+
+    private static final String cheHangListUrl = hostUrl +"v3/publishcar/getcompanylist";//车行列表
 
     public static String getUserLoginUrl() {
         return userLoginUrl;
@@ -157,5 +160,9 @@ public class Constant {
 
     public static String getMyCarRentUrl() {
         return myCarRentUrl;
+    }
+
+    public static String getCheHangListUrl() {
+        return cheHangListUrl;
     }
 }

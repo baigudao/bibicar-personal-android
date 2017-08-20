@@ -22,6 +22,7 @@ import com.wiserz.pbibi.bean.CarInfoBean;
 import com.wiserz.pbibi.bean.CarInfoBeanForCarCenter;
 import com.wiserz.pbibi.bean.CarRentInfoBean;
 import com.wiserz.pbibi.bean.CheHangBean;
+import com.wiserz.pbibi.bean.CheHangUserListBean;
 import com.wiserz.pbibi.bean.FuLiBean;
 import com.wiserz.pbibi.bean.UserBean;
 import com.wiserz.pbibi.bean.VideoBean;
@@ -262,39 +263,42 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                 holder.tv_item3.setText(TimeUtils.date2String(new Date(Long.valueOf(videoBean.getCreated()) * 1000), new SimpleDateFormat("yyyy-MM-dd")) + "更新");//time为秒，换算成毫秒
             }
         } else if (dataType == CHE_HANG_LIST_DATA_TYPE) {
-            ArrayList<FuLiBean> fuLiBeanArrayList = (ArrayList<FuLiBean>) mList;
+            ArrayList<CheHangUserListBean> cheHangUserListBeanArrayList = (ArrayList<CheHangUserListBean>) mList;
 
-            if (EmptyUtils.isNotEmpty(fuLiBeanArrayList)) {
-                final FuLiBean fuLiBean = fuLiBeanArrayList.get(position);
+            if (EmptyUtils.isNotEmpty(cheHangUserListBeanArrayList)) {
+                final CheHangUserListBean cheHangUserListBean = cheHangUserListBeanArrayList.get(position);
 
                 Glide.with(mContext)
-                        .load(fuLiBean.getUrl())
+                        .load(cheHangUserListBean.getAvatar())
                         .placeholder(R.drawable.user_photo)
                         .bitmapTransform(new RoundedCornersTransformation(mContext, SizeUtils.dp2px(8), 0, RoundedCornersTransformation.CornerType.ALL))
                         .into(holder.iv_item1);
-                holder.tv_item1.setText(fuLiBean.getWho());
-                holder.tv_item2.setText(fuLiBean.getDesc());
-                holder.tv_item3.setText(fuLiBean.getDesc());
+                holder.tv_item1.setText(cheHangUserListBean.getNickname());
+                holder.tv_item2.setText("在售" + cheHangUserListBean.getSaling_num() + "辆");
+                holder.tv_item3.setText("已售" + cheHangUserListBean.getSold_num() + "辆");
 
                 holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ToastUtils.showShort(fuLiBean.getWho());
+                        ToastUtils.showShort(cheHangUserListBean.getNickname());
                     }
                 });
 
-                BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, fuLiBeanArrayList, CHE_HANG_LIST_ITEM_DATA_TYPE);
-                holder.recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
-                holder.recyclerView.setAdapter(baseRecyclerViewAdapter);
-                baseRecyclerViewAdapter.setOnItemClickListener(new OnItemClickListener() {
-                    @Override
-                    public void onItemClick(Object data, int position) {
-                        if (data.getClass().getSimpleName().equals("FuLiBean")) {
-                            FuLiBean fuLiBean1 = (FuLiBean) data;
-                            ToastUtils.showShort(fuLiBean1.getWho());
+                ArrayList<CheHangUserListBean.CarListBeanX.CarListBean> carListBeanArrayList = (ArrayList<CheHangUserListBean.CarListBeanX.CarListBean>) cheHangUserListBean.getCar_list().getCar_list();
+                if (EmptyUtils.isNotEmpty(carListBeanArrayList)) {
+                    BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, carListBeanArrayList, CHE_HANG_LIST_ITEM_DATA_TYPE);
+                    holder.recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
+                    holder.recyclerView.setAdapter(baseRecyclerViewAdapter);
+                    baseRecyclerViewAdapter.setOnItemClickListener(new OnItemClickListener() {
+                        @Override
+                        public void onItemClick(Object data, int position) {
+                            if (data.getClass().getSimpleName().equals("CarListBean")) {
+                                CheHangUserListBean.CarListBeanX.CarListBean carListBean = (CheHangUserListBean.CarListBeanX.CarListBean) data;
+                                ToastUtils.showShort(carListBean.getCar_info().getCar_name());
+                            }
                         }
-                    }
-                });
+                    });
+                }
 
                 holder.linearLayout1.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -310,17 +314,19 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                 });
             }
         } else if (dataType == CHE_HANG_LIST_ITEM_DATA_TYPE) {
-            ArrayList<FuLiBean> fuLiBeanArrayList = (ArrayList<FuLiBean>) mList;
+            ArrayList<CheHangUserListBean.CarListBeanX.CarListBean> carListBeanArrayList = (ArrayList<CheHangUserListBean.CarListBeanX.CarListBean>) mList;
 
-            if (EmptyUtils.isNotEmpty(fuLiBeanArrayList)) {
-                FuLiBean fuLiBean = fuLiBeanArrayList.get(position);
+            if (EmptyUtils.isNotEmpty(carListBeanArrayList)) {
+                CheHangUserListBean.CarListBeanX.CarListBean carListBean = carListBeanArrayList.get(position);
 
-                Glide.with(mContext)
-                        .load(fuLiBean.getUrl())
-                        .placeholder(R.drawable.default_bg_ratio_1)
-                        .bitmapTransform(new RoundedCornersTransformation(mContext, SizeUtils.dp2px(8), 0, RoundedCornersTransformation.CornerType.ALL))
-                        .into(holder.iv_item1);
-                holder.tv_item1.setText(fuLiBean.getDesc());
+                if (EmptyUtils.isNotEmpty(carListBean.getCar_info().getFiles())) {
+                    Glide.with(mContext)
+                            .load(carListBean.getCar_info().getFiles().get(0).getFile_url())
+                            .placeholder(R.drawable.default_bg_ratio_1)
+                            .bitmapTransform(new RoundedCornersTransformation(mContext, SizeUtils.dp2px(8), 0, RoundedCornersTransformation.CornerType.ALL))
+                            .into(holder.iv_item1);
+                }
+                holder.tv_item1.setText(String.valueOf("成交价：" + carListBean.getCar_info().getPrice() + "万"));
             }
         } else if (dataType == CAR_LIST_FOR_CAR_CENTER) {
             ArrayList<CarInfoBeanForCarCenter> carInfoBeanForCarCenterArrayList = (ArrayList<CarInfoBeanForCarCenter>) mList;

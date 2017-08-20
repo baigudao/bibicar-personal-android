@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/background_color"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -20,7 +21,7 @@
                 android:layout_height="wrap_content"
                 android:text="车行推荐"
                 android:textColor="#3a3a3a"
-                android:textSize="18sp"/>
+                android:textSize="18sp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -28,7 +29,7 @@
                 android:layout_marginTop="10dp"
                 android:text="优质车行与平台"
                 android:textColor="#929292"
-                android:textSize="12sp"/>
+                android:textSize="12sp" />
 
         </LinearLayout>
 
@@ -42,7 +43,7 @@
             android:clickable="true"
             android:text="查看更多"
             android:textColor="#929292"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
 
     </RelativeLayout>
 
@@ -50,8 +51,6 @@
         android:id="@+id/car_company_recyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:background="@color/pure_white_color"
-        android:paddingRight="15dp"/>
+        android:layout_marginTop="15dp" />
 
 </LinearLayout>

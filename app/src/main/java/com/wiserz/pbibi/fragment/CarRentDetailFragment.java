@@ -25,7 +25,6 @@ import org.json.JSONObject;
 import cn.sharesdk.onekeyshare.OnekeyShare;
 import okhttp3.Call;
 
-import static com.wiserz.pbibi.R.id.iv_image;
 
 /**
  * Created by jackie on 2017/8/15 15:43.
@@ -38,6 +37,7 @@ public class CarRentDetailFragment extends BaseFragment {
     private TextView tv_title;
 
     private String car_id;
+    private String is_auth;
 
     @Override
     protected int getLayoutId() {
@@ -69,7 +69,7 @@ public class CarRentDetailFragment extends BaseFragment {
             case R.id.iv_back:
                 goBack();
                 break;
-            case iv_image://分享
+            case R.id.iv_image://分享
                 showSharePlatformPopWindow();
                 break;
             case R.id.btn_custom_service:
@@ -77,9 +77,14 @@ public class CarRentDetailFragment extends BaseFragment {
                 showShare();
                 break;
             case R.id.btn_rent_car:
-                Bundle bundle = new Bundle();
-                bundle.putString(Constant.CAR_ID,car_id);
-                gotoPager(CreateCarRentOrderFragment.class, bundle);
+                //是否身份验证 1:是 2:否
+                if (is_auth.equals("2")) {
+                    gotoPager(AuthenticationFragment.class, null);
+                } else {
+                    Bundle bundle = new Bundle();
+                    bundle.putString(Constant.CAR_ID, car_id);
+                    gotoPager(CreateCarRentOrderFragment.class, bundle);
+                }
                 break;
             default:
                 break;
@@ -115,6 +120,7 @@ public class CarRentDetailFragment extends BaseFragment {
                             int status = jsonObject.optInt("status");
                             JSONObject jsonObjectData = jsonObject.optJSONObject("data");
                             if (status == 1) {
+                                is_auth = jsonObjectData.optString(Constant.IS_AUTH);
                                 handlerDataForCarRentDetail(jsonObjectData);
                             } else {
                                 String code = jsonObject.optString("code");
@@ -151,6 +157,7 @@ public class CarRentDetailFragment extends BaseFragment {
                     .into((ImageView) getView().findViewById(R.id.iv_image_brand));
         }
     }
+
 
     private void showSharePlatformPopWindow() {
         SharePlatformPopupWindow sharePlatformPopWindow = new SharePlatformPopupWindow(getActivity(), new SharePlatformPopupWindow.SharePlatformListener() {

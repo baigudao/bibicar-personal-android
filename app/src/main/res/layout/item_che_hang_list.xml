@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/background_color"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_color"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/rl_che_hang"
@@ -18,7 +18,7 @@
             android:layout_height="45dp"
             android:layout_marginLeft="15dp"
             android:scaleType="fitXY"
-            android:src="@drawable/default_bg_ratio_1"/>
+            android:src="@drawable/default_bg_ratio_1" />
 
         <TextView
             android:id="@+id/tv_che_hang_name"
@@ -28,7 +28,7 @@
             android:layout_toRightOf="@id/iv_che_hang"
             android:text="法拉利车行（深圳）"
             android:textColor="@color/main_text_color"
-            android:textSize="15sp"/>
+            android:textSize="15sp" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:text="在售233辆"
                 android:textColor="@color/fifth_text_color"
-                android:textSize="12sp"/>
+                android:textSize="12sp" />
 
             <View
                 android:layout_width="1dp"
@@ -52,7 +52,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:background="@color/divider_color"/>
+                android:background="@color/divider_color" />
 
             <TextView
                 android:id="@+id/tv_sold_num"
@@ -60,7 +60,7 @@
                 android:layout_height="wrap_content"
                 android:text="已售出93辆"
                 android:textColor="@color/fifth_text_color"
-                android:textSize="12sp"/>
+                android:textSize="12sp" />
 
         </LinearLayout>
 
@@ -70,7 +70,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
-            android:src="@drawable/v1_more_y3x"/>
+            android:src="@drawable/v1_more_y3x" />
 
     </RelativeLayout>
 
@@ -79,20 +79,20 @@
         android:layout_height="1dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="15dp"
-        android:background="@color/divider_color"/>
+        android:background="@color/divider_color" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"/>
+        android:layout_marginTop="15dp" />
 
     <View
         android:layout_width="345dp"
         android:layout_height="1dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="15dp"
-        android:background="@color/divider_color"/>
+        android:background="@color/divider_color" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -113,14 +113,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
-                android:src="@drawable/shop_phone3x"/>
+                android:src="@drawable/shop_phone3x" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="电话咨询"
                 android:textColor="@color/main_text_color"
-                android:textSize="14sp"/>
+                android:textSize="14sp" />
 
         </LinearLayout>
 
@@ -128,7 +128,7 @@
             android:layout_width="1dp"
             android:layout_height="30dp"
             android:layout_gravity="center_vertical"
-            android:background="@color/divider_color"/>
+            android:background="@color/divider_color" />
 
         <LinearLayout
             android:id="@+id/ll_location"
@@ -143,14 +143,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
-                android:src="@drawable/shop_location3x"/>
+                android:src="@drawable/shop_location3x" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="查看位置"
                 android:textColor="@color/main_text_color"
-                android:textSize="14sp"/>
+                android:textSize="14sp" />
 
         </LinearLayout>
 

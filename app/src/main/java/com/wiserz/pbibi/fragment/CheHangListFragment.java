@@ -6,15 +6,17 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.EmptyUtils;
+import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
-import com.wiserz.pbibi.bean.FuLiBean;
+import com.wiserz.pbibi.bean.CheHangUserListBean;
+import com.wiserz.pbibi.util.Constant;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -31,6 +33,7 @@ public class CheHangListFragment extends BaseFragment implements BaseRecyclerVie
 
     private RecyclerView recyclerView;
     private static final int CHE_HANG_LIST_DATA_TYPE = 14;
+    private int mPage;
 
     @Override
     protected int getLayoutId() {
@@ -42,6 +45,8 @@ public class CheHangListFragment extends BaseFragment implements BaseRecyclerVie
         view.findViewById(R.id.iv_back).setOnClickListener(this);
         ((TextView) view.findViewById(R.id.tv_title)).setText("车行列表");
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+
+        mPage = 0;
     }
 
     @Override
@@ -58,8 +63,11 @@ public class CheHangListFragment extends BaseFragment implements BaseRecyclerVie
     @Override
     protected void initData() {
         super.initData();
-        OkHttpUtils.get()
-                .url("http://gank.io/api/data/福利/10/1")
+        OkHttpUtils.post()
+                .url(Constant.getCheHangListUrl())
+                .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
+                .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
+                .addParams(Constant.PAGE, String.valueOf(mPage))
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -72,8 +80,14 @@ public class CheHangListFragment extends BaseFragment implements BaseRecyclerVie
                         JSONObject jsonObject = null;
                         try {
                             jsonObject = new JSONObject(response);
-                            if (EmptyUtils.isNotEmpty(jsonObject)) {
-                                handlerCheHangListData(jsonObject);
+                            int status = jsonObject.optInt("status");
+                            JSONObject jsonObjectData = jsonObject.optJSONObject("data");
+                            if (status == 1) {
+                                handlerCheHangListData(jsonObjectData);
+                            } else {
+                                String code = jsonObject.optString("code");
+                                String msg = jsonObjectData.optString("msg");
+                                ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -83,20 +97,27 @@ public class CheHangListFragment extends BaseFragment implements BaseRecyclerVie
     }
 
     private void handlerCheHangListData(JSONObject jsonObject) {
+        JSONArray jsonArray = jsonObject.optJSONObject("list").optJSONArray("user_list");
+        ArrayList<CheHangUserListBean> cheHangUserListBeanArrayList = new ArrayList<>();
         Gson gson = new Gson();
-        ArrayList<FuLiBean> fuLiBeanArrayList = gson.fromJson(jsonObject.optJSONArray("results").toString(), new TypeToken<ArrayList<FuLiBean>>() {
-        }.getType());
-        BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, fuLiBeanArrayList, CHE_HANG_LIST_DATA_TYPE);
-        recyclerView.setAdapter(baseRecyclerViewAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
-        baseRecyclerViewAdapter.setOnItemClickListener(this);
+        if (EmptyUtils.isNotEmpty(jsonArray)) {
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObjectForUserList = jsonArray.optJSONObject(i);
+                CheHangUserListBean cheHangUserListBean = gson.fromJson(jsonObjectForUserList.toString(), CheHangUserListBean.class);
+                cheHangUserListBeanArrayList.add(cheHangUserListBean);
+            }
+            BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, cheHangUserListBeanArrayList, CHE_HANG_LIST_DATA_TYPE);
+            recyclerView.setAdapter(baseRecyclerViewAdapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
+            baseRecyclerViewAdapter.setOnItemClickListener(this);
+        }
     }
 
     @Override
     public void onItemClick(Object data, int position) {
-        if (data.getClass().getSimpleName().equals("FuLiBean")) {
-            FuLiBean fuLiBean = (FuLiBean) data;
-            ToastUtils.showShort(fuLiBean.getWho());
+        if (data.getClass().getSimpleName().equals("CheHangUserListBean")) {
+            CheHangUserListBean cheHangUserListBean = (CheHangUserListBean) data;
+            ToastUtils.showShort(cheHangUserListBean.getNickname());
         }
     }
 }
