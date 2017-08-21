@@ -38,5 +38,9 @@
     <string name="tv_car_name1">丰田 埃尔法（进口）2015 3.5L 自动尊贵版</string>
     <string name="car_detail_text">这款车大气时尚，开起来很稳重大方，很有商务的严谨，又有运动的动感，适合多种需求，用车人不要在车内吸烟！保持车内整洁…</string>
     <string name="tv_car_brief">这款车大气时尚，开起来很稳重大方，很有商务的严谨，又有运动的动感，适合多种需求，请用车人不要在车内吸烟！保持车内整洁…</string>
+    <string name="man">男</string>
+    <string name="woman">女</string>
+    <string name="wallet_mind">温馨提示： \n1、充值为100的倍数、代表您当前可以生成几个订单 例：500元即表示您当前可以同时生成5个看车订单。 \n2、一键提现功能在您当前有订单未完成或者未终止时 不可用。</string>
+    <string name="recharge_text_remind">温馨提示： \n\n如需要手动输入金额，建议为100的倍数。</string>
 
 </resources>

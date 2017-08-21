@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/background_color"
+              android:orientation="vertical">
+
+    <include layout="@layout/title_bar"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="@drawable/background3x"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <com.wiserz.pbibi.view.CircleImageView
+                android:id="@+id/iv_circle_image"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="15dp"
+                android:src="@drawable/user_photo"/>
+
+            <TextView
+                android:id="@+id/tv_user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/iv_circle_image"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="5dp"
+                android:layout_toRightOf="@id/iv_circle_image"
+                android:text="玛莎金团"
+                android:textColor="@color/pure_white_color"
+                android:textSize="15sp"/>
+
+            <TextView
+                android:id="@+id/tv_follow_and_fan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/iv_circle_image"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="15dp"
+                android:layout_toRightOf="@id/iv_circle_image"
+                android:text="关注 12 丨 粉丝 145 丨BiBi号 12456"
+                android:textColor="@color/pure_white_color"
+                android:textSize="12sp"/>
+
+            <TextView
+                android:id="@+id/tv_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15dp"
+                android:background="@drawable/border_edit"
+                android:clickable="true"
+                android:gravity="center"
+                android:text="编辑资料"
+                android:textColor="@color/pure_white_color"
+                android:textSize="12sp"/>
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_sign"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:layout_marginLeft="15dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="这位车主非常有个性，因为她没有个性签名。"
+            android:textColor="@color/pure_white_color"
+            android:textSize="12sp"/>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_my_car_repertory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:clickable="true">
+
+        <TextView
+            android:id="@+id/tv1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:text="我的车库"
+            android:textColor="@color/main_text_color"
+            android:textSize="15sp"/>
+
+        <TextView
+            android:id="@+id/tv_total_car"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/tv1"
+            android:text="（拥有13辆，总值134万）"
+            android:textColor="@color/second_text_color"
+            android:textSize="12sp"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:src="@drawable/v3_topic_more3x"/>
+
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"/>
+
+</LinearLayout>

@@ -6,12 +6,14 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.EmptyUtils;
+import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
-import com.wiserz.pbibi.bean.FuLiBean;
+import com.wiserz.pbibi.bean.TopicInfoBean;
+import com.wiserz.pbibi.util.Constant;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -32,6 +34,7 @@ public class AllTopicFragment extends BaseFragment implements BaseRecyclerViewAd
 
     private RecyclerView recyclerView;
     private static final int ALL_TOPIC_DATA_TYPE = 23;
+    private int mPage;
 
     @Override
     protected int getLayoutId() {
@@ -44,6 +47,7 @@ public class AllTopicFragment extends BaseFragment implements BaseRecyclerViewAd
         ((TextView) view.findViewById(R.id.tv_title)).setText("话题");
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        mPage = 0;
     }
 
     @Override
@@ -60,8 +64,15 @@ public class AllTopicFragment extends BaseFragment implements BaseRecyclerViewAd
     @Override
     protected void initData() {
         super.initData();
-        OkHttpUtils.get()
-                .url("http://gank.io/api/data/福利/10/1")
+        getDataFormNet();
+    }
+
+    private void getDataFormNet() {
+        OkHttpUtils.post()
+                .url(Constant.getTopicListUrl())
+                .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
+                .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
+                .addParams(Constant.PAGE, String.valueOf(mPage))
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -74,8 +85,14 @@ public class AllTopicFragment extends BaseFragment implements BaseRecyclerViewAd
                         JSONObject jsonObject = null;
                         try {
                             jsonObject = new JSONObject(response);
-                            if (EmptyUtils.isNotEmpty(jsonObject)) {
-                                handlerData(jsonObject);
+                            int status = jsonObject.optInt("status");
+                            JSONObject jsonObjectData = jsonObject.optJSONObject("data");
+                            if (status == 1) {
+                                handlerData(jsonObjectData);
+                            } else {
+                                String code = jsonObject.optString("code");
+                                String msg = jsonObjectData.optString("msg");
+                                ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -85,21 +102,23 @@ public class AllTopicFragment extends BaseFragment implements BaseRecyclerViewAd
     }
 
     private void handlerData(JSONObject jsonObject) {
-        JSONArray jsonArray = jsonObject.optJSONArray("results");
+        JSONArray jsonArray = jsonObject.optJSONArray("theme_list");
         Gson gson = new Gson();
-        ArrayList<FuLiBean> fuLiBeanArrayList = gson.fromJson(jsonArray.toString(), new TypeToken<ArrayList<FuLiBean>>() {
-        }.getType());
-        BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, fuLiBeanArrayList, ALL_TOPIC_DATA_TYPE);
-        recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
-        recyclerView.setAdapter(baseRecyclerViewAdapter);
-        baseRecyclerViewAdapter.setOnItemClickListener(this);
+        if (EmptyUtils.isNotEmpty(jsonArray)) {
+            ArrayList<TopicInfoBean> topicInfoBeanArrayList = gson.fromJson(jsonArray.toString(), new TypeToken<ArrayList<TopicInfoBean>>() {
+            }.getType());
+            BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, topicInfoBeanArrayList, ALL_TOPIC_DATA_TYPE);
+            recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
+            recyclerView.setAdapter(baseRecyclerViewAdapter);
+            baseRecyclerViewAdapter.setOnItemClickListener(this);
+        }
     }
 
     @Override
     public void onItemClick(Object data, int position) {
-        if (data.getClass().getSimpleName().equals("FuLiBean")) {
-            FuLiBean fuLiBean = (FuLiBean) data;
-            ToastUtils.showShort(fuLiBean.getWho());
+        if (data.getClass().getSimpleName().equals("TopicInfoBean")) {
+            TopicInfoBean topicInfoBean = (TopicInfoBean) data;
+            ToastUtils.showShort(topicInfoBean.getTheme());
         }
     }
 }

@@ -64,11 +64,13 @@ public class CarSearchFragment extends BaseFragment implements BaseRecyclerViewA
     protected void initData() {
         super.initData();
         if (EmptyUtils.isNotEmpty(keyword)) {
+            //当传入keyword时
             car_search_recycler_view.setVisibility(View.VISIBLE);
             ll_search_history.setVisibility(View.GONE);
             LogUtils.e("有数据");
             getCarListDataFromNet(keyword, null, null, null, null, null, null, null, null, null, null, null, null);
         } else {
+            //当没有keyword时
             ll_search_history.setVisibility(View.VISIBLE);
             car_search_recycler_view.setVisibility(View.GONE);
             LogUtils.e("为空");

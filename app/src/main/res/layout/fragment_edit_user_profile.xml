@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/background_color"
+              android:orientation="vertical">
+
+    <include layout="@layout/title_bar"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp">
+
+        <TextView
+            android:id="@+id/tv1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:text="头像"
+            android:textColor="@color/second_text_color"
+            android:textSize="15sp"/>
+
+        <com.wiserz.pbibi.view.CircleImageView
+            android:id="@+id/iv_circle_image"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:clickable="true"
+            android:src="@drawable/user_photo"/>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="345dp"
+        android:layout_height="1dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/divider_color"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+        <TextView
+            android:id="@+id/tv2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:text="昵称"
+            android:textColor="@color/second_text_color"
+            android:textSize="15sp"/>
+
+        <EditText
+            android:id="@+id/et_edit_nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:hint="请输入昵称"
+            android:maxLength="8"
+            android:textColor="@color/main_text_color"
+            android:textColorHint="@color/second_text_color"
+            android:textSize="15sp"/>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="345dp"
+        android:layout_height="1dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/divider_color"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+        <TextView
+            android:id="@+id/tv3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:text="性别"
+            android:textColor="@color/second_text_color"
+            android:textSize="15sp"/>
+
+        <EditText
+            android:id="@+id/et_edit_gender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:hint="请输入性别"
+            android:maxLength="1"
+            android:textColor="@color/main_text_color"
+            android:textColorHint="@color/second_text_color"
+            android:textSize="15sp"/>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="345dp"
+        android:layout_height="1dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/divider_color"/>
+
+    <TextView
+        android:id="@+id/tv4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        android:text="简介"
+        android:textColor="@color/second_text_color"
+        android:textSize="15sp"/>
+
+    <EditText
+        android:id="@+id/et_edit_profile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="15dp"
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:textColor="@color/main_text_color"
+        android:textColorHint="@color/second_text_color"
+        android:textSize="15sp"/>
+
+    <View
+        android:layout_width="345dp"
+        android:layout_height="1dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/divider_color"/>
+
+</LinearLayout>

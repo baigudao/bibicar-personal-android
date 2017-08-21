@@ -24,6 +24,7 @@ import com.wiserz.pbibi.bean.CarRentInfoBean;
 import com.wiserz.pbibi.bean.CheHangBean;
 import com.wiserz.pbibi.bean.CheHangUserListBean;
 import com.wiserz.pbibi.bean.FuLiBean;
+import com.wiserz.pbibi.bean.TopicInfoBean;
 import com.wiserz.pbibi.bean.UserBean;
 import com.wiserz.pbibi.bean.VideoBean;
 
@@ -185,17 +186,17 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                 holder.tv_item2.setText(carRentInfoBean.getRental_info().getOne() + "/天");
             }
         } else if (dataType == RECOMMEND_TOPIC_DATA_TYPE) {
-            ArrayList<FuLiBean> fuLiBeanArrayList = (ArrayList<FuLiBean>) mList;
+            ArrayList<TopicInfoBean> topicInfoBeanArrayList = (ArrayList<TopicInfoBean>) mList;
 
-            if (EmptyUtils.isNotEmpty(fuLiBeanArrayList)) {
-                FuLiBean fuLiBean = fuLiBeanArrayList.get(position);
+            if (EmptyUtils.isNotEmpty(topicInfoBeanArrayList)) {
+                TopicInfoBean topicInfoBean = topicInfoBeanArrayList.get(position);
 
                 Glide.with(mContext)
-                        .load(fuLiBean.getUrl())
+                        .load(topicInfoBean.getPost_file())
                         .placeholder(R.drawable.default_bg_ratio_1)
                         .bitmapTransform(new RoundedCornersTransformation(mContext, SizeUtils.dp2px(8), 0, RoundedCornersTransformation.CornerType.ALL))
                         .into(holder.iv_item1);
-                holder.tv_item1.setText(fuLiBean.getDesc());
+                holder.tv_item1.setText(topicInfoBean.getTheme());
             }
         } else if (dataType == MY_TOPIC_DATA_TYPE) {
             ArrayList<FuLiBean> fuLiBeanArrayList = (ArrayList<FuLiBean>) mList;
@@ -213,19 +214,19 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                 holder.tv_item3.setText(fuLiBean.getDesc());
             }
         } else if (dataType == ALL_TOPIC_DATA_TYPE) {
-            ArrayList<FuLiBean> fuLiBeanArrayList = (ArrayList<FuLiBean>) mList;
+            ArrayList<TopicInfoBean> topicInfoBeanArrayList = (ArrayList<TopicInfoBean>) mList;
 
-            if (EmptyUtils.isNotEmpty(fuLiBeanArrayList)) {
-                FuLiBean fuLiBean = fuLiBeanArrayList.get(position);
+            if (EmptyUtils.isNotEmpty(topicInfoBeanArrayList)) {
+                TopicInfoBean topicInfoBean = topicInfoBeanArrayList.get(position);
 
                 Glide.with(mContext)
-                        .load(fuLiBean.getUrl())
+                        .load(topicInfoBean.getPost_file())
                         .placeholder(R.drawable.user_photo)
                         .bitmapTransform(new RoundedCornersTransformation(mContext, SizeUtils.dp2px(8), 0, RoundedCornersTransformation.CornerType.ALL))
                         .into(holder.iv_item1);
-                holder.tv_item1.setText(fuLiBean.getWho());
-                holder.tv_item2.setText(fuLiBean.getDesc());
-                holder.tv_item3.setText(fuLiBean.getDesc());
+                holder.tv_item1.setText(topicInfoBean.getTheme());
+                holder.tv_item2.setText(topicInfoBean.getTitle());
+                holder.tv_item3.setText(topicInfoBean.getFeed_num() + "参与丨" + topicInfoBean.getIs_skip() + "内容");
             }
         } else if (dataType == ARTICLE_LIST_DATA_TYPE) {
             ArrayList<ArticleBean> articleBeanArrayList = (ArrayList<ArticleBean>) mList;

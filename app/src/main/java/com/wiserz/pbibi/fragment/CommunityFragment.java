@@ -44,11 +44,11 @@ public class CommunityFragment extends BaseFragment {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_create_topic:
-                //                gotoPager(CreateTopicFragment.class,null);
+                gotoPager(CreateTopicFragment.class, null);
 
                 //                gotoPager(TopicMemberFragment.class, null);
 
-                gotoPager(PublishDynamicStateFragment.class, null);//发布动态
+                //                gotoPager(PublishDynamicStateFragment.class, null);//发布动态
                 break;
             default:
                 break;
@@ -77,10 +77,6 @@ public class CommunityFragment extends BaseFragment {
         }
     }
 
-    /**
-     * @param from 刚显示的Fragment,马上就要被隐藏了
-     * @param to   马上要切换到的Fragment，一会要显示
-     */
     private void switchFragment(Fragment from, Fragment to) {
         if (from != to) {
             fromFragment = to;
@@ -107,11 +103,6 @@ public class CommunityFragment extends BaseFragment {
         }
     }
 
-    /**
-     * 根据位置得到对应的Fragment
-     *
-     * @return
-     */
     private BaseFragment getFragment() {
         BaseFragment fragment = mBaseFragment.get(position);
         return fragment;

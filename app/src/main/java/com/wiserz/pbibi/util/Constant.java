@@ -62,6 +62,10 @@ public class Constant {
     public static final String SOURCE = "source";
     public static final String FEED_ID = "feed_id";
     public static final String IS_AUTH = "is_auth";//是否身份验证 1:是 2:否
+    public static final String THEME = "theme";
+    public static final String POST_FILE = "post_file";
+    public static final String TITLE = "title";
+    public static final String MONEY = "money";
 
     //URL常量
     //    private final static String hostUrl = "https://api.bibicar.cn/";//正式环境
@@ -97,6 +101,14 @@ public class Constant {
     private final static String topicSearchUrl = hostUrl + "v3/theme/searchtheme";//话题搜索
 
     private static final String cheHangListUrl = hostUrl +"v3/publishcar/getcompanylist";//车行列表
+
+    private static final String createTopicUrl = hostUrl +"v3/theme/createtheme";//创建话题
+    private static final String hallUrl = hostUrl +"v3/theme/themehome";//大厅
+    private static final String topicListUrl = hostUrl +"v3/theme/list";//话题列表
+
+    private static final String balanceUrl = hostUrl + "v3/UserCarPact/getusermoney";//获取余额
+    private static final String takeCashUrl = hostUrl + "v3/UserCarPact/sellerrefund";//卖家提现
+    private static final String sellerRechargeUrl = hostUrl + "v3/UserCarPact/withdraw";//卖家充值
 
     public static String getUserLoginUrl() {
         return userLoginUrl;
@@ -164,5 +176,29 @@ public class Constant {
 
     public static String getCheHangListUrl() {
         return cheHangListUrl;
+    }
+
+    public static String getCreateTopicUrl() {
+        return createTopicUrl;
+    }
+
+    public static String getHallUrl() {
+        return hallUrl;
+    }
+
+    public static String getTopicListUrl() {
+        return topicListUrl;
+    }
+
+    public static String getBalanceUrl() {
+        return balanceUrl;
+    }
+
+    public static String getTakeCashUrl() {
+        return takeCashUrl;
+    }
+
+    public static String getSellerRechargeUrl() {
+        return sellerRechargeUrl;
     }
 }

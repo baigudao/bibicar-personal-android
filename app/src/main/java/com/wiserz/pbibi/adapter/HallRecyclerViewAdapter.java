@@ -13,7 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.activity.BaseActivity;
-import com.wiserz.pbibi.bean.FuLiBean;
+import com.wiserz.pbibi.bean.TopicInfoBean;
 import com.wiserz.pbibi.fragment.AllTopicFragment;
 
 import org.json.JSONArray;
@@ -69,9 +69,9 @@ public class HallRecyclerViewAdapter extends RecyclerView.Adapter implements Bas
                 }
             });
 
-            ArrayList<FuLiBean> fuLiBeanArrayList = getRecommendTopicData(jsonObjectData);
-            if (EmptyUtils.isNotEmpty(fuLiBeanArrayList)) {
-                BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, fuLiBeanArrayList, RECOMMEND_TOPIC_DATA_TYPE);
+            ArrayList<TopicInfoBean> topicInfoBeanArrayList = getRecommendTopicData(jsonObjectData);
+            if (EmptyUtils.isNotEmpty(topicInfoBeanArrayList)) {
+                BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, topicInfoBeanArrayList, RECOMMEND_TOPIC_DATA_TYPE);
                 recommendTopicViewHolder.recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
                 recommendTopicViewHolder.recyclerView.setAdapter(baseRecyclerViewAdapter);
                 baseRecyclerViewAdapter.setOnItemClickListener(this);
@@ -85,17 +85,17 @@ public class HallRecyclerViewAdapter extends RecyclerView.Adapter implements Bas
                 }
             });
 
-            ArrayList<FuLiBean> fuLiBeanArrayList = getMyJoinTopicData(jsonObjectData);
-            ArrayList<FuLiBean> fuLiBeanArrayList1 = new ArrayList<>();
-            fuLiBeanArrayList1.add(fuLiBeanArrayList.get(0));
-            fuLiBeanArrayList1.add(fuLiBeanArrayList.get(1));
-            fuLiBeanArrayList1.add(fuLiBeanArrayList.get(2));
-            if (EmptyUtils.isNotEmpty(fuLiBeanArrayList)) {
-                BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, fuLiBeanArrayList1, MY_TOPIC_DATA_TYPE);
-                myJoinTopicViewHolder.recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
-                myJoinTopicViewHolder.recyclerView.setAdapter(baseRecyclerViewAdapter);
-                baseRecyclerViewAdapter.setOnItemClickListener(this);
-            }
+            //            ArrayList<FuLiBean> fuLiBeanArrayList = getMyJoinTopicData(jsonObjectData);
+            //            ArrayList<FuLiBean> fuLiBeanArrayList1 = new ArrayList<>();
+            //            fuLiBeanArrayList1.add(fuLiBeanArrayList.get(0));
+            //            fuLiBeanArrayList1.add(fuLiBeanArrayList.get(1));
+            //            fuLiBeanArrayList1.add(fuLiBeanArrayList.get(2));
+            //            if (EmptyUtils.isNotEmpty(fuLiBeanArrayList)) {
+            //                BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, fuLiBeanArrayList1, MY_TOPIC_DATA_TYPE);
+            //                myJoinTopicViewHolder.recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
+            //                myJoinTopicViewHolder.recyclerView.setAdapter(baseRecyclerViewAdapter);
+            //                baseRecyclerViewAdapter.setOnItemClickListener(this);
+            //            }
         }
     }
 
@@ -125,9 +125,9 @@ public class HallRecyclerViewAdapter extends RecyclerView.Adapter implements Bas
 
     @Override
     public void onItemClick(Object data, int position) {
-        if (data.getClass().getSimpleName().equals("FuLiBean")) {
-            FuLiBean fuLiBean = (FuLiBean) data;
-            ToastUtils.showShort(fuLiBean.getDesc());
+        if (data.getClass().getSimpleName().equals("TopicInfoBean")) {
+            TopicInfoBean topicInfoBean = (TopicInfoBean) data;
+            ToastUtils.showShort(topicInfoBean.getTheme());
         }
     }
 
@@ -155,29 +155,29 @@ public class HallRecyclerViewAdapter extends RecyclerView.Adapter implements Bas
         }
     }
 
-    private ArrayList<FuLiBean> getRecommendTopicData(JSONObject jsonObjectData) {
-        ArrayList<FuLiBean> list = null;
+    private ArrayList<TopicInfoBean> getRecommendTopicData(JSONObject jsonObjectData) {
+        ArrayList<TopicInfoBean> list = null;
         if (jsonObjectData == null) {
             return new ArrayList<>();
         } else {
-            JSONArray jsonArray = jsonObjectData.optJSONArray("results");
+            JSONArray jsonArray = jsonObjectData.optJSONArray("theme_recommend");
             Gson gson = new Gson();
-            list = gson.fromJson(jsonArray.toString(), new TypeToken<ArrayList<FuLiBean>>() {
+            list = gson.fromJson(jsonArray.toString(), new TypeToken<ArrayList<TopicInfoBean>>() {
             }.getType());
         }
         return list;
     }
 
-    private ArrayList<FuLiBean> getMyJoinTopicData(JSONObject jsonObjectData) {
-        ArrayList<FuLiBean> list = null;
-        if (jsonObjectData == null) {
-            return new ArrayList<>();
-        } else {
-            JSONArray jsonArray = jsonObjectData.optJSONArray("results");
-            Gson gson = new Gson();
-            list = gson.fromJson(jsonArray.toString(), new TypeToken<ArrayList<FuLiBean>>() {
-            }.getType());
-        }
-        return list;
-    }
+    //    private ArrayList<FuLiBean> getMyJoinTopicData(JSONObject jsonObjectData) {
+    //        ArrayList<FuLiBean> list = null;
+    //        if (jsonObjectData == null) {
+    //            return new ArrayList<>();
+    //        } else {
+    //            JSONArray jsonArray = jsonObjectData.optJSONArray("results");
+    //            Gson gson = new Gson();
+    //            list = gson.fromJson(jsonArray.toString(), new TypeToken<ArrayList<FuLiBean>>() {
+    //            }.getType());
+    //        }
+    //        return list;
+    //    }
 }

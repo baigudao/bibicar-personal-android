@@ -11,6 +11,8 @@ import com.wiserz.pbibi.R;
  * Used as : 浏览历史的页面
  */
 public class SearchHistoryFragment extends BaseFragment {
+
+
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_search_history;

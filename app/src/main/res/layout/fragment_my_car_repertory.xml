@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/background_color"
+              android:orientation="vertical">
+
+    <include layout="@layout/title_bar"/>
+
+    <RadioGroup
+        android:id="@+id/rg_main"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/rb_love_car"
+            style="@style/top_search_tag_style"
+            android:text="爱车"/>
+
+        <RadioButton
+            android:id="@+id/rb_selling_car"
+            style="@style/top_search_tag_style"
+            android:text="售车"/>
+
+        <RadioButton
+            android:id="@+id/rb_dream_car"
+            style="@style/top_search_tag_style"
+            android:text="梦想车"/>
+
+    </RadioGroup>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider_color"/>
+
+    <!--FrameLayout-->
+    <FrameLayout
+        android:id="@+id/fl_car_repertory_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</LinearLayout>

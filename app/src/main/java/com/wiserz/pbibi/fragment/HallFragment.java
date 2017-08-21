@@ -4,9 +4,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.blankj.utilcode.util.EmptyUtils;
+import com.blankj.utilcode.util.SPUtils;
+import com.blankj.utilcode.util.ToastUtils;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.adapter.HallRecyclerViewAdapter;
+import com.wiserz.pbibi.util.Constant;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -23,6 +25,7 @@ import okhttp3.Call;
 public class HallFragment extends BaseFragment {
 
     private RecyclerView recyclerView;
+    private int mPage;
 
     @Override
     protected int getLayoutId() {
@@ -32,6 +35,8 @@ public class HallFragment extends BaseFragment {
     @Override
     protected void initView(View view) {
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+
+        mPage = 0;
     }
 
     @Override
@@ -42,8 +47,15 @@ public class HallFragment extends BaseFragment {
     @Override
     protected void initData() {
         super.initData();
-        OkHttpUtils.get()
-                .url("http://gank.io/api/data/福利/10/1")
+        getDataFromNet();
+    }
+
+    private void getDataFromNet() {
+        OkHttpUtils.post()
+                .url(Constant.getHallUrl())
+                .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
+                .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
+                .addParams(Constant.PAGE, String.valueOf(mPage))
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -56,10 +68,16 @@ public class HallFragment extends BaseFragment {
                         JSONObject jsonObject = null;
                         try {
                             jsonObject = new JSONObject(response);
-                            if (EmptyUtils.isNotEmpty(jsonObject)) {
-                                HallRecyclerViewAdapter hallRecyclerViewAdapter = new HallRecyclerViewAdapter(mContext, jsonObject);
-                                recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
+                            int status = jsonObject.optInt("status");
+                            JSONObject jsonObjectData = jsonObject.optJSONObject("data");
+                            if (status == 1) {
+                                HallRecyclerViewAdapter hallRecyclerViewAdapter = new HallRecyclerViewAdapter(mContext, jsonObjectData);
                                 recyclerView.setAdapter(hallRecyclerViewAdapter);
+                                recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
+                            } else {
+                                String code = jsonObject.optString("code");
+                                String msg = jsonObjectData.optString("msg");
+                                ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
