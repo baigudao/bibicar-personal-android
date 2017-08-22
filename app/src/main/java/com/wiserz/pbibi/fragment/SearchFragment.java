@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 
-import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.util.DataManager;
@@ -66,7 +65,6 @@ public class SearchFragment extends BaseFragment {
                 case R.id.rb_car://车辆
                     position = 0;
                     DataManager.getInstance().setData1(getInputKeyword());
-                    LogUtils.e("here");
                     break;
                 case R.id.rb_article://文章
                     position = 1;
@@ -105,7 +103,7 @@ public class SearchFragment extends BaseFragment {
                     ft.hide(from);
                 }
                 //添加to
-                ft.add(R.id.fl_content, to).commit();
+                ft.add(R.id.fl_search_content, to).commit();
             } else {
                 //to已经被添加
                 // from隐藏
@@ -115,6 +113,8 @@ public class SearchFragment extends BaseFragment {
                 //显示to
                 ft.show(to).commit();
             }
+        }else {
+            ToastUtils.showShort("to与from相同");
         }
     }
 
@@ -130,10 +130,9 @@ public class SearchFragment extends BaseFragment {
                 goBack();
                 break;
             case R.id.btn_search:
-                ToastUtils.showShort("搜索000");
                 switch (position) {
                     case 0:
-                        mRg_main.clearCheck();
+//                        mRg_main.clearCheck();
                         mRg_main.check(R.id.rb_car);
                         break;
                     case 1:

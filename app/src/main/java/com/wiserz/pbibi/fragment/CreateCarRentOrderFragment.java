@@ -4,6 +4,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -49,6 +50,7 @@ public class CreateCarRentOrderFragment extends BaseFragment {
     private CarRentDetailInfoBean carRentDetailInfoBean;
 
     private static final int SDK_PAY_FLAG = 1;
+    private int pay_type;
 
     private int time;//进入日期时间选择器的次数
 
@@ -97,14 +99,46 @@ public class CreateCarRentOrderFragment extends BaseFragment {
             ((TextView) view.findViewById(R.id.tv_subscription)).setText("¥" + carRentDetailInfoBean.getRental_info().getDeposit() + "元/天");//订金
             ((TextView) view.findViewById(R.id.tv_deposit)).setText("¥" + carRentDetailInfoBean.getRental_info().getSubscription() + "元/天");//押金
             ((TextView) view.findViewById(R.id.tv_rent_price)).setText("¥" + carRentDetailInfoBean.getRental_info().getOne() + "元/天");//租金
+
+            double sum = carRentDetailInfoBean.getRental_info().getDeposit() + carRentDetailInfoBean.getRental_info().getOne() +
+                    carRentDetailInfoBean.getRental_info().getSubscription();
+            ((TextView) view.findViewById(R.id.tv_cost)).setText("费用：" + sum + "元");
         }
+
+        view.findViewById(R.id.rl_weixinpay).setOnClickListener(this);
+        view.findViewById(R.id.rl_alipay).setOnClickListener(this);
 
         view.findViewById(R.id.btn_choose_time).setOnClickListener(this);
         view.findViewById(R.id.btn_pay).setOnClickListener(this);
 
         time = 0;
 
+        weixinPay();
+    }
+
+    private void aliPay() {//支付方式 1:支付宝 2微信
+        pay_type = 1;
+        if (getView() != null) {
+            getView().findViewById(R.id.iv_weixin_choose).setVisibility(View.GONE);
+            getView().findViewById(R.id.iv_alipay_choose).setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void weixinPay() {
+        pay_type = 2;
         regToWx();
+        if (getView() != null) {
+            getView().findViewById(R.id.iv_weixin_choose).setVisibility(View.VISIBLE);
+            getView().findViewById(R.id.iv_alipay_choose).setVisibility(View.GONE);
+        }
+    }
+
+    private String getName() {
+        return ((EditText) getView().findViewById(R.id.et_input_name)).getText().toString().trim();
+    }
+
+    private String getPhone() {
+        return ((EditText) getView().findViewById(R.id.et_input_phone)).getText().toString().trim();
     }
 
     @Override
@@ -116,6 +150,12 @@ public class CreateCarRentOrderFragment extends BaseFragment {
             case R.id.btn_choose_time:
                 chooseData();
                 break;
+            case R.id.rl_weixinpay:
+                weixinPay();
+                break;
+            case R.id.rl_alipay:
+                aliPay();
+                break;
             case R.id.btn_pay:
                 createCarRentOrder();
                 break;
@@ -124,6 +164,9 @@ public class CreateCarRentOrderFragment extends BaseFragment {
         }
     }
 
+    /**
+     * 选择日期
+     */
     private void chooseData() {
         ++time;
         boolean isLightTheme = ThemeManager.getInstance().getCurrentTheme() == 0;
@@ -137,8 +180,8 @@ public class CreateCarRentOrderFragment extends BaseFragment {
                             ((TextView) getView().findViewById(R.id.tv_rent_date)).setText((dialog.getMonth() + 1) + "-" + dialog.getDay());//07-13
                             chooseTime();//选择时间
                             break;
-                        case 2:
-                            ((TextView) getView().findViewById(R.id.tv_rent_date)).setText((dialog.getMonth() + 1) + "-" + dialog.getDay());//07-13
+                        case 3:
+                            ((TextView) getView().findViewById(R.id.tv_back_date)).setText((dialog.getMonth() + 1) + "-" + dialog.getDay());//07-13
                             chooseTime();
                             break;
                         default:
@@ -160,6 +203,9 @@ public class CreateCarRentOrderFragment extends BaseFragment {
         fragment.show(getFragmentManager(), null);
     }
 
+    /**
+     * 选择时间
+     */
     private void chooseTime() {
         ++time;
         boolean isLightTheme = ThemeManager.getInstance().getCurrentTheme() == 0;
@@ -169,11 +215,11 @@ public class CreateCarRentOrderFragment extends BaseFragment {
                 TimePickerDialog dialog = (TimePickerDialog) fragment.getDialog();
                 if (getView() != null) {
                     switch (time) {
-                        case 1:
+                        case 2:
                             ((TextView) getView().findViewById(R.id.tv_rent_time)).setText(dialog.getHour() + ":" + dialog.getMinute());//18:00
                             chooseData();
                             break;
-                        case 2:
+                        case 4:
                             ((TextView) getView().findViewById(R.id.tv_back_time)).setText(dialog.getHour() + ":" + dialog.getMinute());//18:00
                             break;
                         default:
@@ -195,18 +241,30 @@ public class CreateCarRentOrderFragment extends BaseFragment {
         fragment.show(getFragmentManager(), null);
     }
 
+    private String getRentCarTime() {
+        return ((TextView) getView().findViewById(R.id.tv_rent_date)).getText().toString() + ((TextView) getView().findViewById(R.id.tv_rent_time)).getText().toString();
+    }
+
+    private String getBackCarTime() {
+        return ((TextView) getView().findViewById(R.id.tv_back_date)).getText().toString() + ((TextView) getView().findViewById(R.id.tv_back_time)).getText().toString();
+    }
+
     /**
      * 创建租车订单
      */
     private void createCarRentOrder() {
+        if (EmptyUtils.isEmpty(getName()) && EmptyUtils.isEmpty(getPhone())) {
+            ToastUtils.showShort("请输入姓名和手机号");
+            return;
+        }
         OkHttpUtils.post()
                 .url(Constant.getCreateCarRentOrderUrl())
                 .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
                 .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
                 .addParams(Constant.CAR_ID, carRentDetailInfoBean.getCar_id())
-                .addParams(Constant.RENTAL_TIME_START, "450")
-                .addParams(Constant.RENTAL_TIME_END, "9854")
-                .addParams(Constant.MOBILE, "13325458956")
+                .addParams(Constant.RENTAL_TIME_START, getRentCarTime())
+                .addParams(Constant.RENTAL_TIME_END, getBackCarTime())
+                .addParams(Constant.MOBILE, SPUtils.getInstance().getString(Constant.ACCOUNT))
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -250,7 +308,7 @@ public class CreateCarRentOrderFragment extends BaseFragment {
                 .url(Constant.getCreateCarRentPayUrl())
                 .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
                 .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
-                .addParams(Constant.PAY_TYPE, "2")
+                .addParams(Constant.PAY_TYPE, String.valueOf(pay_type))
                 .addParams(Constant.ORDER_SN, order_sn)
                 .build()
                 .execute(new StringCallback() {
