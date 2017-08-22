@@ -35,28 +35,28 @@ public class MyFragment extends BaseFragment {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rl_user:
-                gotoPager(MyHomePageFragment.class, null);
+                gotoPager(MyHomePageFragment.class, null);//我的主页
                 break;
             case R.id.rl_setting:
-                gotoPager(SettingFragment.class, null);
+                gotoPager(SettingFragment.class, null);//设置
                 break;
             case R.id.rl_my_wallet:
-                gotoPager(MyWalletFragment.class, null);
+                gotoPager(MyWalletFragment.class, null);//我的钱包
                 break;
             case R.id.rl_total_property:
-                gotoPager(TotalPropertyFragment.class, null);
+                gotoPager(TotalPropertyFragment.class, null);//总资产
                 break;
             case R.id.rl_my_car_repertory:
-                gotoPager(MyCarRepertory.class, null);
+                gotoPager(MyCarRepertory.class, null);//我的车库
                 break;
             case R.id.rl_like:
-                gotoPager(MyLikeFragment.class, null);
+                gotoPager(MyLikeFragment.class, null);//喜欢的
                 break;
             case R.id.rl_my_order:
-                gotoPager(MyOrderFragment.class, null);
+                gotoPager(MyOrderFragment.class, null);//我的订单
                 break;
             case R.id.rl_car_service:
-                gotoPager(CarServiceFragment.class, null);
+                gotoPager(CarServiceFragment.class, null);//汽车服务
                 break;
             default:
                 break;

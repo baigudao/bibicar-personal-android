@@ -4,20 +4,29 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.alipay.sdk.app.PayTask;
 import com.blankj.utilcode.util.EmptyUtils;
 import com.blankj.utilcode.util.SPUtils;
+import com.blankj.utilcode.util.SizeUtils;
 import com.blankj.utilcode.util.ToastUtils;
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
+import com.rey.material.app.DatePickerDialog;
+import com.rey.material.app.DialogFragment;
+import com.rey.material.app.ThemeManager;
+import com.rey.material.app.TimePickerDialog;
 import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.alipay.PayResult;
+import com.wiserz.pbibi.bean.CarRentDetailInfoBean;
 import com.wiserz.pbibi.bean.CarRentOrderBean;
 import com.wiserz.pbibi.util.Constant;
+import com.wiserz.pbibi.util.DataManager;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -26,6 +35,7 @@ import org.json.JSONObject;
 
 import java.util.Map;
 
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 import okhttp3.Call;
 
 /**
@@ -35,10 +45,12 @@ import okhttp3.Call;
  */
 public class CreateCarRentOrderFragment extends BaseFragment {
 
-    private String car_id;
     private IWXAPI iwxapi;
+    private CarRentDetailInfoBean carRentDetailInfoBean;
 
     private static final int SDK_PAY_FLAG = 1;
+
+    private int time;//进入日期时间选择器的次数
 
     private Handler mHandler = new Handler() {
         @Override
@@ -70,11 +82,27 @@ public class CreateCarRentOrderFragment extends BaseFragment {
 
     @Override
     protected void initView(View view) {
-        car_id = getArguments().getString(Constant.CAR_ID);
+        carRentDetailInfoBean = (CarRentDetailInfoBean) DataManager.getInstance().getData1();
+        DataManager.getInstance().setData1(null);
         view.findViewById(R.id.iv_back).setOnClickListener(this);
         ((TextView) view.findViewById(R.id.tv_title)).setText("创建订单");
 
+        if (EmptyUtils.isNotEmpty(carRentDetailInfoBean)) {
+            Glide.with(mContext)
+                    .load(carRentDetailInfoBean.getFiles().get(0).getFile_url())
+                    .placeholder(R.drawable.default_bg_ratio_1)
+                    .bitmapTransform(new RoundedCornersTransformation(mContext, SizeUtils.dp2px(8), 0, RoundedCornersTransformation.CornerType.ALL))
+                    .into((ImageView) view.findViewById(R.id.iv_car_image));
+            ((TextView) view.findViewById(R.id.tv_car_name)).setText(carRentDetailInfoBean.getCar_name());
+            ((TextView) view.findViewById(R.id.tv_subscription)).setText("¥" + carRentDetailInfoBean.getRental_info().getDeposit() + "元/天");//订金
+            ((TextView) view.findViewById(R.id.tv_deposit)).setText("¥" + carRentDetailInfoBean.getRental_info().getSubscription() + "元/天");//押金
+            ((TextView) view.findViewById(R.id.tv_rent_price)).setText("¥" + carRentDetailInfoBean.getRental_info().getOne() + "元/天");//租金
+        }
+
+        view.findViewById(R.id.btn_choose_time).setOnClickListener(this);
         view.findViewById(R.id.btn_pay).setOnClickListener(this);
+
+        time = 0;
 
         regToWx();
     }
@@ -85,12 +113,86 @@ public class CreateCarRentOrderFragment extends BaseFragment {
             case R.id.iv_back:
                 goBack();
                 break;
+            case R.id.btn_choose_time:
+                chooseData();
+                break;
             case R.id.btn_pay:
                 createCarRentOrder();
                 break;
             default:
                 break;
         }
+    }
+
+    private void chooseData() {
+        ++time;
+        boolean isLightTheme = ThemeManager.getInstance().getCurrentTheme() == 0;
+        DatePickerDialog.Builder builder = new DatePickerDialog.Builder(isLightTheme ? R.style.Material_App_Dialog_DatePicker_Light : R.style.Material_App_Dialog_DatePicker) {
+            @Override
+            public void onPositiveActionClicked(DialogFragment fragment) {
+                DatePickerDialog dialog = (DatePickerDialog) fragment.getDialog();
+                if (getView() != null) {
+                    switch (time) {
+                        case 1:
+                            ((TextView) getView().findViewById(R.id.tv_rent_date)).setText((dialog.getMonth() + 1) + "-" + dialog.getDay());//07-13
+                            chooseTime();//选择时间
+                            break;
+                        case 2:
+                            ((TextView) getView().findViewById(R.id.tv_rent_date)).setText((dialog.getMonth() + 1) + "-" + dialog.getDay());//07-13
+                            chooseTime();
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                super.onPositiveActionClicked(fragment);
+            }
+
+            @Override
+            public void onNegativeActionClicked(DialogFragment fragment) {
+                super.onNegativeActionClicked(fragment);
+            }
+        };
+        builder.positiveAction("确定")
+                .negativeAction("取消");
+
+        DialogFragment fragment = DialogFragment.newInstance(builder);
+        fragment.show(getFragmentManager(), null);
+    }
+
+    private void chooseTime() {
+        ++time;
+        boolean isLightTheme = ThemeManager.getInstance().getCurrentTheme() == 0;
+        TimePickerDialog.Builder builder = new TimePickerDialog.Builder(isLightTheme ? R.style.Material_App_Dialog_TimePicker_Light : R.style.Material_App_Dialog_TimePicker, 24, 00) {
+            @Override
+            public void onPositiveActionClicked(DialogFragment fragment) {
+                TimePickerDialog dialog = (TimePickerDialog) fragment.getDialog();
+                if (getView() != null) {
+                    switch (time) {
+                        case 1:
+                            ((TextView) getView().findViewById(R.id.tv_rent_time)).setText(dialog.getHour() + ":" + dialog.getMinute());//18:00
+                            chooseData();
+                            break;
+                        case 2:
+                            ((TextView) getView().findViewById(R.id.tv_back_time)).setText(dialog.getHour() + ":" + dialog.getMinute());//18:00
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                super.onPositiveActionClicked(fragment);
+            }
+
+            @Override
+            public void onNegativeActionClicked(DialogFragment fragment) {
+                super.onNegativeActionClicked(fragment);
+            }
+        };
+        builder.positiveAction("确定")
+                .negativeAction("取消");
+
+        DialogFragment fragment = DialogFragment.newInstance(builder);
+        fragment.show(getFragmentManager(), null);
     }
 
     /**
@@ -101,7 +203,7 @@ public class CreateCarRentOrderFragment extends BaseFragment {
                 .url(Constant.getCreateCarRentOrderUrl())
                 .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
                 .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
-                .addParams(Constant.CAR_ID, car_id)
+                .addParams(Constant.CAR_ID, carRentDetailInfoBean.getCar_id())
                 .addParams(Constant.RENTAL_TIME_START, "450")
                 .addParams(Constant.RENTAL_TIME_END, "9854")
                 .addParams(Constant.MOBILE, "13325458956")

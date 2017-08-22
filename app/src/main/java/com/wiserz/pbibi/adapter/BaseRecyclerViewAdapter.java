@@ -21,9 +21,11 @@ import com.wiserz.pbibi.bean.ArticleBean;
 import com.wiserz.pbibi.bean.CarInfoBean;
 import com.wiserz.pbibi.bean.CarInfoBeanForCarCenter;
 import com.wiserz.pbibi.bean.CarRentInfoBean;
+import com.wiserz.pbibi.bean.CarRentRecommendCarBean;
 import com.wiserz.pbibi.bean.CheHangBean;
 import com.wiserz.pbibi.bean.CheHangUserListBean;
 import com.wiserz.pbibi.bean.FuLiBean;
+import com.wiserz.pbibi.bean.MyCarRentOrderBean;
 import com.wiserz.pbibi.bean.TopicInfoBean;
 import com.wiserz.pbibi.bean.UserBean;
 import com.wiserz.pbibi.bean.VideoBean;
@@ -68,6 +70,10 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
 
     private static final int USER_SEARCH_DATA_TYPE = 12;
 
+    private static final int MY_CAR_RENT_ORDER_DATA_TYPE = 13;
+
+    private static final int CAR_RENT_RECOMMEND_DATA_TYPE = 16;
+
     public BaseRecyclerViewAdapter(Context context, List<T> tList, int dataType) {
         this.mContext = context;
         this.mList = tList;
@@ -103,6 +109,10 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
             viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_car_center_car_list, null));
         } else if (dataType == USER_SEARCH_DATA_TYPE) {
             viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_user, null));
+        } else if (dataType == MY_CAR_RENT_ORDER_DATA_TYPE) {
+            viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_my_car_rent_order, null));
+        } else if (dataType == CAR_RENT_RECOMMEND_DATA_TYPE) {
+            viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_car_rent_recommend, null));
         } else {
             viewHolder = null;
         }
@@ -362,6 +372,74 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                 holder.tv_item1.setText(userBean.getNickname());
                 holder.tv_item2.setText("粉丝 " + userBean.getFans_num() + " | 关注" + userBean.getFriend_num());
             }
+        } else if (dataType == MY_CAR_RENT_ORDER_DATA_TYPE) {
+            ArrayList<MyCarRentOrderBean> myCarRentOrderBeanArrayList = (ArrayList<MyCarRentOrderBean>) mList;
+
+            if (EmptyUtils.isNotEmpty(myCarRentOrderBeanArrayList)) {
+                MyCarRentOrderBean myCarRentOrderBean = myCarRentOrderBeanArrayList.get(position);
+
+                Glide.with(mContext)
+                        .load(myCarRentOrderBean.getCar_info().getFiles().get(0).getFile_url())
+                        .placeholder(R.drawable.default_bg_ratio_1)
+                        .error(R.drawable.default_bg_ratio_1)
+                        .bitmapTransform(new RoundedCornersTransformation(mContext, SizeUtils.dp2px(8), 0, RoundedCornersTransformation.CornerType.ALL))
+                        .into(holder.iv_item1);
+                int status = myCarRentOrderBean.getStatus();//1:待支付 2:支付失败 3:支付成功（待提车） 4:订单失败 5:订单成功
+                if (EmptyUtils.isNotEmpty(status)) {
+                    switch (status) {
+                        case 1:
+                            holder.tv_item1.setText("待支付...");
+                            break;
+                        case 2:
+                            holder.tv_item1.setText("支付失败");
+                            break;
+                        case 3:
+                            holder.tv_item1.setText("支付成功（待提车）");
+                            break;
+                        case 4:
+                            holder.tv_item1.setText("订单失败");
+                            break;
+                        case 5:
+                            holder.tv_item1.setText("订单成功");
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                holder.tv_item2.setText(TimeUtils.date2String(new Date(Long.valueOf(myCarRentOrderBean.getCreated_at()) * 1000), new SimpleDateFormat("yyyy.MM.dd")));//time为秒，换算成毫秒
+                holder.tv_item3.setText(myCarRentOrderBean.getCar_info().getCar_name());
+                holder.tv_item4.setText(TimeUtils.date2String(new Date(Long.valueOf(myCarRentOrderBean.getRental_time_start()) * 1000), new SimpleDateFormat("yyyy/MM/dd")) + "~" +
+                        TimeUtils.date2String(new Date(Long.valueOf(myCarRentOrderBean.getRental_time_end()) * 1000), new SimpleDateFormat("yyyy/MM/dd")));//2017/07/13~2017/08/13
+            }
+        } else if (dataType == CAR_RENT_RECOMMEND_DATA_TYPE) {
+            ArrayList<CarRentRecommendCarBean> carRentRecommendCarBeanArrayList = (ArrayList<CarRentRecommendCarBean>) mList;
+
+            if (EmptyUtils.isNotEmpty(carRentRecommendCarBeanArrayList)) {
+                CarRentRecommendCarBean carRentRecommendCarBean = carRentRecommendCarBeanArrayList.get(position);
+
+                Glide.with(mContext)
+                        .load(carRentRecommendCarBean.getFiles().get(0).getFile_url())
+                        .placeholder(R.drawable.default_bg_ratio_1)
+                        .error(R.drawable.default_bg_ratio_1)
+                        .bitmapTransform(new RoundedCornersTransformation(mContext, SizeUtils.dp2px(8), 0, RoundedCornersTransformation.CornerType.ALL))
+                        .into(holder.iv_item1);
+
+                int status = carRentRecommendCarBean.getRental_info().getStatus();//车辆出租状态 1:可租 2已租
+                if (EmptyUtils.isNotEmpty(status)) {
+                    switch (status) {
+                        case 1:
+                            holder.iv_item2.setImageResource(R.drawable.b_zu_status3x);
+                            break;
+                        case 2:
+                            holder.iv_item2.setImageResource(R.drawable.g_zu_status3x);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                holder.tv_item1.setText(carRentRecommendCarBean.getCar_name());
+                holder.tv_item2.setText("¥" + String.valueOf(carRentRecommendCarBean.getRental_info().getDeposit()) + "/日均");//¥468/日均
+            }
         }
     }
 
@@ -379,6 +457,7 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
         private TextView tv_item1;
         private TextView tv_item2;
         private TextView tv_item3;
+        private TextView tv_item4;
 
         private RecyclerView recyclerView;
 
@@ -563,6 +642,37 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                 iv_item1 = (ImageView) itemView.findViewById(R.id.iv_circle_image);
                 tv_item1 = (TextView) itemView.findViewById(R.id.tv_name);
                 tv_item2 = (TextView) itemView.findViewById(R.id.tv_fan_and_follow);
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnItemClickListener != null) {
+                            int position = getLayoutPosition();
+                            mOnItemClickListener.onItemClick(mList.get(position), position);
+                        }
+                    }
+                });
+            } else if (dataType == MY_CAR_RENT_ORDER_DATA_TYPE) {
+                iv_item1 = (ImageView) itemView.findViewById(R.id.iv_car_image);
+                tv_item1 = (TextView) itemView.findViewById(R.id.tv_car_rent_status);
+                tv_item2 = (TextView) itemView.findViewById(R.id.tv_car_rent_time);
+                tv_item3 = (TextView) itemView.findViewById(R.id.tv_car_rent_name);
+                tv_item4 = (TextView) itemView.findViewById(R.id.tv_car_rent_between);
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnItemClickListener != null) {
+                            int position = getLayoutPosition();
+                            mOnItemClickListener.onItemClick(mList.get(position), position);
+                        }
+                    }
+                });
+            } else if (dataType == CAR_RENT_RECOMMEND_DATA_TYPE) {
+                iv_item1 = (ImageView) itemView.findViewById(R.id.iv_image);
+                iv_item2 = (ImageView) itemView.findViewById(R.id.iv_car_rent_status);
+                tv_item1 = (TextView) itemView.findViewById(R.id.tv_name);
+                tv_item2 = (TextView) itemView.findViewById(R.id.tv_price);
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override

@@ -67,4 +67,6 @@ dependencies {
     compile 'com.qiniu:qiniu-android-sdk:7.3.9'
     //节操视频播放
     compile 'fm.jiecao:jiecaovideoplayer:5.8.1'
+    //material库
+    compile 'com.github.rey5137:material:1.2.4'
 }

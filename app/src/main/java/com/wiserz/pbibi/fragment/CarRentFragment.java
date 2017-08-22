@@ -64,7 +64,7 @@ public class CarRentFragment extends BaseFragment implements BaseRecyclerViewAda
                 goBack();
                 break;
             case R.id.btn_register:
-                gotoPager(MyCarRentFragment.class,null);
+                gotoPager(MyCarRentFragment.class,null);//我的租车
                 break;
             default:
                 break;

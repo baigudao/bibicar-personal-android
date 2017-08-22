@@ -11,6 +11,8 @@ import com.wiserz.pbibi.R;
  * Used as : 我的主页的页面
  */
 public class MyHomePageFragment extends BaseFragment {
+
+
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_my_home_page;
