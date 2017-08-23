@@ -120,12 +120,12 @@
         "source": "E:\\android-as-ws\\bibicar-personal-android\\IMKit\\build\\intermediates\\bundles\\debug\\res\\drawable\\rc_ic_files_selector.xml"
     },
     {
-        "merged": "E:\\android-as-ws\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\rc_plugin_toggle_selector.xml",
-        "source": "E:\\android-as-ws\\bibicar-personal-android\\IMKit\\build\\intermediates\\bundles\\debug\\res\\drawable\\rc_plugin_toggle_selector.xml"
-    },
-    {
         "merged": "E:\\android-as-ws\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\rc_progress_sending_style.xml",
         "source": "E:\\android-as-ws\\bibicar-personal-android\\IMKit\\build\\intermediates\\bundles\\debug\\res\\drawable\\rc_progress_sending_style.xml"
+    },
+    {
+        "merged": "E:\\android-as-ws\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\rc_plugin_toggle_selector.xml",
+        "source": "E:\\android-as-ws\\bibicar-personal-android\\IMKit\\build\\intermediates\\bundles\\debug\\res\\drawable\\rc_plugin_toggle_selector.xml"
     },
     {
         "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\rc_bg_mentionlist_item.xml",

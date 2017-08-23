@@ -1,5 +1,6 @@
 package com.wiserz.pbibi.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -23,7 +24,12 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import cn.sharesdk.onekeyshare.OnekeyShare;
+import cn.sharesdk.onekeyshare.OnekeyShareTheme;
 import okhttp3.Call;
+
+import static com.wiserz.pbibi.R.id.rl_share_wechat;
+import static com.wiserz.pbibi.R.id.rl_share_wechatmoments;
 
 /**
  * Created by jackie on 2017/8/17 16:48.
@@ -33,6 +39,10 @@ import okhttp3.Call;
 public class ArticleDetailFragment extends BaseFragment {
 
     private int feed_id;
+    private String share_img;
+    private String share_title;
+    private String share_txt;
+    private String share_url;
 
     @Override
     protected int getLayoutId() {
@@ -45,6 +55,10 @@ public class ArticleDetailFragment extends BaseFragment {
         feed_id = bundle.getInt(Constant.FEED_ID);
         view.findViewById(R.id.iv_back).setOnClickListener(this);
         ((TextView) view.findViewById(R.id.tv_title)).setText("文章详情");
+
+        view.findViewById(rl_share_wechat).setOnClickListener(this);
+        view.findViewById(rl_share_wechatmoments).setOnClickListener(this);
+        view.findViewById(R.id.rl_share_weibo).setOnClickListener(this);
     }
 
     @Override
@@ -52,6 +66,15 @@ public class ArticleDetailFragment extends BaseFragment {
         switch (v.getId()) {
             case R.id.iv_back:
                 goBack();
+                break;
+            case R.id.rl_share_weibo:
+                ToastUtils.showShort("微博");
+                break;
+            case rl_share_wechat:
+                ToastUtils.showShort("微信");
+                break;
+            case rl_share_wechatmoments:
+                ToastUtils.showShort("朋友圈");
                 break;
             default:
                 break;
@@ -82,6 +105,10 @@ public class ArticleDetailFragment extends BaseFragment {
                                 int status = jsonObject.optInt("status");
                                 JSONObject jsonObjectData = jsonObject.optJSONObject("data");
                                 if (status == 1) {
+                                    share_img = jsonObjectData.optString("share_img");
+                                    share_title = jsonObjectData.optString("share_title");
+                                    share_txt = jsonObjectData.optString("share_txt");
+                                    share_url = jsonObjectData.optString("share_url");
                                     handlerArticleDetailData(jsonObjectData);
                                 } else {
                                     String code = jsonObject.optString("code");
@@ -115,5 +142,39 @@ public class ArticleDetailFragment extends BaseFragment {
                     .into((ImageView) getView().findViewById(R.id.iv_circle_image));
             ((TextView) getView().findViewById(R.id.tv_author_and_time)).setText(articleDetailBean.getFeed_from() + " · " + TimeUtils.date2String(new Date(Long.valueOf(articleDetailBean.getCreated()) * 1000), new SimpleDateFormat("yyyy/MM/dd")));
         }
+    }
+
+    /**
+     * 演示调用ShareSDK执行分享
+     *
+     * @param context
+     * @param platformToShare 指定直接分享平台名称（一旦设置了平台名称，则九宫格将不会显示）
+     * @param showContentEdit 是否显示编辑页
+     */
+    private void showShare(Context context, String platformToShare, boolean showContentEdit) {
+
+        OnekeyShare oks = new OnekeyShare();
+        oks.setSilent(!showContentEdit);
+        if (platformToShare != null) {
+            oks.setPlatform(platformToShare);
+        }
+        //ShareSDK快捷分享提供两个界面第一个是九宫格 CLASSIC  第二个是SKYBLUE
+        oks.setTheme(OnekeyShareTheme.CLASSIC);
+        // 令编辑页面显示为Dialog模式
+        //        oks.setDialogMode();
+        // 在自动授权时可以禁用SSO方式
+        oks.disableSSOWhenAuthorize();
+
+        oks.setTitle(share_title);
+        if (platformToShare.equalsIgnoreCase("SinaWeibo")) {
+            oks.setText(share_txt + "\n" + share_url);
+        } else {
+            oks.setText(share_img);
+            oks.setImageUrl(share_img);
+            oks.setUrl(share_url);
+        }
+
+        // 启动分享
+        oks.show(context);
     }
 }
