@@ -68,13 +68,13 @@ public class ArticleDetailFragment extends BaseFragment {
                 goBack();
                 break;
             case R.id.rl_share_weibo:
-                ToastUtils.showShort("微博");
+                showShare(mContext, "SinaWeibo", true);
                 break;
             case rl_share_wechat:
-                ToastUtils.showShort("微信");
+                showShare(mContext, "Wechat", true);
                 break;
             case rl_share_wechatmoments:
-                ToastUtils.showShort("朋友圈");
+                showShare(mContext, "WechatMoments", true);
                 break;
             default:
                 break;
