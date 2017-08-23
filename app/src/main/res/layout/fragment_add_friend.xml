@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_color"
+    android:orientation="vertical">
+
+    <include layout="@layout/title_bar" />
+
+    <RelativeLayout
+        android:id="@+id/rl_search_user"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:clickable="true"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/tvSearch1"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="50dp"
+            android:background="@drawable/shape_circle_search"
+            android:clickable="true" />
+
+        <TextView
+            android:id="@+id/tvSearch2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:cursorVisible="false"
+            android:drawableLeft="@drawable/v1_search3x"
+            android:drawablePadding="10dp"
+            android:hint="@string/search_user"
+            android:padding="10dp"
+            android:textColor="#B9B9B9"
+            android:textSize="12sp" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/invite_address_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/add_person" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="15dp"
+            android:padding="10dp"
+            android:text="@string/invite_list"
+            android:textSize="16sp" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_weight="1" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/v3_topic_more3x" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="345dp"
+        android:layout_height="1dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/divider_color" />
+
+    <!-- 邀请微博好友-->
+    <LinearLayout
+        android:id="@+id/invite_weibo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/sina" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="15dp"
+            android:padding="10dp"
+            android:text="@string/invite_weibo"
+            android:textSize="16sp" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_weight="1" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/v3_topic_more3x" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="345dp"
+        android:layout_height="1dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/divider_color" />
+
+    <!-- 邀请微信好友-->
+    <LinearLayout
+        android:id="@+id/invite_wechat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/wechat" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="15dp"
+            android:padding="10dp"
+            android:text="@string/invite_wechat"
+            android:textSize="16sp" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_weight="1" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/v3_topic_more3x" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="345dp"
+        android:layout_height="1dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/divider_color" />
+
+</LinearLayout>

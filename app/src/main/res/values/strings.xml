@@ -42,5 +42,9 @@
     <string name="woman">女</string>
     <string name="wallet_mind">温馨提示： \n1、充值为100的倍数、代表您当前可以生成几个订单 例：500元即表示您当前可以同时生成5个看车订单。 \n2、一键提现功能在您当前有订单未完成或者未终止时 不可用。</string>
     <string name="recharge_text_remind">温馨提示： \n\n如需要手动输入金额，建议为100的倍数。</string>
+    <string name="search_user">搜索用户</string>
+    <string name="invite_list">邀请通讯录好友</string>
+    <string name="invite_weibo">邀请微博好友</string>
+    <string name="invite_wechat">邀请微信好友</string>
 
 </resources>

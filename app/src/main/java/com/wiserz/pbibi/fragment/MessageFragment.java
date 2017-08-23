@@ -7,7 +7,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.EmptyUtils;
-import com.blankj.utilcode.util.ToastUtils;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.bean.LoginBean;
 import com.wiserz.pbibi.util.DataManager;
@@ -77,7 +76,7 @@ public class MessageFragment extends BaseFragment {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_image:
-                ToastUtils.showShort("添加好友");
+                gotoPager(AddFriendFragment.class, null);
                 break;
             default:
                 break;

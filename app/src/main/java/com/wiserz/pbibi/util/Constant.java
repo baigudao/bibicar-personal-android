@@ -110,6 +110,8 @@ public class Constant {
     private static final String takeCashUrl = hostUrl + "v3/UserCarPact/sellerrefund";//卖家提现
     private static final String sellerRechargeUrl = hostUrl + "v3/UserCarPact/withdraw";//卖家充值
 
+    private static final String inviteFriendUrl = hostUrl + "v3/user/getmessage";
+
     public static String getUserLoginUrl() {
         return userLoginUrl;
     }
@@ -200,5 +202,9 @@ public class Constant {
 
     public static String getSellerRechargeUrl() {
         return sellerRechargeUrl;
+    }
+
+    public static String getInviteFriendUrl() {
+        return inviteFriendUrl;
     }
 }
