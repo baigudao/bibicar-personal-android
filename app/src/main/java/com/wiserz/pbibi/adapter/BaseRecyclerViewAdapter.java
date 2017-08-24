@@ -18,6 +18,7 @@ import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.bean.ArticleBean;
+import com.wiserz.pbibi.bean.ArticleCommentBean;
 import com.wiserz.pbibi.bean.CarInfoBean;
 import com.wiserz.pbibi.bean.CarInfoBeanForCarCenter;
 import com.wiserz.pbibi.bean.CarRentInfoBean;
@@ -74,6 +75,8 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
 
     private static final int CAR_RENT_RECOMMEND_DATA_TYPE = 16;
 
+    private static final int ARTICLE_COMMENT_LIST_DATA_TYPE = 18;
+
     public BaseRecyclerViewAdapter(Context context, List<T> tList, int dataType) {
         this.mContext = context;
         this.mList = tList;
@@ -83,7 +86,9 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
     @Override
     public BaseRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         ViewHolder viewHolder;
-        if (dataType == NEW_CAR_DATA_TYPE) {
+        if (dataType == ARTICLE_COMMENT_LIST_DATA_TYPE) {
+            viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_article_comment, null));
+        } else if (dataType == NEW_CAR_DATA_TYPE) {
             viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_new_car, null));
         } else if (dataType == CAR_VIDEO_DATA_TYPE) {
             viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_car_video, null));
@@ -440,6 +445,19 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                 holder.tv_item1.setText(carRentRecommendCarBean.getCar_name());
                 holder.tv_item2.setText("¥" + String.valueOf(carRentRecommendCarBean.getRental_info().getDeposit()) + "/日均");//¥468/日均
             }
+        }else if (dataType == ARTICLE_COMMENT_LIST_DATA_TYPE){
+            ArrayList<ArticleCommentBean> articleCommentBeanArrayList = (ArrayList<ArticleCommentBean>) mList;
+
+            if (EmptyUtils.isNotEmpty(articleCommentBeanArrayList)){
+                ArticleCommentBean articleCommentBean = articleCommentBeanArrayList.get(position);
+
+                Glide.with(mContext)
+                        .load(articleCommentBean.getFrom_user().getAvatar())
+                        .placeholder(R.drawable.user_photo)
+                        .error(R.drawable.user_photo)
+                        .into(holder.iv_item1);
+                holder.tv_item1.setText(articleCommentBean.getFrom_user().getNickname());
+            }
         }
     }
 
@@ -683,6 +701,15 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                         }
                     }
                 });
+            } else if (dataType == ARTICLE_COMMENT_LIST_DATA_TYPE) {
+                iv_item1 = (ImageView) itemView.findViewById(R.id.iv_circle_image);
+                tv_item1 = (TextView) itemView.findViewById(R.id.tv_comment_name);
+                tv_item2 = (TextView) itemView.findViewById(R.id.tv_comment_time);
+
+                iv_item2 = (ImageView) itemView.findViewById(R.id.iv_zan);
+                tv_item3 = (TextView) itemView.findViewById(R.id.tv_zan);
+                iv_item3 = (ImageView) itemView.findViewById(R.id.iv_comment);
+                tv_item4 = (TextView) itemView.findViewById(R.id.tv_comment);
             }
         }
     }

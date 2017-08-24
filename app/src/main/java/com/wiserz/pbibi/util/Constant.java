@@ -66,6 +66,9 @@ public class Constant {
     public static final String POST_FILE = "post_file";
     public static final String TITLE = "title";
     public static final String MONEY = "money";
+    public static final String ADVERTISEMENT_IMAGE_SUCCESS = "advertisement_image_success";
+    public static final String ADVERTISEMENT_IMAGE = "advertisement_image";
+    public static final String ADVERTISEMENT_IMAGE_NUM = "advertisement_image_num";
 
     //URL常量
     //    private final static String hostUrl = "https://api.bibicar.cn/";//正式环境
@@ -76,6 +79,7 @@ public class Constant {
     public static final String userRegisterUrl = hostUrl + "v3/user/register";//用户注册
     public static final String userProtocolUrl = "https://api.bibicar.cn/protocol.html";//用户协议
 
+    private static final String splashUrl = hostUrl + "app/getimg";//启动页
     private static final String userLoginUrl = hostUrl + "v3/user/login";//用户登录
     private static final String newHomeUrl = hostUrl + "v3/theme/homepage";//首页
 
@@ -95,22 +99,27 @@ public class Constant {
     private final static String articleListUrl = hostUrl + "v3/article/list";//文章列表
     private final static String articleIndexUrl = hostUrl + "v3/article/index";
     private final static String articleSearchUrl = hostUrl + "v3/Article/searcharticlelist";//搜索文章
+    private static final String articleCommentListUrl = hostUrl + "v3/article/commentlist";//文章评论列表
 
     private final static String userSearchUrl = hostUrl + "v3/user/search";//用户搜索
 
     private final static String topicSearchUrl = hostUrl + "v3/theme/searchtheme";//话题搜索
 
-    private static final String cheHangListUrl = hostUrl +"v3/publishcar/getcompanylist";//车行列表
+    private static final String cheHangListUrl = hostUrl + "v3/publishcar/getcompanylist";//车行列表
 
-    private static final String createTopicUrl = hostUrl +"v3/theme/createtheme";//创建话题
-    private static final String hallUrl = hostUrl +"v3/theme/themehome";//大厅
-    private static final String topicListUrl = hostUrl +"v3/theme/list";//话题列表
+    private static final String createTopicUrl = hostUrl + "v3/theme/createtheme";//创建话题
+    private static final String hallUrl = hostUrl + "v3/theme/themehome";//大厅
+    private static final String topicListUrl = hostUrl + "v3/theme/list";//话题列表
 
     private static final String balanceUrl = hostUrl + "v3/UserCarPact/getusermoney";//获取余额
     private static final String takeCashUrl = hostUrl + "v3/UserCarPact/sellerrefund";//卖家提现
     private static final String sellerRechargeUrl = hostUrl + "v3/UserCarPact/withdraw";//卖家充值
 
     private static final String inviteFriendUrl = hostUrl + "v3/user/getmessage";
+
+    public static String getSplashUrl() {
+        return splashUrl;
+    }
 
     public static String getUserLoginUrl() {
         return userLoginUrl;
@@ -206,5 +215,9 @@ public class Constant {
 
     public static String getInviteFriendUrl() {
         return inviteFriendUrl;
+    }
+
+    public static String getArticleCommentListUrl() {
+        return articleCommentListUrl;
     }
 }

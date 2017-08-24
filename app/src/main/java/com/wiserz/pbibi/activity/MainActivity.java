@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.fragment.BaseFragment;
@@ -135,24 +136,16 @@ public class MainActivity extends BaseActivity {
         radioButton.setChecked(true);
     }
 
-    //    private long startTime = 0;
-    //    private Toast toast = null;
-    //
-    //    @Override
-    //    public boolean onKeyDown(int keyCode, KeyEvent event) {
-    //        if (keyCode == KeyEvent.KEYCODE_BACK) {
-    //            long currentTime = System.currentTimeMillis();
-    //            if ((currentTime - startTime) > 2000) {
-    //                toast = Toast.makeText(MainActivity.this, "再按一次退出程序", Toast.LENGTH_SHORT);
-    //                toast.show();
-    //                startTime = currentTime;
-    //            } else {
-    //                finish();
-    //                if (toast != null) {
-    //                    toast.cancel();
-    //                }
-    //            }
-    //        }
-    //        return super.onKeyDown(keyCode, event);
-    //    }
+    long startTime = 0;
+
+    @Override
+    public void onBackPressed() {
+        long currentTime = System.currentTimeMillis();
+        if ((currentTime - startTime) > 2000) {
+            Toast.makeText(MainActivity.this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+            startTime = currentTime;
+        } else {
+            finish();
+        }
+    }
 }

@@ -30,6 +30,7 @@ import com.wiserz.pbibi.view.CountDownView;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -52,6 +53,7 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getAdvertisementImageFromNet();//额外增加线程外任务，用于请求启动页面的数据并保存广告图片到SD卡
         initView();
     }
 
@@ -109,10 +111,19 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private String getAdvertisementImage() {
-        ArrayList<String> strings = new ArrayList<>();
-        strings.add("http://img.bibicar.cn/bling.png");
-        strings.add("http://img.bibicar.cn/qiuyue.png");
-        strings.add("http://img.bibicar.cn/yub.png");
+        final ArrayList<String> strings = new ArrayList<>();
+        boolean is_have_image = SPUtils.getInstance().getBoolean(Constant.ADVERTISEMENT_IMAGE_SUCCESS);
+        if (is_have_image) {
+            int image_size = SPUtils.getInstance().getInt(Constant.ADVERTISEMENT_IMAGE_NUM);
+            for (int i = 0; i < image_size; i++) {
+                strings.add(SPUtils.getInstance().getString(Constant.ADVERTISEMENT_IMAGE + i));
+            }
+        } else {
+            //默认的三张图片
+            strings.add("http://img.bibicar.cn/chezhuzhaoweijia.jpeg");
+            strings.add("http://img.bibicar.cn/chezhustory002.jpeg");
+            strings.add("http://img.bibicar.cn/chezhustory003.jpeg");
+        }
         Random random = new Random();
         int size = random.nextInt(strings.size());
         return strings.get(size);
@@ -223,5 +234,50 @@ public class SplashActivity extends AppCompatActivity {
         }
         startActivity(intent);
         finish();
+    }
+
+    /**
+     * 用于请求启动页面的数据并保存广告图片到SD卡
+     */
+    private void getAdvertisementImageFromNet() {
+        OkHttpUtils.get()
+                .url(Constant.getSplashUrl())
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+                        JSONObject jsonObject = null;
+                        try {
+                            jsonObject = new JSONObject(response);
+                            int status = jsonObject.optInt("status");
+                            JSONObject jsonObjectData = jsonObject.optJSONObject("data");
+                            if (status == 1) {
+                                JSONArray jsonArray = jsonObjectData.optJSONArray("url");
+                                if (EmptyUtils.isNotEmpty(jsonArray)) {
+                                    //保存广告图片的数量
+                                    SPUtils.getInstance().put(Constant.ADVERTISEMENT_IMAGE_NUM, jsonArray.length());
+                                    for (int i = 0; i < jsonArray.length(); i++) {
+                                        //保存广告图片的地址
+                                        SPUtils.getInstance().put(Constant.ADVERTISEMENT_IMAGE + i, jsonArray.optString(i));
+                                    }
+                                    //保存广告图片地址成功
+                                    SPUtils.getInstance().put(Constant.ADVERTISEMENT_IMAGE_SUCCESS, true);
+                                }
+
+                            } else {
+                                String code = jsonObject.optString("code");
+                                String msg = jsonObjectData.optString("msg");
+                                ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
     }
 }
