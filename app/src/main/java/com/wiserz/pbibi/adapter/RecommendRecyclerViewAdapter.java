@@ -33,13 +33,17 @@ import com.wiserz.pbibi.bean.CheHangBean;
 import com.wiserz.pbibi.bean.LampBean;
 import com.wiserz.pbibi.bean.TopLineBean;
 import com.wiserz.pbibi.bean.VideoBean;
+import com.wiserz.pbibi.fragment.ArticleDetailFragment;
 import com.wiserz.pbibi.fragment.ArticleListFragment;
+import com.wiserz.pbibi.fragment.BannerFragment;
 import com.wiserz.pbibi.fragment.CarCheckServiceFragment;
 import com.wiserz.pbibi.fragment.CarDetailFragment;
 import com.wiserz.pbibi.fragment.CarRentFragment;
 import com.wiserz.pbibi.fragment.CheHangListFragment;
+import com.wiserz.pbibi.fragment.VideoDetailFragment;
 import com.wiserz.pbibi.fragment.VideoListFragment;
 import com.wiserz.pbibi.util.Constant;
+import com.wiserz.pbibi.util.DataManager;
 import com.wiserz.pbibi.view.BaseAutoScrollView;
 import com.wiserz.pbibi.view.VerticalLampView;
 
@@ -107,7 +111,7 @@ public class RecommendRecyclerViewAdapter extends RecyclerView.Adapter implement
         if (currentType == BANNER) {
             BannerViewHolder bannerViewHolder = (BannerViewHolder) holder;
 
-            ArrayList<BannerBean> bannerBeanArrayList = getBannerData(jsonObjectData);
+            final ArrayList<BannerBean> bannerBeanArrayList = getBannerData(jsonObjectData);
 
             //自定义你的Holder，实现更多复杂的界面，不一定是图片翻页，其他任何控件翻页亦可。
             bannerViewHolder.convenientBanner.startTurning(5000);
@@ -124,7 +128,11 @@ public class RecommendRecyclerViewAdapter extends RecyclerView.Adapter implement
                     .setOnItemClickListener(new OnItemClickListener() {
                         @Override
                         public void onItemClick(int position) {
-                            ToastUtils.showShort(position + "");
+                            BannerBean bannerBean = bannerBeanArrayList.get(position);
+                            if (EmptyUtils.isNotEmpty(bannerBean)){
+                                DataManager.getInstance().setData1(bannerBean);
+                                ((BaseActivity) mContext).gotoPager(BannerFragment.class, null);
+                            }
                         }
                     });
             //设置翻页的效果，不需要翻页效果可用不设
@@ -213,7 +221,7 @@ public class RecommendRecyclerViewAdapter extends RecyclerView.Adapter implement
             ArrayList<ArticleBean> articleBeanArrayList = getArticleData(jsonObjectData);
             if (EmptyUtils.isNotEmpty(articleBeanArrayList)) {
                 //第一篇文章
-                ArticleBean articleBean1 = articleBeanArrayList.get(0);
+                final ArticleBean articleBean1 = articleBeanArrayList.get(0);
                 Glide.with(mContext)
                         .load(articleBean1.getImage_url().get(0))
                         .placeholder(R.drawable.default_bg_ratio_1)
@@ -225,11 +233,13 @@ public class RecommendRecyclerViewAdapter extends RecyclerView.Adapter implement
                 carArticleViewHolder.ll_article_item1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ToastUtils.showShort("第一篇文章");
+                        Bundle bundle = new Bundle();
+                        bundle.putInt(Constant.FEED_ID, articleBean1.getFeed_id());
+                        ((BaseActivity) mContext).gotoPager(ArticleDetailFragment.class, bundle);
                     }
                 });
                 //第二篇文章
-                ArticleBean articleBean2 = articleBeanArrayList.get(1);
+                final ArticleBean articleBean2 = articleBeanArrayList.get(1);
                 Glide.with(mContext)
                         .load(articleBean2.getImage_url().get(0))
                         .placeholder(R.drawable.default_bg_ratio_1)
@@ -241,11 +251,13 @@ public class RecommendRecyclerViewAdapter extends RecyclerView.Adapter implement
                 carArticleViewHolder.rl_article_item2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ToastUtils.showShort("第二篇文章");
+                        Bundle bundle = new Bundle();
+                        bundle.putInt(Constant.FEED_ID, articleBean2.getFeed_id());
+                        ((BaseActivity) mContext).gotoPager(ArticleDetailFragment.class, bundle);
                     }
                 });
                 //第三篇文章
-                ArticleBean articleBean3 = articleBeanArrayList.get(2);
+                final ArticleBean articleBean3 = articleBeanArrayList.get(2);
                 Glide.with(mContext)
                         .load(articleBean3.getImage_url().get(0))
                         .placeholder(R.drawable.default_bg_ratio_1)
@@ -257,7 +269,9 @@ public class RecommendRecyclerViewAdapter extends RecyclerView.Adapter implement
                 carArticleViewHolder.rl_article_item3.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ToastUtils.showShort("第三篇文章");
+                        Bundle bundle = new Bundle();
+                        bundle.putInt(Constant.FEED_ID, articleBean3.getFeed_id());
+                        ((BaseActivity) mContext).gotoPager(ArticleDetailFragment.class, bundle);
                     }
                 });
             }
@@ -325,7 +339,8 @@ public class RecommendRecyclerViewAdapter extends RecyclerView.Adapter implement
             ((BaseActivity) mContext).gotoPager(CarDetailFragment.class, bundle);
         } else if (data.getClass().getSimpleName().equals("VideoBean")) {
             VideoBean videoBean = (VideoBean) data;
-            ToastUtils.showShort(videoBean.getPost_content());
+            DataManager.getInstance().setData1(videoBean);
+            ((BaseActivity) mContext).gotoPager(VideoDetailFragment.class, null);
         } else if (data.getClass().getSimpleName().equals("CheHangBean")) {
             CheHangBean cheHangBean = (CheHangBean) data;
             ToastUtils.showShort(cheHangBean.getNickname());

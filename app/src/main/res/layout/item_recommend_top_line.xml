@@ -1,16 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:background="@color/background_color"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/background_color"
+    android:orientation="vertical">
 
-    <View
-        android:layout_width="345dp"
-        android:layout_height="1dp"
-        android:layout_gravity="center_horizontal"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
-        android:background="@color/divider_color"/>
+        android:orientation="horizontal">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <View
+            android:layout_width="345dp"
+            android:layout_height="1dp"
+            android:background="@color/divider_color" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+    </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -22,7 +38,7 @@
             android:layout_height="40dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="28dp"
-            android:src="@drawable/v1_bibinew3x"/>
+            android:src="@drawable/v1_bibinew3x" />
 
         <View
             android:id="@+id/top_line_view"
@@ -31,21 +47,37 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
             android:layout_toRightOf="@id/iv_top_line"
-            android:background="@color/divider_color"/>
+            android:background="@color/divider_color" />
 
         <com.wiserz.pbibi.view.VerticalLampView
             android:id="@+id/vertical_lamp_view"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/top_line_view"/>
+            android:layout_toRightOf="@id/top_line_view" />
 
     </RelativeLayout>
 
-    <View
-        android:layout_width="345dp"
-        android:layout_height="1dp"
-        android:layout_gravity="center_horizontal"
-        android:background="@color/divider_color"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <View
+            android:layout_width="345dp"
+            android:layout_height="1dp"
+            android:background="@color/divider_color" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+    </LinearLayout>
 
 </LinearLayout>

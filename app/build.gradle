@@ -69,4 +69,5 @@ dependencies {
     compile 'fm.jiecao:jiecaovideoplayer:5.8.1'
     //material库
     compile 'com.github.rey5137:material:1.2.4'
+    compile files('libs/tbs_sdk_thirdapp_v3.3.0.1045_43300.jar')
 }

@@ -32,12 +32,12 @@
         "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_ext_extension_bar.xml"
     },
     {
-        "merged": "E:\\android-as-ws\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\release\\layout\\rc_ext_plugin_item.xml",
-        "source": "E:\\android-as-ws\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_ext_plugin_item.xml"
-    },
-    {
         "merged": "E:\\android-as-ws\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\release\\layout\\rc_item_location_message.xml",
         "source": "E:\\android-as-ws\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_item_location_message.xml"
+    },
+    {
+        "merged": "E:\\android-as-ws\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\release\\layout\\rc_ext_plugin_item.xml",
+        "source": "E:\\android-as-ws\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_ext_plugin_item.xml"
     },
     {
         "merged": "E:\\android-as-ws\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\release\\layout\\rc_ext_sub_menu_container.xml",
@@ -76,12 +76,12 @@
         "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_ac_camera.xml"
     },
     {
-        "merged": "E:\\android-as-ws\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\release\\layout\\rc_wi_block.xml",
-        "source": "E:\\android-as-ws\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_wi_block.xml"
-    },
-    {
         "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\release\\layout\\rc_item_location_message.xml",
         "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_item_location_message.xml"
+    },
+    {
+        "merged": "E:\\android-as-ws\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\release\\layout\\rc_wi_block.xml",
+        "source": "E:\\android-as-ws\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_wi_block.xml"
     },
     {
         "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\release\\layout\\rc_wi_vo_popup.xml",
@@ -100,16 +100,16 @@
         "source": "E:\\android-as-ws\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_item_group_conversation.xml"
     },
     {
-        "merged": "E:\\android-as-ws\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\release\\layout\\rc_ext_plugin_pager.xml",
-        "source": "E:\\android-as-ws\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_ext_plugin_pager.xml"
+        "merged": "E:\\android-as-ws\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\release\\layout\\rc_ac_camera.xml",
+        "source": "E:\\android-as-ws\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_ac_camera.xml"
     },
     {
         "merged": "E:\\android-as-ws\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\release\\layout\\rc_item_base_conversation.xml",
         "source": "E:\\android-as-ws\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_item_base_conversation.xml"
     },
     {
-        "merged": "E:\\android-as-ws\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\release\\layout\\rc_ac_camera.xml",
-        "source": "E:\\android-as-ws\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_ac_camera.xml"
+        "merged": "E:\\android-as-ws\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\release\\layout\\rc_ext_plugin_pager.xml",
+        "source": "E:\\android-as-ws\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_ext_plugin_pager.xml"
     },
     {
         "merged": "E:\\android-as-ws\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\release\\layout\\rc_item_voice_message.xml",
@@ -140,12 +140,12 @@
         "source": "E:\\android-as-ws\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_item_preview_fragment.xml"
     },
     {
-        "merged": "E:\\android-as-ws\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\release\\layout\\rc_wi_notice.xml",
-        "source": "E:\\android-as-ws\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_wi_notice.xml"
-    },
-    {
         "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\release\\layout\\rc_cs_leave_message.xml",
         "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_cs_leave_message.xml"
+    },
+    {
+        "merged": "E:\\android-as-ws\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\release\\layout\\rc_wi_notice.xml",
+        "source": "E:\\android-as-ws\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_wi_notice.xml"
     },
     {
         "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\release\\layout\\rc_ext_indicator.xml",
@@ -188,12 +188,12 @@
         "source": "E:\\android-as-ws\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_icon_rt_location_marker.xml"
     },
     {
-        "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\release\\layout\\rc_item_progress.xml",
-        "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_item_progress.xml"
-    },
-    {
         "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\release\\layout\\rc_ext_input_edit_text.xml",
         "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_ext_input_edit_text.xml"
+    },
+    {
+        "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\release\\layout\\rc_item_progress.xml",
+        "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_item_progress.xml"
     },
     {
         "merged": "E:\\android-as-ws\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\release\\layout\\rc_picsel_grid_item.xml",
@@ -252,12 +252,12 @@
         "source": "E:\\android-as-ws\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_fr_file_list.xml"
     },
     {
-        "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\release\\layout\\rc_item_public_service_search.xml",
-        "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_item_public_service_search.xml"
-    },
-    {
         "merged": "E:\\android-as-ws\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\release\\layout\\rc_ext_voice_input.xml",
         "source": "E:\\android-as-ws\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_ext_voice_input.xml"
+    },
+    {
+        "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\release\\layout\\rc_item_public_service_search.xml",
+        "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_item_public_service_search.xml"
     },
     {
         "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\release\\layout\\rc_picsel_original.xml",
@@ -288,12 +288,12 @@
         "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_ext_emoji_pager.xml"
     },
     {
-        "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\release\\layout\\rc_ext_emoji_grid_view.xml",
-        "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_ext_emoji_grid_view.xml"
-    },
-    {
         "merged": "E:\\android-as-ws\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\release\\layout\\rc_fr_public_service_inf.xml",
         "source": "E:\\android-as-ws\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_fr_public_service_inf.xml"
+    },
+    {
+        "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\release\\layout\\rc_ext_emoji_grid_view.xml",
+        "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_ext_emoji_grid_view.xml"
     },
     {
         "merged": "E:\\android-as-ws\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\release\\layout\\rc_wi_block_popup.xml",
@@ -312,12 +312,12 @@
         "source": "E:\\android-as-ws\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_picsel_catalog_listview.xml"
     },
     {
-        "merged": "E:\\android-as-ws\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\release\\layout\\rc_item_discussion_conversation.xml",
-        "source": "E:\\android-as-ws\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_item_discussion_conversation.xml"
-    },
-    {
         "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\release\\layout\\rc_input_pager_layout.xml",
         "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_input_pager_layout.xml"
+    },
+    {
+        "merged": "E:\\android-as-ws\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\release\\layout\\rc_item_discussion_conversation.xml",
+        "source": "E:\\android-as-ws\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_item_discussion_conversation.xml"
     },
     {
         "merged": "E:\\android-as-ws\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\release\\layout\\rc_pic_popup_window.xml",

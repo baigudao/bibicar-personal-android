@@ -26,7 +26,6 @@ import okhttp3.Call;
 
 public class AddFriendFragment extends BaseFragment {
 
-
     private String share_img;
     private String share_message;
     private String share_title;

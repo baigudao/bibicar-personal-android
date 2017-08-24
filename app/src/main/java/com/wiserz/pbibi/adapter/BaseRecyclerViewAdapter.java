@@ -17,6 +17,7 @@ import com.blankj.utilcode.util.TimeUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
 import com.wiserz.pbibi.R;
+import com.wiserz.pbibi.activity.BaseActivity;
 import com.wiserz.pbibi.bean.ArticleBean;
 import com.wiserz.pbibi.bean.ArticleCommentBean;
 import com.wiserz.pbibi.bean.CarInfoBean;
@@ -30,6 +31,8 @@ import com.wiserz.pbibi.bean.MyCarRentOrderBean;
 import com.wiserz.pbibi.bean.TopicInfoBean;
 import com.wiserz.pbibi.bean.UserBean;
 import com.wiserz.pbibi.bean.VideoBean;
+import com.wiserz.pbibi.fragment.VideoDetailFragment;
+import com.wiserz.pbibi.util.DataManager;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -150,6 +153,8 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                         //                        Intent intent = new Intent(mContext, VideoPlayActivity.class);
                         //                        DataManger.getInstance().setData(videoBean);
                         //                        mContext.startActivity(intent);
+                        DataManager.getInstance().setData1(videoBean);
+                        ((BaseActivity) mContext).gotoPager(VideoDetailFragment.class, null);
                     }
                 });
                 if (videoBean.getPost_content() != null) {
@@ -445,10 +450,10 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                 holder.tv_item1.setText(carRentRecommendCarBean.getCar_name());
                 holder.tv_item2.setText("¥" + String.valueOf(carRentRecommendCarBean.getRental_info().getDeposit()) + "/日均");//¥468/日均
             }
-        }else if (dataType == ARTICLE_COMMENT_LIST_DATA_TYPE){
+        } else if (dataType == ARTICLE_COMMENT_LIST_DATA_TYPE) {
             ArrayList<ArticleCommentBean> articleCommentBeanArrayList = (ArrayList<ArticleCommentBean>) mList;
 
-            if (EmptyUtils.isNotEmpty(articleCommentBeanArrayList)){
+            if (EmptyUtils.isNotEmpty(articleCommentBeanArrayList)) {
                 ArticleCommentBean articleCommentBean = articleCommentBeanArrayList.get(position);
 
                 Glide.with(mContext)
