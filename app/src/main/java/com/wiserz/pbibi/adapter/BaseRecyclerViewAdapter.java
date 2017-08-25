@@ -31,6 +31,7 @@ import com.wiserz.pbibi.bean.MyCarRentOrderBean;
 import com.wiserz.pbibi.bean.TopicInfoBean;
 import com.wiserz.pbibi.bean.UserBean;
 import com.wiserz.pbibi.bean.VideoBean;
+import com.wiserz.pbibi.fragment.CommentDetailFragment;
 import com.wiserz.pbibi.fragment.VideoDetailFragment;
 import com.wiserz.pbibi.util.DataManager;
 
@@ -80,6 +81,10 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
 
     private static final int ARTICLE_COMMENT_LIST_DATA_TYPE = 18;
 
+    private static final int ARTICLE_COMMENT_REPLY_DATA_TYPE = 19;
+
+    private static final int COMMENT_DETAIL_DATA_TYPE = 20;
+
     public BaseRecyclerViewAdapter(Context context, List<T> tList, int dataType) {
         this.mContext = context;
         this.mList = tList;
@@ -89,7 +94,11 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
     @Override
     public BaseRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         ViewHolder viewHolder;
-        if (dataType == ARTICLE_COMMENT_LIST_DATA_TYPE) {
+        if (dataType == COMMENT_DETAIL_DATA_TYPE) {
+            viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_comment_detail, null));
+        } else if (dataType == ARTICLE_COMMENT_REPLY_DATA_TYPE) {
+            viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_article_comment_reply, null));
+        } else if (dataType == ARTICLE_COMMENT_LIST_DATA_TYPE) {
             viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_article_comment, null));
         } else if (dataType == NEW_CAR_DATA_TYPE) {
             viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_new_car, null));
@@ -454,14 +463,76 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
             ArrayList<ArticleCommentBean> articleCommentBeanArrayList = (ArrayList<ArticleCommentBean>) mList;
 
             if (EmptyUtils.isNotEmpty(articleCommentBeanArrayList)) {
-                ArticleCommentBean articleCommentBean = articleCommentBeanArrayList.get(position);
+                final ArticleCommentBean articleCommentBean = articleCommentBeanArrayList.get(position);
 
                 Glide.with(mContext)
                         .load(articleCommentBean.getFrom_user().getAvatar())
                         .placeholder(R.drawable.user_photo)
                         .error(R.drawable.user_photo)
                         .into(holder.iv_item1);
+                holder.iv_item1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ToastUtils.showShort(articleCommentBean.getFrom_user().getUser_id() + "");
+                    }
+                });
                 holder.tv_item1.setText(articleCommentBean.getFrom_user().getNickname());
+                holder.tv_item2.setText(TimeUtils.date2String(new Date(Long.valueOf(articleCommentBean.getComment_created()) * 1000), new SimpleDateFormat("yyyy-MM-dd")));
+
+                holder.tv_item5.setText(articleCommentBean.getComment_content());//评论的内容
+
+                ArrayList<ArticleCommentBean.HotListBean.ListBean> listBeanList = (ArrayList<ArticleCommentBean.HotListBean.ListBean>) articleCommentBean.getHot_list().getList();
+                if (EmptyUtils.isNotEmpty(listBeanList)) {
+                    holder.linearLayout1.setVisibility(View.VISIBLE);
+                    int reply_size = listBeanList.size();
+                    if (reply_size <= 3) {
+                        //如果回复数小于等于3
+                        BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, listBeanList, ARTICLE_COMMENT_REPLY_DATA_TYPE);
+                        holder.recyclerView.setAdapter(baseRecyclerViewAdapter);
+                        holder.recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
+                    }
+
+                    holder.tv_item6.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //查看更多回复
+                            DataManager.getInstance().setData1(articleCommentBean);
+                            ((BaseActivity) mContext).gotoPager(CommentDetailFragment.class, null);
+                        }
+                    });
+                } else {
+                    holder.linearLayout1.setVisibility(View.GONE);
+                }
+            }
+        } else if (dataType == ARTICLE_COMMENT_REPLY_DATA_TYPE) {
+            ArrayList<ArticleCommentBean.HotListBean.ListBean> listBeanList = (ArrayList<ArticleCommentBean.HotListBean.ListBean>) mList;
+
+            if (EmptyUtils.isNotEmpty(listBeanList)) {
+                ArticleCommentBean.HotListBean.ListBean listBean = listBeanList.get(position);
+
+                holder.tv_item1.setText(listBean.getFrom_user().getNickname() + "：");
+                holder.tv_item2.setText(listBean.getComment_content());
+            }
+        } else if (dataType == COMMENT_DETAIL_DATA_TYPE) {
+            ArrayList<ArticleCommentBean.HotListBean.ListBean> listBeanList = (ArrayList<ArticleCommentBean.HotListBean.ListBean>) mList;
+
+            if (EmptyUtils.isNotEmpty(listBeanList)) {
+                final ArticleCommentBean.HotListBean.ListBean listBean = listBeanList.get(position);
+
+                Glide.with(mContext)
+                        .load(listBean.getFrom_user().getAvatar())
+                        .placeholder(R.drawable.user_photo)
+                        .error(R.drawable.user_photo)
+                        .into(holder.iv_item1);
+                holder.iv_item1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ToastUtils.showShort(listBean.getFrom_user().getUser_id() + "");
+                    }
+                });
+                holder.tv_item1.setText(listBean.getFrom_user().getNickname());
+                holder.tv_item2.setText(TimeUtils.date2String(new Date(Long.valueOf(listBean.getComment_created()) * 1000), new SimpleDateFormat("yyyy-MM-dd")));
+                holder.tv_item3.setText(listBean.getComment_content());
             }
         }
     }
@@ -481,6 +552,9 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
         private TextView tv_item2;
         private TextView tv_item3;
         private TextView tv_item4;
+        private TextView tv_item5;
+        private TextView tv_item6;
+        private TextView tv_item7;
 
         private RecyclerView recyclerView;
 
@@ -715,6 +789,21 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                 tv_item3 = (TextView) itemView.findViewById(R.id.tv_zan);
                 iv_item3 = (ImageView) itemView.findViewById(R.id.iv_comment);
                 tv_item4 = (TextView) itemView.findViewById(R.id.tv_comment);
+
+                tv_item5 = (TextView) itemView.findViewById(R.id.tv_comment_content);//评论的内容
+
+                linearLayout1 = (LinearLayout) itemView.findViewById(R.id.ll_comment_reply);
+                recyclerView = (RecyclerView) itemView.findViewById(R.id.recyclerView);
+
+                tv_item6 = (TextView) itemView.findViewById(R.id.tv_check_all_comment_reply);
+            } else if (dataType == ARTICLE_COMMENT_REPLY_DATA_TYPE) {
+                tv_item1 = (TextView) itemView.findViewById(R.id.tv_comment_reply_name);
+                tv_item2 = (TextView) itemView.findViewById(R.id.tv_comment_reply_content);
+            } else if (dataType == COMMENT_DETAIL_DATA_TYPE) {
+                iv_item1 = (ImageView) itemView.findViewById(R.id.iv_circle_image);
+                tv_item1 = (TextView) itemView.findViewById(R.id.tv_comment_name);
+                tv_item2 = (TextView) itemView.findViewById(R.id.tv_comment_time);
+                tv_item3 = (TextView) itemView.findViewById(R.id.tv_comment_content);
             }
         }
     }

@@ -185,11 +185,20 @@
         android:layout_marginTop="35dp"
         android:background="@color/divider_color"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="35dp"
+        android:text="评论列表"
+        android:textColor="@color/main_text_color"
+        android:textSize="16sp"/>
+
     <!--评论区-->
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="35dp"/>
+        android:layout_marginTop="10dp"/>
 
 </LinearLayout>

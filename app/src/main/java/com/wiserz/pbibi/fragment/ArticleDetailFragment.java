@@ -209,7 +209,7 @@ public class ArticleDetailFragment extends BaseFragment {
                     .placeholder(R.drawable.user_photo)
                     .error(R.drawable.user_photo)
                     .into((ImageView) getView().findViewById(R.id.iv_circle_image));
-            ((TextView) getView().findViewById(R.id.tv_author_and_time)).setText(articleDetailBean.getFeed_from() + " · "
+            ((TextView) getView().findViewById(R.id.tv_author_and_time)).setText(articleDetailBean.getPost_user_info().getProfile().getNickname() + " · "
                     + TimeUtils.date2String(new Date(Long.valueOf(articleDetailBean.getCreated()) * 1000), new SimpleDateFormat("yyyy/MM/dd")));
             //添加文章内容
             addArticleContent(articleDetailBean.getContent_info());

@@ -40,7 +40,7 @@ public class CarCheckServiceFragment extends BaseFragment {
                 gotoPager(CheckPeccancyFragment.class, null);//查违章
                 break;
             case R.id.btn_check_insurance:
-                gotoPager(CheckInsuranceFragment.class, null);//查保险
+                gotoPager(CheckInsuranceFragment.class, null);//查保险：8.24确定不做
                 break;
             case R.id.btn_check_guarantee:
                 gotoPager(CheckGuaranteeFragment.class, null);//查维保

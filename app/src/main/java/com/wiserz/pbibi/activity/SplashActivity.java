@@ -14,7 +14,6 @@ import android.widget.ImageView;
 
 import com.blankj.utilcode.util.BarUtils;
 import com.blankj.utilcode.util.EmptyUtils;
-import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ScreenUtils;
 import com.blankj.utilcode.util.ToastUtils;
@@ -71,27 +70,25 @@ public class SplashActivity extends AppCompatActivity {
 
             @Override
             public void onFinishCount() {
-                afterRequestPermission();//请求权限之后 Meizu5.1
-                //                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                //                    //SDK版本大于等于23，也就是Android 6.0
-                //                    //                    requestPermission();//请求权限 Xiaomi6.0.1
-                //                } else {
-                //                    //SDK版本小于23的走这
-                //                    afterRequestPermission();//请求权限之后 Meizu5.1
-                //                }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    //SDK版本大于等于23，也就是Android 6.0
+                    requestPermission();//请求权限 Xiaomi6.0.1
+                } else {
+                    //SDK版本小于23的走这
+                    afterRequestPermission();//请求权限之后 Meizu5.1
+                }
             }
         });
         countDownView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                afterRequestPermission();//请求权限之后 Meizu5.1
-                //                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                //                    //SDK版本大于等于23，也就是Android 6.0
-                //                    //                    requestPermission();//请求权限 Xiaomi6.0.1
-                //                } else {
-                //                    //SDK版本小于23的走这
-                //                    afterRequestPermission();//请求权限之后 Meizu5.1
-                //                }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    //SDK版本大于等于23，也就是Android 6.0
+                    requestPermission();//请求权限 Xiaomi6.0.1
+                } else {
+                    //SDK版本小于23的走这
+                    afterRequestPermission();//请求权限之后 Meizu5.1
+                }
             }
         });
 
@@ -130,11 +127,10 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void requestPermission() {
-        LogUtils.e("//requestPermission();");
         ArrayList<String> unCheckPermissions = null;
         String[] appNeedPermission = APP_NEED_PERMISSIONS;
         for (String permission : appNeedPermission) {
-            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(SplashActivity.this, permission) != PackageManager.PERMISSION_GRANTED) {
                 if (unCheckPermissions == null) {
                     unCheckPermissions = new ArrayList<>();
                 }
@@ -145,8 +141,7 @@ public class SplashActivity extends AppCompatActivity {
             String[] array = new String[unCheckPermissions.size()];
             ActivityCompat.requestPermissions(this, unCheckPermissions.toArray(array), EXTERNAL_STORAGE_REQ_CODE);
         } else {
-            LogUtils.e("//            afterRequestPermission();");
-            //            afterRequestPermission();
+            afterRequestPermission();
         }
     }
 
@@ -155,7 +150,6 @@ public class SplashActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case EXTERNAL_STORAGE_REQ_CODE: {
-                LogUtils.e("//onRequestPermissionsResult();");
                 if (grantResults.length > 0) {
                     for (int result : grantResults) {
                         if (result != PackageManager.PERMISSION_GRANTED) {

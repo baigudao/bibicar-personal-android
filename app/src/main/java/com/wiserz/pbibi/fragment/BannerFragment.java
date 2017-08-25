@@ -1,12 +1,15 @@
 package com.wiserz.pbibi.fragment;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.alipay.sdk.app.PayTask;
@@ -25,6 +28,7 @@ import com.wiserz.pbibi.alipay.PayResult;
 import com.wiserz.pbibi.bean.BannerBean;
 import com.wiserz.pbibi.util.Constant;
 import com.wiserz.pbibi.util.DataManager;
+import com.wiserz.pbibi.view.SharePlatformPopupWindow;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,6 +36,9 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Map;
+
+import cn.sharesdk.onekeyshare.OnekeyShare;
+import cn.sharesdk.onekeyshare.OnekeyShareTheme;
 
 /**
  * Created by jackie on 2017/8/24 22:26.
@@ -42,7 +49,6 @@ import java.util.Map;
 public class BannerFragment extends BaseFragment {
 
     private BannerBean bannerBean;
-    private WebView webView;
     private IWXAPI api;
 
     private static final int SDK_PAY_FLAG = 1;
@@ -96,8 +102,14 @@ public class BannerFragment extends BaseFragment {
 
         if (EmptyUtils.isNotEmpty(bannerBean)) {
             if (bannerBean.getType().equals("0")) {
-                ((TextView) view.findViewById(R.id.tv_title)).setText("web轮播图");
-                webView = (WebView) view.findViewById(R.id.tencent_web_view);
+                //进入网页
+                ((TextView) view.findViewById(R.id.tv_title)).setText("web页面");
+                ImageView iv_image = (ImageView) view.findViewById(R.id.iv_image);
+                iv_image.setVisibility(View.VISIBLE);
+                iv_image.setImageResource(R.drawable.share_selector);
+                iv_image.setOnClickListener(this);
+
+                WebView webView = (WebView) view.findViewById(R.id.tencent_web_view);
                 webView.getSettings().setJavaScriptEnabled(true);
                 webView.getSettings().setSupportZoom(true);
                 webView.getSettings().setUseWideViewPort(true);
@@ -109,6 +121,7 @@ public class BannerFragment extends BaseFragment {
                 webView.getSettings().setAppCacheEnabled(true);
                 webView.getSettings().setLoadWithOverviewMode(true);
                 webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+
                 webView.setWebViewClient(new WebViewClient() {
 
                     @Override
@@ -116,7 +129,7 @@ public class BannerFragment extends BaseFragment {
                         String result_url = url.split("//")[1];
                         if (result_url.equals("success")) {
                             ToastUtils.showShort("发布我的爱车");
-//                            gotoPager(PostMyLoveCarFragment.class, null);
+                            //                            gotoPager(PostMyLoveCarFragment.class, null);
                             return true;
                         } else if (result_url.startsWith("pay?info=")) {
 
@@ -171,13 +184,13 @@ public class BannerFragment extends BaseFragment {
                     @Override
                     public void onPageStarted(WebView webView, String s, Bitmap bitmap) {
                         super.onPageStarted(webView, s, bitmap);
-                        webView.setVisibility(View.INVISIBLE);
+                        //                        webView.setVisibility(View.INVISIBLE);
                     }
 
                     @Override
                     public void onPageFinished(WebView webView, String s) {
                         super.onPageFinished(webView, s);
-                        webView.setVisibility(View.VISIBLE);
+                        //                        webView.setVisibility(View.VISIBLE);
                     }
                 });
 
@@ -187,14 +200,17 @@ public class BannerFragment extends BaseFragment {
 
                     }
                 });
+
                 if (Build.VERSION.SDK_INT < 19) {
                     if (Build.VERSION.SDK_INT > 8) {
                         webView.getSettings().setPluginState(WebSettings.PluginState.ON);
                     }
                 }
+
                 webView.loadUrl(bannerBean.getAppUrl());
             } else {
-                ToastUtils.showShort("呵呵");
+                //进入话题
+                ToastUtils.showShort("话题");
             }
         }
     }
@@ -205,8 +221,71 @@ public class BannerFragment extends BaseFragment {
             case R.id.iv_back:
                 goBack();
                 break;
+            case R.id.iv_image:
+                showSharePlatformPopWindow();//分享
+                break;
             default:
                 break;
         }
+    }
+
+    private void showSharePlatformPopWindow() {
+        SharePlatformPopupWindow sharePlatformPopWindow = new SharePlatformPopupWindow(getActivity(), new SharePlatformPopupWindow.SharePlatformListener() {
+            @Override
+            public void onSinaWeiboClicked() {
+                showShare(mContext, "SinaWeibo", true);
+            }
+
+            @Override
+            public void onWeChatClicked() {
+                showShare(mContext, "Wechat", true);
+            }
+
+            @Override
+            public void onWechatMomentsClicked() {
+                showShare(mContext, "WechatMoments", true);
+            }
+
+            @Override
+            public void onCancelBtnClicked() {
+
+            }
+        });
+        sharePlatformPopWindow.initView();
+        sharePlatformPopWindow.showAtLocation(getView(), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+    }
+
+    /**
+     * 演示调用ShareSDK执行分享
+     *
+     * @param context
+     * @param platformToShare 指定直接分享平台名称（一旦设置了平台名称，则九宫格将不会显示）
+     * @param showContentEdit 是否显示编辑页
+     */
+    private void showShare(Context context, String platformToShare, boolean showContentEdit) {
+
+        OnekeyShare oks = new OnekeyShare();
+        oks.setSilent(!showContentEdit);
+        if (platformToShare != null) {
+            oks.setPlatform(platformToShare);
+        }
+        //ShareSDK快捷分享提供两个界面第一个是九宫格 CLASSIC  第二个是SKYBLUE
+        oks.setTheme(OnekeyShareTheme.CLASSIC);
+        // 令编辑页面显示为Dialog模式
+        //        oks.setDialogMode();
+        // 在自动授权时可以禁用SSO方式
+        oks.disableSSOWhenAuthorize();
+
+        oks.setTitle(getString(R.string.vr_see_car));
+        if (platformToShare.equalsIgnoreCase("SinaWeibo")) {
+            oks.setText(getString(R.string.bibicar_vr) + "\n" + bannerBean.getAppUrl());
+        } else {
+            oks.setText(getString(R.string.bibicar_vr));
+            oks.setImageUrl(bannerBean.getImgUrl());
+            oks.setUrl(bannerBean.getAppUrl());
+        }
+
+        // 启动分享
+        oks.show(context);
     }
 }

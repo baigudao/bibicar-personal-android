@@ -47,4 +47,7 @@
     <string name="invite_weibo">邀请微博好友</string>
     <string name="invite_wechat">邀请微信好友</string>
 
+    <string name="vr_see_car">VR看车</string>
+    <string name="bibicar_vr">BiBiCar-VR</string>
+
 </resources>

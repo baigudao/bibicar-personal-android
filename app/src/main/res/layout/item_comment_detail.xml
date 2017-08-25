@@ -8,7 +8,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="25dp">
 
         <com.wiserz.pbibi.view.CircleImageView
             android:id="@+id/iv_circle_image"
@@ -62,26 +62,8 @@
                 android:id="@+id/tv_zan"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="20dp"
                 android:clickable="true"
                 android:text="143"
-                android:textColor="@color/second_text_color"
-                android:textSize="12sp"/>
-
-            <ImageView
-                android:id="@+id/iv_comment"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="6dp"
-                android:clickable="true"
-                android:src="@drawable/v1_comment3x"/>
-
-            <TextView
-                android:id="@+id/tv_comment"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:text="42"
                 android:textColor="@color/second_text_color"
                 android:textSize="12sp"/>
 
@@ -117,60 +99,25 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/ll_comment_reply"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="65dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/border_comment_reply"
-        android:orientation="vertical">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="1dp"
-            android:layout_marginRight="1dp"
-            android:layout_marginTop="5dp"/>
-
-        <TextView
-            android:id="@+id/tv_check_all_comment_reply"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="18dp"
-            android:clickable="true"
-            android:text="查看更多回复"
-            android:textColor="@color/main_color"
-            android:textSize="12sp"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
         android:layout_marginTop="20dp"
         android:orientation="horizontal">
 
         <View
             android:layout_width="0dp"
             android:layout_height="1dp"
-            android:layout_weight="1"
-            android:background="@color/background_color"/>
+            android:layout_weight="1"/>
 
         <View
             android:layout_width="345dp"
             android:layout_height="1dp"
-            android:layout_gravity="center_horizontal"
             android:background="@color/divider_color"/>
 
         <View
             android:layout_width="0dp"
             android:layout_height="1dp"
-            android:layout_weight="1"
-            android:background="@color/background_color"/>
+            android:layout_weight="1"/>
 
     </LinearLayout>
 
