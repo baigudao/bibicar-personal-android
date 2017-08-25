@@ -65,7 +65,7 @@ public class SplashActivity extends AppCompatActivity {
         countDownView.setCountDownTimerListener(new CountDownView.CountDownTimerListener() {
             @Override
             public void onStartCount() {
-                //                Toast.makeText(getApplicationContext(), "开始计时", Toast.LENGTH_SHORT).show();
+                //               Toast.makeText(getApplicationContext(), "开始计时", Toast.LENGTH_SHORT).show();
             }
 
             @Override
