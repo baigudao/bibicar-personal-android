@@ -50,4 +50,18 @@
     <string name="vr_see_car">VR看车</string>
     <string name="bibicar_vr">BiBiCar-VR</string>
 
+    <string name="please_input_nickname">请输入昵称</string>
+    <string name="please_input_phone_number">请输入手机号码</string>
+    <string name="please_input_phone_or_name">请输入昵称和手机号</string>
+    <string name="please_input_verfication_code">请输入验证码</string>
+    <string name="free_get">免费获取</string>
+    <string name="reset_password">重置密码</string>
+    <string name="new_password">新密码</string>
+    <string name="please_input_new_password">请输入新的密码</string>
+
+    <string name="pwd_not_same">两次密码不一样,请检查输入</string>
+    <string name="please_input_all_message">请输入完整信息</string>
+
+    <string name="register_text1">请先选择您的用户类型，用户类型不同有助 于我们了解您的具体偏向并对您进行功能性 的推荐与服务。</string>
+
 </resources>

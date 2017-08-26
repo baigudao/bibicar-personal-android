@@ -66,6 +66,7 @@ public class Constant {
     public static final String POST_FILE = "post_file";
     public static final String TITLE = "title";
     public static final String MONEY = "money";
+    public static final String AVATAR = "avatar";
     public static final String ADVERTISEMENT_IMAGE_SUCCESS = "advertisement_image_success";
     public static final String ADVERTISEMENT_IMAGE = "advertisement_image";
     public static final String ADVERTISEMENT_IMAGE_NUM = "advertisement_image_num";
@@ -74,10 +75,13 @@ public class Constant {
     //    private final static String hostUrl = "https://api.bibicar.cn/";//正式环境
     private static final String hostUrl = "https://testapi.bibicar.cn/";//测试环境
 
-    public static final String registerApp = hostUrl + "app/register";//App注册
-    public static final String verificationCodeUrl = hostUrl + "v3/user/sendcode";//得到验证码
-    public static final String userRegisterUrl = hostUrl + "v3/user/register";//用户注册
-    public static final String userProtocolUrl = "https://api.bibicar.cn/protocol.html";//用户协议
+    private static final String registerApp = hostUrl + "app/register";//App注册
+    private static final String verificationCodeUrl = hostUrl + "v3/user/sendcode";//得到验证码
+    private static final String forgetPasswordUrl = hostUrl + "v3/user/forgetpassword";//忘记密码
+    private static final String userRegisterUrl = hostUrl + "v3/user/register";//用户注册
+    private static final String userProtocolUrl = "https://api.bibicar.cn/protocol.html";//用户协议
+    private final static String oauthRegisterUrl = hostUrl + "v3/user/oauthregister";//第三方注册
+    private static final String oauthLoginUrl= hostUrl + "v3/user/oauthlogin";//第三方登录
 
     private static final String splashUrl = hostUrl + "app/getimg";//启动页
     private static final String userLoginUrl = hostUrl + "v3/user/login";//用户登录
@@ -117,12 +121,40 @@ public class Constant {
 
     private static final String inviteFriendUrl = hostUrl + "v3/user/getmessage";
 
+    public static String getRegisterApp() {
+        return registerApp;
+    }
+
+    public static String getUserRegisterUrl() {
+        return userRegisterUrl;
+    }
+
+    public static String getVerificationCodeUrl() {
+        return verificationCodeUrl;
+    }
+
+    public static String getForgetPasswordUrl() {
+        return forgetPasswordUrl;
+    }
+
+    public static String getUserProtocolUrl() {
+        return userProtocolUrl;
+    }
+
     public static String getSplashUrl() {
         return splashUrl;
     }
 
     public static String getUserLoginUrl() {
         return userLoginUrl;
+    }
+
+    public static String getOauthRegisterUrl() {
+        return oauthRegisterUrl;
+    }
+
+    public static String getOauthLoginUrl() {
+        return oauthLoginUrl;
     }
 
     public static String getNewHomeUrl() {

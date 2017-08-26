@@ -176,7 +176,7 @@ public class SplashActivity extends AppCompatActivity {
             String device_type = String.valueOf(Constant.DEVICE_TYPE_ANDROID);//设备类型Apple/Android
 
             OkHttpUtils.post()
-                    .url(Constant.registerApp)
+                    .url(Constant.getRegisterApp())
                     .addParams(Constant.DEVICE_ID, device_id)
                     .addParams(Constant.DEVICE_RESOLUTION, device_resolution)
                     .addParams(Constant.DEVICE_SYS_VERSION, device_sys_version)
@@ -201,7 +201,8 @@ public class SplashActivity extends AppCompatActivity {
                                     SPUtils.getInstance().put(Constant.DEVICE_IDENTIFIER, device_identifier);
                                 } else {
                                     String code = jsonObject.optString("code");
-                                    ToastUtils.showLong("请求数据失败,请检查网络:" + code);
+                                    String msg = jsonObjectData.optString("msg");
+                                    ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();

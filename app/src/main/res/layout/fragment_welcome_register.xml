@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/background_color"
+              android:orientation="vertical">
+
+    <include layout="@layout/title_bar"/>
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="140dp"
+        android:layout_height="28dp"
+        android:layout_marginLeft="42dp"
+        android:layout_marginTop="110dp"
+        android:text="欢迎您的到来"
+        android:textColor="#545454"
+        android:textSize="23sp"/>
+
+    <TextView
+        android:layout_width="291dp"
+        android:layout_height="81dp"
+        android:layout_marginLeft="42dp"
+        android:layout_marginTop="28dp"
+        android:text="@string/register_text1"
+        android:textColor="#545454"
+        android:textSize="15sp"/>
+
+    <TextView
+        android:layout_width="160dp"
+        android:layout_height="14dp"
+        android:layout_marginLeft="42dp"
+        android:layout_marginTop="7dp"
+        android:text="※如有需要可切换用户类型。"
+        android:textColor="#bbbbbb"
+        android:textSize="12sp"/>
+
+    <Button
+        android:id="@+id/btn_welcome_private_register"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="38dp"
+        android:layout_marginTop="51dp"
+        android:background="@drawable/btn_background_selector"
+        android:text="我是个人用户"
+        android:textColor="@drawable/btn_text_background_selector"
+        android:textSize="16sp"/>
+
+    <Button
+        android:id="@+id/btn_welcome_company_register"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="38dp"
+        android:layout_marginTop="33dp"
+        android:background="@drawable/btn_background_selector"
+        android:text="我是企业用户"
+        android:textColor="@drawable/btn_text_background_selector"
+        android:textSize="16sp"/>
+
+</LinearLayout>

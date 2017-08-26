@@ -17,6 +17,10 @@ import com.google.gson.Gson;
 import com.wiserz.pbibi.BaseApplication;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.bean.LoginBean;
+import com.wiserz.pbibi.fragment.ForgetPasswordFragment;
+import com.wiserz.pbibi.fragment.OauthRegisterFragment;
+import com.wiserz.pbibi.fragment.UserProtocolFragment;
+import com.wiserz.pbibi.fragment.WelcomeRegisterFragment;
 import com.wiserz.pbibi.util.Constant;
 import com.wiserz.pbibi.util.DataManager;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -25,6 +29,15 @@ import com.zhy.http.okhttp.callback.StringCallback;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.HashMap;
+
+import cn.sharesdk.framework.Platform;
+import cn.sharesdk.framework.PlatformDb;
+import cn.sharesdk.login.LoginApi;
+import cn.sharesdk.login.OnLoginListener;
+import cn.sharesdk.login.UserInfo;
 import io.rong.imkit.RongIM;
 import io.rong.imlib.RongIMClient;
 import okhttp3.Call;
@@ -43,7 +56,9 @@ public class RegisterAndLoginActivity extends BaseActivity implements View.OnCli
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_and_login);
         findViewById(R.id.iv_back).setVisibility(View.GONE);
-        findViewById(R.id.btn_register).setOnClickListener(this);
+        Button btn_register = (Button) findViewById(R.id.btn_register);
+        btn_register.setOnClickListener(this);
+        btn_register.setVisibility(View.VISIBLE);
 
         et_account_login = (EditText) findViewById(R.id.et_account_login);
         et_account_login.addTextChangedListener(new TextChangedListener());
@@ -51,16 +66,34 @@ public class RegisterAndLoginActivity extends BaseActivity implements View.OnCli
         et_password_login.addTextChangedListener(new TextChangedListener());
         btn_login = (Button) findViewById(R.id.btn_login);//登录按钮
         btn_login.setOnClickListener(this);
+
+        findViewById(R.id.btn_user_protocol).setOnClickListener(this);
+        findViewById(R.id.btn_forget_password).setOnClickListener(this);
+
+        findViewById(R.id.image_btn_weixin_login).setOnClickListener(this);
+        findViewById(R.id.image_btn_weibo_login).setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_register:
-                ToastUtils.showShort("注册");
+                gotoPager(WelcomeRegisterFragment.class, null);
                 break;
             case R.id.btn_login:
                 login();
+                break;
+            case R.id.btn_user_protocol:
+                gotoPager(UserProtocolFragment.class, null);
+                break;
+            case R.id.btn_forget_password:
+                gotoPager(ForgetPasswordFragment.class, null);
+                break;
+            case R.id.image_btn_weixin_login:
+                login("Wechat");
+                break;
+            case R.id.image_btn_weibo_login:
+                login("SinaWeibo");
                 break;
             default:
                 break;
@@ -121,19 +154,152 @@ public class RegisterAndLoginActivity extends BaseActivity implements View.OnCli
     }
 
     /**
-     * 得到账号
+     * 演示执行第三方登录/注册的方法
+     * 这不是一个完整的示例代码，需要根据您项目的业务需求，改写登录/注册回调函数
      *
-     * @return
+     * @param platformName 执行登录/注册的平台名称，如：SinaWeibo.NAME
      */
+    private void login(final String platformName) {
+        LoginApi api = new LoginApi();
+        //设置登陆的平台后执行登陆的方法
+        api.setPlatform(platformName);
+        api.setOnLoginListener(new OnLoginListener() {
+            // 在这个方法填写尝试的代码，返回true表示还不能登录，需要注册
+            public boolean onLogin(Platform platform, HashMap<String, Object> res) {
+                PlatformDb platDB = platform.getDb();//获取平台数据DB
+                //通过DB获取各种数据
+                platDB.getToken();
+                platDB.getUserGender();
+                platDB.getUserIcon();
+                platDB.getUserId();
+                platDB.getUserName();
+
+                UserInfo userInfo = new UserInfo();
+                userInfo.setUserIcon(platDB.getUserIcon());
+                userInfo.setUserId(platDB.getUserId());
+                userInfo.setUserName(platDB.getUserName());
+                userInfo.setUserGender(platDB.getUserGender());
+                if (platform.getName().equalsIgnoreCase("Wechat")) {
+                    userInfo.setUserId((String) res.get("unionid"));
+                }
+                userInfo.setPlatform(platform);
+                oauthLogin(userInfo);
+                return true;
+            }
+        });
+        api.login(this);
+    }
+
+    private void oauthLogin(final UserInfo userInfo) {
+
+        //        GBExecutionPool.getExecutor().execute(new Runnable() {
+        //            @Override
+        //            public void run() {
+        //                String data = "";
+        //                try {
+        //                    String weiboId = "";
+        //                    String wxId = "";
+        //                    if (userInfo.getPlatform().getName().equalsIgnoreCase("SinaWeibo")) {
+        //                        weiboId = userInfo.getUserId();
+        //                    } else {
+        //                        wxId = userInfo.getUserId();
+        //                    }
+        //                    data = Constant.getOauthLogin(URLEncoder.encode(userInfo.getUserIcon(), "utf-8"), Constants.getDeviceIdentifier(BaseApplication.getAppContext()),
+        //                            URLEncoder.encode(userInfo.getUserName(), "utf-8"), weiboId, wxId);
+        //                } catch (UnsupportedEncodingException e) {
+        //                    e.printStackTrace();
+        //                    return;
+        //                }
+        //                final ServerResultBean<ResponseObject> result = DataManger.getInstance().oauthLogin(data);
+        //                if (getView() != null) {
+        //                    getActivity().runOnUiThread(new Runnable() {
+        //                        @Override
+        //                        public void run() {
+        //                            hideLoadingDialog();
+        //                            if (getView() != null) {
+        //                                if (result.isSuccess() && result.getData() != null) {
+        //                                    PreferencesWrapper.getInstanse(BaseApplication.getAppContext()).setPreferenceStringValue(Constants.SESSION_ID, result.getData().getSession_id());
+        //                                    PreferencesWrapper.getInstanse(BaseApplication.getAppContext()).setPreferenceStringValue(Constants.CHAT_TOKEN, result.getData().getUser_info().getChat_token());
+        //                                    PreferencesWrapper.getInstanse(BaseApplication.getAppContext()).setPreferenceIntValue(Constants.USER_ID, result.getData().getUser_info().getUser_id());
+        //                                    MyUserInfoBean myInfo = new MyUserInfoBean();
+        //                                    myInfo.setUser_info(result.getData().getUser_info());
+        //                                    DataManger.getInstance().setMyUserInfo(myInfo);
+        //                                    Intent intent = new Intent(getActivity(), HomeActivity.class);
+        //                                    startActivity(intent);
+        //                                    getActivity().finish();
+        //                                    connect(Constants.getChatToken(BaseApplication.getAppContext()));
+        //                                    Toast.makeText(getActivity(), getString(R.string.login_successful), Toast.LENGTH_SHORT).show();
+        //                                } else {
+        //                                    if (result.getErrorCode() == 51008) {
+        //                                        DataManger.getInstance().setData(userInfo);
+        //                                        gotoPager(OauthRegisterFragment.class, null);
+        //                                    } else {
+        //                                        Toast.makeText(getActivity(), result.getMsg(), Toast.LENGTH_SHORT).show();
+        //                                    }
+        //                                }
+        //                            }
+        //                        }
+        //                    });
+        //                }
+        //            }
+        //        });
+
+        String weiboId = "";
+        String wxId = "";
+        if (userInfo.getPlatform().getName().equalsIgnoreCase("SinaWeibo")) {
+            weiboId = userInfo.getUserId();
+        } else {
+            wxId = userInfo.getUserId();
+        }
+        try {
+            OkHttpUtils.post()
+                    .url(Constant.getOauthLoginUrl())
+                    .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
+                    .addParams(Constant.AVATAR, URLEncoder.encode(userInfo.getUserIcon(), "utf-8"))
+                    .addParams(Constant.NICKNAME, URLEncoder.encode(userInfo.getUserName(), "utf-8"))
+                    .addParams("weibo_open_id", weiboId)
+                    .addParams("wx_open_id", wxId)
+                    .build()
+                    .execute(new StringCallback() {
+                        @Override
+                        public void onError(Call call, Exception e, int id) {
+
+                        }
+
+                        @Override
+                        public void onResponse(String response, int id) {
+                            JSONObject jsonObject = null;
+                            try {
+                                jsonObject = new JSONObject(response);
+                                int status = jsonObject.optInt("status");
+                                JSONObject jsonObjectData = jsonObject.optJSONObject("data");
+                                if (status == 1) {
+                                    ToastUtils.showShort("hehe,三方登录success");
+                                } else {
+                                    int code = jsonObject.optInt("code");
+                                    if (code == 51008) {
+                                        DataManager.getInstance().setData1(userInfo);
+                                        gotoPager(OauthRegisterFragment.class, null);
+                                        return;
+                                    }
+                                    String msg = jsonObjectData.optString("msg");
+                                    ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
+
     public String getAccount() {
         return et_account_login.getText().toString().trim();
     }
 
-    /**
-     * 得到密码
-     *
-     * @return
-     */
     public String getPassword() {
         return et_password_login.getText().toString().trim();
     }
@@ -160,7 +326,6 @@ public class RegisterAndLoginActivity extends BaseActivity implements View.OnCli
 
         }
     }
-
 
     /**
      * <p>连接服务器，在整个应用程序全局，只需要调用一次，需在 RongIM.init() 之后调用。</p>
