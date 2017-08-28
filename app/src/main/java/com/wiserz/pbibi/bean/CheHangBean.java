@@ -273,7 +273,7 @@ public class CheHangBean extends BaseBean {
                 private ModelDetailBean model_detail;
                 private ModelInfoBean model_info;
                 private PlatformInfoBean platform_info;
-                private int price;
+                private double price;
                 private int sales_volume;
                 private SeriesInfoBean series_info;
                 private int style;
@@ -542,11 +542,11 @@ public class CheHangBean extends BaseBean {
                     this.platform_info = platform_info;
                 }
 
-                public int getPrice() {
+                public double getPrice() {
                     return price;
                 }
 
-                public void setPrice(int price) {
+                public void setPrice(double price) {
                     this.price = price;
                 }
 
@@ -967,6 +967,50 @@ public class CheHangBean extends BaseBean {
                 }
 
                 public static class ModelInfoBean {
+
+                    /**
+                     * model_id : 106019
+                     * model_name : 2014 6.0L 敞篷百年纪念版
+                     * model_year : 2014
+                     * series_id : 2621
+                     */
+
+                    private int model_id;
+                    private String model_name;
+                    private String model_year;
+                    private int series_id;
+
+                    public int getModel_id() {
+                        return model_id;
+                    }
+
+                    public void setModel_id(int model_id) {
+                        this.model_id = model_id;
+                    }
+
+                    public String getModel_name() {
+                        return model_name;
+                    }
+
+                    public void setModel_name(String model_name) {
+                        this.model_name = model_name;
+                    }
+
+                    public String getModel_year() {
+                        return model_year;
+                    }
+
+                    public void setModel_year(String model_year) {
+                        this.model_year = model_year;
+                    }
+
+                    public int getSeries_id() {
+                        return series_id;
+                    }
+
+                    public void setSeries_id(int series_id) {
+                        this.series_id = series_id;
+                    }
                 }
 
                 public static class PlatformInfoBean {

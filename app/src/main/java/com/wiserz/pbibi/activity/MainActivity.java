@@ -7,13 +7,16 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.fragment.BaseFragment;
 import com.wiserz.pbibi.fragment.CarCenterFragment;
 import com.wiserz.pbibi.fragment.CommunityFragment;
 import com.wiserz.pbibi.fragment.MessageFragment;
 import com.wiserz.pbibi.fragment.MyFragment;
+import com.wiserz.pbibi.fragment.MyFragmentForCompany;
 import com.wiserz.pbibi.fragment.RecommendFragment;
+import com.wiserz.pbibi.util.DataManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +51,7 @@ public class MainActivity extends BaseActivity {
         mBaseFragment.add(new CarCenterFragment());//汽车中心
         mBaseFragment.add(new MessageFragment());//消息
         mBaseFragment.add(new MyFragment());//我的
+        mBaseFragment.add(new MyFragmentForCompany());//企业中心
     }
 
     private void setListener() {
@@ -74,7 +78,13 @@ public class MainActivity extends BaseActivity {
                     position = 3;
                     break;
                 case R.id.rb_mine://我的
-                    position = 4;
+                    int type = DataManager.getInstance().getUserInfo().getProfile().getType();//1,表示个人用户；2，表示企业用户
+                    LogUtils.e("用户类型===" + type);
+                    if (type == 1) {
+                        position = 4;
+                    } else if (type == 2) {
+                        position = 5;
+                    }
                     break;
                 default:
                     position = 0;

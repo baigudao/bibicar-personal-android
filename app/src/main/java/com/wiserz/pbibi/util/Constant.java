@@ -67,6 +67,8 @@ public class Constant {
     public static final String TITLE = "title";
     public static final String MONEY = "money";
     public static final String AVATAR = "avatar";
+    public static final String COMPANY_ID = "company_id";
+    public static final String THEME_ID = "theme_id";
     public static final String ADVERTISEMENT_IMAGE_SUCCESS = "advertisement_image_success";
     public static final String ADVERTISEMENT_IMAGE = "advertisement_image";
     public static final String ADVERTISEMENT_IMAGE_NUM = "advertisement_image_num";
@@ -81,7 +83,7 @@ public class Constant {
     private static final String userRegisterUrl = hostUrl + "v3/user/register";//用户注册
     private static final String userProtocolUrl = "https://api.bibicar.cn/protocol.html";//用户协议
     private final static String oauthRegisterUrl = hostUrl + "v3/user/oauthregister";//第三方注册
-    private static final String oauthLoginUrl= hostUrl + "v3/user/oauthlogin";//第三方登录
+    private static final String oauthLoginUrl = hostUrl + "v3/user/oauthlogin";//第三方登录
 
     private static final String splashUrl = hostUrl + "app/getimg";//启动页
     private static final String userLoginUrl = hostUrl + "v3/user/login";//用户登录
@@ -114,12 +116,18 @@ public class Constant {
     private static final String createTopicUrl = hostUrl + "v3/theme/createtheme";//创建话题
     private static final String hallUrl = hostUrl + "v3/theme/themehome";//大厅
     private static final String topicListUrl = hostUrl + "v3/theme/list";//话题列表
+    private static final String topicDetailUrl = hostUrl + "v3/theme/themeindex";//话题详情
+    private static final String myFocusUrl = hostUrl + "v3/theme/myfocus";//我的关注
 
     private static final String balanceUrl = hostUrl + "v3/UserCarPact/getusermoney";//获取余额
     private static final String takeCashUrl = hostUrl + "v3/UserCarPact/sellerrefund";//卖家提现
     private static final String sellerRechargeUrl = hostUrl + "v3/UserCarPact/withdraw";//卖家充值
 
     private static final String inviteFriendUrl = hostUrl + "v3/user/getmessage";
+
+    private static final String userHomeUrl = hostUrl + "v3/user/homepage";//用户信息
+    private static final String sellingCarUrl = hostUrl + "v3/publishcar/list";//在售车辆
+    private static final String salesConsultantUrl = hostUrl + "v3/user/getsaleslist";//销售顾问
 
     public static String getRegisterApp() {
         return registerApp;
@@ -251,5 +259,25 @@ public class Constant {
 
     public static String getArticleCommentListUrl() {
         return articleCommentListUrl;
+    }
+
+    public static String getUserHomeUrl() {
+        return userHomeUrl;
+    }
+
+    public static String getSellingCarUrl() {
+        return sellingCarUrl;
+    }
+
+    public static String getSalesConsultantUrl() {
+        return salesConsultantUrl;
+    }
+
+    public static String getTopicDetailUrl() {
+        return topicDetailUrl;
+    }
+
+    public static String getMyFocusUrl() {
+        return myFocusUrl;
     }
 }

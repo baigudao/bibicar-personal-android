@@ -1,6 +1,7 @@
 package com.wiserz.pbibi.adapter;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -15,6 +16,8 @@ import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.activity.BaseActivity;
 import com.wiserz.pbibi.bean.TopicInfoBean;
 import com.wiserz.pbibi.fragment.AllTopicFragment;
+import com.wiserz.pbibi.fragment.TopicDetailFragment;
+import com.wiserz.pbibi.util.Constant;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -127,7 +130,12 @@ public class HallRecyclerViewAdapter extends RecyclerView.Adapter implements Bas
     public void onItemClick(Object data, int position) {
         if (data.getClass().getSimpleName().equals("TopicInfoBean")) {
             TopicInfoBean topicInfoBean = (TopicInfoBean) data;
-            ToastUtils.showShort(topicInfoBean.getTheme());
+            int theme_id = topicInfoBean.getId();
+            if (EmptyUtils.isNotEmpty(theme_id)) {
+                Bundle bundle = new Bundle();
+                bundle.putInt(Constant.THEME_ID, theme_id);
+                ((BaseActivity) mContext).gotoPager(TopicDetailFragment.class, bundle);
+            }
         }
     }
 
@@ -167,17 +175,4 @@ public class HallRecyclerViewAdapter extends RecyclerView.Adapter implements Bas
         }
         return list;
     }
-
-    //    private ArrayList<FuLiBean> getMyJoinTopicData(JSONObject jsonObjectData) {
-    //        ArrayList<FuLiBean> list = null;
-    //        if (jsonObjectData == null) {
-    //            return new ArrayList<>();
-    //        } else {
-    //            JSONArray jsonArray = jsonObjectData.optJSONArray("results");
-    //            Gson gson = new Gson();
-    //            list = gson.fromJson(jsonArray.toString(), new TypeToken<ArrayList<FuLiBean>>() {
-    //            }.getType());
-    //        }
-    //        return list;
-    //    }
 }

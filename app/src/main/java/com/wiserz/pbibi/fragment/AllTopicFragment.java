@@ -1,5 +1,6 @@
 package com.wiserz.pbibi.fragment;
 
+import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -11,6 +12,7 @@ import com.blankj.utilcode.util.ToastUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wiserz.pbibi.R;
+import com.wiserz.pbibi.activity.BaseActivity;
 import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
 import com.wiserz.pbibi.bean.TopicInfoBean;
 import com.wiserz.pbibi.util.Constant;
@@ -44,7 +46,7 @@ public class AllTopicFragment extends BaseFragment implements BaseRecyclerViewAd
     @Override
     protected void initView(View view) {
         view.findViewById(R.id.iv_back).setOnClickListener(this);
-        ((TextView) view.findViewById(R.id.tv_title)).setText("话题");
+        ((TextView) view.findViewById(R.id.tv_title)).setText("话题列表");
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         mPage = 0;
@@ -118,7 +120,12 @@ public class AllTopicFragment extends BaseFragment implements BaseRecyclerViewAd
     public void onItemClick(Object data, int position) {
         if (data.getClass().getSimpleName().equals("TopicInfoBean")) {
             TopicInfoBean topicInfoBean = (TopicInfoBean) data;
-            ToastUtils.showShort(topicInfoBean.getTheme());
+            int theme_id = topicInfoBean.getId();
+            if (EmptyUtils.isNotEmpty(theme_id)) {
+                Bundle bundle = new Bundle();
+                bundle.putInt(Constant.THEME_ID, theme_id);
+                ((BaseActivity) mContext).gotoPager(TopicDetailFragment.class, bundle);
+            }
         }
     }
 }

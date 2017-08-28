@@ -37,6 +37,32 @@
         <item name="android:textSize">18sp</item>
     </style>
 
+    <style name="bottom_tag_style_for_company">
+        <!-- Customize your theme here. -->
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:button">@null</item>
+        <item name="android:background">@null</item><!--这个要留意-->
+        <item name="android:gravity">center</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:textColor">@drawable/bottom_text_color_drawable_selector</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="bottom_tag_style_for_topic">
+        <!-- Customize your theme here. -->
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:button">@null</item>
+        <item name="android:background">@null</item><!--这个要留意-->
+        <item name="android:gravity">center</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:textColor">@drawable/bottom_text_color_drawable_selector</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
     <style name="top_search_tag_style">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">40dp</item>

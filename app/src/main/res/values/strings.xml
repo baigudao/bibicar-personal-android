@@ -64,4 +64,13 @@
 
     <string name="register_text1">请先选择您的用户类型，用户类型不同有助 于我们了解您的具体偏向并对您进行功能性 的推荐与服务。</string>
 
+    <string name="fans_">粉丝  %1$s</string>
+    <string name="follow_">关注  %1$s</string>
+    <string name="fans">粉丝</string>
+    <string name="private_message">私信</string>
+    <string name="my_company_text">法拉利（Ferrari）是一家意大利汽车生产商，1929年由恩佐·法拉利（Enzo Ferrari）创办，主要制造一级方程式赛车、赛车及高性能的豪华体验的高档车</string>
+
+    <string name="have_no_bio">您尚未编辑个性签名</string>
+    <string name="user_have_no_bio">该用户尚未编辑个性签名</string>
+
 </resources>
