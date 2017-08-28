@@ -1,204 +1,196 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/background_color"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_color"
+    android:orientation="vertical">
 
-    <include layout="@layout/title_bar"/>
+    <include layout="@layout/title_bar" />
 
-    <LinearLayout
-        android:id="@+id/ll_binding_phone"
+    <RelativeLayout
+        android:id="@+id/rl_binding_phone"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:background="@drawable/setting_background_selector"
-        android:orientation="horizontal"
-        android:padding="10dp">
+        android:clickable="true">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="10dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
             android:text="绑定手机号"
             android:textColor="@color/main_text_color"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_gravity="center"
-            android:layout_weight="1"/>
+        <ImageView
+            android:id="@+id/iv1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:src="@drawable/v3_topic_more3x" />
 
         <TextView
             android:id="@+id/tv_binding_phone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:layout_toLeftOf="@id/iv1"
             android:text="133xxxxxxxx"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:padding="10dp"
-            android:src="@drawable/v3_topic_more3x"/>
-
-    </LinearLayout>
+    </RelativeLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/divider_color"/>
+        android:background="@color/divider_color" />
 
-    <LinearLayout
-        android:id="@+id/ll_modify_pwd"
+    <RelativeLayout
+        android:id="@+id/rl_modify_pwd"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:background="@drawable/setting_background_selector"
-        android:orientation="horizontal"
-        android:padding="10dp">
+        android:clickable="true">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="10dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
             android:text="修改密码"
             android:textColor="@color/main_text_color"
-            android:textSize="14sp"/>
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_gravity="center"
-            android:layout_weight="1"/>
+            android:textSize="14sp" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:padding="10dp"
-            android:src="@drawable/v3_topic_more3x"/>
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:src="@drawable/v3_topic_more3x" />
 
-    </LinearLayout>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@color/divider_color" />
 
     <!-- 清除缓存-->
-    <LinearLayout
-        android:id="@+id/ll_clear_cache"
+    <RelativeLayout
+        android:id="@+id/rl_clear_cache"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_height="50dp"
         android:background="@drawable/setting_background_selector"
-        android:orientation="horizontal"
-        android:padding="10dp">
+        android:clickable="true">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="10dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
             android:text="清除缓存"
             android:textColor="@color/main_text_color"
-            android:textSize="14sp"/>
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_gravity="center"
-            android:layout_weight="1"/>
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/settings_cache_size"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:padding="10dp"
-            android:text="23.00M"/>
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:text="23.00M" />
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/divider_color"/>
+        android:layout_height="10dp"
+        android:background="@color/divider_color" />
 
     <!--  关于BIBiCar-->
-    <LinearLayout
-        android:id="@+id/ll_about_us"
+    <RelativeLayout
+        android:id="@+id/rl_about_us"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:background="@drawable/setting_background_selector"
-        android:orientation="horizontal"
-        android:padding="10dp">
+        android:clickable="true">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="10dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
             android:text="关于BiBiCar"
             android:textColor="@color/main_text_color"
-            android:textSize="14sp"/>
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_gravity="center"
-            android:layout_weight="1"/>
+            android:textSize="14sp" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:padding="10dp"
-            android:src="@drawable/v3_topic_more3x"/>
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:src="@drawable/v3_topic_more3x" />
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/divider_color"/>
+        android:background="@color/divider_color" />
 
     <!-- 给我们打个分吧-->
-    <LinearLayout
-        android:id="@+id/ll_give_grade"
+    <RelativeLayout
+        android:id="@+id/rl_give_grade"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:background="@drawable/setting_background_selector"
-        android:orientation="horizontal"
-        android:padding="10dp">
+        android:clickable="true">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="10dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
             android:text="给我们打个分吧"
             android:textColor="@color/main_text_color"
-            android:textSize="12sp"/>
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_gravity="center"
-            android:layout_weight="1"/>
+            android:textSize="14sp" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:padding="10dp"
-            android:src="@drawable/v3_topic_more3x"/>
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:src="@drawable/v3_topic_more3x" />
 
-    </LinearLayout>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@color/divider_color" />
 
     <TextView
         android:id="@+id/tvLogout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_height="50dp"
         android:background="@drawable/setting_background_selector"
+        android:clickable="true"
         android:gravity="center"
-        android:padding="15dp"
         android:text="退出登录"
         android:textColor="@color/main_color"
-        android:textSize="16sp"/>
+        android:textSize="16sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider_color" />
 
 </LinearLayout>

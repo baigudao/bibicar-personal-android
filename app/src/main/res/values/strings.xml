@@ -73,4 +73,8 @@
     <string name="have_no_bio">您尚未编辑个性签名</string>
     <string name="user_have_no_bio">该用户尚未编辑个性签名</string>
 
+    <string name="copy_right">Copyright ️2016 Bibi Automotive. All Rights Reserved</string>
+
+    <string name="load_store_failed">跳转市场失败</string>
+
 </resources>

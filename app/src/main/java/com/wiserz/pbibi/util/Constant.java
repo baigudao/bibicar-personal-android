@@ -125,6 +125,8 @@ public class Constant {
 
     private static final String inviteFriendUrl = hostUrl + "v3/user/getmessage";
 
+    private static final String bindingPhoneUrl = hostUrl + "v3/user/bindmobile";
+
     private static final String userHomeUrl = hostUrl + "v3/user/homepage";//用户信息
     private static final String sellingCarUrl = hostUrl + "v3/publishcar/list";//在售车辆
     private static final String salesConsultantUrl = hostUrl + "v3/user/getsaleslist";//销售顾问
@@ -279,5 +281,9 @@ public class Constant {
 
     public static String getMyFocusUrl() {
         return myFocusUrl;
+    }
+
+    public static String getBindingPhoneUrl() {
+        return bindingPhoneUrl;
     }
 }
