@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -83,7 +82,6 @@ public class CarServiceFragment extends BaseFragment {
         view.findViewById(R.id.iv_back).setOnClickListener(this);
         ((TextView) view.findViewById(R.id.tv_title)).setText("汽车服务");
 
-
         WebView wb = (WebView) view.findViewById(R.id.webview_for_server);
         String webview_for_server = BASE_URL + Arrays.toString(EncodeUtils.base64Encode(SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER)))
                 + ADD_URL + Arrays.toString(EncodeUtils.base64Encode(SPUtils.getInstance().getString(Constant.SESSION_ID)));
@@ -147,15 +145,12 @@ public class CarServiceFragment extends BaseFragment {
                             // 必须异步调用
                             Thread payThread = new Thread(payRunnable);
                             payThread.start();
-
                         }
                         return true;
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
-                        Log.e("UnsupdEncodingException", e.getMessage());
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        Log.e("JSONException", e.getMessage());
                     }
                 }
                 return super.shouldOverrideUrlLoading(view, url);

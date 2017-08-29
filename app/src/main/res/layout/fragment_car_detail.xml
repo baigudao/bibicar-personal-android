@@ -697,6 +697,7 @@
                 android:background="@color/divider_color"/>
 
             <TextView
+                android:id="@+id/tv_same_style_car"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
@@ -706,9 +707,26 @@
                 android:textSize="15sp"/>
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/recyclerView"
+                android:id="@+id/recycler_view_same_style"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"/>
+
+            <TextView
+                android:id="@+id/tv_same_price_car"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="20dp"
+                android:text="同价推荐"
+                android:textColor="#3a3a3a"
+                android:textSize="15sp"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view_same_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
                 android:layout_marginTop="20dp"/>
 
         </LinearLayout>

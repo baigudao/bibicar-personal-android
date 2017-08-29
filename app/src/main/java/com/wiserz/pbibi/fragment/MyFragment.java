@@ -47,7 +47,7 @@ public class MyFragment extends BaseFragment {
                 gotoPager(TotalPropertyFragment.class, null);//总资产
                 break;
             case R.id.rl_my_car_repertory:
-                gotoPager(MyCarRepertory.class, null);//我的车库
+                gotoPager(MyCarRepertoryFragment.class, null);//我的车库
                 break;
             case R.id.rl_like:
                 gotoPager(MyLikeFragment.class, null);//喜欢的

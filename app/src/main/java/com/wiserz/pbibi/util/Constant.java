@@ -97,8 +97,8 @@ public class Constant {
 
     private final static String uploadTokenUrl = hostUrl + "app/uploadtoken";//上传文件的Token
 
-    private final static String carListUrl = hostUrl + "v3/car/list";//车辆列表
-    private final static String carDetailUrl = hostUrl + "v3/car/index";//车辆详情  v3接口
+    private final static String carListUrl = hostUrl + "v4/car/list";//车辆列表
+    private final static String carDetailUrl = hostUrl + "v4/car/index";//车辆详情  v4接口
 
     private final static String videoListUrl = hostUrl + "v3/Video/list";//视频列表
 
@@ -130,6 +130,9 @@ public class Constant {
     private static final String userHomeUrl = hostUrl + "v3/user/homepage";//用户信息
     private static final String sellingCarUrl = hostUrl + "v3/publishcar/list";//在售车辆
     private static final String salesConsultantUrl = hostUrl + "v3/user/getsaleslist";//销售顾问
+
+    private static final String userLoveCarUrl = hostUrl + "v3/car/userFavCars";//用户爱车
+    private static final String dreamCarUrl = hostUrl + "v3/DreamCar/list";//梦想车
 
     public static String getRegisterApp() {
         return registerApp;
@@ -285,5 +288,13 @@ public class Constant {
 
     public static String getBindingPhoneUrl() {
         return bindingPhoneUrl;
+    }
+
+    public static String getUserLoveCarUrl() {
+        return userLoveCarUrl;
+    }
+
+    public static String getDreamCarUrl() {
+        return dreamCarUrl;
     }
 }

@@ -100,6 +100,15 @@ public class CarInfoBeanForCarDetail extends BaseBean {
     private int visit_num;
     private String vr_url;
     private List<FilesBean> files;
+    private Files2 files2;
+
+    public Files2 getFiles2() {
+        return files2;
+    }
+
+    public void setFiles2(Files2 files2) {
+        this.files2 = files2;
+    }
 
     public String getBoard_time() {
         return board_time;
@@ -496,6 +505,190 @@ public class CarInfoBeanForCarDetail extends BaseBean {
 
         public void setBrand_url(String brand_url) {
             this.brand_url = brand_url;
+        }
+    }
+
+    public static class Files2{
+
+        private List<Type1Bean> type1;
+        private List<Type2Bean> type2;
+        private List<Type3Bean> type3;
+        private List<Type4Bean> type4;
+
+        public List<Type1Bean> getType1() {
+            return type1;
+        }
+
+        public void setType1(List<Type1Bean> type1) {
+            this.type1 = type1;
+        }
+
+        public List<Type2Bean> getType2() {
+            return type2;
+        }
+
+        public void setType2(List<Type2Bean> type2) {
+            this.type2 = type2;
+        }
+
+        public List<Type3Bean> getType3() {
+            return type3;
+        }
+
+        public void setType3(List<Type3Bean> type3) {
+            this.type3 = type3;
+        }
+
+        public List<Type4Bean> getType4() {
+            return type4;
+        }
+
+        public void setType4(List<Type4Bean> type4) {
+            this.type4 = type4;
+        }
+
+        public static class Type1Bean {
+            /**
+             * file_id : FgZeohcEFDereUj2k21wwx5Q7hYz
+             * file_type : 1
+             * file_url : http://thirtimg.bibicar.cn/13905981_73d5a300852_20.jpg?imageMogr2/auto-orient/thumbnail/1000x/strip
+             */
+
+            private String file_id;
+            private int file_type;
+            private String file_url;
+
+            public String getFile_id() {
+                return file_id;
+            }
+
+            public void setFile_id(String file_id) {
+                this.file_id = file_id;
+            }
+
+            public int getFile_type() {
+                return file_type;
+            }
+
+            public void setFile_type(int file_type) {
+                this.file_type = file_type;
+            }
+
+            public String getFile_url() {
+                return file_url;
+            }
+
+            public void setFile_url(String file_url) {
+                this.file_url = file_url;
+            }
+        }
+
+        public static class Type2Bean {
+            /**
+             * file_id : FnL4x9zqE_w8xpGSekQi4bgNMLMG
+             * file_type : 2
+             * file_url : http://thirtimg.bibicar.cn/13905981_5cb6f654985_20.jpg?imageMogr2/auto-orient/thumbnail/1000x/strip
+             */
+
+            private String file_id;
+            private int file_type;
+            private String file_url;
+
+            public String getFile_id() {
+                return file_id;
+            }
+
+            public void setFile_id(String file_id) {
+                this.file_id = file_id;
+            }
+
+            public int getFile_type() {
+                return file_type;
+            }
+
+            public void setFile_type(int file_type) {
+                this.file_type = file_type;
+            }
+
+            public String getFile_url() {
+                return file_url;
+            }
+
+            public void setFile_url(String file_url) {
+                this.file_url = file_url;
+            }
+        }
+
+        public static class Type3Bean {
+            /**
+             * file_id : Fl1gsmkdRc02VpHCEgtvEmH35min
+             * file_type : 3
+             * file_url : http://thirtimg.bibicar.cn/13905981_c6be0285974_20.jpg?imageMogr2/auto-orient/thumbnail/1000x/strip
+             */
+
+            private String file_id;
+            private int file_type;
+            private String file_url;
+
+            public String getFile_id() {
+                return file_id;
+            }
+
+            public void setFile_id(String file_id) {
+                this.file_id = file_id;
+            }
+
+            public int getFile_type() {
+                return file_type;
+            }
+
+            public void setFile_type(int file_type) {
+                this.file_type = file_type;
+            }
+
+            public String getFile_url() {
+                return file_url;
+            }
+
+            public void setFile_url(String file_url) {
+                this.file_url = file_url;
+            }
+        }
+
+        public static class Type4Bean {
+            /**
+             * file_id : FuBthC0X6wbfUCAYs4r7V3S_icKE
+             * file_type : 4
+             * file_url : http://thirtimg.bibicar.cn/13905981_cdb43206202_20.jpg?imageMogr2/auto-orient/thumbnail/1000x/strip
+             */
+
+            private String file_id;
+            private int file_type;
+            private String file_url;
+
+            public String getFile_id() {
+                return file_id;
+            }
+
+            public void setFile_id(String file_id) {
+                this.file_id = file_id;
+            }
+
+            public int getFile_type() {
+                return file_type;
+            }
+
+            public void setFile_type(int file_type) {
+                this.file_type = file_type;
+            }
+
+            public String getFile_url() {
+                return file_url;
+            }
+
+            public void setFile_url(String file_url) {
+                this.file_url = file_url;
+            }
         }
     }
 

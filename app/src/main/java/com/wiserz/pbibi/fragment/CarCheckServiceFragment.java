@@ -23,11 +23,10 @@ public class CarCheckServiceFragment extends BaseFragment {
         ((TextView) view.findViewById(R.id.tv_title)).setText("车辆检测服务");
         view.findViewById(R.id.btn_register).setVisibility(View.GONE);
 
-        view.findViewById(R.id.btn_check_peccancy).setOnClickListener(this);
-        view.findViewById(R.id.btn_check_guarantee).setOnClickListener(this);
-        view.findViewById(R.id.btn_check_insurance).setOnClickListener(this);
-        view.findViewById(R.id.btn_check_sum).setOnClickListener(this);
-        view.findViewById(R.id.btn_check_history).setOnClickListener(this);
+        view.findViewById(R.id.ll_check_peccancy).setOnClickListener(this);
+        view.findViewById(R.id.ll_check_guarantee).setOnClickListener(this);
+        view.findViewById(R.id.ll_check_sum).setOnClickListener(this);
+        view.findViewById(R.id.ll_check_history).setOnClickListener(this);
     }
 
     @Override
@@ -36,19 +35,16 @@ public class CarCheckServiceFragment extends BaseFragment {
             case R.id.iv_back:
                 goBack();
                 break;
-            case R.id.btn_check_peccancy:
+            case R.id.ll_check_peccancy:
                 gotoPager(CheckPeccancyFragment.class, null);//查违章
                 break;
-            case R.id.btn_check_insurance:
-                gotoPager(CheckInsuranceFragment.class, null);//查保险：8.24确定不做
-                break;
-            case R.id.btn_check_guarantee:
+            case R.id.ll_check_guarantee:
                 gotoPager(CheckGuaranteeFragment.class, null);//查维保
                 break;
-            case R.id.btn_check_sum:
+            case R.id.ll_check_sum:
                 gotoPager(CheckSumFragment.class, null);//查出险
                 break;
-            case R.id.btn_check_history:
+            case R.id.ll_check_history:
                 gotoPager(CheckHistoryFragment.class, null);//查询历史
                 break;
             default:

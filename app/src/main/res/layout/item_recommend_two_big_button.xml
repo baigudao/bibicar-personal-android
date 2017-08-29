@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/background_color">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/background_color">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -10,23 +10,27 @@
         android:layout_marginTop="15dp"
         android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/btn_car_check"
+        <ImageView
+            android:id="@+id/iv_car_check"
             android:layout_width="0dp"
             android:layout_height="100dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="5dp"
             android:layout_weight="1"
-            android:background="#dda753" />
+            android:clickable="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/v1_service3x"/>
 
-        <Button
-            android:id="@+id/btn_rent_car"
+        <ImageView
+            android:id="@+id/iv_rent_car"
             android:layout_width="0dp"
             android:layout_height="100dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="15dp"
             android:layout_weight="1"
-            android:background="#F15044" />
+            android:clickable="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/v1_leasecar3x"/>
 
     </LinearLayout>
 

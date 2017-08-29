@@ -34,4 +34,9 @@ public class MyOrderFragment extends BaseFragment {
                 break;
         }
     }
+
+    @Override
+    protected void initData() {
+        super.initData();
+    }
 }

@@ -1,7 +1,15 @@
 package com.wiserz.pbibi.fragment;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -13,20 +21,33 @@ import com.bigkoo.convenientbanner.holder.Holder;
 import com.bigkoo.convenientbanner.listener.OnItemClickListener;
 import com.blankj.utilcode.util.EmptyUtils;
 import com.blankj.utilcode.util.SPUtils;
+import com.blankj.utilcode.util.TimeUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.wiserz.pbibi.R;
+import com.wiserz.pbibi.activity.VRWatchCarActivity;
+import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
 import com.wiserz.pbibi.bean.CarInfoBeanForCarDetail;
 import com.wiserz.pbibi.util.Constant;
+import com.wiserz.pbibi.view.SharePlatformPopupWindow;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
+import cn.sharesdk.onekeyshare.OnekeyShare;
+import cn.sharesdk.onekeyshare.OnekeyShareTheme;
+import io.rong.imkit.RongIM;
+import io.rong.imlib.model.Conversation;
+import io.rong.imlib.model.UserInfo;
 import okhttp3.Call;
 
 /**
@@ -34,9 +55,18 @@ import okhttp3.Call;
  * QQ : 971060378
  * Used as : 汽车详情的页面
  */
-public class CarDetailFragment extends BaseFragment {
+public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewAdapter.OnItemClickListener {
 
     private String car_id;
+    private String share_img;
+    private String share_title;
+    private String share_txt;
+    private String share_url;
+    private String vr_url;
+    private String contact_phone;
+    private CarInfoBeanForCarDetail carInfoBeanForCarDetail;
+
+    private static final int SAME_STYLE_CAR_DATA_TYPE = 28;
 
     @Override
     protected int getLayoutId() {
@@ -49,6 +79,10 @@ public class CarDetailFragment extends BaseFragment {
         car_id = bundle.getString(Constant.CAR_ID);
         view.findViewById(R.id.iv_back).setOnClickListener(this);
         ((TextView) view.findViewById(R.id.tv_title)).setText("车辆详情");
+        ImageView iv_image = (ImageView) view.findViewById(R.id.iv_image);
+        iv_image.setVisibility(View.VISIBLE);
+        iv_image.setImageResource(R.drawable.share_selector);
+        iv_image.setOnClickListener(this);
         view.findViewById(R.id.btn_watch_vr).setOnClickListener(this);
         view.findViewById(R.id.btn_line_contact).setOnClickListener(this);
         view.findViewById(R.id.btn_phone_contact).setOnClickListener(this);
@@ -60,14 +94,49 @@ public class CarDetailFragment extends BaseFragment {
             case R.id.iv_back:
                 goBack();
                 break;
+            case R.id.iv_image:
+                showSharePlatformPopWindow();
+                break;
             case R.id.btn_watch_vr:
-                ToastUtils.showShort("VR");
+                if (EmptyUtils.isEmpty(vr_url)) {
+                    ToastUtils.showShort("该车暂未拍摄");
+                    return;
+                } else {
+                    gotoPager(VRWatchCarActivity.class, null);
+                }
                 break;
             case R.id.btn_line_contact:
-                ToastUtils.showShort("btn_line_contact");
+                if (EmptyUtils.isNotEmpty(carInfoBeanForCarDetail)) {
+                    CarInfoBeanForCarDetail.UserInfoBean userInfoBean = carInfoBeanForCarDetail.getUser_info();
+                    if (EmptyUtils.isNotEmpty(userInfoBean)) {
+                        CarInfoBeanForCarDetail.UserInfoBean.ProfileBean profileBean = userInfoBean.getProfile();
+                        final int user_id = userInfoBean.getUser_id();
+                        if (EmptyUtils.isNotEmpty(profileBean)) {
+                            final String avatar = profileBean.getAvatar();
+                            final String nick_name = profileBean.getNickname();
+
+                            if (EmptyUtils.isNotEmpty(user_id) && EmptyUtils.isNotEmpty(avatar) && EmptyUtils.isNotEmpty(nick_name)) {
+                                RongIM.getInstance().startConversation(mContext, Conversation.ConversationType.PRIVATE, String.valueOf(user_id), nick_name);
+                                RongIM.setUserInfoProvider(new RongIM.UserInfoProvider() {
+                                    @Override
+                                    public UserInfo getUserInfo(String s) {
+                                        return new UserInfo(String.valueOf(user_id), nick_name, Uri.parse(avatar));//根据 userId 去你的用户系统里查询对应的用户信息返回给融云 SDK。
+                                    }
+                                }, true);
+                            } else {
+                                ToastUtils.showShort("该车的相关信息为空");
+                            }
+                        }
+                    }
+                }
                 break;
             case R.id.btn_phone_contact:
-                ToastUtils.showShort("btn_phone_contact");
+                if (EmptyUtils.isEmpty(contact_phone)) {
+                    ToastUtils.showShort("该车主没有联系方式");
+                    return;
+                } else {
+                    showCallPhoneDialog(contact_phone);
+                }
                 break;
             default:
                 break;
@@ -103,8 +172,13 @@ public class CarDetailFragment extends BaseFragment {
                             int status = jsonObject.optInt("status");
                             JSONObject jsonObjectData = jsonObject.optJSONObject("data");
                             if (status == 1) {
+                                share_img = jsonObjectData.optString("share_img");
+                                share_title = jsonObjectData.optString("share_title");
+                                share_txt = jsonObjectData.optString("share_txt");
+                                share_url = jsonObjectData.optString("share_url");
                                 handlerCarInfoData(jsonObjectData.optJSONObject("car_info"));//处理此车辆的数据
-
+                                //                                handlerSameStyleCarData(jsonObjectData.optJSONArray("related_style_car_list"));//处理同款车辆的数据
+                                //                                handlerSamePriceCarData(jsonObjectData.optJSONArray("related_price_car_list"));//处理同价车辆的数据
                             } else {
                                 String code = jsonObject.optString("code");
                                 String msg = jsonObjectData.optString("msg");
@@ -117,36 +191,88 @@ public class CarDetailFragment extends BaseFragment {
                 });
     }
 
+    private void handlerSamePriceCarData(JSONArray related_price_car_list) {
+        if (getView() != null) {
+            RecyclerView recycler_view_same_style = (RecyclerView) getView().findViewById(R.id.recycler_view_same_price);
+            TextView tv_same_style_car = (TextView) getView().findViewById(R.id.tv_same_price_car);
+            if (EmptyUtils.isNotEmpty(related_price_car_list)) {
+                if (related_price_car_list.length() == 0) {
+                    tv_same_style_car.setVisibility(View.GONE);
+                    recycler_view_same_style.setVisibility(View.GONE);
+                    return;
+                }
+                Gson gson = new Gson();
+                ArrayList<CarInfoBeanForCarDetail> carInfoBeanForCarDetailArrayList = gson.fromJson(related_price_car_list.toString(), new TypeToken<ArrayList<CarInfoBeanForCarDetail>>() {
+                }.getType());
+                BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, carInfoBeanForCarDetailArrayList, SAME_STYLE_CAR_DATA_TYPE);
+                recycler_view_same_style.setAdapter(baseRecyclerViewAdapter);
+                recycler_view_same_style.setLayoutManager(new GridLayoutManager(mContext, 2, LinearLayoutManager.VERTICAL, false));
+                baseRecyclerViewAdapter.setOnItemClickListener(this);
+            } else {
+                tv_same_style_car.setVisibility(View.GONE);
+                recycler_view_same_style.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    private void handlerSameStyleCarData(JSONArray related_style_car_list) {
+        if (getView() != null) {
+            RecyclerView recycler_view_same_style = (RecyclerView) getView().findViewById(R.id.recycler_view_same_style);
+            TextView tv_same_style_car = (TextView) getView().findViewById(R.id.tv_same_style_car);
+            if (EmptyUtils.isNotEmpty(related_style_car_list)) {
+                if (related_style_car_list.length() == 0) {
+                    tv_same_style_car.setVisibility(View.GONE);
+                    recycler_view_same_style.setVisibility(View.GONE);
+                    return;
+                }
+                Gson gson = new Gson();
+                ArrayList<CarInfoBeanForCarDetail> carInfoBeanForCarDetailArrayList = gson.fromJson(related_style_car_list.toString(), new TypeToken<ArrayList<CarInfoBeanForCarDetail>>() {
+                }.getType());
+                BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, carInfoBeanForCarDetailArrayList, SAME_STYLE_CAR_DATA_TYPE);
+                recycler_view_same_style.setAdapter(baseRecyclerViewAdapter);
+                recycler_view_same_style.setLayoutManager(new GridLayoutManager(mContext, 2, LinearLayoutManager.VERTICAL, false));
+                baseRecyclerViewAdapter.setOnItemClickListener(this);
+            } else {
+                tv_same_style_car.setVisibility(View.GONE);
+                recycler_view_same_style.setVisibility(View.GONE);
+            }
+        }
+    }
+
     private void handlerCarInfoData(JSONObject car_info) {
         Gson gson = new Gson();
-        CarInfoBeanForCarDetail carInfoBeanForCarDetail = gson.fromJson(car_info.toString(), CarInfoBeanForCarDetail.class);
+        carInfoBeanForCarDetail = gson.fromJson(car_info.toString(), CarInfoBeanForCarDetail.class);
 
         if (EmptyUtils.isNotEmpty(carInfoBeanForCarDetail) && getView() != null) {
+            vr_url = carInfoBeanForCarDetail.getVr_url();
+            contact_phone = carInfoBeanForCarDetail.getContact_phone();
             ((TextView) getView().findViewById(R.id.tv_title)).setText(carInfoBeanForCarDetail.getBrand_info().getBrand_name() + " " + carInfoBeanForCarDetail.getSeries_info().getSeries_name());
 
             ConvenientBanner convenientBanner = (ConvenientBanner) getView().findViewById(R.id.convenientBanner);
             ArrayList<CarInfoBeanForCarDetail.FilesBean> filesBeanArrayList = (ArrayList<CarInfoBeanForCarDetail.FilesBean>) carInfoBeanForCarDetail.getFiles();
-            //自定义你的Holder，实现更多复杂的界面，不一定是图片翻页，其他任何控件翻页亦可。
-            //            convenientBanner.startTurning(5000);
-            convenientBanner.setPages(new CBViewHolderCreator<LocalImageHolderView>() {
-                @Override
-                public LocalImageHolderView createHolder() {
-                    return new LocalImageHolderView();
-                }
-            }, filesBeanArrayList)
-                    //设置两个点图片作为翻页指示器，不设置则没有指示器，可以根据自己需求自行配合自己的指示器,不需要圆点指示器可用不设
-                    //                    .setPageIndicator(new int[]{R.drawable.point_normal1, R.drawable.point_checked})
-                    //设置指示器的方向
-                    //                    .setPageIndicatorAlign(ConvenientBanner.PageIndicatorAlign.CENTER_HORIZONTAL)
-                    .setOnItemClickListener(new OnItemClickListener() {
-                        @Override
-                        public void onItemClick(int position) {
-                            ToastUtils.showShort(position + "");
-                        }
-                    });
-            //设置翻页的效果，不需要翻页效果可用不设
-            //.setPageTransformer(Transformer.DefaultTransformer);    集成特效之后会有白屏现象，新版已经分离，如果要集成特效的例子可以看Demo的点击响应。
-            // convenientBanner.setManualPageable(false);//设置不能手动影响
+            if (EmptyUtils.isNotEmpty(filesBeanArrayList)) {
+                //自定义你的Holder，实现更多复杂的界面，不一定是图片翻页，其他任何控件翻页亦可。
+                //            convenientBanner.startTurning(5000);
+                convenientBanner.setPages(new CBViewHolderCreator<LocalImageHolderView>() {
+                    @Override
+                    public LocalImageHolderView createHolder() {
+                        return new LocalImageHolderView();
+                    }
+                }, filesBeanArrayList)
+                        //设置两个点图片作为翻页指示器，不设置则没有指示器，可以根据自己需求自行配合自己的指示器,不需要圆点指示器可用不设
+                        //                    .setPageIndicator(new int[]{R.drawable.point_normal1, R.drawable.point_checked})
+                        //设置指示器的方向
+                        //                    .setPageIndicatorAlign(ConvenientBanner.PageIndicatorAlign.CENTER_HORIZONTAL)
+                        .setOnItemClickListener(new OnItemClickListener() {
+                            @Override
+                            public void onItemClick(int position) {
+                                ToastUtils.showShort(position + "");
+                            }
+                        });
+                //设置翻页的效果，不需要翻页效果可用不设
+                //.setPageTransformer(Transformer.DefaultTransformer);    集成特效之后会有白屏现象，新版已经分离，如果要集成特效的例子可以看Demo的点击响应。
+                // convenientBanner.setManualPageable(false);//设置不能手动影响
+            }
 
             if (EmptyUtils.isNotEmpty(carInfoBeanForCarDetail.getCar_name())) {
                 ((TextView) getView().findViewById(R.id.tv_car_name)).setText(carInfoBeanForCarDetail.getCar_name());
@@ -154,8 +280,8 @@ public class CarDetailFragment extends BaseFragment {
             if (EmptyUtils.isNotEmpty(carInfoBeanForCarDetail.getPrice())) {
                 ((TextView) getView().findViewById(R.id.tv_car_price)).setText(carInfoBeanForCarDetail.getPrice() + "万");
             }
-            ((TextView) getView().findViewById(R.id.tv_car_location)).setText(carInfoBeanForCarDetail.getCity_info().getCity_name());
-            ((TextView) getView().findViewById(R.id.tv_car_time)).setText(carInfoBeanForCarDetail.getCar_time());
+            ((TextView) getView().findViewById(R.id.tv_car_location)).setText(EmptyUtils.isEmpty(carInfoBeanForCarDetail.getCity_info()) ? "深圳" : carInfoBeanForCarDetail.getCity_info().getCity_name());
+            ((TextView) getView().findViewById(R.id.tv_car_time)).setText(TimeUtils.date2String(new Date(Long.valueOf(carInfoBeanForCarDetail.getCreated()) * 1000), new SimpleDateFormat("yyyy-MM-dd")));
 
             getView().findViewById(R.id.tv_check_all_car_configure).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -176,13 +302,74 @@ public class CarDetailFragment extends BaseFragment {
             getView().findViewById(R.id.tv_contact_car_owner).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ToastUtils.showShort("联系车主");
+                    if (EmptyUtils.isNotEmpty(carInfoBeanForCarDetail.getContact_phone())) {
+                        showCallPhoneDialog(carInfoBeanForCarDetail.getContact_phone());
+                    }
                 }
             });
             if (EmptyUtils.isNotEmpty(carInfoBeanForCarDetail.getUser_info()) && EmptyUtils.isNotEmpty(carInfoBeanForCarDetail.getUser_info().getProfile())) {
                 ((TextView) getView().findViewById(R.id.tv_car_owner_detail)).setText(carInfoBeanForCarDetail.getUser_info().getProfile().getSignature());
             }
+
+            getView().findViewById(R.id.tv_check_all_car_service).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    gotoPager(CarServiceFragment.class, null);
+                }
+            });
+
+            //车辆照片类型 (1:外观 2:中控内饰 3:发动机及结构 4:更多细节)
+            if (EmptyUtils.isNotEmpty(EmptyUtils.isNotEmpty(carInfoBeanForCarDetail.getFiles2()))) {
+                if (EmptyUtils.isNotEmpty(carInfoBeanForCarDetail.getFiles2().getType1())) {
+                    //外观
+                    ArrayList<CarInfoBeanForCarDetail.Files2.Type1Bean> type1BeanArrayList = (ArrayList<CarInfoBeanForCarDetail.Files2.Type1Bean>) carInfoBeanForCarDetail.getFiles2().getType1();
+                    if (type1BeanArrayList.size() != 0) {
+                        Glide.with(mContext)
+                                .load(type1BeanArrayList.get(0).getFile_url())
+                                .placeholder(R.drawable.default_bg_ratio_1)
+                                .error(R.drawable.default_bg_ratio_1)
+                                .into((ImageView) getView().findViewById(R.id.iv_car_surface));
+                        int size1 = type1BeanArrayList.size();
+                        ((TextView) getView().findViewById(R.id.tv_car_surface_num)).setText("(" + size1 + ")");
+                    }
+                }
+            }
         }
+    }
+
+    @Override
+    public void onItemClick(Object data, int position) {
+        if (data.getClass().getSimpleName().equals("CarInfoBeanForCarDetail")) {
+            CarInfoBeanForCarDetail carInfoBeanForCarDetail = (CarInfoBeanForCarDetail) data;
+            if (EmptyUtils.isNotEmpty(carInfoBeanForCarDetail)) {
+                Bundle bundle = new Bundle();
+                bundle.putString(Constant.CAR_ID, carInfoBeanForCarDetail.getCar_id());
+                gotoPager(CarDetailFragment.class, bundle);
+            }
+        }
+    }
+
+    private void showCallPhoneDialog(final String contact_phone) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(getString(R.string.connect_to_buy));
+        builder.setMessage(getString(R.string.connect_phone_number));
+        builder.setPositiveButton(getString(R.string.call_phone), new DialogInterface.OnClickListener() { //设置确定按钮
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_CALL);
+                intent.setData(Uri.parse("tel:" + contact_phone));
+                startActivity(intent);
+            }
+        });
+        builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() { //设置取消按钮
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
     }
 
     private class LocalImageHolderView implements Holder<CarInfoBeanForCarDetail.FilesBean> {
@@ -212,5 +399,65 @@ public class CarDetailFragment extends BaseFragment {
                         .into(iv_image);
             }
         }
+    }
+
+    private void showSharePlatformPopWindow() {
+        SharePlatformPopupWindow sharePlatformPopWindow = new SharePlatformPopupWindow(getActivity(), new SharePlatformPopupWindow.SharePlatformListener() {
+            @Override
+            public void onSinaWeiboClicked() {
+                showShare(mContext, "SinaWeibo", true);
+            }
+
+            @Override
+            public void onWeChatClicked() {
+                showShare(mContext, "Wechat", true);
+            }
+
+            @Override
+            public void onWechatMomentsClicked() {
+                showShare(mContext, "WechatMoments", true);
+            }
+
+            @Override
+            public void onCancelBtnClicked() {
+
+            }
+        });
+        sharePlatformPopWindow.initView();
+        sharePlatformPopWindow.showAtLocation(getView(), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+    }
+
+    /**
+     * 演示调用ShareSDK执行分享
+     *
+     * @param context
+     * @param platformToShare 指定直接分享平台名称（一旦设置了平台名称，则九宫格将不会显示）
+     * @param showContentEdit 是否显示编辑页
+     */
+    private void showShare(Context context, String platformToShare, boolean showContentEdit) {
+
+        OnekeyShare oks = new OnekeyShare();
+        oks.setSilent(!showContentEdit);
+        if (platformToShare != null) {
+            oks.setPlatform(platformToShare);
+        }
+        //ShareSDK快捷分享提供两个界面第一个是九宫格 CLASSIC  第二个是SKYBLUE
+        oks.setTheme(OnekeyShareTheme.CLASSIC);
+        // 令编辑页面显示为Dialog模式
+        //        oks.setDialogMode();
+        // 在自动授权时可以禁用SSO方式
+        oks.disableSSOWhenAuthorize();
+
+        oks.setTitle(share_title);
+        if (platformToShare.equalsIgnoreCase("SinaWeibo")) {
+            oks.setText(share_txt + "\n" + share_url);
+        } else {
+            oks.setText(share_img);
+            oks.setImageUrl(share_img);
+            oks.setUrl(share_url);
+        }
+
+        // 启动分享
+        oks.show(context);
     }
 }

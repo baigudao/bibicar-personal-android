@@ -22,10 +22,12 @@ import com.wiserz.pbibi.bean.ArticleBean;
 import com.wiserz.pbibi.bean.ArticleCommentBean;
 import com.wiserz.pbibi.bean.CarInfoBean;
 import com.wiserz.pbibi.bean.CarInfoBeanForCarCenter;
+import com.wiserz.pbibi.bean.CarInfoBeanForCarDetail;
 import com.wiserz.pbibi.bean.CarRentInfoBean;
 import com.wiserz.pbibi.bean.CarRentRecommendCarBean;
 import com.wiserz.pbibi.bean.CheHangBean;
 import com.wiserz.pbibi.bean.CheHangUserListBean;
+import com.wiserz.pbibi.bean.DreamCarBean;
 import com.wiserz.pbibi.bean.FuLiBean;
 import com.wiserz.pbibi.bean.MyCarRentOrderBean;
 import com.wiserz.pbibi.bean.ThemeUserBean;
@@ -95,6 +97,12 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
 
     private static final int MY_STATE_DATA_TYPE = 25;
 
+    private static final int DREAM_CAR_DATA_TYPE = 26;
+
+    private static final int TOTAL_PROPERTY_DATA_TYPE = 27;
+
+    private static final int SAME_STYLE_CAR_DATA_TYPE = 28;
+
     public BaseRecyclerViewAdapter(Context context, List<T> tList, int dataType) {
         this.mContext = context;
         this.mList = tList;
@@ -104,7 +112,13 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
     @Override
     public BaseRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         ViewHolder viewHolder;
-        if (dataType == MY_STATE_DATA_TYPE) {
+        if (dataType == SAME_STYLE_CAR_DATA_TYPE) {
+            viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_same_style_car, null));
+        } else if (dataType == TOTAL_PROPERTY_DATA_TYPE) {
+            viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_total_property, null));
+        } else if (dataType == DREAM_CAR_DATA_TYPE) {
+            viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_dream_car, null));
+        } else if (dataType == MY_STATE_DATA_TYPE) {
             viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_my_state, null));
         } else if (dataType == MY_CAR_REPERTORY_DATA_TYPE) {
             viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_my_car_repertory, null));
@@ -583,6 +597,37 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                             .into(holder.iv_item1);
                 }
             }
+        } else if (dataType == DREAM_CAR_DATA_TYPE) {
+            ArrayList<DreamCarBean> dreamCarBeanArrayList = (ArrayList<DreamCarBean>) mList;
+
+            if (EmptyUtils.isNotEmpty(dreamCarBeanArrayList)) {
+                DreamCarBean dreamCarBean = dreamCarBeanArrayList.get(position);
+
+                if (EmptyUtils.isNotEmpty(dreamCarBean)) {
+                    Glide.with(mContext)
+                            .load(dreamCarBean.getBrand_info().getBrand_url())
+                            .placeholder(R.drawable.default_bg_ratio_1)
+                            .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
+                            .into(holder.iv_item1);
+                    holder.tv_item1.setText(dreamCarBean.getBrand_info().getBrand_name() + dreamCarBean.getSeries_info().getSeries_name());
+                }
+            }
+        } else if (dataType == SAME_STYLE_CAR_DATA_TYPE) {
+            ArrayList<CarInfoBeanForCarDetail> carInfoBeanForCarDetailArrayList = (ArrayList<CarInfoBeanForCarDetail>) mList;
+
+            if (EmptyUtils.isNotEmpty(carInfoBeanForCarDetailArrayList)) {
+                CarInfoBeanForCarDetail carInfoBeanForCarDetail = carInfoBeanForCarDetailArrayList.get(position);
+
+                if (EmptyUtils.isNotEmpty(carInfoBeanForCarDetail)) {
+                    Glide.with(mContext)
+                            .load(carInfoBeanForCarDetail.getFiles().get(0).getFile_url())
+                            .placeholder(R.drawable.default_bg_ratio_1)
+                            .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
+                            .into(holder.iv_item1);
+                    holder.tv_item1.setText(carInfoBeanForCarDetail.getCar_name());
+                    holder.tv_item2.setText(carInfoBeanForCarDetail.getPrice() + "万");
+                }
+            }
         }
     }
 
@@ -873,6 +918,23 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                 });
             } else if (dataType == THEME_USER_DATA_TYPE) {
                 iv_item1 = (ImageView) itemView.findViewById(R.id.iv_circle_image);
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnItemClickListener != null) {
+                            int position = getLayoutPosition();
+                            mOnItemClickListener.onItemClick(mList.get(position), position);
+                        }
+                    }
+                });
+            } else if (dataType == DREAM_CAR_DATA_TYPE) {
+                iv_item1 = (ImageView) itemView.findViewById(R.id.iv_image);
+                tv_item1 = (TextView) itemView.findViewById(R.id.tv_name);
+            } else if (dataType == SAME_STYLE_CAR_DATA_TYPE) {
+                iv_item1 = (ImageView) itemView.findViewById(R.id.iv_most_new_car);
+                tv_item1 = (TextView) itemView.findViewById(R.id.tv_most_new_car_name);
+                tv_item2 = (TextView) itemView.findViewById(R.id.tv_most_new_car_price);
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override

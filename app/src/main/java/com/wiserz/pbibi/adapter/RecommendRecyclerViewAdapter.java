@@ -6,7 +6,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -129,7 +128,7 @@ public class RecommendRecyclerViewAdapter extends RecyclerView.Adapter implement
                         @Override
                         public void onItemClick(int position) {
                             BannerBean bannerBean = bannerBeanArrayList.get(position);
-                            if (EmptyUtils.isNotEmpty(bannerBean)){
+                            if (EmptyUtils.isNotEmpty(bannerBean)) {
                                 DataManager.getInstance().setData1(bannerBean);
                                 ((BaseActivity) mContext).gotoPager(BannerFragment.class, null);
                             }
@@ -140,7 +139,7 @@ public class RecommendRecyclerViewAdapter extends RecyclerView.Adapter implement
             // convenientBanner.setManualPageable(false);//设置不能手动影响
         } else if (currentType == TWO_BIG_BUTTON) {
             TwoBigButtonViewHolder twoBigButtonViewHolder = (TwoBigButtonViewHolder) holder;
-            twoBigButtonViewHolder.btn_car_check.setOnClickListener(new View.OnClickListener() {
+            twoBigButtonViewHolder.iv_car_check.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     ((BaseActivity) mContext).gotoPager(CarCheckServiceFragment.class, null);
@@ -150,7 +149,7 @@ public class RecommendRecyclerViewAdapter extends RecyclerView.Adapter implement
                     //                    mContext.startActivity(intent);
                 }
             });
-            twoBigButtonViewHolder.btn_rent_car.setOnClickListener(new View.OnClickListener() {
+            twoBigButtonViewHolder.iv_rent_car.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     ((BaseActivity) mContext).gotoPager(CarRentFragment.class, null);
@@ -359,13 +358,13 @@ public class RecommendRecyclerViewAdapter extends RecyclerView.Adapter implement
 
     private class TwoBigButtonViewHolder extends RecyclerView.ViewHolder {
 
-        private Button btn_car_check;
-        private Button btn_rent_car;
+        private ImageView iv_car_check;
+        private ImageView iv_rent_car;
 
         TwoBigButtonViewHolder(View itemView) {
             super(itemView);
-            btn_car_check = (Button) itemView.findViewById(R.id.btn_car_check);
-            btn_rent_car = (Button) itemView.findViewById(R.id.btn_rent_car);
+            iv_car_check = (ImageView) itemView.findViewById(R.id.iv_car_check);
+            iv_rent_car = (ImageView) itemView.findViewById(R.id.iv_rent_car);
         }
     }
 
