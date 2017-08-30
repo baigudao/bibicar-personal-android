@@ -6,6 +6,9 @@ import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.baidu.location.BDAbstractLocationListener;
@@ -19,7 +22,7 @@ import com.google.gson.Gson;
 import com.wiserz.pbibi.BaseApplication;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
-import com.wiserz.pbibi.bean.CarInfoBeanForCarCenter;
+import com.wiserz.pbibi.bean.CarInfoBean;
 import com.wiserz.pbibi.util.Constant;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -44,6 +47,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
     public BDAbstractLocationListener myListener = new MyLocationListener();
 
     private TextView tvLocation;
+    private LinearLayout ll_sort;
 
     private RecyclerView recyclerView;
     private int mPage;
@@ -77,6 +81,8 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
         mLocationClient.start();//开始定位
 
         view.findViewById(R.id.ivRight).setOnClickListener(this);
+        ll_sort = (LinearLayout) view.findViewById(R.id.ll_sort);
+        ll_sort.setOnClickListener(this);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         mPage = 0;
@@ -91,6 +97,11 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                 //                gotoPager(ConcreteParameterFragment.class, null);//具体参数
 
                 gotoPager(TestFragment.class, null);
+                break;
+            case R.id.ll_sort:
+                PopupWindow popupWindow = new PopupWindow(View.inflate(mContext, R.layout.item_car_sort, null), ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                popupWindow.setOutsideTouchable(true);
+                popupWindow.showAsDropDown(ll_sort);
                 break;
             default:
                 break;
@@ -153,15 +164,15 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
     }
 
     private void handlerCarListData(JSONObject jsonObjectData) {
-        ArrayList<CarInfoBeanForCarCenter> carInfoBeanForCarCenterArrayList = getCarListData(jsonObjectData);
-        BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, carInfoBeanForCarCenterArrayList, CAR_LIST_FOR_CAR_CENTER);
+        ArrayList<CarInfoBean> carInfoBeanArrayList = getCarListData(jsonObjectData);
+        BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, carInfoBeanArrayList, CAR_LIST_FOR_CAR_CENTER);
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(baseRecyclerViewAdapter);
         baseRecyclerViewAdapter.setOnItemClickListener(this);
     }
 
-    private ArrayList<CarInfoBeanForCarCenter> getCarListData(JSONObject jsonObjectData) {
-        ArrayList<CarInfoBeanForCarCenter> list = null;
+    private ArrayList<CarInfoBean> getCarListData(JSONObject jsonObjectData) {
+        ArrayList<CarInfoBean> list = null;
         if (jsonObjectData == null) {
             return new ArrayList<>();
         } else {
@@ -170,8 +181,8 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
             Gson gson = new Gson();
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObjectCarInfo = jsonArray.optJSONObject(i).optJSONObject("car_info");
-                CarInfoBeanForCarCenter carInfoBeanForCarCenter = gson.fromJson(jsonObjectCarInfo.toString(), CarInfoBeanForCarCenter.class);
-                list.add(carInfoBeanForCarCenter);
+                CarInfoBean carInfoBean = gson.fromJson(jsonObjectCarInfo.toString(), CarInfoBean.class);
+                list.add(carInfoBean);
             }
         }
         return list;
@@ -179,11 +190,11 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
 
     @Override
     public void onItemClick(Object data, int position) {
-        if (data.getClass().getSimpleName().equals("CarInfoBeanForCarCenter")) {
-            CarInfoBeanForCarCenter carInfoBeanForCarCenter = (CarInfoBeanForCarCenter) data;
-            if (EmptyUtils.isNotEmpty(carInfoBeanForCarCenter)) {
+        if (data.getClass().getSimpleName().equals("CarInfoBean")) {
+            CarInfoBean carInfoBean = (CarInfoBean) data;
+            if (EmptyUtils.isNotEmpty(carInfoBean)) {
                 Bundle bundle = new Bundle();
-                bundle.putString(Constant.CAR_ID, carInfoBeanForCarCenter.getCar_id());
+                bundle.putString(Constant.CAR_ID, carInfoBean.getCar_id());
                 gotoPager(CarDetailFragment.class, bundle);
             }
         }

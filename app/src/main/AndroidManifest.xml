@@ -100,7 +100,6 @@
 
         <activity
             android:name=".activity.VRWatchCarActivity"
-            android:screenOrientation="landscape"
             android:windowSoftInputMode="stateAlwaysHidden"/>
 
         <!--微信支付回调-->

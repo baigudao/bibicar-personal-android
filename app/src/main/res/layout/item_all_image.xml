@@ -5,9 +5,12 @@
               android:background="@color/background_color"
               android:orientation="vertical">
 
-    <com.tencent.smtt.sdk.WebView
-        android:id="@+id/tencent_web_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    <ImageView
+        android:id="@+id/iv_image_all"
+        android:layout_width="120dp"
+        android:layout_height="80dp"
+        android:layout_gravity="center_horizontal"
+        android:scaleType="fitXY"
+        android:src="@drawable/default_bg_ratio_1"/>
 
 </LinearLayout>

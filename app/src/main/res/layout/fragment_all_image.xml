@@ -5,9 +5,14 @@
               android:background="@color/background_color"
               android:orientation="vertical">
 
-    <com.tencent.smtt.sdk.WebView
-        android:id="@+id/tencent_web_view"
+    <include layout="@layout/title_bar"/>
+
+    <com.wiserz.pbibi.view.MyScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content">
+
+        <include layout="@layout/all_image_inner"/>
+
+    </com.wiserz.pbibi.view.MyScrollView>
 
 </LinearLayout>

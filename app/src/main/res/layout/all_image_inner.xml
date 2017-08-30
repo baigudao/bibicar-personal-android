@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/background_color"
+              android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:text="车身外观"
+            android:textColor="@color/main_text_color"
+            android:textSize="15sp"/>
+
+        <TextView
+            android:id="@+id/tv_car_surface_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="（9）"
+            android:textColor="@color/second_text_color"
+            android:textSize="14sp"/>
+
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView_car_surface"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:text="中控内饰"
+            android:textColor="@color/main_text_color"
+            android:textSize="15sp"/>
+
+        <TextView
+            android:id="@+id/tv_car_inside"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="（9）"
+            android:textColor="@color/second_text_color"
+            android:textSize="14sp"/>
+
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView_car_inside"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:text="发动机及结构"
+            android:textColor="@color/main_text_color"
+            android:textSize="15sp"/>
+
+        <TextView
+            android:id="@+id/tv_car_structure"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="（9）"
+            android:textColor="@color/second_text_color"
+            android:textSize="14sp"/>
+
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView_car_structure"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:text="更多细节"
+            android:textColor="@color/main_text_color"
+            android:textSize="15sp"/>
+
+        <TextView
+            android:id="@+id/tv_car_more_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="（9）"
+            android:textColor="@color/second_text_color"
+            android:textSize="14sp"/>
+
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView_car_more_detail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"/>
+
+</LinearLayout>

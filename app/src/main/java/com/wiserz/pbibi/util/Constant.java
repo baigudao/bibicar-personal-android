@@ -72,6 +72,7 @@ public class Constant {
     public static final String ADVERTISEMENT_IMAGE_SUCCESS = "advertisement_image_success";
     public static final String ADVERTISEMENT_IMAGE = "advertisement_image";
     public static final String ADVERTISEMENT_IMAGE_NUM = "advertisement_image_num";
+    public static final String HOST_IMAGE_URL = "http://img.bibicar.cn/";//http://img.bibicar.cn/Fja6zKmICAz6l6QCd7-Z0pC-bjt8
 
     //URL常量
     //    private final static String hostUrl = "https://api.bibicar.cn/";//正式环境
