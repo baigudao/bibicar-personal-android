@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.blankj.utilcode.util.EmptyUtils;
+import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.google.gson.Gson;
@@ -47,6 +48,7 @@ public class ArticleSearchFragment extends BaseFragment implements BaseRecyclerV
 
     @Override
     protected void initView(View view) {
+        LogUtils.e("ArticleSearchFragment");
         keyword = (String) DataManager.getInstance().getData1();
         DataManager.getInstance().setData1(null);
         article_search_recycler_view = (RecyclerView) view.findViewById(R.id.article_search_recycler_view);
@@ -61,7 +63,7 @@ public class ArticleSearchFragment extends BaseFragment implements BaseRecyclerV
     @Override
     protected void initData() {
         super.initData();
-        getDataFromNet(keyword);
+        //        getDataFromNet(keyword);
     }
 
     private void getDataFromNet(String keyword) {

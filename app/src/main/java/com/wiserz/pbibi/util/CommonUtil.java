@@ -18,6 +18,7 @@ import com.google.gson.Gson;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.List;
 
 /**
  * Created by jackie on 2017/8/9 10:33.
@@ -150,5 +151,15 @@ public class CommonUtil {
             e.printStackTrace();
         }
         return pi;
+    }
+
+    /**
+     * 判断list是否为空
+     *
+     * @param list
+     * @return
+     */
+    public static boolean isListNullOrEmpty(List list) {
+        return list == null || list.isEmpty();
     }
 }

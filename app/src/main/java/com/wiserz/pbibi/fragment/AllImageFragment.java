@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.EmptyUtils;
-import com.blankj.utilcode.util.ToastUtils;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
 import com.wiserz.pbibi.bean.CarInfoBean;
@@ -43,6 +42,8 @@ public class AllImageFragment extends BaseFragment implements BaseRecyclerViewAd
     private static final int CAR_STRUCTURE_DATA_TYPE = 30;
 
     private static final int CAR_MORE_DETAIL_DATA_TYPE = 31;
+
+    private ArrayList<String> stringImageUrl;
 
     @Override
     protected int getLayoutId() {
@@ -90,6 +91,7 @@ public class AllImageFragment extends BaseFragment implements BaseRecyclerViewAd
     }
 
     private void showData() {
+        stringImageUrl = new ArrayList<>();
         ArrayList<CarInfoBean.FilesBean.Type1Bean> type1BeanArrayList = (ArrayList<CarInfoBean.FilesBean.Type1Bean>) filesBean.getType1();
         if (EmptyUtils.isNotEmpty(type1BeanArrayList) && type1BeanArrayList.size() != 0) {
             tv_car_surface_num.setVisibility(View.VISIBLE);
@@ -100,6 +102,10 @@ public class AllImageFragment extends BaseFragment implements BaseRecyclerViewAd
             recyclerView_car_surface.setAdapter(baseRecyclerViewAdapter);
             recyclerView_car_surface.setLayoutManager(new GridLayoutManager(mContext, 3, LinearLayoutManager.VERTICAL, false));
             baseRecyclerViewAdapter.setOnItemClickListener(this);
+
+            for (int i = 0; i < type1BeanArrayList.size(); i++) {
+                stringImageUrl.add(type1BeanArrayList.get(i).getFile_url());
+            }
         } else {
             tv_car_surface_num.setVisibility(View.GONE);
             recyclerView_car_surface.setVisibility(View.GONE);
@@ -115,6 +121,10 @@ public class AllImageFragment extends BaseFragment implements BaseRecyclerViewAd
             recyclerView_car_inside.setAdapter(baseRecyclerViewAdapter);
             recyclerView_car_inside.setLayoutManager(new GridLayoutManager(mContext, 3, LinearLayoutManager.VERTICAL, false));
             baseRecyclerViewAdapter.setOnItemClickListener(this);
+
+            for (int i = 0; i < type2BeanArrayList.size(); i++) {
+                stringImageUrl.add(type2BeanArrayList.get(i).getFile_url());
+            }
         } else {
             tv_car_inside.setVisibility(View.GONE);
             recyclerView_car_inside.setVisibility(View.GONE);
@@ -130,6 +140,10 @@ public class AllImageFragment extends BaseFragment implements BaseRecyclerViewAd
             recyclerView_car_structure.setAdapter(baseRecyclerViewAdapter);
             recyclerView_car_structure.setLayoutManager(new GridLayoutManager(mContext, 3, LinearLayoutManager.VERTICAL, false));
             baseRecyclerViewAdapter.setOnItemClickListener(this);
+
+            for (int i = 0; i < type3BeanArrayList.size(); i++) {
+                stringImageUrl.add(type3BeanArrayList.get(i).getFile_url());
+            }
         } else {
             tv_car_structure.setVisibility(View.GONE);
             recyclerView_car_structure.setVisibility(View.GONE);
@@ -145,6 +159,10 @@ public class AllImageFragment extends BaseFragment implements BaseRecyclerViewAd
             recyclerView_car_more_detail.setAdapter(baseRecyclerViewAdapter);
             recyclerView_car_more_detail.setLayoutManager(new GridLayoutManager(mContext, 3, LinearLayoutManager.VERTICAL, false));
             baseRecyclerViewAdapter.setOnItemClickListener(this);
+
+            for (int i = 0; i < type4BeanArrayList.size(); i++) {
+                stringImageUrl.add(type4BeanArrayList.get(i).getFile_url());
+            }
         } else {
             tv_car_more_detail.setVisibility(View.GONE);
             recyclerView_car_more_detail.setVisibility(View.GONE);
@@ -155,19 +173,31 @@ public class AllImageFragment extends BaseFragment implements BaseRecyclerViewAd
     public void onItemClick(Object data, int position) {
         if (data.getClass().getSimpleName().equals("Type1Bean")) {
             CarInfoBean.FilesBean.Type1Bean type1Bean = (CarInfoBean.FilesBean.Type1Bean) data;
-            ToastUtils.showShort(type1Bean.getFile_url());
+            if (EmptyUtils.isNotEmpty(stringImageUrl) && stringImageUrl.size() != 0) {
+                DataManager.getInstance().setData1(stringImageUrl);
+                gotoPager(ShowAllImageFragment.class, null);
+            }
         }
         if (data.getClass().getSimpleName().equals("Type2Bean")) {
             CarInfoBean.FilesBean.Type2Bean type2Bean = (CarInfoBean.FilesBean.Type2Bean) data;
-            ToastUtils.showShort(type2Bean.getFile_url());
+            if (EmptyUtils.isNotEmpty(stringImageUrl) && stringImageUrl.size() != 0) {
+                DataManager.getInstance().setData1(stringImageUrl);
+                gotoPager(ShowAllImageFragment.class, null);
+            }
         }
         if (data.getClass().getSimpleName().equals("Type3Bean")) {
             CarInfoBean.FilesBean.Type3Bean type3Bean = (CarInfoBean.FilesBean.Type3Bean) data;
-            ToastUtils.showShort(type3Bean.getFile_url());
+            if (EmptyUtils.isNotEmpty(stringImageUrl) && stringImageUrl.size() != 0) {
+                DataManager.getInstance().setData1(stringImageUrl);
+                gotoPager(ShowAllImageFragment.class, null);
+            }
         }
         if (data.getClass().getSimpleName().equals("Type4Bean")) {
             CarInfoBean.FilesBean.Type4Bean type4Bean = (CarInfoBean.FilesBean.Type4Bean) data;
-            ToastUtils.showShort(type4Bean.getFile_url());
+            if (EmptyUtils.isNotEmpty(stringImageUrl) && stringImageUrl.size() != 0) {
+                DataManager.getInstance().setData1(stringImageUrl);
+                gotoPager(ShowAllImageFragment.class, null);
+            }
         }
     }
 }

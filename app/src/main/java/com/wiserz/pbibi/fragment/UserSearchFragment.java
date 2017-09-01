@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.blankj.utilcode.util.EmptyUtils;
+import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.google.gson.Gson;
@@ -42,6 +43,7 @@ public class UserSearchFragment extends BaseFragment implements BaseRecyclerView
 
     @Override
     protected void initView(View view) {
+        LogUtils.e("UserSearchFragment");
         user_search_recycler_view = (RecyclerView) view.findViewById(R.id.user_search_recycler_view);
         mPage = 0;
     }

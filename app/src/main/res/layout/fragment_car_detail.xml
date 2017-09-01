@@ -267,7 +267,7 @@
                         android:layout_below="@id/tv_car_grounding"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="5dp"
-                        android:text="上架日期"
+                        android:text="上市日期"
                         android:textColor="#929292"
                         android:textSize="12sp"/>
 

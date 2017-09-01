@@ -133,8 +133,7 @@ public class MainActivity extends BaseActivity {
      * @return
      */
     private BaseFragment getFragment() {
-        BaseFragment fragment = mBaseFragment.get(position);
-        return fragment;
+        return mBaseFragment.get(position);
     }
 
     public void setCheck(RadioButton radioButton) {

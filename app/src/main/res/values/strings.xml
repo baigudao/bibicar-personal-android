@@ -79,5 +79,8 @@
     <string name="connect_to_buy">联系车主</string>
     <string name="connect_phone_number">400-113-8778</string>
     <string name="call_phone">拨打</string>
+    <string name="sure">确定</string>
+    <string name="yes">是</string>
+    <string name="no">否</string>
 
 </resources>

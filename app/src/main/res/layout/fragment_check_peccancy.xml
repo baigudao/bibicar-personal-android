@@ -8,9 +8,11 @@
     <include layout="@layout/title_bar"/>
 
     <RelativeLayout
+        android:id="@+id/rl_check_city"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@color/pure_white_color">
+        android:background="@drawable/setting_background_selector"
+        android:clickable="true">
 
         <TextView
             android:layout_width="wrap_content"
@@ -28,18 +30,20 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
-            android:clickable="true"
             android:text="广东 深圳"
             android:textColor="@color/third_text_color"
             android:textSize="15sp"/>
 
     </RelativeLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider_color"/>
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="1dp"
-        android:background="@color/pure_white_color">
+        android:layout_height="50dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -57,6 +61,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
+            android:background="@null"
             android:hint="输入车牌号"
             android:maxLength="6"
             android:textColorHint="@color/third_text_color"
@@ -78,11 +83,14 @@
 
     </RelativeLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider_color"/>
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="1dp"
-        android:background="@color/pure_white_color">
+        android:layout_height="50dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -100,6 +108,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
+            android:background="@null"
             android:hint="请输入车架号后6位"
             android:maxLength="6"
             android:textColorHint="@color/third_text_color"
@@ -107,11 +116,14 @@
 
     </RelativeLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider_color"/>
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="1dp"
-        android:background="@color/pure_white_color">
+        android:layout_height="50dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -129,6 +141,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
+            android:background="@null"
             android:hint="请输入发动机号后6位"
             android:maxLength="6"
             android:textColorHint="@color/third_text_color"
@@ -136,12 +149,17 @@
 
     </RelativeLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider_color"/>
+
     <Button
         android:id="@+id/btn_start_check"
         android:layout_width="300dp"
-        android:layout_height="50dp"
+        android:layout_height="45dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="50dp"
         android:background="@drawable/btn_background_selector"
         android:text="立即查询"
         android:textColor="@drawable/btn_text_background_selector"

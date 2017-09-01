@@ -52,6 +52,7 @@ import io.rong.imlib.model.UserInfo;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 import okhttp3.Call;
 
+
 /**
  * Created by jackie on 2017/8/17 9:30.
  * QQ : 971060378
@@ -371,7 +372,8 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
                             .setOnItemClickListener(new OnItemClickListener() {
                                 @Override
                                 public void onItemClick(int position) {
-                                    ToastUtils.showShort(position + "");
+                                    DataManager.getInstance().setData1(filesBean);
+                                    gotoPager(AllImageFragment.class, null);
                                 }
                             });
                     //设置翻页的效果，不需要翻页效果可用不设
@@ -392,19 +394,44 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
             getView().findViewById(R.id.tv_check_all_car_configure).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    DataManager.getInstance().setData1(carInfoBean);
                     gotoPager(ConcreteParameterFragment.class, null);
                 }
             });
 
-            if (EmptyUtils.isNotEmpty(carInfoBean.getUser_info()) && EmptyUtils.isNotEmpty(carInfoBean.getUser_info().getProfile()) && EmptyUtils.isNotEmpty(carInfoBean.getUser_info().getProfile().getAvatar())) {
-                Glide.with(mContext)
-                        .load(carInfoBean.getUser_info().getProfile().getAvatar())
-                        .placeholder(R.drawable.user_photo)
-                        .into((ImageView) getView().findViewById(R.id.image_circle));
-            }
+            ((TextView) getView().findViewById(R.id.tv_car_distance)).setText(EmptyUtils.isEmpty(carInfoBean.getMileage()) ? " " : carInfoBean.getMileage() + "万公里");
+            ((TextView) getView().findViewById(R.id.tv_register_time)).setText(EmptyUtils.isEmpty(carInfoBean.getBoard_time()) ? " " : carInfoBean.getBoard_time() + "年");
+            ((TextView) getView().findViewById(R.id.tv_car_displacement)).setText(EmptyUtils.isEmpty(carInfoBean.getModel_detail().getEngine_ExhaustForFloat()) ? " " : carInfoBean.getModel_detail().getEngine_ExhaustForFloat());
+            ((TextView) getView().findViewById(R.id.tv_exchange_num)).setText(EmptyUtils.isEmpty(carInfoBean.getExchange_time()) ? " " : carInfoBean.getExchange_time() + "次");
+            ((TextView) getView().findViewById(R.id.tv_car_grounding)).setText(EmptyUtils.isEmpty(carInfoBean.getModel_info().getModel_year()) ? " " : carInfoBean.getModel_info().getModel_year() + "年");
+            ((TextView) getView().findViewById(R.id.tv_car_environmental)).setText(EmptyUtils.isEmpty(carInfoBean.getModel_detail().getEngine_EnvirStandard()) ? " " : carInfoBean.getModel_detail().getEngine_EnvirStandard());
+
             if (EmptyUtils.isNotEmpty(carInfoBean.getUser_info()) && EmptyUtils.isNotEmpty(carInfoBean.getUser_info().getProfile())) {
-                ((TextView) getView().findViewById(R.id.tv_car_owner_nickname)).setText(carInfoBean.getUser_info().getProfile().getNickname());
+                if (EmptyUtils.isNotEmpty(carInfoBean.getUser_info().getProfile().getAvatar())) {
+                    Glide.with(mContext)
+                            .load(carInfoBean.getUser_info().getProfile().getAvatar())
+                            .placeholder(R.drawable.user_photo)
+                            .error(R.drawable.user_photo)
+                            .into((ImageView) getView().findViewById(R.id.image_circle));
+                    getView().findViewById(R.id.image_circle).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ToastUtils.showShort("车主");
+                        }
+                    });
+                }
+                ((TextView) getView().findViewById(R.id.tv_car_owner_nickname)).setText(EmptyUtils.isEmpty(carInfoBean.getUser_info().getProfile().getNickname()) ? "无名" : carInfoBean.getUser_info().getProfile().getNickname());
+                getView().findViewById(R.id.tv_car_owner_nickname).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ToastUtils.showShort("车主名");
+                    }
+                });
+                if (EmptyUtils.isNotEmpty(carInfoBean.getUser_info().getProfile().getSignature())) {
+                    ((TextView) getView().findViewById(R.id.tv_car_owner_detail)).setText(carInfoBean.getUser_info().getProfile().getSignature());
+                }
             }
+
             getView().findViewById(R.id.tv_contact_car_owner).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -413,9 +440,6 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
                     }
                 }
             });
-            if (EmptyUtils.isNotEmpty(carInfoBean.getUser_info()) && EmptyUtils.isNotEmpty(carInfoBean.getUser_info().getProfile())) {
-                ((TextView) getView().findViewById(R.id.tv_car_owner_detail)).setText(carInfoBean.getUser_info().getProfile().getSignature());
-            }
 
             getView().findViewById(R.id.tv_check_all_car_service).setOnClickListener(new View.OnClickListener() {
                 @Override

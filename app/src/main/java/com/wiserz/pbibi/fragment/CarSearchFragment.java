@@ -48,8 +48,9 @@ public class CarSearchFragment extends BaseFragment implements BaseRecyclerViewA
 
     @Override
     protected void initView(View view) {
+        LogUtils.e("CarSearchFragment");
         keyword = (String) DataManager.getInstance().getData1();
-        LogUtils.e("keyword为：" + keyword);
+        //        LogUtils.e("keyword为：" + keyword);
         DataManager.getInstance().setData1(null);
         car_search_recycler_view = (RecyclerView) view.findViewById(R.id.car_search_recycler_view);
         ll_search_history = (LinearLayout) view.findViewById(R.id.ll_search_history);
@@ -64,18 +65,18 @@ public class CarSearchFragment extends BaseFragment implements BaseRecyclerViewA
     @Override
     protected void initData() {
         super.initData();
-//        if (EmptyUtils.isNotEmpty(keyword)) {
+        //        if (EmptyUtils.isNotEmpty(keyword)) {
         //当传入keyword时
         car_search_recycler_view.setVisibility(View.VISIBLE);
         ll_search_history.setVisibility(View.GONE);
-        LogUtils.e("有数据");
-        getCarListDataFromNet(keyword, null, null, null, null, null, null, null, null, null, null, null, null);
-//        } else {
-//            //当没有keyword时
-//            ll_search_history.setVisibility(View.VISIBLE);
-//            car_search_recycler_view.setVisibility(View.GONE);
-//            LogUtils.e("为空");
-//        }
+        //        LogUtils.e("有数据");
+        //        getCarListDataFromNet(keyword, null, null, null, null, null, null, null, null, null, null, null, null);
+        //        } else {
+        //            //当没有keyword时
+        //            ll_search_history.setVisibility(View.VISIBLE);
+        //            car_search_recycler_view.setVisibility(View.GONE);
+        //            LogUtils.e("为空");
+        //        }
     }
 
     private void getCarListDataFromNet(String keyword, String order_id, String brand_id, String series_id,

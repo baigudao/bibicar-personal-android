@@ -69,6 +69,7 @@ public class Constant {
     public static final String AVATAR = "avatar";
     public static final String COMPANY_ID = "company_id";
     public static final String THEME_ID = "theme_id";
+    public static final String PROVINCE_ID = "province_id";
     public static final String ADVERTISEMENT_IMAGE_SUCCESS = "advertisement_image_success";
     public static final String ADVERTISEMENT_IMAGE = "advertisement_image";
     public static final String ADVERTISEMENT_IMAGE_NUM = "advertisement_image_num";
@@ -134,6 +135,12 @@ public class Constant {
 
     private static final String userLoveCarUrl = hostUrl + "v3/car/userFavCars";//用户爱车
     private static final String dreamCarUrl = hostUrl + "v3/DreamCar/list";//梦想车
+
+    private static final String cityListUrl = hostUrl + "car/city/province_id/";//城市列表
+    private static final String provinceListUrl = hostUrl + "car/province";//省份列表
+
+    private static final String articleSearchHistoryUrl = hostUrl + "v3/Article/visitlist";//文章浏览历史
+    private static final String carSearchHistoryUrl = hostUrl + "v4/car/carvisithistory";//车辆浏览历史
 
     public static String getRegisterApp() {
         return registerApp;
@@ -297,5 +304,21 @@ public class Constant {
 
     public static String getDreamCarUrl() {
         return dreamCarUrl;
+    }
+
+    public static String getCityListUrl() {
+        return cityListUrl;
+    }
+
+    public static String getProvinceListUrl() {
+        return provinceListUrl;
+    }
+
+    public static String getArticleSearchHistoryUrl() {
+        return articleSearchHistoryUrl;
+    }
+
+    public static String getCarSearchHistoryUrl() {
+        return carSearchHistoryUrl;
     }
 }

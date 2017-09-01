@@ -54,6 +54,42 @@ public class CarInfoBean extends BaseBean {
     private FilesBean files;
     private String contact_phone;
     private String city_name;
+    private String gearbox;
+    private String mileage;
+    private String board_time;
+    private String exchange_time;
+
+    public String getExchange_time() {
+        return exchange_time;
+    }
+
+    public void setExchange_time(String exchange_time) {
+        this.exchange_time = exchange_time;
+    }
+
+    public String getBoard_time() {
+        return board_time;
+    }
+
+    public void setBoard_time(String board_time) {
+        this.board_time = board_time;
+    }
+
+    public String getMileage() {
+        return mileage;
+    }
+
+    public void setMileage(String mileage) {
+        this.mileage = mileage;
+    }
+
+    public String getGearbox() {
+        return gearbox;
+    }
+
+    public void setGearbox(String gearbox) {
+        this.gearbox = gearbox;
+    }
 
     public String getCity_name() {
         return city_name;
@@ -507,12 +543,30 @@ public class CarInfoBean extends BaseBean {
         private String OutSet_Width;
         private String Perf_AccelerateTime;
         private String Perf_DriveType;
+        private String Engine_Type;
         private String Perf_MaxSpeed;
         private String Perf_SeatNum;
         private String Perf_ZongHeYouHao;
         private String UnderPan_ForwardGearNum;
+        private String OutSet_MinGapFromEarth;
         private int id;
         private int model_id;
+
+        public String getOutSet_MinGapFromEarth() {
+            return OutSet_MinGapFromEarth;
+        }
+
+        public void setOutSet_MinGapFromEarth(String outSet_MinGapFromEarth) {
+            OutSet_MinGapFromEarth = outSet_MinGapFromEarth;
+        }
+
+        public String getEngine_Type() {
+            return Engine_Type;
+        }
+
+        public void setEngine_Type(String engine_Type) {
+            Engine_Type = engine_Type;
+        }
 
         public String getCarReferPrice() {
             return CarReferPrice;

@@ -25,6 +25,7 @@ import com.google.gson.reflect.TypeToken;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.activity.BaseActivity;
 import com.wiserz.pbibi.activity.MainActivity;
+import com.wiserz.pbibi.activity.VRWatchCarActivity;
 import com.wiserz.pbibi.bean.ArticleBean;
 import com.wiserz.pbibi.bean.BannerBean;
 import com.wiserz.pbibi.bean.CarInfoBean;
@@ -129,8 +130,14 @@ public class RecommendRecyclerViewAdapter extends RecyclerView.Adapter implement
                         public void onItemClick(int position) {
                             BannerBean bannerBean = bannerBeanArrayList.get(position);
                             if (EmptyUtils.isNotEmpty(bannerBean)) {
-                                DataManager.getInstance().setData1(bannerBean);
-                                ((BaseActivity) mContext).gotoPager(BannerFragment.class, null);
+                                String type = bannerBean.getType();
+                                if (type.equals("0")) {
+                                    DataManager.getInstance().setData1(bannerBean);
+                                    ((MainActivity)mContext).gotoPager(VRWatchCarActivity.class,null);
+                                } else {
+                                    DataManager.getInstance().setData1(bannerBean);
+                                    ((BaseActivity) mContext).gotoPager(BannerFragment.class, null);
+                                }
                             }
                         }
                     });

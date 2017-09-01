@@ -3,8 +3,8 @@ package com.wiserz.pbibi.fragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.RadioGroup;
+import android.widget.SearchView;
 
 import com.blankj.utilcode.util.ToastUtils;
 import com.wiserz.pbibi.R;
@@ -24,7 +24,9 @@ public class SearchFragment extends BaseFragment {
     private int position;
     private Fragment fromFragment;
 
-    private EditText et_search;
+    private String keyword;
+
+    private SearchView search_view;
     private RadioGroup mRg_main;
 
     @Override
@@ -35,18 +37,30 @@ public class SearchFragment extends BaseFragment {
     @Override
     protected void initView(View view) {
         view.findViewById(R.id.iv_back).setOnClickListener(this);
-        et_search = (EditText) view.findViewById(R.id.et_search);
-        view.findViewById(R.id.btn_search).setOnClickListener(this);
+        search_view = (SearchView) view.findViewById(R.id.search_view);
+        search_view.setSubmitButtonEnabled(true);
+        search_view.setIconifiedByDefault(false);
+        search_view.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            // 当点击搜索按钮时触发该方法
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                ToastUtils.showShort("开始搜索" + query);
+                return false;
+            }
+
+            // 当搜索内容改变时触发该方法
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
 
         mRg_main = (RadioGroup) view.findViewById(R.id.rg_main);
         initFragment();
         mRg_main.setOnCheckedChangeListener(new MyOnCheckedChangeListener());
         //设置默认选中常用框架
         mRg_main.check(R.id.rb_car);
-    }
-
-    private String getInputKeyword() {
-        return et_search.getText().toString().trim();
     }
 
     private void initFragment() {
@@ -64,23 +78,21 @@ public class SearchFragment extends BaseFragment {
             switch (checkedId) {
                 case R.id.rb_car://车辆
                     position = 0;
-                    DataManager.getInstance().setData1(getInputKeyword());
+                    DataManager.getInstance().setData1(keyword);
                     break;
                 case R.id.rb_article://文章
                     position = 1;
-                    DataManager.getInstance().setData1(getInputKeyword());
+                    DataManager.getInstance().setData1(keyword);
                     break;
                 case R.id.rb_user://用户
                     position = 2;
-                    DataManager.getInstance().setData1(getInputKeyword());
+                    DataManager.getInstance().setData1(keyword);
                     break;
                 case R.id.rb_topic://话题
                     position = 3;
-                    DataManager.getInstance().setData1(getInputKeyword());
+                    DataManager.getInstance().setData1(keyword);
                     break;
                 default:
-                    position = 0;
-                    DataManager.getInstance().setData1(getInputKeyword());
                     break;
             }
             //根据位置得到对应的Fragment
@@ -94,13 +106,12 @@ public class SearchFragment extends BaseFragment {
         if (from != to) {
             fromFragment = to;
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-            //才切换
             //判断有没有被添加
             if (!to.isAdded()) {
                 //to没有被添加
                 //from隐藏
                 if (from != null) {
-                    ft.hide(from);
+                    ft.remove(from);
                 }
                 //添加to
                 ft.add(R.id.fl_search_content, to).commit();
@@ -108,19 +119,16 @@ public class SearchFragment extends BaseFragment {
                 //to已经被添加
                 // from隐藏
                 if (from != null) {
-                    ft.hide(from);
+                    ft.remove(from);
                 }
                 //显示to
                 ft.show(to).commit();
             }
-        }else {
-            ToastUtils.showShort("to与from相同");
         }
     }
 
     private BaseFragment getFragment() {
-        BaseFragment fragment = mBaseFragment.get(position);
-        return fragment;
+        return mBaseFragment.get(position);
     }
 
     @Override
@@ -128,25 +136,6 @@ public class SearchFragment extends BaseFragment {
         switch (v.getId()) {
             case R.id.iv_back:
                 goBack();
-                break;
-            case R.id.btn_search:
-                switch (position) {
-                    case 0:
-//                        mRg_main.clearCheck();
-                        mRg_main.check(R.id.rb_car);
-                        break;
-                    case 1:
-                        mRg_main.check(R.id.rb_article);
-                        break;
-                    case 2:
-                        mRg_main.check(R.id.rb_user);
-                        break;
-                    case 3:
-                        mRg_main.check(R.id.rb_topic);
-                        break;
-                    default:
-                        break;
-                }
                 break;
             default:
                 break;

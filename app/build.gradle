@@ -70,4 +70,6 @@ dependencies {
     //material库
     compile 'com.github.rey5137:material:1.2.4'
     compile files('libs/tbs_sdk_thirdapp_v3.3.0.1045_43300.jar')
+    //PhotoView
+    compile 'com.github.chrisbanes:PhotoView:2.0.0'
 }
