@@ -50,8 +50,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:clickable="true"
             android:layout_marginRight="15dp"
+            android:clickable="true"
             android:orientation="horizontal">
 
             <RelativeLayout

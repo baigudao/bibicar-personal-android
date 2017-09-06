@@ -59,6 +59,10 @@ public class Constant {
     public static final String MAX_BOARD_TIME = "max_board_time";
     public static final String HAS_VR = "has_vr";
     public static final String OLD = "old";
+    public static final String PHONE = "phone";
+    public static final String AGE = "age";
+    public static final String BRAND_NAME = "brand_name";
+    public static final String DESC = "desc";
     public static final String SOURCE = "source";
     public static final String FEED_ID = "feed_id";
     public static final String IS_AUTH = "is_auth";//是否身份验证 1:是 2:否
@@ -70,6 +74,10 @@ public class Constant {
     public static final String COMPANY_ID = "company_id";
     public static final String THEME_ID = "theme_id";
     public static final String PROVINCE_ID = "province_id";
+    public static final String CONTENT = "content";
+    public static final String REPLY_ID = "reply_id";
+    public static final String FATHER_ID = "father_id";
+    public static final String COMMENT_ID = "comment_id";
     public static final String ADVERTISEMENT_IMAGE_SUCCESS = "advertisement_image_success";
     public static final String ADVERTISEMENT_IMAGE = "advertisement_image";
     public static final String ADVERTISEMENT_IMAGE_NUM = "advertisement_image_num";
@@ -103,23 +111,31 @@ public class Constant {
     private final static String carDetailUrl = hostUrl + "v4/car/index";//车辆详情  v4接口
 
     private final static String videoListUrl = hostUrl + "v3/Video/list";//视频列表
+    private static final String videoDetailUrl = hostUrl + "v3/Video/index";//视频详情
 
     private final static String articleListUrl = hostUrl + "v3/article/list";//文章列表
     private final static String articleIndexUrl = hostUrl + "v3/article/index";
     private final static String articleSearchUrl = hostUrl + "v3/Article/searcharticlelist";//搜索文章
     private static final String articleCommentListUrl = hostUrl + "v3/article/commentlist";//文章评论列表
+    private static final String createCommentUrl = hostUrl + "v3/article/commentcreate";//添加评论
+    private final static String allSecondComment = hostUrl + "v3/article/getcomment";//二级评论
+    private final static String commentLikeCreate = hostUrl + "v3/article/commentlikecreate";//点赞
+    private final static String commentLikeDelete = hostUrl + "v3/article/commentlikedelete";//取消点赞
+    private final static String articleCollectURl = hostUrl + "v3/article/collectcreate";//收藏
+    private final static String articleDeleteURl = hostUrl + "v3/article/collectdelete";//取消收藏
 
     private final static String userSearchUrl = hostUrl + "v3/user/search";//用户搜索
 
     private final static String topicSearchUrl = hostUrl + "v3/theme/searchtheme";//话题搜索
 
-    private static final String cheHangListUrl = hostUrl + "v3/publishcar/getcompanylist";//车行列表
+    private static final String cheHangListUrl = hostUrl + "v4/publishcar/getcompanylist";//车行列表
 
     private static final String createTopicUrl = hostUrl + "v3/theme/createtheme";//创建话题
     private static final String hallUrl = hostUrl + "v3/theme/themehome";//大厅
     private static final String topicListUrl = hostUrl + "v3/theme/list";//话题列表
     private static final String topicDetailUrl = hostUrl + "v3/theme/themeindex";//话题详情
     private static final String myFocusUrl = hostUrl + "v3/theme/myfocus";//我的关注
+    private static final String joinTopicUrl = hostUrl + "v3/theme/followtheme";//加入话题
 
     private static final String balanceUrl = hostUrl + "v3/UserCarPact/getusermoney";//获取余额
     private static final String takeCashUrl = hostUrl + "v3/UserCarPact/sellerrefund";//卖家提现
@@ -141,6 +157,15 @@ public class Constant {
 
     private static final String articleSearchHistoryUrl = hostUrl + "v3/Article/visitlist";//文章浏览历史
     private static final String carSearchHistoryUrl = hostUrl + "v4/car/carvisithistory";//车辆浏览历史
+
+    private static final String customMadeCarUrl = hostUrl + "v3/car/applycar";//订制车辆
+
+    private static final String myHomePageUrl = hostUrl + "v4/User/homepage";//个人中心
+    private static final String myUserPageUrl = hostUrl + "v4/user/userpage";//个人主页
+    private static final String myRichListUrl = hostUrl + "v4/User/getrichlist";//财富排行
+
+    private static final String myFriendsUrl = hostUrl + "v3/Post/publish";//个人的朋友圈
+    private static final String commentListUrl = hostUrl + "v3/Comment/list";//评论列表
 
     public static String getRegisterApp() {
         return registerApp;
@@ -320,5 +345,61 @@ public class Constant {
 
     public static String getCarSearchHistoryUrl() {
         return carSearchHistoryUrl;
+    }
+
+    public static String getCustomMadeCarUrl() {
+        return customMadeCarUrl;
+    }
+
+    public static String getMyHomePageUrl() {
+        return myHomePageUrl;
+    }
+
+    public static String getMyRichListUrl() {
+        return myRichListUrl;
+    }
+
+    public static String getMyUserPageUrl() {
+        return myUserPageUrl;
+    }
+
+    public static String getVideoDetailUrl() {
+        return videoDetailUrl;
+    }
+
+    public static String getMyFriendsUrl() {
+        return myFriendsUrl;
+    }
+
+    public static String getCommentListUrl() {
+        return commentListUrl;
+    }
+
+    public static String getCreateCommentUrl() {
+        return createCommentUrl;
+    }
+
+    public static String getAllSecondComment() {
+        return allSecondComment;
+    }
+
+    public static String getCommentLikeCreate() {
+        return commentLikeCreate;
+    }
+
+    public static String getCommentLikeDelete() {
+        return commentLikeDelete;
+    }
+
+    public static String getArticleCollectURl() {
+        return articleCollectURl;
+    }
+
+    public static String getArticleDeleteURl() {
+        return articleDeleteURl;
+    }
+
+    public static String getJoinTopicUrl() {
+        return joinTopicUrl;
     }
 }

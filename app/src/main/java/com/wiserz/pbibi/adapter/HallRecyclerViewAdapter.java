@@ -55,6 +55,8 @@ public class HallRecyclerViewAdapter extends RecyclerView.Adapter implements Bas
             viewHolder = new RecommendTopicViewHolder(View.inflate(mContext, R.layout.item_recommend_topic, null));
         } else if (viewType == MY_TOPIC) {
             viewHolder = new MyJoinTopicViewHolder(View.inflate(mContext, R.layout.item_my_topic, null));
+        } else if (viewType == HOT_WEEK) {
+            viewHolder = new MyJoinTopicViewHolder(View.inflate(mContext, R.layout.item_hot_week, null));
         } else {
             viewHolder = null;
         }
@@ -88,23 +90,21 @@ public class HallRecyclerViewAdapter extends RecyclerView.Adapter implements Bas
                 }
             });
 
-            //            ArrayList<FuLiBean> fuLiBeanArrayList = getMyJoinTopicData(jsonObjectData);
-            //            ArrayList<FuLiBean> fuLiBeanArrayList1 = new ArrayList<>();
-            //            fuLiBeanArrayList1.add(fuLiBeanArrayList.get(0));
-            //            fuLiBeanArrayList1.add(fuLiBeanArrayList.get(1));
-            //            fuLiBeanArrayList1.add(fuLiBeanArrayList.get(2));
-            //            if (EmptyUtils.isNotEmpty(fuLiBeanArrayList)) {
-            //                BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, fuLiBeanArrayList1, MY_TOPIC_DATA_TYPE);
-            //                myJoinTopicViewHolder.recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
-            //                myJoinTopicViewHolder.recyclerView.setAdapter(baseRecyclerViewAdapter);
-            //                baseRecyclerViewAdapter.setOnItemClickListener(this);
-            //            }
+            ArrayList<TopicInfoBean> topicInfoBeanArrayList = getJoinTopicData(jsonObjectData);
+            if (EmptyUtils.isNotEmpty(topicInfoBeanArrayList)) {
+                BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, topicInfoBeanArrayList, MY_TOPIC_DATA_TYPE);
+                myJoinTopicViewHolder.recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
+                myJoinTopicViewHolder.recyclerView.setAdapter(baseRecyclerViewAdapter);
+                baseRecyclerViewAdapter.setOnItemClickListener(this);
+            }
+        } else if (currentType == HOT_WEEK) {
+
         }
     }
 
     @Override
     public int getItemCount() {
-        return 2;
+        return 3;
     }
 
     @Override
@@ -130,11 +130,13 @@ public class HallRecyclerViewAdapter extends RecyclerView.Adapter implements Bas
     public void onItemClick(Object data, int position) {
         if (data.getClass().getSimpleName().equals("TopicInfoBean")) {
             TopicInfoBean topicInfoBean = (TopicInfoBean) data;
-            int theme_id = topicInfoBean.getId();
-            if (EmptyUtils.isNotEmpty(theme_id)) {
-                Bundle bundle = new Bundle();
-                bundle.putInt(Constant.THEME_ID, theme_id);
-                ((BaseActivity) mContext).gotoPager(TopicDetailFragment.class, bundle);
+            if (EmptyUtils.isNotEmpty(topicInfoBean)) {
+                int theme_id = topicInfoBean.getId();
+                if (EmptyUtils.isNotEmpty(theme_id)) {
+                    Bundle bundle = new Bundle();
+                    bundle.putInt(Constant.THEME_ID, theme_id);
+                    ((BaseActivity) mContext).gotoPager(TopicDetailFragment.class, bundle);
+                }
             }
         }
     }
@@ -169,6 +171,19 @@ public class HallRecyclerViewAdapter extends RecyclerView.Adapter implements Bas
             return new ArrayList<>();
         } else {
             JSONArray jsonArray = jsonObjectData.optJSONArray("theme_recommend");
+            Gson gson = new Gson();
+            list = gson.fromJson(jsonArray.toString(), new TypeToken<ArrayList<TopicInfoBean>>() {
+            }.getType());
+        }
+        return list;
+    }
+
+    private ArrayList<TopicInfoBean> getJoinTopicData(JSONObject jsonObjectData) {
+        ArrayList<TopicInfoBean> list = null;
+        if (jsonObjectData == null) {
+            return new ArrayList<>();
+        } else {
+            JSONArray jsonArray = jsonObjectData.optJSONArray("theme_join");
             Gson gson = new Gson();
             list = gson.fromJson(jsonArray.toString(), new TypeToken<ArrayList<TopicInfoBean>>() {
             }.getType());

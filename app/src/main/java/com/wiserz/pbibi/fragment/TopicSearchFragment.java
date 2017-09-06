@@ -3,6 +3,7 @@ package com.wiserz.pbibi.fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.blankj.utilcode.util.EmptyUtils;
 import com.blankj.utilcode.util.LogUtils;
@@ -14,6 +15,7 @@ import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
 import com.wiserz.pbibi.bean.TopicInfoBean;
 import com.wiserz.pbibi.util.Constant;
+import com.wiserz.pbibi.util.DataManager;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -33,8 +35,10 @@ import okhttp3.Call;
 public class TopicSearchFragment extends BaseFragment implements BaseRecyclerViewAdapter.OnItemClickListener {
 
     private RecyclerView topic_search_recycler_view;
+    private LinearLayout ll_search_history;
     private int mPage;
     private static final int ALL_TOPIC_DATA_TYPE = 23;
+    private String keyword;
 
     @Override
     protected int getLayoutId() {
@@ -43,8 +47,11 @@ public class TopicSearchFragment extends BaseFragment implements BaseRecyclerVie
 
     @Override
     protected void initView(View view) {
-        LogUtils.e("TopicSearchFragment");
+        keyword = (String) DataManager.getInstance().getData1();
+        LogUtils.e("TopicSearchFragment keyword为：" + keyword);
+        DataManager.getInstance().setData1(null);
         topic_search_recycler_view = (RecyclerView) view.findViewById(R.id.topic_search_recycler_view);
+        ll_search_history = (LinearLayout) view.findViewById(R.id.ll_search_history);
 
         mPage = 0;
     }
@@ -57,7 +64,16 @@ public class TopicSearchFragment extends BaseFragment implements BaseRecyclerVie
     @Override
     protected void initData() {
         super.initData();
-        getDataFromNet("达晨");
+        if (EmptyUtils.isNotEmpty(keyword)) {
+            //当传入keyword时
+            topic_search_recycler_view.setVisibility(View.VISIBLE);
+            ll_search_history.setVisibility(View.GONE);
+            getDataFromNet(keyword);
+        } else {
+            //当没有keyword时
+            ll_search_history.setVisibility(View.VISIBLE);
+            topic_search_recycler_view.setVisibility(View.GONE);
+        }
     }
 
     private void getDataFromNet(String keyword) {
@@ -101,10 +117,18 @@ public class TopicSearchFragment extends BaseFragment implements BaseRecyclerVie
         if (EmptyUtils.isNotEmpty(jsonArray)) {
             ArrayList<TopicInfoBean> topicInfoBeanArrayList = gson.fromJson(jsonArray.toString(), new TypeToken<ArrayList<TopicInfoBean>>() {
             }.getType());
-            BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, topicInfoBeanArrayList, ALL_TOPIC_DATA_TYPE);
-            topic_search_recycler_view.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
-            topic_search_recycler_view.setAdapter(baseRecyclerViewAdapter);
-            baseRecyclerViewAdapter.setOnItemClickListener(this);
+            if (EmptyUtils.isNotEmpty(topicInfoBeanArrayList)) {
+                BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, topicInfoBeanArrayList, ALL_TOPIC_DATA_TYPE);
+                topic_search_recycler_view.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
+                topic_search_recycler_view.setAdapter(baseRecyclerViewAdapter);
+                baseRecyclerViewAdapter.setOnItemClickListener(this);
+            } else {
+                if (getView() != null) {
+                    getView().findViewById(R.id.ll_custom_made).setVisibility(View.VISIBLE);
+                    topic_search_recycler_view.setVisibility(View.GONE);
+                    ll_search_history.setVisibility(View.GONE);
+                }
+            }
         }
     }
 

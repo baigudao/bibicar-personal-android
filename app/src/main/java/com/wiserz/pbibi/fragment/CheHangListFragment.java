@@ -6,14 +6,12 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.EmptyUtils;
-import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.google.gson.Gson;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
 import com.wiserz.pbibi.bean.CheHangUserListBean;
-import com.wiserz.pbibi.util.CommonUtil;
 import com.wiserz.pbibi.util.Constant;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -79,8 +77,6 @@ public class CheHangListFragment extends BaseFragment implements BaseRecyclerVie
 
                     @Override
                     public void onResponse(String response, int id) {
-                        LogUtils.e(response);
-                        CommonUtil.writeToSDCard(mContext, response);
                         JSONObject jsonObject = null;
                         try {
                             jsonObject = new JSONObject(response);

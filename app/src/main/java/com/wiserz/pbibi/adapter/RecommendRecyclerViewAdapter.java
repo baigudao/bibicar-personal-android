@@ -76,7 +76,7 @@ public class RecommendRecyclerViewAdapter extends RecyclerView.Adapter implement
 
     private static final int NEW_CAR_DATA_TYPE = 55;
     private static final int CAR_VIDEO_DATA_TYPE = 65;
-    private static final int CHE_HANG_DATA_TYPE = 75;
+    private static final int CHE_HANG_HOME_DATA_TYPE = 75;
 
     public RecommendRecyclerViewAdapter(Context mContext, JSONObject jsonObjectData) {
         this.mContext = mContext;
@@ -133,7 +133,7 @@ public class RecommendRecyclerViewAdapter extends RecyclerView.Adapter implement
                                 String type = bannerBean.getType();
                                 if (type.equals("0")) {
                                     DataManager.getInstance().setData1(bannerBean);
-                                    ((MainActivity)mContext).gotoPager(VRWatchCarActivity.class,null);
+                                    ((MainActivity) mContext).gotoPager(VRWatchCarActivity.class, null);
                                 } else {
                                     DataManager.getInstance().setData1(bannerBean);
                                     ((BaseActivity) mContext).gotoPager(BannerFragment.class, null);
@@ -292,7 +292,7 @@ public class RecommendRecyclerViewAdapter extends RecyclerView.Adapter implement
 
             ArrayList<CheHangBean> cheHangBeanArrayList = getCheHangData(jsonObjectData);
             if (EmptyUtils.isNotEmpty(cheHangBeanArrayList)) {
-                BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, cheHangBeanArrayList, CHE_HANG_DATA_TYPE);
+                BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, cheHangBeanArrayList, CHE_HANG_HOME_DATA_TYPE);
                 cheHangViewHolder.car_company_recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
                 cheHangViewHolder.car_company_recyclerView.setAdapter(baseRecyclerViewAdapter);
                 baseRecyclerViewAdapter.setOnItemClickListener(this);
@@ -340,13 +340,18 @@ public class RecommendRecyclerViewAdapter extends RecyclerView.Adapter implement
     public void onItemClick(Object data, int position) {
         if (data.getClass().getSimpleName().equals("CarInfoBean")) {
             CarInfoBean carInfoBean = (CarInfoBean) data;
-            Bundle bundle = new Bundle();
-            bundle.putString(Constant.CAR_ID, carInfoBean.getCar_id());
-            ((BaseActivity) mContext).gotoPager(CarDetailFragment.class, bundle);
+            if (EmptyUtils.isNotEmpty(carInfoBean)) {
+                Bundle bundle = new Bundle();
+                bundle.putString(Constant.CAR_ID, carInfoBean.getCar_id());
+                ((BaseActivity) mContext).gotoPager(CarDetailFragment.class, bundle);
+            }
         } else if (data.getClass().getSimpleName().equals("VideoBean")) {
             VideoBean videoBean = (VideoBean) data;
-            DataManager.getInstance().setData1(videoBean);
-            ((BaseActivity) mContext).gotoPager(VideoDetailFragment.class, null);
+            if (EmptyUtils.isNotEmpty(videoBean)) {
+                int feed_id = videoBean.getFeed_id();
+                DataManager.getInstance().setData1(feed_id);
+                ((BaseActivity) mContext).gotoPager(VideoDetailFragment.class, null);
+            }
         } else if (data.getClass().getSimpleName().equals("CheHangBean")) {
             CheHangBean cheHangBean = (CheHangBean) data;
             ToastUtils.showShort(cheHangBean.getNickname());

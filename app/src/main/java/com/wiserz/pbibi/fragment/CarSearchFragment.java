@@ -13,7 +13,7 @@ import com.blankj.utilcode.util.ToastUtils;
 import com.google.gson.Gson;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
-import com.wiserz.pbibi.bean.CarInfoBeanForCarCenter;
+import com.wiserz.pbibi.bean.CarInfoBean;
 import com.wiserz.pbibi.util.Constant;
 import com.wiserz.pbibi.util.DataManager;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -48,9 +48,8 @@ public class CarSearchFragment extends BaseFragment implements BaseRecyclerViewA
 
     @Override
     protected void initView(View view) {
-        LogUtils.e("CarSearchFragment");
         keyword = (String) DataManager.getInstance().getData1();
-        //        LogUtils.e("keyword为：" + keyword);
+        LogUtils.e("CarSearchFragment keyword为：" + keyword);
         DataManager.getInstance().setData1(null);
         car_search_recycler_view = (RecyclerView) view.findViewById(R.id.car_search_recycler_view);
         ll_search_history = (LinearLayout) view.findViewById(R.id.ll_search_history);
@@ -65,18 +64,16 @@ public class CarSearchFragment extends BaseFragment implements BaseRecyclerViewA
     @Override
     protected void initData() {
         super.initData();
-        //        if (EmptyUtils.isNotEmpty(keyword)) {
-        //当传入keyword时
-        car_search_recycler_view.setVisibility(View.VISIBLE);
-        ll_search_history.setVisibility(View.GONE);
-        //        LogUtils.e("有数据");
-        //        getCarListDataFromNet(keyword, null, null, null, null, null, null, null, null, null, null, null, null);
-        //        } else {
-        //            //当没有keyword时
-        //            ll_search_history.setVisibility(View.VISIBLE);
-        //            car_search_recycler_view.setVisibility(View.GONE);
-        //            LogUtils.e("为空");
-        //        }
+        if (EmptyUtils.isNotEmpty(keyword)) {
+            //当传入keyword时
+            car_search_recycler_view.setVisibility(View.VISIBLE);
+            ll_search_history.setVisibility(View.GONE);
+            getCarListDataFromNet(keyword, null, null, null, null, null, null, null, null, null, null, null, null);
+        } else {
+            //当没有keyword时
+            ll_search_history.setVisibility(View.VISIBLE);
+            car_search_recycler_view.setVisibility(View.GONE);
+        }
     }
 
     private void getCarListDataFromNet(String keyword, String order_id, String brand_id, String series_id,
@@ -109,6 +106,7 @@ public class CarSearchFragment extends BaseFragment implements BaseRecyclerViewA
 
                     @Override
                     public void onResponse(String response, int id) {
+                        LogUtils.e(response);
                         JSONObject jsonObject = null;
                         try {
                             jsonObject = new JSONObject(response);
@@ -129,15 +127,30 @@ public class CarSearchFragment extends BaseFragment implements BaseRecyclerViewA
     }
 
     private void handlerCarListData(JSONObject jsonObjectData) {
-        ArrayList<CarInfoBeanForCarCenter> carInfoBeanForCarCenterArrayList = getCarListData(jsonObjectData);
-        BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, carInfoBeanForCarCenterArrayList, CAR_LIST_FOR_CAR_CENTER);
-        car_search_recycler_view.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
-        car_search_recycler_view.setAdapter(baseRecyclerViewAdapter);
-        baseRecyclerViewAdapter.setOnItemClickListener(this);
+        ArrayList<CarInfoBean> carInfoBeanArrayList = getCarListData(jsonObjectData);
+        if (EmptyUtils.isNotEmpty(carInfoBeanArrayList)) {
+            BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, carInfoBeanArrayList, CAR_LIST_FOR_CAR_CENTER);
+            car_search_recycler_view.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
+            car_search_recycler_view.setAdapter(baseRecyclerViewAdapter);
+            baseRecyclerViewAdapter.setOnItemClickListener(this);
+        } else {
+            if (getView() != null) {
+                getView().findViewById(R.id.ll_custom_made).setVisibility(View.VISIBLE);
+                car_search_recycler_view.setVisibility(View.GONE);
+                ll_search_history.setVisibility(View.GONE);
+
+                getView().findViewById(R.id.tv_start).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        gotoPager(CustomMadeCarFragment.class, null);
+                    }
+                });
+            }
+        }
     }
 
-    private ArrayList<CarInfoBeanForCarCenter> getCarListData(JSONObject jsonObjectData) {
-        ArrayList<CarInfoBeanForCarCenter> list = null;
+    private ArrayList<CarInfoBean> getCarListData(JSONObject jsonObjectData) {
+        ArrayList<CarInfoBean> list = null;
         if (jsonObjectData == null) {
             return new ArrayList<>();
         } else {
@@ -146,8 +159,8 @@ public class CarSearchFragment extends BaseFragment implements BaseRecyclerViewA
             Gson gson = new Gson();
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObjectCarInfo = jsonArray.optJSONObject(i).optJSONObject("car_info");
-                CarInfoBeanForCarCenter carInfoBeanForCarCenter = gson.fromJson(jsonObjectCarInfo.toString(), CarInfoBeanForCarCenter.class);
-                list.add(carInfoBeanForCarCenter);
+                CarInfoBean carInfoBean = gson.fromJson(jsonObjectCarInfo.toString(), CarInfoBean.class);
+                list.add(carInfoBean);
             }
         }
         return list;
@@ -155,11 +168,11 @@ public class CarSearchFragment extends BaseFragment implements BaseRecyclerViewA
 
     @Override
     public void onItemClick(Object data, int position) {
-        if (data.getClass().getSimpleName().equals("CarInfoBeanForCarCenter")) {
-            CarInfoBeanForCarCenter carInfoBeanForCarCenter = (CarInfoBeanForCarCenter) data;
-            if (EmptyUtils.isNotEmpty(carInfoBeanForCarCenter)) {
+        if (data.getClass().getSimpleName().equals("CarInfoBean")) {
+            CarInfoBean carInfoBean = (CarInfoBean) data;
+            if (EmptyUtils.isNotEmpty(carInfoBean)) {
                 Bundle bundle = new Bundle();
-                bundle.putString(Constant.CAR_ID, carInfoBeanForCarCenter.getCar_id());
+                bundle.putString(Constant.CAR_ID, carInfoBean.getCar_id());
                 gotoPager(CarDetailFragment.class, bundle);
             }
         }

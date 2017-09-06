@@ -1,6 +1,9 @@
 package com.wiserz.pbibi.adapter;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -12,12 +15,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.EmptyUtils;
+import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.SizeUtils;
 import com.blankj.utilcode.util.TimeUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.activity.BaseActivity;
+import com.wiserz.pbibi.bean.AllSecondCommentBean;
 import com.wiserz.pbibi.bean.ArticleBean;
 import com.wiserz.pbibi.bean.ArticleCommentBean;
 import com.wiserz.pbibi.bean.CarInfoBean;
@@ -26,15 +31,22 @@ import com.wiserz.pbibi.bean.CarRentRecommendCarBean;
 import com.wiserz.pbibi.bean.CheHangBean;
 import com.wiserz.pbibi.bean.CheHangUserListBean;
 import com.wiserz.pbibi.bean.DreamCarBean;
-import com.wiserz.pbibi.bean.FuLiBean;
+import com.wiserz.pbibi.bean.FeedBean;
 import com.wiserz.pbibi.bean.MyCarRentOrderBean;
 import com.wiserz.pbibi.bean.ThemeUserBean;
 import com.wiserz.pbibi.bean.TopicInfoBean;
 import com.wiserz.pbibi.bean.UserBean;
 import com.wiserz.pbibi.bean.VideoBean;
 import com.wiserz.pbibi.fragment.CommentDetailFragment;
+import com.wiserz.pbibi.fragment.ShowAllImageFragment;
 import com.wiserz.pbibi.fragment.VideoDetailFragment;
+import com.wiserz.pbibi.util.Constant;
 import com.wiserz.pbibi.util.DataManager;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -43,6 +55,9 @@ import java.util.List;
 import java.util.Locale;
 
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
+import okhttp3.Call;
+
+import static com.wiserz.pbibi.R.id.tv_zan;
 
 /**
  * Created by jackie on 2017/8/10 14:07.
@@ -85,7 +100,7 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
 
     private static final int DREAM_CAR_DATA_TYPE = 26;
 
-    private static final int TOTAL_PROPERTY_DATA_TYPE = 27;
+    private static final int MY_STATE_INNER_DATA_TYPE = 27;
 
     private static final int SAME_STYLE_CAR_DATA_TYPE = 28;
 
@@ -99,7 +114,7 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
 
     private static final int CAR_VIDEO_DATA_TYPE = 65;
 
-    private static final int CHE_HANG_DATA_TYPE = 75;
+    private static final int CHE_HANG_HOME_DATA_TYPE = 75;
 
     private static final int ARTICLE_LIST_DATA_TYPE = 76;
 
@@ -122,7 +137,9 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
     @Override
     public BaseRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         ViewHolder viewHolder;
-        if (dataType == CAR_SURFACE_DATA_TYPE) {
+        if (dataType == MY_STATE_INNER_DATA_TYPE) {
+            viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_my_state_inner, null));
+        } else if (dataType == CAR_SURFACE_DATA_TYPE) {
             viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_all_image, null));
         } else if (dataType == CAR_INSIDE_DATA_TYPE) {
             viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_all_image, null));
@@ -132,8 +149,6 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
             viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_all_image, null));
         } else if (dataType == SAME_STYLE_CAR_DATA_TYPE) {
             viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_same_style_car, null));
-        } else if (dataType == TOTAL_PROPERTY_DATA_TYPE) {
-            viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_total_property, null));
         } else if (dataType == DREAM_CAR_DATA_TYPE) {
             viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_dream_car, null));
         } else if (dataType == MY_STATE_DATA_TYPE) {
@@ -154,7 +169,7 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
             viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_new_car, null));
         } else if (dataType == CAR_VIDEO_DATA_TYPE) {
             viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_car_video, null));
-        } else if (dataType == CHE_HANG_DATA_TYPE) {
+        } else if (dataType == CHE_HANG_HOME_DATA_TYPE) {
             viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_che_hang, null));
         } else if (dataType == CAR_RENT_DATA_TYPE) {
             viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_car_rent, null));
@@ -187,7 +202,7 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
     }
 
     @Override
-    public void onBindViewHolder(BaseRecyclerViewAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(final BaseRecyclerViewAdapter.ViewHolder holder, final int position) {
         if (dataType == NEW_CAR_DATA_TYPE) {
             ArrayList<CarInfoBean> carInfoBeanArrayList = (ArrayList<CarInfoBean>) mList;
 
@@ -220,33 +235,38 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                         //                        Intent intent = new Intent(mContext, VideoPlayActivity.class);
                         //                        DataManger.getInstance().setData(videoBean);
                         //                        mContext.startActivity(intent);
-                        DataManager.getInstance().setData1(videoBean);
-                        ((BaseActivity) mContext).gotoPager(VideoDetailFragment.class, null);
+                        if (EmptyUtils.isNotEmpty(videoBean)) {
+                            int feed_id = videoBean.getFeed_id();
+                            DataManager.getInstance().setData1(feed_id);
+                            ((BaseActivity) mContext).gotoPager(VideoDetailFragment.class, null);
+                        }
                     }
                 });
                 if (videoBean.getPost_content() != null) {
                     holder.tv_item1.setText(videoBean.getPost_content());
                 }
             }
-        } else if (dataType == CHE_HANG_DATA_TYPE) {
+        } else if (dataType == CHE_HANG_HOME_DATA_TYPE) {
             ArrayList<CheHangBean> cheHangBeanArrayList = (ArrayList<CheHangBean>) mList;
 
             if (EmptyUtils.isNotEmpty(cheHangBeanArrayList)) {
                 CheHangBean cheHangBean = cheHangBeanArrayList.get(position);
-                if (cheHangBean.getAvatar() != null) {
-                    Glide.with(mContext)
-                            .load(cheHangBean.getAvatar())
-                            .placeholder(R.drawable.user_photo)
-                            .bitmapTransform(new RoundedCornersTransformation(mContext, SizeUtils.dp2px(8), 0, RoundedCornersTransformation.CornerType.ALL))
-                            .into(holder.iv_item1);
+
+                if (EmptyUtils.isNotEmpty(cheHangBean)) {
+                    if (EmptyUtils.isNotEmpty(cheHangBean.getAvatar())) {
+                        Glide.with(mContext)
+                                .load(cheHangBean.getAvatar())
+                                .placeholder(R.drawable.user_photo)
+                                .error(R.drawable.user_photo)
+                                .bitmapTransform(new RoundedCornersTransformation(mContext, SizeUtils.dp2px(8), 0, RoundedCornersTransformation.CornerType.ALL))
+                                .into(holder.iv_item1);
+                    }
+                    holder.tv_item1.setText(EmptyUtils.isEmpty(cheHangBean.getNickname()) ? "" : cheHangBean.getNickname());
+                    holder.tv_item2.setText(EmptyUtils.isEmpty(cheHangBean.getSignature()) ? "" : cheHangBean.getSignature());
+                    if (EmptyUtils.isNotEmpty(cheHangBean.getSaling_num()) && EmptyUtils.isNotEmpty(cheHangBean.getSold_num())) {
+                        holder.tv_item3.setText("在售" + cheHangBean.getSaling_num() + "辆丨已售" + cheHangBean.getSold_num() + "辆");
+                    }
                 }
-                if (cheHangBean.getNickname() != null) {
-                    holder.tv_item1.setText(cheHangBean.getNickname());
-                }
-                if (cheHangBean.getSignature() != null) {
-                    holder.tv_item2.setText(cheHangBean.getSignature());
-                }
-                holder.tv_item3.setText("在售" + cheHangBean.getSaling_num() + "辆丨已售" + cheHangBean.getSold_num() + "辆");
             }
         } else if (dataType == CAR_RENT_DATA_TYPE) {
             ArrayList<CarRentInfoBean> carRentInfoBeanArrayList = (ArrayList<CarRentInfoBean>) mList;
@@ -278,27 +298,31 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
             if (EmptyUtils.isNotEmpty(topicInfoBeanArrayList)) {
                 TopicInfoBean topicInfoBean = topicInfoBeanArrayList.get(position);
 
-                Glide.with(mContext)
-                        .load(topicInfoBean.getPost_file())
-                        .placeholder(R.drawable.default_bg_ratio_1)
-                        .bitmapTransform(new RoundedCornersTransformation(mContext, SizeUtils.dp2px(8), 0, RoundedCornersTransformation.CornerType.ALL))
-                        .into(holder.iv_item1);
-                holder.tv_item1.setText(topicInfoBean.getTheme());
+                if (EmptyUtils.isNotEmpty(topicInfoBean)) {
+                    Glide.with(mContext)
+                            .load(topicInfoBean.getPost_file())
+                            .placeholder(R.drawable.default_bg_ratio_1)
+                            .bitmapTransform(new RoundedCornersTransformation(mContext, SizeUtils.dp2px(8), 0, RoundedCornersTransformation.CornerType.ALL))
+                            .into(holder.iv_item1);
+                    //                holder.tv_item1.setText(topicInfoBean.getTheme());
+                }
             }
         } else if (dataType == MY_TOPIC_DATA_TYPE) {
-            ArrayList<FuLiBean> fuLiBeanArrayList = (ArrayList<FuLiBean>) mList;
+            ArrayList<TopicInfoBean> topicInfoBeanArrayList = (ArrayList<TopicInfoBean>) mList;
 
-            if (EmptyUtils.isNotEmpty(fuLiBeanArrayList)) {
-                FuLiBean fuLiBean = fuLiBeanArrayList.get(position);
+            if (EmptyUtils.isNotEmpty(topicInfoBeanArrayList)) {
+                TopicInfoBean topicInfoBean = topicInfoBeanArrayList.get(position);
 
-                Glide.with(mContext)
-                        .load(fuLiBean.getUrl())
-                        .placeholder(R.drawable.user_photo)
-                        .bitmapTransform(new RoundedCornersTransformation(mContext, SizeUtils.dp2px(8), 0, RoundedCornersTransformation.CornerType.ALL))
-                        .into(holder.iv_item1);
-                holder.tv_item1.setText(fuLiBean.getWho());
-                holder.tv_item2.setText(fuLiBean.getDesc());
-                holder.tv_item3.setText(fuLiBean.getDesc());
+                if (EmptyUtils.isNotEmpty(topicInfoBean)) {
+                    Glide.with(mContext)
+                            .load(topicInfoBean.getPost_file())
+                            .placeholder(R.drawable.user_photo)
+                            .bitmapTransform(new RoundedCornersTransformation(mContext, SizeUtils.dp2px(8), 0, RoundedCornersTransformation.CornerType.ALL))
+                            .into(holder.iv_item1);
+                    holder.tv_item1.setText(topicInfoBean.getTheme());
+                    //                    holder.tv_item2.setText(fuLiBean.getDesc());//35参与丨155内容
+                    //                    holder.tv_item3.setText(fuLiBean.getDesc());//12条更新
+                }
             }
         } else if (dataType == ALL_TOPIC_DATA_TYPE) {
             ArrayList<TopicInfoBean> topicInfoBeanArrayList = (ArrayList<TopicInfoBean>) mList;
@@ -526,43 +550,191 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
             if (EmptyUtils.isNotEmpty(articleCommentBeanArrayList)) {
                 final ArticleCommentBean articleCommentBean = articleCommentBeanArrayList.get(position);
 
-                Glide.with(mContext)
-                        .load(articleCommentBean.getFrom_user().getAvatar())
-                        .placeholder(R.drawable.user_photo)
-                        .error(R.drawable.user_photo)
-                        .into(holder.iv_item1);
-                holder.iv_item1.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ToastUtils.showShort(articleCommentBean.getFrom_user().getUser_id() + "");
-                    }
-                });
-                holder.tv_item1.setText(articleCommentBean.getFrom_user().getNickname());
-                holder.tv_item2.setText(TimeUtils.date2String(new Date(Long.valueOf(articleCommentBean.getComment_created()) * 1000), new SimpleDateFormat("yyyy-MM-dd")));
-
-                holder.tv_item5.setText(articleCommentBean.getComment_content());//评论的内容
-
-                ArrayList<ArticleCommentBean.HotListBean.ListBean> listBeanList = (ArrayList<ArticleCommentBean.HotListBean.ListBean>) articleCommentBean.getHot_list().getList();
-                if (EmptyUtils.isNotEmpty(listBeanList)) {
-                    holder.linearLayout1.setVisibility(View.VISIBLE);
-                    int reply_size = listBeanList.size();
-                    if (reply_size <= 3) {
-                        //如果回复数小于等于3
-                        BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, listBeanList, ARTICLE_COMMENT_REPLY_DATA_TYPE);
-                        holder.recyclerView.setAdapter(baseRecyclerViewAdapter);
-                        holder.recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
-                    }
-
-                    holder.tv_item6.setOnClickListener(new View.OnClickListener() {
+                if (EmptyUtils.isNotEmpty(articleCommentBean)) {
+                    Glide.with(mContext)
+                            .load(articleCommentBean.getFrom_user().getAvatar())
+                            .placeholder(R.drawable.user_photo)
+                            .error(R.drawable.user_photo)
+                            .into(holder.iv_item1);
+                    holder.iv_item1.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            //查看更多回复
-                            DataManager.getInstance().setData1(articleCommentBean);
-                            ((BaseActivity) mContext).gotoPager(CommentDetailFragment.class, null);
+                            ToastUtils.showShort(articleCommentBean.getFrom_user().getUser_id() + "");
                         }
                     });
-                } else {
-                    holder.linearLayout1.setVisibility(View.GONE);
+                    holder.tv_item1.setText(articleCommentBean.getFrom_user().getNickname());
+                    holder.tv_item1.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ToastUtils.showShort(articleCommentBean.getFrom_user().getUser_id() + "");
+                        }
+                    });
+                    holder.tv_item2.setText(TimeUtils.date2String(new Date(Long.valueOf(articleCommentBean.getComment_created()) * 1000), new SimpleDateFormat("yyyy-MM-dd")));
+
+                    holder.tv_item3.setText(String.valueOf(articleCommentBean.getLike_num()));
+                    int is_like = articleCommentBean.getIs_like();
+                    if (EmptyUtils.isNotEmpty(is_like)) {
+                        switch (is_like) {
+                            case 1:
+                                holder.iv_item2.setImageResource(R.drawable.v1_zan3x);
+                                break;
+                            case 2:
+                                holder.iv_item2.setImageResource(R.drawable.v1_meizan3x);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    holder.linearLayout2.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            final Handler handler = new Handler() {
+                                @Override
+                                public void handleMessage(Message msg) {
+                                    super.handleMessage(msg);
+                                    if (msg.what == 555) {
+                                        //取消点赞
+                                        OkHttpUtils.post()
+                                                .url(Constant.getCommentLikeDelete())
+                                                .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
+                                                .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
+                                                .addParams(Constant.FEED_ID, String.valueOf(articleCommentBean.getFeed_id()))
+                                                .addParams(Constant.COMMENT_ID, String.valueOf(articleCommentBean.getComment_id()))
+                                                .build()
+                                                .execute(new StringCallback() {
+                                                    @Override
+                                                    public void onError(Call call, Exception e, int id) {
+                                                        ToastUtils.showShort("取消点赞失败");
+                                                    }
+
+                                                    @Override
+                                                    public void onResponse(String response, int id) {
+                                                        JSONObject jsonObject = null;
+                                                        try {
+                                                            jsonObject = new JSONObject(response);
+                                                            int status = jsonObject.optInt("status");
+                                                            JSONObject jsonObjectData = jsonObject.optJSONObject("data");
+                                                            if (status == 1) {
+                                                                holder.iv_item2.setImageResource(R.drawable.v1_meizan3x);
+                                                                int like_num = Integer.valueOf(holder.tv_item3.getText().toString());
+                                                                --like_num;
+                                                                holder.tv_item3.setText(String.valueOf(like_num));
+                                                                ToastUtils.showShort("取消点赞成功");
+                                                            } else {
+                                                                String code = jsonObject.optString("code");
+                                                                String msg = jsonObjectData.optString("msg");
+                                                                ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                                            }
+                                                        } catch (JSONException e) {
+                                                            e.printStackTrace();
+                                                        }
+                                                    }
+                                                });
+                                    }
+                                }
+                            };
+                            //点赞
+                            OkHttpUtils.post()
+                                    .url(Constant.getCommentLikeCreate())
+                                    .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
+                                    .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
+                                    .addParams(Constant.FEED_ID, String.valueOf(articleCommentBean.getFeed_id()))
+                                    .addParams(Constant.COMMENT_ID, String.valueOf(articleCommentBean.getComment_id()))
+                                    .build()
+                                    .execute(new StringCallback() {
+                                        @Override
+                                        public void onError(Call call, Exception e, int id) {
+                                            ToastUtils.showShort("点赞失败");
+                                        }
+
+                                        @Override
+                                        public void onResponse(String response, int id) {
+                                            JSONObject jsonObject = null;
+                                            try {
+                                                jsonObject = new JSONObject(response);
+                                                int status = jsonObject.optInt("status");
+                                                JSONObject jsonObjectData = jsonObject.optJSONObject("data");
+                                                if (status == 1) {
+                                                    holder.iv_item2.setImageResource(R.drawable.v1_zan3x);
+                                                    int like_num = Integer.valueOf(holder.tv_item3.getText().toString());
+                                                    ++like_num;
+                                                    holder.tv_item3.setText(String.valueOf(like_num));
+                                                    ToastUtils.showShort("点赞成功");
+                                                } else {
+                                                    String code = jsonObject.optString("code");
+                                                    if (code.equals("67000")) {
+                                                        handler.sendEmptyMessage(555);
+                                                        return;
+                                                    }
+                                                    String msg = jsonObjectData.optString("msg");
+                                                    ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                                }
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    });
+                        }
+                    });
+
+                    holder.iv_item3.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (mOnItemClickListener != null) {
+                                mOnItemClickListener.onItemClick(mList.get(position), position);
+                            }
+                        }
+                    });
+                    holder.tv_item4.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (mOnItemClickListener != null) {
+                                mOnItemClickListener.onItemClick(mList.get(position), position);
+                            }
+                        }
+                    });
+                    holder.tv_item5.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (mOnItemClickListener != null) {
+                                mOnItemClickListener.onItemClick(mList.get(position), position);
+                            }
+                        }
+                    });
+
+                    if (EmptyUtils.isNotEmpty(articleCommentBean.getHot_list())) {
+                        holder.tv_item4.setText(String.valueOf(articleCommentBean.getHot_list().getTotal()));//评论数
+                    }
+
+                    holder.tv_item5.setText(articleCommentBean.getComment_content());//评论的内容
+
+                    ArrayList<ArticleCommentBean.HotListBean.ListBean> listBeanList = (ArrayList<ArticleCommentBean.HotListBean.ListBean>) articleCommentBean.getHot_list().getList();
+                    if (EmptyUtils.isNotEmpty(listBeanList)) {
+                        holder.linearLayout1.setVisibility(View.VISIBLE);
+                        int reply_size = listBeanList.size();
+                        if (reply_size < 4) {
+                            //如果回复数小于4
+                            BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, listBeanList, ARTICLE_COMMENT_REPLY_DATA_TYPE);
+                            holder.recyclerView.setAdapter(baseRecyclerViewAdapter);
+                            holder.recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
+                        }
+
+                        holder.tv_item6.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                //查看更多回复
+                                int comment_id = articleCommentBean.getComment_id();
+                                int feed_id = articleCommentBean.getFeed_id();
+                                if (EmptyUtils.isNotEmpty(comment_id) && EmptyUtils.isNotEmpty(feed_id)) {
+                                    DataManager.getInstance().setData1(feed_id);
+                                    DataManager.getInstance().setData2(comment_id);
+                                    ((BaseActivity) mContext).gotoPager(CommentDetailFragment.class, null);
+                                }
+                            }
+                        });
+                    } else {
+                        holder.linearLayout1.setVisibility(View.GONE);
+                    }
                 }
             }
         } else if (dataType == ARTICLE_COMMENT_REPLY_DATA_TYPE) {
@@ -575,25 +747,140 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                 holder.tv_item2.setText(listBean.getComment_content());
             }
         } else if (dataType == COMMENT_DETAIL_DATA_TYPE) {
-            ArrayList<ArticleCommentBean.HotListBean.ListBean> listBeanList = (ArrayList<ArticleCommentBean.HotListBean.ListBean>) mList;
+            ArrayList<AllSecondCommentBean> allSecondCommentBeanArrayList = (ArrayList<AllSecondCommentBean>) mList;
 
-            if (EmptyUtils.isNotEmpty(listBeanList)) {
-                final ArticleCommentBean.HotListBean.ListBean listBean = listBeanList.get(position);
+            if (EmptyUtils.isNotEmpty(allSecondCommentBeanArrayList)) {
+                final AllSecondCommentBean allSecondCommentBean = allSecondCommentBeanArrayList.get(position);
 
-                Glide.with(mContext)
-                        .load(listBean.getFrom_user().getAvatar())
-                        .placeholder(R.drawable.user_photo)
-                        .error(R.drawable.user_photo)
-                        .into(holder.iv_item1);
-                holder.iv_item1.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ToastUtils.showShort(listBean.getFrom_user().getUser_id() + "");
+                if (EmptyUtils.isNotEmpty(allSecondCommentBean)) {
+
+                    Glide.with(mContext)
+                            .load(allSecondCommentBean.getFrom_user().getAvatar())
+                            .placeholder(R.drawable.user_photo)
+                            .error(R.drawable.user_photo)
+                            .into(holder.iv_item1);
+                    holder.iv_item1.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ToastUtils.showShort(allSecondCommentBean.getFrom_user().getUser_id() + "");
+                        }
+                    });
+                    holder.tv_item1.setText(allSecondCommentBean.getFrom_user().getNickname());
+                    holder.tv_item1.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ToastUtils.showShort(allSecondCommentBean.getFrom_user().getUser_id() + "");
+                        }
+                    });
+                    holder.tv_item2.setText(TimeUtils.date2String(new Date(Long.valueOf(allSecondCommentBean.getComment_created()) * 1000), new SimpleDateFormat("yyyy-MM-dd")));
+                    holder.tv_item3.setText(allSecondCommentBean.getComment_content());
+
+                    holder.linearLayout1.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            final Handler handler = new Handler() {
+                                @Override
+                                public void handleMessage(Message msg) {
+                                    super.handleMessage(msg);
+                                    if (msg.what == 555) {
+                                        //取消点赞
+                                        OkHttpUtils.post()
+                                                .url(Constant.getCommentLikeDelete())
+                                                .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
+                                                .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
+                                                .addParams(Constant.FEED_ID, String.valueOf(allSecondCommentBean.getFeed_id()))
+                                                .addParams(Constant.COMMENT_ID, String.valueOf(allSecondCommentBean.getComment_id()))
+                                                .build()
+                                                .execute(new StringCallback() {
+                                                    @Override
+                                                    public void onError(Call call, Exception e, int id) {
+                                                        ToastUtils.showShort("取消点赞失败");
+                                                    }
+
+                                                    @Override
+                                                    public void onResponse(String response, int id) {
+                                                        JSONObject jsonObject = null;
+                                                        try {
+                                                            jsonObject = new JSONObject(response);
+                                                            int status = jsonObject.optInt("status");
+                                                            JSONObject jsonObjectData = jsonObject.optJSONObject("data");
+                                                            if (status == 1) {
+                                                                holder.iv_item2.setImageResource(R.drawable.v1_meizan3x);
+                                                                int like_num = Integer.valueOf(holder.tv_item4.getText().toString());
+                                                                --like_num;
+                                                                holder.tv_item4.setText(String.valueOf(like_num));
+                                                                ToastUtils.showShort("取消点赞成功");
+                                                            } else {
+                                                                String code = jsonObject.optString("code");
+                                                                String msg = jsonObjectData.optString("msg");
+                                                                ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                                            }
+                                                        } catch (JSONException e) {
+                                                            e.printStackTrace();
+                                                        }
+                                                    }
+                                                });
+                                    }
+                                }
+                            };
+                            //点赞
+                            OkHttpUtils.post()
+                                    .url(Constant.getCommentLikeCreate())
+                                    .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
+                                    .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
+                                    .addParams(Constant.FEED_ID, String.valueOf(allSecondCommentBean.getFeed_id()))
+                                    .addParams(Constant.COMMENT_ID, String.valueOf(allSecondCommentBean.getComment_id()))
+                                    .build()
+                                    .execute(new StringCallback() {
+                                        @Override
+                                        public void onError(Call call, Exception e, int id) {
+                                            ToastUtils.showShort("点赞失败");
+                                        }
+
+                                        @Override
+                                        public void onResponse(String response, int id) {
+                                            JSONObject jsonObject = null;
+                                            try {
+                                                jsonObject = new JSONObject(response);
+                                                int status = jsonObject.optInt("status");
+                                                JSONObject jsonObjectData = jsonObject.optJSONObject("data");
+                                                if (status == 1) {
+                                                    holder.iv_item2.setImageResource(R.drawable.v1_zan3x);
+                                                    int like_num = Integer.valueOf(holder.tv_item4.getText().toString());
+                                                    ++like_num;
+                                                    holder.tv_item4.setText(String.valueOf(like_num));
+                                                    ToastUtils.showShort("点赞成功");
+                                                } else {
+                                                    String code = jsonObject.optString("code");
+                                                    if (code.equals("67000")) {
+                                                        handler.sendEmptyMessage(555);
+                                                        return;
+                                                    }
+                                                    String msg = jsonObjectData.optString("msg");
+                                                    ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                                }
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    });
+                        }
+                    });
+                    int is_like = allSecondCommentBean.getIs_like();
+                    if (EmptyUtils.isNotEmpty(is_like)) {
+                        switch (is_like) {
+                            case 1:
+                                holder.iv_item2.setImageResource(R.drawable.v1_zan3x);
+                                break;
+                            case 2:
+                                holder.iv_item2.setImageResource(R.drawable.v1_meizan3x);
+                                break;
+                            default:
+                                break;
+                        }
                     }
-                });
-                holder.tv_item1.setText(listBean.getFrom_user().getNickname());
-                holder.tv_item2.setText(TimeUtils.date2String(new Date(Long.valueOf(listBean.getComment_created()) * 1000), new SimpleDateFormat("yyyy-MM-dd")));
-                holder.tv_item3.setText(listBean.getComment_content());
+                    holder.tv_item4.setText(String.valueOf(allSecondCommentBean.getLike_num()));
+                }
             }
         } else if (dataType == SELLING_CAR_DATA_TYPE) {
             ArrayList<CheHangBean.CarListBeanX.CarListBean> carListBeanArrayList = (ArrayList<CheHangBean.CarListBeanX.CarListBean>) mList;
@@ -603,12 +890,12 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                 CheHangBean.CarListBeanX.CarListBean.CarInfoBean carInfoBean = carListBean.getCar_info();
 
                 if (EmptyUtils.isNotEmpty(carInfoBean)) {
-                    Glide.with(mContext)
-                            .load(carInfoBean.getFiles().get(0).getFile_url())
-                            .placeholder(R.drawable.default_bg_ratio_1)
-                            .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
-                            .into(holder.iv_item1);
-                    holder.tv_item1.setText(carInfoBean.getBrand_info().getBrand_name() + " " + carInfoBean.getSeries_info().getSeries_name() + " " + carInfoBean.getModel_info().getModel_name());
+                    //                    Glide.with(mContext)
+                    //                            .load(carInfoBean.getFiles().get(0).getFile_url())
+                    //                            .placeholder(R.drawable.default_bg_ratio_1)
+                    //                            .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
+                    //                            .into(holder.iv_item1);
+                    //                    holder.tv_item1.setText(carInfoBean.getBrand_info().getBrand_name() + " " + carInfoBean.getSeries_info().getSeries_name() + " " + carInfoBean.getModel_info().getModel_name());
                     holder.tv_item3.setText(carInfoBean.getModel_info().getModel_year() + "年/排量" + carInfoBean.getModel_detail().getEngine_ExhaustForFloat());
                     holder.tv_item2.setText(mContext.getString(R.string._wan, String.format(Locale.CHINA, "%.2f", carInfoBean.getPrice())));
                 }
@@ -710,7 +997,68 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                         .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
                         .into(holder.iv_item1);
             }
+        } else if (dataType == MY_STATE_DATA_TYPE) {
+            ArrayList<FeedBean> feedBeanArrayList = (ArrayList<FeedBean>) mList;
+
+            if (EmptyUtils.isNotEmpty(feedBeanArrayList)) {
+                FeedBean feedBean = feedBeanArrayList.get(position);
+
+                if (EmptyUtils.isNotEmpty(feedBean.getPost_user_info()) && EmptyUtils.isNotEmpty(feedBean.getPost_user_info().getProfile())) {
+                    Glide.with(mContext)
+                            .load(feedBean.getPost_user_info().getProfile().getAvatar())
+                            .placeholder(R.drawable.user_photo)
+                            .error(R.drawable.user_photo)
+                            .into(holder.iv_item1);
+                    holder.tv_item1.setText(feedBean.getPost_user_info().getProfile().getNickname());
+                }
+                holder.tv_item2.setText(TimeUtils.date2String(new Date(Long.valueOf(feedBean.getCreated()) * 1000), new SimpleDateFormat("yy-MM-dd HH:mm")));
+
+                ArrayList<FeedBean.PostFilesBeanX> postFilesBeanXArrayList = (ArrayList<FeedBean.PostFilesBeanX>) feedBean.getPost_files();
+                if (EmptyUtils.isNotEmpty(postFilesBeanXArrayList) && postFilesBeanXArrayList.size() != 0) {
+                    BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, postFilesBeanXArrayList, MY_STATE_INNER_DATA_TYPE);
+                    holder.recyclerView.setAdapter(baseRecyclerViewAdapter);
+                    holder.recyclerView.setLayoutManager(new GridLayoutManager(mContext, 3, LinearLayoutManager.VERTICAL, false));
+                }
+            }
+        } else if (dataType == MY_STATE_INNER_DATA_TYPE) {
+            ArrayList<FeedBean.PostFilesBeanX> postFilesBeanXArrayList = (ArrayList<FeedBean.PostFilesBeanX>) mList;
+
+            if (EmptyUtils.isNotEmpty(postFilesBeanXArrayList)) {
+                final FeedBean.PostFilesBeanX postFilesBeanX = postFilesBeanXArrayList.get(position);
+
+                if (EmptyUtils.isNotEmpty(postFilesBeanX)) {
+                    Glide.with(mContext)
+                            .load(postFilesBeanX.getFile_url())
+                            .placeholder(R.drawable.default_bg_ratio_1)
+                            .error(R.drawable.default_bg_ratio_1)
+                            .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
+                            .into(holder.iv_item1);
+
+                    if (postFilesBeanXArrayList.size() != 0) {
+                        final ArrayList<String> stringImageUrl = new ArrayList<>();
+                        for (int i = 0; i < postFilesBeanXArrayList.size(); i++) {
+                            stringImageUrl.add(postFilesBeanXArrayList.get(i).getFile_url());
+                        }
+                        holder.iv_item1.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                DataManager.getInstance().setData1(stringImageUrl);
+                                ((BaseActivity) mContext).gotoPager(ShowAllImageFragment.class, null);
+                            }
+                        });
+                    }
+                }
+            }
         }
+    }
+
+    /**
+     * 发送二级评论
+     *
+     * @param articleCommentBean
+     */
+    private void sendSecondLevelComment(ArticleCommentBean articleCommentBean) {
+
     }
 
     @Override
@@ -769,7 +1117,7 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                         }
                     }
                 });
-            } else if (dataType == CHE_HANG_DATA_TYPE) {
+            } else if (dataType == CHE_HANG_HOME_DATA_TYPE) {
                 iv_item1 = (ImageView) itemView.findViewById(R.id.iv_image);
                 tv_item1 = (TextView) itemView.findViewById(R.id.tv_title);
                 tv_item2 = (TextView) itemView.findViewById(R.id.tv_info);
@@ -962,13 +1310,14 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                 tv_item2 = (TextView) itemView.findViewById(R.id.tv_comment_time);
 
                 iv_item2 = (ImageView) itemView.findViewById(R.id.iv_zan);
-                tv_item3 = (TextView) itemView.findViewById(R.id.tv_zan);
-                iv_item3 = (ImageView) itemView.findViewById(R.id.iv_comment);
-                tv_item4 = (TextView) itemView.findViewById(R.id.tv_comment);
+                tv_item3 = (TextView) itemView.findViewById(tv_zan);
+                iv_item3 = (ImageView) itemView.findViewById(R.id.iv_comment_item);
+                tv_item4 = (TextView) itemView.findViewById(R.id.tv_comment_num_item);
 
                 tv_item5 = (TextView) itemView.findViewById(R.id.tv_comment_content);//评论的内容
 
                 linearLayout1 = (LinearLayout) itemView.findViewById(R.id.ll_comment_reply);
+                linearLayout2 = (LinearLayout) itemView.findViewById(R.id.ll_zan_or_no);
                 recyclerView = (RecyclerView) itemView.findViewById(R.id.recyclerView);
 
                 tv_item6 = (TextView) itemView.findViewById(R.id.tv_check_all_comment_reply);
@@ -980,6 +1329,11 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                 tv_item1 = (TextView) itemView.findViewById(R.id.tv_comment_name);
                 tv_item2 = (TextView) itemView.findViewById(R.id.tv_comment_time);
                 tv_item3 = (TextView) itemView.findViewById(R.id.tv_comment_content);
+
+                iv_item2 = (ImageView) itemView.findViewById(R.id.iv_zan);
+                tv_item4 = (TextView) itemView.findViewById(tv_zan);
+
+                linearLayout1 = (LinearLayout) itemView.findViewById(R.id.ll_zan_or_no);
             } else if (dataType == SELLING_CAR_DATA_TYPE) {
                 iv_item1 = (ImageView) itemView.findViewById(R.id.ivCarIcon);
                 tv_item1 = (TextView) itemView.findViewById(R.id.tvCarName);
@@ -1075,6 +1429,14 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                         }
                     }
                 });
+            } else if (dataType == MY_STATE_DATA_TYPE) {
+                iv_item1 = (ImageView) itemView.findViewById(R.id.iv_circle_image);
+                tv_item1 = (TextView) itemView.findViewById(R.id.tv_state_name);
+                tv_item2 = (TextView) itemView.findViewById(R.id.tv_state_time);
+
+                recyclerView = (RecyclerView) itemView.findViewById(R.id.recyclerView);
+            } else if (dataType == MY_STATE_INNER_DATA_TYPE) {
+                iv_item1 = (ImageView) itemView.findViewById(R.id.iv_image_state_inner);
             }
         }
     }

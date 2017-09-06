@@ -6,13 +6,19 @@ import android.graphics.Matrix;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.EmptyUtils;
+import com.blankj.utilcode.util.KeyboardUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.TimeUtils;
 import com.blankj.utilcode.util.ToastUtils;
@@ -26,6 +32,7 @@ import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
 import com.wiserz.pbibi.bean.ArticleCommentBean;
 import com.wiserz.pbibi.bean.ArticleDetailBean;
 import com.wiserz.pbibi.util.Constant;
+import com.wiserz.pbibi.view.SharePlatformPopupWindow;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -50,7 +57,7 @@ import static com.wiserz.pbibi.R.id.rl_share_wechatmoments;
  * QQ : 971060378
  * Used as : 文章详情的页面
  */
-public class ArticleDetailFragment extends BaseFragment {
+public class ArticleDetailFragment extends BaseFragment implements BaseRecyclerViewAdapter.OnItemClickListener {
 
     private int feed_id;
     private String share_img;
@@ -59,7 +66,17 @@ public class ArticleDetailFragment extends BaseFragment {
     private String share_url;
     private int mPage;
 
+    private ImageView iv_like;
+
+    private EditText et_input_comment;
+    private Button btn_send;
+    private LinearLayout ll_share_comment;
+
     private static final int ARTICLE_COMMENT_LIST_DATA_TYPE = 18;
+    private int is_collect;
+
+    private int flag;
+    private int comment_id;
 
     @Override
     protected int getLayoutId() {
@@ -77,7 +94,21 @@ public class ArticleDetailFragment extends BaseFragment {
         view.findViewById(rl_share_wechatmoments).setOnClickListener(this);
         view.findViewById(R.id.rl_share_weibo).setOnClickListener(this);
 
+        view.findViewById(R.id.iv_share).setOnClickListener(this);
+        iv_like = (ImageView) view.findViewById(R.id.iv_like);
+        iv_like.setOnClickListener(this);
+
+        btn_send = (Button) view.findViewById(R.id.btn_send);
+        btn_send.setOnClickListener(this);
+        ll_share_comment = (LinearLayout) view.findViewById(R.id.ll_share_comment);
+        et_input_comment = (EditText) view.findViewById(R.id.et_input_comment);
+        et_input_comment.addTextChangedListener(new TextChangedListener());
+
         mPage = 0;
+    }
+
+    private String getCommentContent() {
+        return et_input_comment.getText().toString().trim();
     }
 
     @Override
@@ -89,11 +120,22 @@ public class ArticleDetailFragment extends BaseFragment {
             case R.id.rl_share_weibo:
                 showShare(mContext, "SinaWeibo", true);
                 break;
-            case rl_share_wechat:
+            case R.id.rl_share_wechat:
                 showShare(mContext, "Wechat", true);
                 break;
-            case rl_share_wechatmoments:
+            case R.id.rl_share_wechatmoments:
                 showShare(mContext, "WechatMoments", true);
+                break;
+            case R.id.iv_share:
+                showSharePlatformPopWindow();
+                break;
+            case R.id.iv_like:
+                if (EmptyUtils.isNotEmpty(feed_id) && EmptyUtils.isNotEmpty(is_collect)) {
+                    collectOrNot(feed_id, is_collect);
+                }
+                break;
+            case R.id.btn_send:
+                sendComment();
                 break;
             default:
                 break;
@@ -185,10 +227,35 @@ public class ArticleDetailFragment extends BaseFragment {
             ArrayList<ArticleCommentBean> articleCommentBeanArrayList = gson.fromJson(jsonArrayForComment.toString(), new TypeToken<ArrayList<ArticleCommentBean>>() {
             }.getType());
 
-            RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.recyclerView);
-            BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, articleCommentBeanArrayList, ARTICLE_COMMENT_LIST_DATA_TYPE);
-            recyclerView.setAdapter(baseRecyclerViewAdapter);
-            recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
+            if (EmptyUtils.isNotEmpty(articleCommentBeanArrayList) && articleCommentBeanArrayList.size() != 0) {
+                getView().findViewById(R.id.tv_comment_area).setVisibility(View.VISIBLE);
+                getView().findViewById(R.id.recyclerView).setVisibility(View.VISIBLE);
+                RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.recyclerView);
+                BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, articleCommentBeanArrayList, ARTICLE_COMMENT_LIST_DATA_TYPE);
+                recyclerView.setAdapter(baseRecyclerViewAdapter);
+                recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
+                baseRecyclerViewAdapter.setOnItemClickListener(this);
+            } else {
+                getView().findViewById(R.id.tv_comment_area).setVisibility(View.GONE);
+                getView().findViewById(R.id.recyclerView).setVisibility(View.GONE);
+            }
+        }
+    }
+
+    @Override
+    public void onItemClick(Object data, int position) {
+        if (data.getClass().getSimpleName().equals("ArticleCommentBean")) {
+            ArticleCommentBean articleCommentBean = (ArticleCommentBean) data;
+
+            if (EmptyUtils.isNotEmpty(articleCommentBean)) {
+                flag = 1;
+                comment_id = articleCommentBean.getComment_id();
+                et_input_comment.setFocusable(true);
+                et_input_comment.setFocusableInTouchMode(true);
+                et_input_comment.requestFocus();
+                KeyboardUtils.showSoftInput(getActivity());
+                KeyboardUtils.clickBlankArea2HideSoftInput();
+            }
         }
     }
 
@@ -211,6 +278,21 @@ public class ArticleDetailFragment extends BaseFragment {
                     .into((ImageView) getView().findViewById(R.id.iv_circle_image));
             ((TextView) getView().findViewById(R.id.tv_author_and_time)).setText(articleDetailBean.getPost_user_info().getProfile().getNickname() + " · "
                     + TimeUtils.date2String(new Date(Long.valueOf(articleDetailBean.getCreated()) * 1000), new SimpleDateFormat("yyyy/MM/dd")));
+
+            is_collect = articleDetailBean.getIs_collect();
+            if (EmptyUtils.isNotEmpty(is_collect)) {
+                switch (is_collect) {
+                    case 1:
+                        iv_like.setImageResource(R.drawable.v1_like_selected3x);
+                        break;
+                    case 2:
+                        iv_like.setImageResource(R.drawable.v1_like3x);
+                        break;
+                    default:
+                        break;
+                }
+            }
+
             //添加文章内容
             addArticleContent(articleDetailBean.getContent_info());
         }
@@ -268,6 +350,126 @@ public class ArticleDetailFragment extends BaseFragment {
         }
     }
 
+    /**
+     * 收藏or不收藏
+     */
+    private void collectOrNot(int feed_ids, final int is_collects) {
+        if (is_collects == 1) {
+            //为1已经收藏了 需要取消收藏
+            OkHttpUtils.post()
+                    .url(Constant.getArticleDeleteURl())
+                    .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
+                    .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
+                    .addParams(Constant.FEED_ID, String.valueOf(feed_ids))
+                    .build()
+                    .execute(new StringCallback() {
+                        @Override
+                        public void onError(Call call, Exception e, int id) {
+                            ToastUtils.showShort("取消收藏失败");
+                        }
+
+                        @Override
+                        public void onResponse(String response, int id) {
+                            JSONObject jsonObject = null;
+                            try {
+                                jsonObject = new JSONObject(response);
+                                int status = jsonObject.optInt("status");
+                                JSONObject jsonObjectData = jsonObject.optJSONObject("data");
+                                if (status == 1) {
+                                    iv_like.setImageResource(R.drawable.v1_like3x);
+                                    is_collect = 2;
+                                    ToastUtils.showShort("取消收藏成功");
+                                } else {
+                                    String code = jsonObject.optString("code");
+                                    String msg = jsonObjectData.optString("msg");
+                                    ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+
+        } else if (is_collects == 2) {
+            //为2点赞  还没收藏需要收藏
+            OkHttpUtils.post()
+                    .url(Constant.getArticleCollectURl())
+                    .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
+                    .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
+                    .addParams(Constant.FEED_ID, String.valueOf(feed_ids))
+                    .build()
+                    .execute(new StringCallback() {
+                        @Override
+                        public void onError(Call call, Exception e, int id) {
+                            ToastUtils.showShort("收藏文章失败");
+                        }
+
+                        @Override
+                        public void onResponse(String response, int id) {
+                            JSONObject jsonObject = null;
+                            try {
+                                jsonObject = new JSONObject(response);
+                                int status = jsonObject.optInt("status");
+                                JSONObject jsonObjectData = jsonObject.optJSONObject("data");
+                                if (status == 1) {
+                                    iv_like.setImageResource(R.drawable.v1_like_selected3x);
+                                    is_collect = 1;
+                                    ToastUtils.showShort("收藏文章成功");
+                                } else {
+                                    String code = jsonObject.optString("code");
+                                    String msg = jsonObjectData.optString("msg");
+                                    ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+        }
+    }
+
+    private void sendComment() {
+        OkHttpUtils.post()
+                .url(Constant.getCreateCommentUrl())
+                .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
+                .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
+                .addParams(Constant.FEED_ID, String.valueOf(feed_id))
+                .addParams(Constant.CONTENT, getCommentContent())
+                .addParams(Constant.REPLY_ID, flag == 1 ? String.valueOf(comment_id) : String.valueOf(0))//flag =1为二级评论
+                .addParams(Constant.FATHER_ID, flag == 1 ? String.valueOf(comment_id) : String.valueOf(0))
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        ToastUtils.showShort("评论失败");
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+                        JSONObject jsonObject = null;
+                        try {
+                            jsonObject = new JSONObject(response);
+                            int status = jsonObject.optInt("status");
+                            JSONObject jsonObjectData = jsonObject.optJSONObject("data");
+                            if (status == 1) {
+                                getCommentListData();
+                                ToastUtils.showShort("评论成功");
+                            } else {
+                                String code = jsonObject.optString("code");
+                                String msg = jsonObjectData.optString("msg");
+                                ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+        et_input_comment.setText("");
+        KeyboardUtils.hideSoftInput(getActivity());
+        KeyboardUtils.clickBlankArea2HideSoftInput();
+        btn_send.setVisibility(View.GONE);
+        ll_share_comment.setVisibility(View.VISIBLE);
+    }
 
     /**
      * 演示调用ShareSDK执行分享
@@ -302,4 +504,57 @@ public class ArticleDetailFragment extends BaseFragment {
         // 启动分享
         oks.show(context);
     }
+
+    private void showSharePlatformPopWindow() {
+        SharePlatformPopupWindow sharePlatformPopWindow = new SharePlatformPopupWindow(getActivity(), new SharePlatformPopupWindow.SharePlatformListener() {
+            @Override
+            public void onSinaWeiboClicked() {
+                showShare(mContext, "SinaWeibo", true);
+            }
+
+            @Override
+            public void onWeChatClicked() {
+                showShare(mContext, "Wechat", true);
+            }
+
+            @Override
+            public void onWechatMomentsClicked() {
+                showShare(mContext, "WechatMoments", true);
+            }
+
+            @Override
+            public void onCancelBtnClicked() {
+
+            }
+        });
+        sharePlatformPopWindow.initView();
+        sharePlatformPopWindow.showAtLocation(getView(), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+    }
+
+    private class TextChangedListener implements TextWatcher {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            boolean user = et_input_comment.getText().length() > 0;
+            if (user) {
+                ll_share_comment.setVisibility(View.GONE);
+                btn_send.setVisibility(View.VISIBLE);
+                btn_send.setEnabled(true);
+            } else {
+                ll_share_comment.setVisibility(View.VISIBLE);
+                btn_send.setVisibility(View.GONE);
+                btn_send.setEnabled(false);
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    }
+
 }

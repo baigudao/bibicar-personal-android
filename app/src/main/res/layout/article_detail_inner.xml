@@ -186,6 +186,7 @@
         android:background="@color/divider_color"/>
 
     <TextView
+        android:id="@+id/tv_comment_area"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"

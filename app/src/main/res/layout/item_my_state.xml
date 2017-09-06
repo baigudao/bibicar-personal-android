@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/background_color"
-    android:orientation="vertical">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/background_color"
+              android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -15,7 +15,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginLeft="15dp"
-            android:src="@drawable/user_photo" />
+            android:src="@drawable/user_photo"/>
 
         <TextView
             android:id="@+id/tv_state_name"
@@ -26,7 +26,7 @@
             android:layout_toRightOf="@id/iv_circle_image"
             android:text="只是个水军"
             android:textColor="@color/main_text_color"
-            android:textSize="14sp" />
+            android:textSize="14sp"/>
 
         <TextView
             android:id="@+id/tv_state_time"
@@ -38,7 +38,7 @@
             android:layout_toRightOf="@id/iv_circle_image"
             android:text="17-08-01 21:03"
             android:textColor="@color/second_text_color"
-            android:textSize="12sp" />
+            android:textSize="12sp"/>
 
         <TextView
             android:id="@+id/tv_follow"
@@ -52,9 +52,17 @@
             android:gravity="center"
             android:text="关注"
             android:textColor="@color/main_color"
-            android:textSize="12sp" />
+            android:textSize="12sp"/>
 
     </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="15dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -69,7 +77,7 @@
             android:layout_marginLeft="15dp"
             android:text="#无差别攻击#"
             android:textColor="@color/main_color"
-            android:textSize="15sp" />
+            android:textSize="15sp"/>
 
         <TextView
             android:id="@+id/tv_state_content2"
@@ -77,7 +85,7 @@
             android:layout_height="wrap_content"
             android:text="又是一个好晴天~"
             android:textColor="@color/main_text_color"
-            android:textSize="15sp" />
+            android:textSize="15sp"/>
 
     </LinearLayout>
 
@@ -93,7 +101,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:background="@drawable/share_selector"
-            android:clickable="true" />
+            android:clickable="true"/>
 
         <TextView
             android:id="@+id/tv_state_share_num"
@@ -103,7 +111,58 @@
             android:layout_marginLeft="10dp"
             android:text="957"
             android:textColor="@color/second_text_color"
-            android:textSize="12sp" />
+            android:textSize="12sp"/>
+
+        <ImageView
+            android:id="@+id/iv_state_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="18dp"
+            android:background="@drawable/v3_comment3x"
+            android:clickable="true"/>
+
+        <TextView
+            android:id="@+id/tv_state_comment_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:text="97"
+            android:textColor="@color/second_text_color"
+            android:textSize="12sp"/>
+
+        <ImageView
+            android:id="@+id/iv_state_like"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="18dp"
+            android:background="@drawable/v1_like3x"
+            android:clickable="true"/>
+
+        <TextView
+            android:id="@+id/tv_state_like_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:text="971"
+            android:textColor="@color/second_text_color"
+            android:textSize="12sp"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"/>
+
+        <ImageView
+            android:id="@+id/tv_state_report"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="15dp"
+            android:clickable="true"
+            android:src="@drawable/report_selector"/>
 
     </LinearLayout>
 
@@ -111,6 +170,6 @@
         android:layout_width="match_parent"
         android:layout_height="10dp"
         android:layout_marginTop="20dp"
-        android:background="@color/divider_color" />
+        android:background="@color/divider_color"/>
 
 </LinearLayout>

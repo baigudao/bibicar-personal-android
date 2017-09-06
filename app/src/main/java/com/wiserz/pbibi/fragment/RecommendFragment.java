@@ -33,18 +33,18 @@ public class RecommendFragment extends BaseFragment {
 
     @Override
     protected void initView(View view) {
-        view.findViewById(R.id.tv_search).setOnClickListener(this);
-        view.findViewById(R.id.iv_search_history).setOnClickListener(this);
+        view.findViewById(R.id.tv_top_search).setOnClickListener(this);
+        view.findViewById(R.id.iv_top_search_history).setOnClickListener(this);
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.tv_search:
+            case R.id.tv_top_search:
                 gotoPager(SearchFragment.class, null);
                 break;
-            case R.id.iv_search_history:
+            case R.id.iv_top_search_history:
                 gotoPager(SearchHistoryFragment.class, null);
                 break;
             default:

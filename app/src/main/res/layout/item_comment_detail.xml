@@ -43,11 +43,13 @@
             android:textSize="12sp"/>
 
         <LinearLayout
+            android:id="@+id/ll_zan_or_no"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
+            android:clickable="true"
             android:orientation="horizontal">
 
             <ImageView

@@ -3,9 +3,11 @@ package com.wiserz.pbibi.fragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.SearchView;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.util.DataManager;
@@ -24,9 +26,7 @@ public class SearchFragment extends BaseFragment {
     private int position;
     private Fragment fromFragment;
 
-    private String keyword;
-
-    private SearchView search_view;
+    private EditText et_search;
     private RadioGroup mRg_main;
 
     @Override
@@ -37,30 +37,18 @@ public class SearchFragment extends BaseFragment {
     @Override
     protected void initView(View view) {
         view.findViewById(R.id.iv_back).setOnClickListener(this);
-        search_view = (SearchView) view.findViewById(R.id.search_view);
-        search_view.setSubmitButtonEnabled(true);
-        search_view.setIconifiedByDefault(false);
-        search_view.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        et_search = (EditText) view.findViewById(R.id.et_search);
+        view.findViewById(R.id.btn_search).setOnClickListener(this);
 
-            // 当点击搜索按钮时触发该方法
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                ToastUtils.showShort("开始搜索" + query);
-                return false;
-            }
-
-            // 当搜索内容改变时触发该方法
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
-
-        mRg_main = (RadioGroup) view.findViewById(R.id.rg_main);
         initFragment();
+        mRg_main = (RadioGroup) view.findViewById(R.id.rg_main);
         mRg_main.setOnCheckedChangeListener(new MyOnCheckedChangeListener());
         //设置默认选中常用框架
         mRg_main.check(R.id.rb_car);
+    }
+
+    private String getKeyword() {
+        return et_search.getText().toString().trim();
     }
 
     private void initFragment() {
@@ -78,19 +66,19 @@ public class SearchFragment extends BaseFragment {
             switch (checkedId) {
                 case R.id.rb_car://车辆
                     position = 0;
-                    DataManager.getInstance().setData1(keyword);
+                    DataManager.getInstance().setData1(getKeyword());
                     break;
                 case R.id.rb_article://文章
                     position = 1;
-                    DataManager.getInstance().setData1(keyword);
+                    DataManager.getInstance().setData1(getKeyword());
                     break;
                 case R.id.rb_user://用户
                     position = 2;
-                    DataManager.getInstance().setData1(keyword);
+                    DataManager.getInstance().setData1(getKeyword());
                     break;
                 case R.id.rb_topic://话题
                     position = 3;
-                    DataManager.getInstance().setData1(keyword);
+                    DataManager.getInstance().setData1(getKeyword());
                     break;
                 default:
                     break;
@@ -137,18 +125,45 @@ public class SearchFragment extends BaseFragment {
             case R.id.iv_back:
                 goBack();
                 break;
+            case R.id.btn_search:
+                ToastUtils.showShort("搜索");
+                checkRadioButton();
+                break;
             default:
                 break;
         }
     }
 
-    //    private void setCheck(RadioButton radioButton) {
-    //        if (getView() != null) {
-    //            ((RadioButton) getView().findViewById(R.id.rb_car)).setChecked(false);
-    //            ((RadioButton) getView().findViewById(R.id.rb_article)).setChecked(false);
-    //            ((RadioButton) getView().findViewById(R.id.rb_user)).setChecked(false);
-    //            ((RadioButton) getView().findViewById(R.id.rb_topic)).setChecked(false);
-    //        }
-    //        radioButton.setChecked(true);
-    //    }
+    private void checkRadioButton() {
+        switch (position) {
+            case 0:
+                mRg_main.check(R.id.rb_car);
+                LogUtils.e("hehe0");
+                break;
+            case 1:
+                mRg_main.check(R.id.rb_article);
+                LogUtils.e("hehe1");
+                break;
+            case 2:
+                mRg_main.check(R.id.rb_user);
+                LogUtils.e("hehe2");
+                break;
+            case 3:
+                mRg_main.check(R.id.rb_topic);
+                LogUtils.e("hehe3");
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void setCheck(RadioButton radioButton) {
+        if (getView() != null) {
+            ((RadioButton) getView().findViewById(R.id.rb_car)).setChecked(false);
+            ((RadioButton) getView().findViewById(R.id.rb_article)).setChecked(false);
+            ((RadioButton) getView().findViewById(R.id.rb_user)).setChecked(false);
+            ((RadioButton) getView().findViewById(R.id.rb_topic)).setChecked(false);
+        }
+        radioButton.setChecked(true);
+    }
 }

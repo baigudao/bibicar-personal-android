@@ -4,12 +4,6 @@
                 android:layout_height="match_parent"
                 android:background="@color/background_color">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="汽车"
-        android:textColor="@color/main_color"/>
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/car_search_recycler_view"
         android:layout_width="match_parent"
@@ -34,6 +28,53 @@
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_custom_made"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="70dp"
+            android:src="@drawable/nocar3x"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="35dp"
+            android:text="暂时没有找到符合条件的车辆"
+            android:textColor="@color/second_text_color"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="25dp"
+            android:text="来试试私人订制车辆吧~"
+            android:textColor="@color/second_text_color"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:id="@+id/tv_start"
+            android:layout_width="150dp"
+            android:layout_height="45dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="50dp"
+            android:background="@drawable/border_car_detail"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="开启订制"
+            android:textColor="@color/main_color"
+            android:textSize="16sp"/>
 
     </LinearLayout>
 

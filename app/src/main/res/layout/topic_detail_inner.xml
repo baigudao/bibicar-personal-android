@@ -60,7 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
-            android:text="3215参与"
+            android:text="3215人参与"
             android:textColor="@color/second_text_color"
             android:textSize="14sp"/>
 
@@ -100,6 +100,11 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:text="最热"/>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="50dp"
+            android:background="@color/divider_color"/>
 
         <RadioButton
             android:id="@+id/rb_most_new"

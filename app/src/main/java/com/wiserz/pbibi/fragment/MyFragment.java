@@ -1,9 +1,24 @@
 package com.wiserz.pbibi.fragment;
 
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.blankj.utilcode.util.EmptyUtils;
+import com.blankj.utilcode.util.SPUtils;
+import com.blankj.utilcode.util.ToastUtils;
+import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 import com.wiserz.pbibi.R;
+import com.wiserz.pbibi.bean.UserInfoBean;
+import com.wiserz.pbibi.util.Constant;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import okhttp3.Call;
 
 /**
  * Created by jackie on 2017/8/9 18:02.
@@ -11,6 +26,9 @@ import com.wiserz.pbibi.R;
  * Used as : 个人中心页面
  */
 public class MyFragment extends BaseFragment {
+
+    private int fans_num;
+    private int friend_num;
 
     @Override
     protected int getLayoutId() {
@@ -60,6 +78,70 @@ public class MyFragment extends BaseFragment {
                 break;
             default:
                 break;
+        }
+    }
+
+    @Override
+    protected void initData() {
+        super.initData();
+        getDataFromNet();
+    }
+
+    private void getDataFromNet() {
+        OkHttpUtils.post()
+                .url(Constant.getMyHomePageUrl())
+                .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
+                .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+                        JSONObject jsonObject = null;
+                        try {
+                            jsonObject = new JSONObject(response);
+                            int status = jsonObject.optInt("status");
+                            JSONObject jsonObjectData = jsonObject.optJSONObject("data");
+                            if (status == 1) {
+                                fans_num = jsonObjectData.optInt("fans_num");
+                                friend_num = jsonObjectData.optInt("friend_num");
+                                JSONObject jsonObjectUserInfo = jsonObjectData.optJSONObject("user_info");
+                                handlerDataForUserInfo(jsonObjectUserInfo);
+                            } else {
+                                String code = jsonObject.optString("code");
+                                String msg = jsonObjectData.optString("msg");
+                                ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+    }
+
+    private void handlerDataForUserInfo(JSONObject jsonObjectUserInfo) {
+        if (EmptyUtils.isNotEmpty(jsonObjectUserInfo)) {
+            Gson gson = new Gson();
+            UserInfoBean userInfoBean = gson.fromJson(jsonObjectUserInfo.toString(), UserInfoBean.class);
+
+            if (EmptyUtils.isNotEmpty(userInfoBean) && getView() != null) {
+                if (EmptyUtils.isNotEmpty(userInfoBean.getProfile())) {
+                    Glide.with(mContext)
+                            .load(userInfoBean.getProfile().getAvatar())
+                            .placeholder(R.drawable.user_photo)
+                            .error(R.drawable.user_photo)
+                            .into((ImageView) getView().findViewById(R.id.iv_circle_image));
+                    ((TextView) getView().findViewById(R.id.tv_user_name)).setText(userInfoBean.getProfile().getNickname() == null ? "" : userInfoBean.getProfile().getNickname());
+                    //关注 4 丨 粉丝 12 丨 BiBi号 13456
+                    ((TextView) getView().findViewById(R.id.tv_num)).setText("关注 " + friend_num + " | " + "粉丝 " + fans_num + " | " + "BiBi号 " + userInfoBean.getProfile().getBibi_no());
+                    ((TextView) getView().findViewById(R.id.tv_car_price)).setText(String.valueOf(userInfoBean.getTotal_money()));
+                    ((TextView) getView().findViewById(R.id.tv_car_num)).setText(String.valueOf(userInfoBean.getTotal_car()));
+                }
+            }
         }
     }
 }

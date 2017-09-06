@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:maxLines="1"
-        android:text="#我的眼里只有钱"
+        android:text=""
         android:textColor="@color/pure_white_color"
         android:textSize="14sp"/>
 

@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
+import com.blankj.utilcode.util.EmptyUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.google.gson.Gson;
@@ -118,8 +119,11 @@ public class VideoListFragment extends BaseFragment implements BaseRecyclerViewA
     public void onItemClick(Object data, int position) {
         if (data.getClass().getSimpleName().equals("VideoBean")) {
             VideoBean videoBean = (VideoBean) data;
-            DataManager.getInstance().setData1(videoBean);
-            gotoPager(VideoDetailFragment.class,null);
+            if (EmptyUtils.isNotEmpty(videoBean)) {
+                int feed_id = videoBean.getFeed_id();
+                DataManager.getInstance().setData1(feed_id);
+                gotoPager(VideoDetailFragment.class, null);
+            }
         }
     }
 }

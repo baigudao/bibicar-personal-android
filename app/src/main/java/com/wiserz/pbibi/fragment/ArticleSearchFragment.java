@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.blankj.utilcode.util.EmptyUtils;
 import com.blankj.utilcode.util.LogUtils;
@@ -34,6 +35,7 @@ import okhttp3.Call;
 public class ArticleSearchFragment extends BaseFragment implements BaseRecyclerViewAdapter.OnItemClickListener {
 
     private RecyclerView article_search_recycler_view;
+    private LinearLayout ll_search_history;
     private int mPage;
 
     private static final int ARTICLE_LIST_DATA_TYPE = 76;
@@ -48,10 +50,11 @@ public class ArticleSearchFragment extends BaseFragment implements BaseRecyclerV
 
     @Override
     protected void initView(View view) {
-        LogUtils.e("ArticleSearchFragment");
         keyword = (String) DataManager.getInstance().getData1();
+        LogUtils.e("ArticleSearchFragment keyword为：" + keyword);
         DataManager.getInstance().setData1(null);
         article_search_recycler_view = (RecyclerView) view.findViewById(R.id.article_search_recycler_view);
+        ll_search_history = (LinearLayout) view.findViewById(R.id.ll_search_history);
         mPage = 0;
     }
 
@@ -63,7 +66,16 @@ public class ArticleSearchFragment extends BaseFragment implements BaseRecyclerV
     @Override
     protected void initData() {
         super.initData();
-        //        getDataFromNet(keyword);
+        if (EmptyUtils.isNotEmpty(keyword)) {
+            //当传入keyword时
+            article_search_recycler_view.setVisibility(View.VISIBLE);
+            ll_search_history.setVisibility(View.GONE);
+            getDataFromNet(keyword);
+        } else {
+            //当没有keyword时
+            ll_search_history.setVisibility(View.VISIBLE);
+            article_search_recycler_view.setVisibility(View.GONE);
+        }
     }
 
     private void getDataFromNet(String keyword) {
@@ -113,10 +125,18 @@ public class ArticleSearchFragment extends BaseFragment implements BaseRecyclerV
             }
         }
 
-        BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, articleBeanArrayList, ARTICLE_LIST_DATA_TYPE);
-        article_search_recycler_view.setAdapter(baseRecyclerViewAdapter);
-        article_search_recycler_view.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
-        baseRecyclerViewAdapter.setOnItemClickListener(this);
+        if (EmptyUtils.isNotEmpty(articleBeanArrayList)) {
+            BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, articleBeanArrayList, ARTICLE_LIST_DATA_TYPE);
+            article_search_recycler_view.setAdapter(baseRecyclerViewAdapter);
+            article_search_recycler_view.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
+            baseRecyclerViewAdapter.setOnItemClickListener(this);
+        } else {
+            if (getView() != null) {
+                getView().findViewById(R.id.ll_custom_made).setVisibility(View.VISIBLE);
+                article_search_recycler_view.setVisibility(View.GONE);
+                ll_search_history.setVisibility(View.GONE);
+            }
+        }
     }
 
     @Override

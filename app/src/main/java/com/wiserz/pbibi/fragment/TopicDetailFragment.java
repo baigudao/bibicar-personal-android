@@ -1,10 +1,13 @@
 package com.wiserz.pbibi.fragment;
 
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.EmptyUtils;
@@ -26,6 +29,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.Call;
 
@@ -35,6 +39,10 @@ import okhttp3.Call;
  * Used as : 话题详情的页面
  */
 public class TopicDetailFragment extends BaseFragment implements BaseRecyclerViewAdapter.OnItemClickListener {
+
+    private List<BaseFragment> mBaseFragment;
+    private int position;
+    private Fragment fromFragment;
 
     private int mPage;
     private int theme_id;
@@ -55,8 +63,22 @@ public class TopicDetailFragment extends BaseFragment implements BaseRecyclerVie
         ((TextView) view.findViewById(R.id.tv_title)).setText("话题详情");
 
         btn_join_topic = (Button) view.findViewById(R.id.btn_join_topic);
+        btn_join_topic.setOnClickListener(this);
 
         mPage = 0;
+
+        //初始化Fragment
+        initFragment();
+        RadioGroup mRg_main = (RadioGroup) view.findViewById(R.id.rg_main);
+        mRg_main.setOnCheckedChangeListener(new MyOnCheckedChangeListener());
+        //设置默认选中常用框架
+        mRg_main.check(R.id.rb_most_hot);
+    }
+
+    private void initFragment() {
+        mBaseFragment = new ArrayList<>();
+        mBaseFragment.add(new MostNewTopicFragment());//最新话题
+        mBaseFragment.add(new MostHotTopicFragment());//最热话题
     }
 
     @Override
@@ -64,6 +86,9 @@ public class TopicDetailFragment extends BaseFragment implements BaseRecyclerVie
         switch (v.getId()) {
             case R.id.iv_back:
                 goBack();
+                break;
+            case R.id.btn_join_topic:
+                joinTopic();
                 break;
             default:
                 break;
@@ -169,11 +194,98 @@ public class TopicDetailFragment extends BaseFragment implements BaseRecyclerVie
         }
     }
 
+    private void joinTopic() {
+        OkHttpUtils.post()
+                .url(Constant.getJoinTopicUrl())
+                .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
+                .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
+                .addParams(Constant.THEME_ID, String.valueOf(theme_id))
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+                        JSONObject jsonObject = null;
+                        try {
+                            jsonObject = new JSONObject(response);
+                            int status = jsonObject.optInt("status");
+                            JSONObject jsonObjectData = jsonObject.optJSONObject("data");
+                            if (status == 1) {
+                                goBack();
+                            } else {
+                                String code = jsonObject.optString("code");
+                                String msg = jsonObjectData.optString("msg");
+                                ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+    }
+
+
     @Override
     public void onItemClick(Object data, int position) {
         if (data.getClass().getSimpleName().equals("ThemeUserBean")) {
             ThemeUserBean themeUserBean = (ThemeUserBean) data;
             ToastUtils.showShort(themeUserBean.getNickname());
         }
+    }
+
+    class MyOnCheckedChangeListener implements RadioGroup.OnCheckedChangeListener {
+
+        @Override
+        public void onCheckedChanged(RadioGroup group, int checkedId) {
+            switch (checkedId) {
+                case R.id.rb_most_hot://最热
+                    position = 0;
+                    break;
+                case R.id.rb_most_new://最新
+                    position = 1;
+                    break;
+                default:
+                    position = 0;
+                    break;
+            }
+            //根据位置得到对应的Fragment
+            BaseFragment toFragment = getFragment();
+            //切换Fragment
+            switchFragment(fromFragment, toFragment);
+        }
+    }
+
+    private void switchFragment(Fragment from, Fragment to) {
+        if (from != to) {
+            fromFragment = to;
+            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+            //才切换
+            //判断有没有被添加
+            if (!to.isAdded()) {
+                //to没有被添加
+                //from隐藏
+                if (from != null) {
+                    ft.hide(from);
+                }
+                //添加to
+                ft.add(R.id.fl_topic_content, to).commit();
+            } else {
+                //to已经被添加
+                // from隐藏
+                if (from != null) {
+                    ft.hide(from);
+                }
+                //显示to
+                ft.show(to).commit();
+            }
+        }
+    }
+
+    private BaseFragment getFragment() {
+        return mBaseFragment.get(position);
     }
 }

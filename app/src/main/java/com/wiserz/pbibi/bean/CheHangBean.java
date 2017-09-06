@@ -10,17 +10,17 @@ import java.util.List;
 public class CheHangBean extends BaseBean {
 
     /**
-     * avatar : http://img.bibicar.cn/FvLNIJe7tr9CD841bljUbpscp8wF
-     * car_list : {"car_list":[{"car_info":{"board_time":"2014","brand_info":{"abbre":"A","brand_id":97,"brand_name":"阿斯顿·马丁","brand_url":"http://image.bitautoimg.com/bt/car/default/images/logo/masterbrand/png/100/m_97_100.png"},"car_color":2,"car_id":"583c0b1028d96","car_intro":"雨","car_name":"阿斯顿·马丁 DB9 2014 6.0L 敞篷百年纪念版","car_no":"000000","car_status":1,"car_time":"17天前","car_type":1,"check_expiration_time":"2014-11-01","city_info":{"city_id":93,"city_lat":360,"city_lng":360,"city_name":"深圳"},"contact_address":"78","contact_name":"吧","contact_phone":"8999","created":1480330000,"displacement":"","engine_no":"999","exchange_time":0,"fav_num":0,"files":[{"file_id":"0ad64a89-0bbc-4595-b569-ccb1f5e87c4c_3","file_type":"4","file_url":"http://img.bibicar.cn/0ad64a89-0bbc-4595-b569-ccb1f5e87c4c_3?imageMogr2/auto-orient/thumbnail/1000x/strip"}],"gearbox":"","guide_price":0,"insurance_due_time":"2013-11-01","is_fav":2,"is_like":2,"is_pacted":2,"is_transfer":2,"maintain":1,"mileage":"20","model_detail":{"CarReferPrice":"438.00万","Engine_EnvirStandard":"欧4","Engine_ExhaustForFloat":"6.0 L","Engine_InhaleType":"无","Engine_Location":"前置","Engine_MaxNJ":"620 N·m","Engine_Type":"AM11","Engine_horsepower":"517 Ps","Oil_FuelCapacity":"78 L","Oil_FuelTab":"","Oil_FuelType":"汽油","Oil_SupplyType":"多点电喷","OutSet_Height":"1282 mm","OutSet_Length":"4720 mm","OutSet_WheelBase":"2740 mm","OutSet_Width":"2061 mm","Perf_AccelerateTime":"4.60 s","Perf_DriveType":"后轮驱动","Perf_MaxSpeed":"295","Perf_SeatNum":"4 个","UnderPan_ForwardGearNum":"6 挡 手自一体","id":2501,"model_id":106019},"model_info":{"model_id":106019,"model_name":"2014 6.0L 敞篷百年纪念版","model_year":"2014","series_id":2621},"platform_info":{},"price":20,"sales_volume":0,"series_info":{"brand_id":97,"series_id":2621,"series_name":"DB9"},"style":0,"updated":1480330000,"user_info":{"created":0,"mobile":"","profile":{"age":0,"avatar":"http://img.bibicar.cn/FvLNIJe7tr9CD841bljUbpscp8wF","constellation":"","gender":0,"nickname":"吴简","signature":"","type":2},"user_id":456,"username":""},"verify_status":2,"vin_file":"","vin_no":"999","visit_num":3,"vr_url":""},"car_users":[]}],"has_more":2,"total":1,"user_list":[]}
+     * avatar : http://img.bibicar.cn/FmDMHALgJxKY9Rw3APp5QSsnajuF
+     * car_list : {"car_list":[{"car_info":{"board_time":"","brand_info":{"abbre":"B","brand_id":82,"brand_name":"保时捷","brand_url":"http://image.bitautoimg.com/bt/car/default/images/logo/masterbrand/png/100/m_82_100.png"},"car_color":0,"car_id":"597af357ead8d","car_intro":"","car_name":"保时捷 911 2008 Carrera","car_status":2,"car_type":1,"contact_address":"","contact_name":"","contact_phone":"0755-28288778","created":1501229911,"fav_num":1,"file_img":"http://img.bibicar.cn/Fm1Tdjf29hWG7ty6A8WD83M51MTX?imageMogr2/auto-orient/thumbnail/1000x/strip","files":[{"hash":"Fm1Tdjf29hWG7ty6A8WD83M51MTX","key":"Fm1Tdjf29hWG7ty6A8WD83M51MTX","type":"1"},{"hash":"Fpt_vC1zv5rAkAynJjH0CvVreC-g","key":"Fpt_vC1zv5rAkAynJjH0CvVreC-g","type":"3"},{"hash":"FrqHWipJ1zb8pI7mY518_DqLJFW_","key":"FrqHWipJ1zb8pI7mY518_DqLJFW_","type":"4"},{"hash":"FlP_j2rbHMlNw8bDa7AB9nKRJKon","key":"FlP_j2rbHMlNw8bDa7AB9nKRJKon","type":"5"},{"hash":"Fgek3XfAIt8F7tQXJiyuh1CMX_Ll","key":"Fgek3XfAIt8F7tQXJiyuh1CMX_Ll","type":"6"},{"hash":"Fl7WHTg3ZppGaJieojcdWXijn8T_","key":"Fl7WHTg3ZppGaJieojcdWXijn8T_","type":"9"},{"hash":"FlFSWnhv0czIgfInb-_DuUQDieuI","key":"FlFSWnhv0czIgfInb-_DuUQDieuI","type":"11"},{"hash":"FqLfI0H3bFzolWc6LT12uWcLy7vQ","key":"FqLfI0H3bFzolWc6LT12uWcLy7vQ","type":"13"}],"is_pacted":2,"mileage":5.6,"model_detail":{"CarReferPrice":"140.96万","Car_RepairPolicy":"两年不限公里","Engine_EnvirStandard":"欧4","Engine_ExhaustForFloat":"3.6 L","Engine_InhaleType":"无","Engine_Location":"后置","Engine_MaxNJ":"390 N·m","Engine_Type":"MA102","Engine_horsepower":"345 Ps","Oil_FuelCapacity":"64 L","Oil_FuelTab":"","Oil_FuelType":"汽油","Oil_SupplyType":"多点电喷","OutSet_Height":"1310 mm","OutSet_Length":"4435 mm","OutSet_WheelBase":"2350 mm","OutSet_Width":"1808 mm","Perf_AccelerateTime":"4.90 s","Perf_DriveType":"后轮驱动","Perf_MaxSpeed":"287","Perf_SeatNum":"4 个","UnderPan_ForwardGearNum":"6 挡 手动","id":884,"model_id":7011},"model_info":{"model_id":7011,"model_name":"2008 Carrera","model_year":"2008","series_id":2045},"price":48,"sales_volume":0,"series_info":{"brand_id":82,"series_id":2045,"series_name":"911"},"updated":1504494983,"user_info":{"created":0,"mobile":"","profile":{"age":0,"avatar":"http://img.bibicar.cn/FmDMHALgJxKY9Rw3APp5QSsnajuF","constellation":"","gender":0,"nickname":"BiBi Car","signature":""},"user_id":389,"username":""},"visit_num":53,"vr_url":"http://720yun.com/t/60djz0wOeu6"}},{"car_info":{"board_time":"","brand_info":{"abbre":"L","brand_id":96,"brand_name":"路虎","brand_url":"http://image.bitautoimg.com/bt/car/default/images/logo/masterbrand/png/100/m_96_100.png"},"car_color":1,"car_id":"59a7df6e1271e","car_intro":"价格为裸车价","car_name":"路虎 揽胜 2017 3.0L V6 SC Vogue SE 创世加长版","car_status":0,"car_type":0,"contact_address":"","contact_name":"","contact_phone":"07552828878","created":1504173934,"fav_num":0,"file_img":"http://img.bibicar.cn/FoVkRwlUtdSaMfpbvcFui093rlJO?imageMogr2/auto-orient/thumbnail/1000x/strip","files":[{"hash":"FoVkRwlUtdSaMfpbvcFui093rlJO","key":"FoVkRwlUtdSaMfpbvcFui093rlJO","type":"1"},{"hash":"Fi9m8MScwsDpCNCOXQsXMk84lJHN","key":"Fi9m8MScwsDpCNCOXQsXMk84lJHN","type":"3"},{"hash":"FhMguEijvzyWBO9YycVAoddEJ5sb","key":"FhMguEijvzyWBO9YycVAoddEJ5sb","type":"4"},{"hash":"FnCci0ox4qjPSCOe4kF9bS1o3CiA","key":"FnCci0ox4qjPSCOe4kF9bS1o3CiA","type":"12"},{"hash":"Fm32hj6sm0v-R9hE0L7R9V2vtMKU","key":"Fm32hj6sm0v-R9hE0L7R9V2vtMKU","type":"14"},{"hash":"FkZEZnboOTXp_nd6K-ug1o5KA72k","key":"FkZEZnboOTXp_nd6K-ug1o5KA72k","type":"16"}],"is_pacted":2,"mileage":0,"model_detail":{"CarReferPrice":"179.80万","Car_RepairPolicy":"三年或10万公里","Engine_EnvirStandard":"欧5","Engine_ExhaustForFloat":"3.0 L","Engine_InhaleType":"机械增压","Engine_Location":"前置","Engine_horsepower":"380 Ps","Oil_FuelCapacity":"105 L","Oil_FuelTab":"95号","Oil_FuelType":"汽油","Oil_SupplyType":"直喷","OutSet_Height":"1840 mm","OutSet_Length":"5199 mm","OutSet_WheelBase":"3120 mm","OutSet_Width":"2073 mm","Perf_AccelerateTime":"7.8 s","Perf_DriveType":"全时四驱","Perf_MaxSpeed":"209","Perf_SeatNum":"5 个","Perf_ZongHeYouHao":"10.7 L/100km","UnderPan_ForwardGearNum":"8 挡 手自一体","id":4308,"model_id":122456},"model_info":{"model_id":122456,"model_name":"2017 3.0L V6 SC Vogue SE 创世加长版","model_year":"2017","series_id":2149},"price":170,"sales_volume":0,"series_info":{"brand_id":96,"series_id":2149,"series_name":"揽胜"},"updated":1504173934,"user_info":{"created":0,"mobile":"","profile":{"age":0,"avatar":"http://img.bibicar.cn/FmDMHALgJxKY9Rw3APp5QSsnajuF","constellation":"","gender":0,"nickname":"BiBi Car","signature":""},"user_id":389,"username":""},"visit_num":9}},{"car_info":{"board_time":"","brand_info":{"abbre":"B","brand_id":85,"brand_name":"宾利","brand_url":"http://image.bitautoimg.com/bt/car/default/images/logo/masterbrand/png/100/m_85_100.png"},"car_color":0,"car_id":"59a7791f8b1e5","car_intro":"","car_name":"宾利 飞驰 2013 6.0T 尊贵版","car_status":1,"car_type":1,"contact_address":"","contact_name":"","contact_phone":"","created":1504147743,"fav_num":0,"file_img":"http://img.bibicar.cn/FlUX59Bml_dRQiodBLxr11Z-5Idh?imageMogr2/auto-orient/thumbnail/1000x/strip","files":[{"hash":"FlUX59Bml_dRQiodBLxr11Z-5Idh","key":"FlUX59Bml_dRQiodBLxr11Z-5Idh","type":"1"},{"hash":"FrXybNGLPjpF16CsoDGvRzHicO4u","key":"FrXybNGLPjpF16CsoDGvRzHicO4u","type":"3"},{"hash":"Fvv4TyNaw6pMdA8x0nlPy2UxaCdM","key":"Fvv4TyNaw6pMdA8x0nlPy2UxaCdM","type":"4"},{"hash":"FtrXn-Pt2pyE2FWxT-K4C6ziAh0W","key":"FtrXn-Pt2pyE2FWxT-K4C6ziAh0W","type":"6"},{"hash":"FkLXn-sKkU4EofxqoPhNKYdFk0nN","key":"FkLXn-sKkU4EofxqoPhNKYdFk0nN","type":"7"},{"hash":"FpbN_Tf67X1QOCDtAWtZtmqe1gfq","key":"FpbN_Tf67X1QOCDtAWtZtmqe1gfq","type":"12"},{"hash":"FiCvDVimpI8s7gW-YCFQcPjlH5Rp","key":"FiCvDVimpI8s7gW-YCFQcPjlH5Rp","type":"13"},{"hash":"FlSZStFW1zZn4sOLc1SKiAaxXLJq","key":"FlSZStFW1zZn4sOLc1SKiAaxXLJq","type":"15"},{"hash":"FnJuBCo4T7DgR3_3ulKJXNhZhIl9","key":"FnJuBCo4T7DgR3_3ulKJXNhZhIl9","type":"16"}],"is_pacted":2,"mileage":3.5,"model_detail":{"CarReferPrice":"405.80万","Engine_EnvirStandard":"欧5","Engine_ExhaustForFloat":"6.0 L","Engine_InhaleType":"双涡轮增压","Engine_Location":"前置","Engine_MaxNJ":"800 N·m","Engine_horsepower":"626 Ps","Oil_FuelCapacity":"90 L","Oil_FuelTab":"97号","Oil_FuelType":"汽油","Oil_SupplyType":"","OutSet_Height":"1488 mm","OutSet_Length":"5299 mm","OutSet_WheelBase":"3066 mm","OutSet_Width":"1976 mm","Perf_AccelerateTime":"4.60 s","Perf_DriveType":"全时四驱","Perf_MaxSpeed":"320","Perf_SeatNum":"5 个","Perf_ZongHeYouHao":"14.70 L/100km","UnderPan_ForwardGearNum":"8 挡 手自一体","id":3412,"model_id":103998},"model_info":{"model_id":103998,"model_name":"2013 6.0T 尊贵版","model_year":"2013","series_id":3859},"price":245,"sales_volume":0,"series_info":{"brand_id":85,"series_id":3859,"series_name":"飞驰"},"updated":1504147832,"user_info":{"created":0,"mobile":"","profile":{"age":0,"avatar":"http://img.bibicar.cn/FmDMHALgJxKY9Rw3APp5QSsnajuF","constellation":"","gender":0,"nickname":"BiBi Car","signature":""},"user_id":389,"username":""},"visit_num":13,"vr_url":"http://720yun.com/t/60djzgunta5"}},{"car_info":{"board_time":"","brand_info":{"abbre":"Y","brand_id":100,"brand_name":"英菲尼迪","brand_url":"http://image.bitautoimg.com/bt/car/default/images/logo/masterbrand/png/100/m_100_100.png"},"car_color":0,"car_id":"59a51a111dc28","car_intro":"","car_name":"英菲尼迪 QX 2011 56","car_status":2,"car_type":1,"contact_address":"南山","contact_name":"BiBiCar","contact_phone":"07552828878","created":1503992337,"fav_num":0,"file_img":"http://img.bibicar.cn/FqbS6CHp0_VYOr7Y9DHXyl8oV9DJ?imageMogr2/auto-orient/thumbnail/1000x/strip","files":[{"hash":"FqbS6CHp0_VYOr7Y9DHXyl8oV9DJ","key":"FqbS6CHp0_VYOr7Y9DHXyl8oV9DJ","type":"1"},{"hash":"Fo357D-S_8fnBivMxbUaKu4oLsaK","key":"Fo357D-S_8fnBivMxbUaKu4oLsaK","type":"3"},{"hash":"Fo_Pzn8NlUBYSfanKVh_oWCG59Av","key":"Fo_Pzn8NlUBYSfanKVh_oWCG59Av","type":"10"},{"hash":"Fi1s_cE-X_jpIiEKGliVGOUBVI8o","key":"Fi1s_cE-X_jpIiEKGliVGOUBVI8o","type":"12"},{"hash":"FpINbs7B69c5BpsDD5PmJnqt3d61","key":"FpINbs7B69c5BpsDD5PmJnqt3d61","type":"16"}],"is_pacted":2,"mileage":5.7,"model_detail":{"CarReferPrice":"149.80万","Car_RepairPolicy":"四年或10万公里","Engine_EnvirStandard":"欧4","Engine_ExhaustForFloat":"5.6 L","Engine_InhaleType":"无","Engine_Location":"前置","Engine_MaxNJ":"555 N·m","Engine_Type":"VK56DE","Engine_horsepower":"441 Ps","Oil_FuelCapacity":"100 L","Oil_FuelTab":"","Oil_FuelType":"汽油","Oil_SupplyType":"直喷","OutSet_Height":"1935 mm","OutSet_Length":"5290 mm","OutSet_WheelBase":"3075 mm","OutSet_Width":"2030 mm","Perf_DriveType":"全时四驱","Perf_MaxSpeed":"240","Perf_SeatNum":"7 个","UnderPan_ForwardGearNum":"7 挡 手自一体","id":581,"model_id":11983},"model_info":{"model_id":11983,"model_name":"2011 56","model_year":"2011","series_id":2029},"price":58,"sales_volume":0,"series_info":{"brand_id":100,"series_id":2029,"series_name":"QX"},"updated":1503992337,"user_info":{"created":0,"mobile":"","profile":{"age":0,"avatar":"http://img.bibicar.cn/FmDMHALgJxKY9Rw3APp5QSsnajuF","constellation":"","gender":0,"nickname":"BiBi Car","signature":""},"user_id":389,"username":""},"visit_num":15}},{"car_info":{"board_time":"2017","brand_info":{"abbre":"B","brand_id":82,"brand_name":"保时捷","brand_url":"http://image.bitautoimg.com/bt/car/default/images/logo/masterbrand/png/100/m_82_100.png"},"car_color":2,"car_id":"5996a10f1692b","car_intro":"前后停车辅助系统，包括倒车摄像头，电动折叠式车外后视镜，保时捷双离合器变速箱，助力转向升级版，19英寸Cayman S车轮，多功能方向盘，带加热功能，涂漆内饰组件（不搭配真皮内饰），涂漆车钥匙，搭配真皮钥匙袋，智慧互联模组","car_name":"保时捷 718 2016 718 Boxster 2.0T","car_status":1,"car_type":1,"contact_address":"南山","contact_name":"邱悦","contact_phone":"18613010911","created":1503043855,"fav_num":0,"file_img":"http://img.bibicar.cn/Fnhu_jtuNXKOLPmN33Gxr9Ir_L2f?imageMogr2/auto-orient/thumbnail/1000x/strip","files":[{"hash":"Fnhu_jtuNXKOLPmN33Gxr9Ir_L2f","key":"Fnhu_jtuNXKOLPmN33Gxr9Ir_L2f","type":"1"},{"hash":"FstBbYawiJQUYRFh9uKQFlLJQ4xE","key":"FstBbYawiJQUYRFh9uKQFlLJQ4xE","type":"2"},{"hash":"Fgc15evAjaCG8MFL0rWJVSrA6Z5B","key":"Fgc15evAjaCG8MFL0rWJVSrA6Z5B","type":"3"},{"hash":"FuX4pTROJI7yQ7gaUU-cXVk73oIX","key":"FuX4pTROJI7yQ7gaUU-cXVk73oIX","type":"4"},{"hash":"FtL9i5cxrX5KCRUBkCybJN41KtEF","key":"FtL9i5cxrX5KCRUBkCybJN41KtEF","type":"5"},{"hash":"FpRjnB6Bufv31ehc2wCn9Fb34CZc","key":"FpRjnB6Bufv31ehc2wCn9Fb34CZc","type":"6"},{"hash":"FrZvu5wc891G9wDpGfoiXwnwVdoM","key":"FrZvu5wc891G9wDpGfoiXwnwVdoM","type":"7"},{"hash":"FqVaq8yBwpnzYJ2mSPgSVl_2tklU","key":"FqVaq8yBwpnzYJ2mSPgSVl_2tklU","type":"8"},{"hash":"Fm4N652PXQsTkvjTT7Uymx3NiN1N","key":"Fm4N652PXQsTkvjTT7Uymx3NiN1N","type":"9"},{"hash":"FiezkGMWMXgvE8D7jM9rjdbK2mtq","key":"FiezkGMWMXgvE8D7jM9rjdbK2mtq","type":"10"},{"hash":"FqJYM3M4T4EZVJt2Q4lc_v-7lbSS","key":"FqJYM3M4T4EZVJt2Q4lc_v-7lbSS","type":"11"},{"hash":"FqvUaglFDzpUjnqTVWF1rdX3nnco","key":"FqvUaglFDzpUjnqTVWF1rdX3nnco","type":"12"},{"hash":"FqMtke1LQiNOLk0yCiIFTLbIQ0VK","key":"FqMtke1LQiNOLk0yCiIFTLbIQ0VK","type":"13"},{"hash":"FtjrI1bodmdpKnViQJhQhp171em4","key":"FtjrI1bodmdpKnViQJhQhp171em4","type":"14"},{"hash":"Fv9CJJdvsdKAAVBzwKevpQSXbb40","key":"Fv9CJJdvsdKAAVBzwKevpQSXbb40","type":"15"},{"hash":"Fv0C6jgTeWDCAf5DvMbLacMo2hct","key":"Fv0C6jgTeWDCAf5DvMbLacMo2hct","type":"16"}],"is_pacted":2,"mileage":0.8,"model_detail":{"CarReferPrice":"59.80万","Car_RepairPolicy":"三年不限公里","Engine_EnvirStandard":"欧5","Engine_ExhaustForFloat":"2.0 L","Engine_InhaleType":"涡轮增压","Engine_Location":"中置","Engine_MaxNJ":"310 N·m","Engine_horsepower":"250 Ps","Oil_FuelCapacity":"54 L","Oil_FuelTab":"97号","Oil_FuelType":"汽油","Oil_SupplyType":"直喷","OutSet_Height":"1281 mm","OutSet_Length":"4379 mm","OutSet_WheelBase":"2475 mm","OutSet_Width":"1801 mm","Perf_AccelerateTime":"5.6 s","Perf_DriveType":"后轮驱动","Perf_MaxSpeed":"260","Perf_SeatNum":"2 个","Perf_ZongHeYouHao":"7.2 L/100km","UnderPan_ForwardGearNum":"7 挡 双离合","id":3878,"model_id":119339},"model_info":{"model_id":119339,"model_name":"2016 718 Boxster 2.0T","model_year":"2016","series_id":4820},"price":73,"sales_volume":0,"series_info":{"brand_id":82,"series_id":4820,"series_name":"718"},"updated":1503043855,"user_info":{"created":0,"mobile":"","profile":{"age":0,"avatar":"http://img.bibicar.cn/FmDMHALgJxKY9Rw3APp5QSsnajuF","constellation":"","gender":0,"nickname":"BiBi Car","signature":""},"user_id":389,"username":""},"visit_num":20,"vr_url":"http://720yun.com/t/bddjzzuyvm4"}}],"has_more":1,"total":248}
      * intro :
-     * nickname : 吴简
-     * saling_num : 1
-     * signature :
-     * sold_num : 0
-     * sort : 912
+     * nickname : BiBi Car
+     * saling_num : 248
+     * signature : 官方账号
+     * sold_num : 12
+     * sort : 898
      * tag : 1
      * type : 2
-     * user_id : 456
+     * user_id : 389
      */
 
     private String avatar;
@@ -125,16 +125,14 @@ public class CheHangBean extends BaseBean {
 
     public static class CarListBeanX {
         /**
-         * car_list : [{"car_info":{"board_time":"2014","brand_info":{"abbre":"A","brand_id":97,"brand_name":"阿斯顿·马丁","brand_url":"http://image.bitautoimg.com/bt/car/default/images/logo/masterbrand/png/100/m_97_100.png"},"car_color":2,"car_id":"583c0b1028d96","car_intro":"雨","car_name":"阿斯顿·马丁 DB9 2014 6.0L 敞篷百年纪念版","car_no":"000000","car_status":1,"car_time":"17天前","car_type":1,"check_expiration_time":"2014-11-01","city_info":{"city_id":93,"city_lat":360,"city_lng":360,"city_name":"深圳"},"contact_address":"78","contact_name":"吧","contact_phone":"8999","created":1480330000,"displacement":"","engine_no":"999","exchange_time":0,"fav_num":0,"files":[{"file_id":"0ad64a89-0bbc-4595-b569-ccb1f5e87c4c_3","file_type":"4","file_url":"http://img.bibicar.cn/0ad64a89-0bbc-4595-b569-ccb1f5e87c4c_3?imageMogr2/auto-orient/thumbnail/1000x/strip"}],"gearbox":"","guide_price":0,"insurance_due_time":"2013-11-01","is_fav":2,"is_like":2,"is_pacted":2,"is_transfer":2,"maintain":1,"mileage":"20","model_detail":{"CarReferPrice":"438.00万","Engine_EnvirStandard":"欧4","Engine_ExhaustForFloat":"6.0 L","Engine_InhaleType":"无","Engine_Location":"前置","Engine_MaxNJ":"620 N·m","Engine_Type":"AM11","Engine_horsepower":"517 Ps","Oil_FuelCapacity":"78 L","Oil_FuelTab":"","Oil_FuelType":"汽油","Oil_SupplyType":"多点电喷","OutSet_Height":"1282 mm","OutSet_Length":"4720 mm","OutSet_WheelBase":"2740 mm","OutSet_Width":"2061 mm","Perf_AccelerateTime":"4.60 s","Perf_DriveType":"后轮驱动","Perf_MaxSpeed":"295","Perf_SeatNum":"4 个","UnderPan_ForwardGearNum":"6 挡 手自一体","id":2501,"model_id":106019},"model_info":{"model_id":106019,"model_name":"2014 6.0L 敞篷百年纪念版","model_year":"2014","series_id":2621},"platform_info":{},"price":20,"sales_volume":0,"series_info":{"brand_id":97,"series_id":2621,"series_name":"DB9"},"style":0,"updated":1480330000,"user_info":{"created":0,"mobile":"","profile":{"age":0,"avatar":"http://img.bibicar.cn/FvLNIJe7tr9CD841bljUbpscp8wF","constellation":"","gender":0,"nickname":"吴简","signature":"","type":2},"user_id":456,"username":""},"verify_status":2,"vin_file":"","vin_no":"999","visit_num":3,"vr_url":""},"car_users":[]}]
-         * has_more : 2
-         * total : 1
-         * user_list : []
+         * car_list : [{"car_info":{"board_time":"","brand_info":{"abbre":"B","brand_id":82,"brand_name":"保时捷","brand_url":"http://image.bitautoimg.com/bt/car/default/images/logo/masterbrand/png/100/m_82_100.png"},"car_color":0,"car_id":"597af357ead8d","car_intro":"","car_name":"保时捷 911 2008 Carrera","car_status":2,"car_type":1,"contact_address":"","contact_name":"","contact_phone":"0755-28288778","created":1501229911,"fav_num":1,"file_img":"http://img.bibicar.cn/Fm1Tdjf29hWG7ty6A8WD83M51MTX?imageMogr2/auto-orient/thumbnail/1000x/strip","files":[{"hash":"Fm1Tdjf29hWG7ty6A8WD83M51MTX","key":"Fm1Tdjf29hWG7ty6A8WD83M51MTX","type":"1"},{"hash":"Fpt_vC1zv5rAkAynJjH0CvVreC-g","key":"Fpt_vC1zv5rAkAynJjH0CvVreC-g","type":"3"},{"hash":"FrqHWipJ1zb8pI7mY518_DqLJFW_","key":"FrqHWipJ1zb8pI7mY518_DqLJFW_","type":"4"},{"hash":"FlP_j2rbHMlNw8bDa7AB9nKRJKon","key":"FlP_j2rbHMlNw8bDa7AB9nKRJKon","type":"5"},{"hash":"Fgek3XfAIt8F7tQXJiyuh1CMX_Ll","key":"Fgek3XfAIt8F7tQXJiyuh1CMX_Ll","type":"6"},{"hash":"Fl7WHTg3ZppGaJieojcdWXijn8T_","key":"Fl7WHTg3ZppGaJieojcdWXijn8T_","type":"9"},{"hash":"FlFSWnhv0czIgfInb-_DuUQDieuI","key":"FlFSWnhv0czIgfInb-_DuUQDieuI","type":"11"},{"hash":"FqLfI0H3bFzolWc6LT12uWcLy7vQ","key":"FqLfI0H3bFzolWc6LT12uWcLy7vQ","type":"13"}],"is_pacted":2,"mileage":5.6,"model_detail":{"CarReferPrice":"140.96万","Car_RepairPolicy":"两年不限公里","Engine_EnvirStandard":"欧4","Engine_ExhaustForFloat":"3.6 L","Engine_InhaleType":"无","Engine_Location":"后置","Engine_MaxNJ":"390 N·m","Engine_Type":"MA102","Engine_horsepower":"345 Ps","Oil_FuelCapacity":"64 L","Oil_FuelTab":"","Oil_FuelType":"汽油","Oil_SupplyType":"多点电喷","OutSet_Height":"1310 mm","OutSet_Length":"4435 mm","OutSet_WheelBase":"2350 mm","OutSet_Width":"1808 mm","Perf_AccelerateTime":"4.90 s","Perf_DriveType":"后轮驱动","Perf_MaxSpeed":"287","Perf_SeatNum":"4 个","UnderPan_ForwardGearNum":"6 挡 手动","id":884,"model_id":7011},"model_info":{"model_id":7011,"model_name":"2008 Carrera","model_year":"2008","series_id":2045},"price":48,"sales_volume":0,"series_info":{"brand_id":82,"series_id":2045,"series_name":"911"},"updated":1504494983,"user_info":{"created":0,"mobile":"","profile":{"age":0,"avatar":"http://img.bibicar.cn/FmDMHALgJxKY9Rw3APp5QSsnajuF","constellation":"","gender":0,"nickname":"BiBi Car","signature":""},"user_id":389,"username":""},"visit_num":53,"vr_url":"http://720yun.com/t/60djz0wOeu6"}},{"car_info":{"board_time":"","brand_info":{"abbre":"L","brand_id":96,"brand_name":"路虎","brand_url":"http://image.bitautoimg.com/bt/car/default/images/logo/masterbrand/png/100/m_96_100.png"},"car_color":1,"car_id":"59a7df6e1271e","car_intro":"价格为裸车价","car_name":"路虎 揽胜 2017 3.0L V6 SC Vogue SE 创世加长版","car_status":0,"car_type":0,"contact_address":"","contact_name":"","contact_phone":"07552828878","created":1504173934,"fav_num":0,"file_img":"http://img.bibicar.cn/FoVkRwlUtdSaMfpbvcFui093rlJO?imageMogr2/auto-orient/thumbnail/1000x/strip","files":[{"hash":"FoVkRwlUtdSaMfpbvcFui093rlJO","key":"FoVkRwlUtdSaMfpbvcFui093rlJO","type":"1"},{"hash":"Fi9m8MScwsDpCNCOXQsXMk84lJHN","key":"Fi9m8MScwsDpCNCOXQsXMk84lJHN","type":"3"},{"hash":"FhMguEijvzyWBO9YycVAoddEJ5sb","key":"FhMguEijvzyWBO9YycVAoddEJ5sb","type":"4"},{"hash":"FnCci0ox4qjPSCOe4kF9bS1o3CiA","key":"FnCci0ox4qjPSCOe4kF9bS1o3CiA","type":"12"},{"hash":"Fm32hj6sm0v-R9hE0L7R9V2vtMKU","key":"Fm32hj6sm0v-R9hE0L7R9V2vtMKU","type":"14"},{"hash":"FkZEZnboOTXp_nd6K-ug1o5KA72k","key":"FkZEZnboOTXp_nd6K-ug1o5KA72k","type":"16"}],"is_pacted":2,"mileage":0,"model_detail":{"CarReferPrice":"179.80万","Car_RepairPolicy":"三年或10万公里","Engine_EnvirStandard":"欧5","Engine_ExhaustForFloat":"3.0 L","Engine_InhaleType":"机械增压","Engine_Location":"前置","Engine_horsepower":"380 Ps","Oil_FuelCapacity":"105 L","Oil_FuelTab":"95号","Oil_FuelType":"汽油","Oil_SupplyType":"直喷","OutSet_Height":"1840 mm","OutSet_Length":"5199 mm","OutSet_WheelBase":"3120 mm","OutSet_Width":"2073 mm","Perf_AccelerateTime":"7.8 s","Perf_DriveType":"全时四驱","Perf_MaxSpeed":"209","Perf_SeatNum":"5 个","Perf_ZongHeYouHao":"10.7 L/100km","UnderPan_ForwardGearNum":"8 挡 手自一体","id":4308,"model_id":122456},"model_info":{"model_id":122456,"model_name":"2017 3.0L V6 SC Vogue SE 创世加长版","model_year":"2017","series_id":2149},"price":170,"sales_volume":0,"series_info":{"brand_id":96,"series_id":2149,"series_name":"揽胜"},"updated":1504173934,"user_info":{"created":0,"mobile":"","profile":{"age":0,"avatar":"http://img.bibicar.cn/FmDMHALgJxKY9Rw3APp5QSsnajuF","constellation":"","gender":0,"nickname":"BiBi Car","signature":""},"user_id":389,"username":""},"visit_num":9}},{"car_info":{"board_time":"","brand_info":{"abbre":"B","brand_id":85,"brand_name":"宾利","brand_url":"http://image.bitautoimg.com/bt/car/default/images/logo/masterbrand/png/100/m_85_100.png"},"car_color":0,"car_id":"59a7791f8b1e5","car_intro":"","car_name":"宾利 飞驰 2013 6.0T 尊贵版","car_status":1,"car_type":1,"contact_address":"","contact_name":"","contact_phone":"","created":1504147743,"fav_num":0,"file_img":"http://img.bibicar.cn/FlUX59Bml_dRQiodBLxr11Z-5Idh?imageMogr2/auto-orient/thumbnail/1000x/strip","files":[{"hash":"FlUX59Bml_dRQiodBLxr11Z-5Idh","key":"FlUX59Bml_dRQiodBLxr11Z-5Idh","type":"1"},{"hash":"FrXybNGLPjpF16CsoDGvRzHicO4u","key":"FrXybNGLPjpF16CsoDGvRzHicO4u","type":"3"},{"hash":"Fvv4TyNaw6pMdA8x0nlPy2UxaCdM","key":"Fvv4TyNaw6pMdA8x0nlPy2UxaCdM","type":"4"},{"hash":"FtrXn-Pt2pyE2FWxT-K4C6ziAh0W","key":"FtrXn-Pt2pyE2FWxT-K4C6ziAh0W","type":"6"},{"hash":"FkLXn-sKkU4EofxqoPhNKYdFk0nN","key":"FkLXn-sKkU4EofxqoPhNKYdFk0nN","type":"7"},{"hash":"FpbN_Tf67X1QOCDtAWtZtmqe1gfq","key":"FpbN_Tf67X1QOCDtAWtZtmqe1gfq","type":"12"},{"hash":"FiCvDVimpI8s7gW-YCFQcPjlH5Rp","key":"FiCvDVimpI8s7gW-YCFQcPjlH5Rp","type":"13"},{"hash":"FlSZStFW1zZn4sOLc1SKiAaxXLJq","key":"FlSZStFW1zZn4sOLc1SKiAaxXLJq","type":"15"},{"hash":"FnJuBCo4T7DgR3_3ulKJXNhZhIl9","key":"FnJuBCo4T7DgR3_3ulKJXNhZhIl9","type":"16"}],"is_pacted":2,"mileage":3.5,"model_detail":{"CarReferPrice":"405.80万","Engine_EnvirStandard":"欧5","Engine_ExhaustForFloat":"6.0 L","Engine_InhaleType":"双涡轮增压","Engine_Location":"前置","Engine_MaxNJ":"800 N·m","Engine_horsepower":"626 Ps","Oil_FuelCapacity":"90 L","Oil_FuelTab":"97号","Oil_FuelType":"汽油","Oil_SupplyType":"","OutSet_Height":"1488 mm","OutSet_Length":"5299 mm","OutSet_WheelBase":"3066 mm","OutSet_Width":"1976 mm","Perf_AccelerateTime":"4.60 s","Perf_DriveType":"全时四驱","Perf_MaxSpeed":"320","Perf_SeatNum":"5 个","Perf_ZongHeYouHao":"14.70 L/100km","UnderPan_ForwardGearNum":"8 挡 手自一体","id":3412,"model_id":103998},"model_info":{"model_id":103998,"model_name":"2013 6.0T 尊贵版","model_year":"2013","series_id":3859},"price":245,"sales_volume":0,"series_info":{"brand_id":85,"series_id":3859,"series_name":"飞驰"},"updated":1504147832,"user_info":{"created":0,"mobile":"","profile":{"age":0,"avatar":"http://img.bibicar.cn/FmDMHALgJxKY9Rw3APp5QSsnajuF","constellation":"","gender":0,"nickname":"BiBi Car","signature":""},"user_id":389,"username":""},"visit_num":13,"vr_url":"http://720yun.com/t/60djzgunta5"}},{"car_info":{"board_time":"","brand_info":{"abbre":"Y","brand_id":100,"brand_name":"英菲尼迪","brand_url":"http://image.bitautoimg.com/bt/car/default/images/logo/masterbrand/png/100/m_100_100.png"},"car_color":0,"car_id":"59a51a111dc28","car_intro":"","car_name":"英菲尼迪 QX 2011 56","car_status":2,"car_type":1,"contact_address":"南山","contact_name":"BiBiCar","contact_phone":"07552828878","created":1503992337,"fav_num":0,"file_img":"http://img.bibicar.cn/FqbS6CHp0_VYOr7Y9DHXyl8oV9DJ?imageMogr2/auto-orient/thumbnail/1000x/strip","files":[{"hash":"FqbS6CHp0_VYOr7Y9DHXyl8oV9DJ","key":"FqbS6CHp0_VYOr7Y9DHXyl8oV9DJ","type":"1"},{"hash":"Fo357D-S_8fnBivMxbUaKu4oLsaK","key":"Fo357D-S_8fnBivMxbUaKu4oLsaK","type":"3"},{"hash":"Fo_Pzn8NlUBYSfanKVh_oWCG59Av","key":"Fo_Pzn8NlUBYSfanKVh_oWCG59Av","type":"10"},{"hash":"Fi1s_cE-X_jpIiEKGliVGOUBVI8o","key":"Fi1s_cE-X_jpIiEKGliVGOUBVI8o","type":"12"},{"hash":"FpINbs7B69c5BpsDD5PmJnqt3d61","key":"FpINbs7B69c5BpsDD5PmJnqt3d61","type":"16"}],"is_pacted":2,"mileage":5.7,"model_detail":{"CarReferPrice":"149.80万","Car_RepairPolicy":"四年或10万公里","Engine_EnvirStandard":"欧4","Engine_ExhaustForFloat":"5.6 L","Engine_InhaleType":"无","Engine_Location":"前置","Engine_MaxNJ":"555 N·m","Engine_Type":"VK56DE","Engine_horsepower":"441 Ps","Oil_FuelCapacity":"100 L","Oil_FuelTab":"","Oil_FuelType":"汽油","Oil_SupplyType":"直喷","OutSet_Height":"1935 mm","OutSet_Length":"5290 mm","OutSet_WheelBase":"3075 mm","OutSet_Width":"2030 mm","Perf_DriveType":"全时四驱","Perf_MaxSpeed":"240","Perf_SeatNum":"7 个","UnderPan_ForwardGearNum":"7 挡 手自一体","id":581,"model_id":11983},"model_info":{"model_id":11983,"model_name":"2011 56","model_year":"2011","series_id":2029},"price":58,"sales_volume":0,"series_info":{"brand_id":100,"series_id":2029,"series_name":"QX"},"updated":1503992337,"user_info":{"created":0,"mobile":"","profile":{"age":0,"avatar":"http://img.bibicar.cn/FmDMHALgJxKY9Rw3APp5QSsnajuF","constellation":"","gender":0,"nickname":"BiBi Car","signature":""},"user_id":389,"username":""},"visit_num":15}},{"car_info":{"board_time":"2017","brand_info":{"abbre":"B","brand_id":82,"brand_name":"保时捷","brand_url":"http://image.bitautoimg.com/bt/car/default/images/logo/masterbrand/png/100/m_82_100.png"},"car_color":2,"car_id":"5996a10f1692b","car_intro":"前后停车辅助系统，包括倒车摄像头，电动折叠式车外后视镜，保时捷双离合器变速箱，助力转向升级版，19英寸Cayman S车轮，多功能方向盘，带加热功能，涂漆内饰组件（不搭配真皮内饰），涂漆车钥匙，搭配真皮钥匙袋，智慧互联模组","car_name":"保时捷 718 2016 718 Boxster 2.0T","car_status":1,"car_type":1,"contact_address":"南山","contact_name":"邱悦","contact_phone":"18613010911","created":1503043855,"fav_num":0,"file_img":"http://img.bibicar.cn/Fnhu_jtuNXKOLPmN33Gxr9Ir_L2f?imageMogr2/auto-orient/thumbnail/1000x/strip","files":[{"hash":"Fnhu_jtuNXKOLPmN33Gxr9Ir_L2f","key":"Fnhu_jtuNXKOLPmN33Gxr9Ir_L2f","type":"1"},{"hash":"FstBbYawiJQUYRFh9uKQFlLJQ4xE","key":"FstBbYawiJQUYRFh9uKQFlLJQ4xE","type":"2"},{"hash":"Fgc15evAjaCG8MFL0rWJVSrA6Z5B","key":"Fgc15evAjaCG8MFL0rWJVSrA6Z5B","type":"3"},{"hash":"FuX4pTROJI7yQ7gaUU-cXVk73oIX","key":"FuX4pTROJI7yQ7gaUU-cXVk73oIX","type":"4"},{"hash":"FtL9i5cxrX5KCRUBkCybJN41KtEF","key":"FtL9i5cxrX5KCRUBkCybJN41KtEF","type":"5"},{"hash":"FpRjnB6Bufv31ehc2wCn9Fb34CZc","key":"FpRjnB6Bufv31ehc2wCn9Fb34CZc","type":"6"},{"hash":"FrZvu5wc891G9wDpGfoiXwnwVdoM","key":"FrZvu5wc891G9wDpGfoiXwnwVdoM","type":"7"},{"hash":"FqVaq8yBwpnzYJ2mSPgSVl_2tklU","key":"FqVaq8yBwpnzYJ2mSPgSVl_2tklU","type":"8"},{"hash":"Fm4N652PXQsTkvjTT7Uymx3NiN1N","key":"Fm4N652PXQsTkvjTT7Uymx3NiN1N","type":"9"},{"hash":"FiezkGMWMXgvE8D7jM9rjdbK2mtq","key":"FiezkGMWMXgvE8D7jM9rjdbK2mtq","type":"10"},{"hash":"FqJYM3M4T4EZVJt2Q4lc_v-7lbSS","key":"FqJYM3M4T4EZVJt2Q4lc_v-7lbSS","type":"11"},{"hash":"FqvUaglFDzpUjnqTVWF1rdX3nnco","key":"FqvUaglFDzpUjnqTVWF1rdX3nnco","type":"12"},{"hash":"FqMtke1LQiNOLk0yCiIFTLbIQ0VK","key":"FqMtke1LQiNOLk0yCiIFTLbIQ0VK","type":"13"},{"hash":"FtjrI1bodmdpKnViQJhQhp171em4","key":"FtjrI1bodmdpKnViQJhQhp171em4","type":"14"},{"hash":"Fv9CJJdvsdKAAVBzwKevpQSXbb40","key":"Fv9CJJdvsdKAAVBzwKevpQSXbb40","type":"15"},{"hash":"Fv0C6jgTeWDCAf5DvMbLacMo2hct","key":"Fv0C6jgTeWDCAf5DvMbLacMo2hct","type":"16"}],"is_pacted":2,"mileage":0.8,"model_detail":{"CarReferPrice":"59.80万","Car_RepairPolicy":"三年不限公里","Engine_EnvirStandard":"欧5","Engine_ExhaustForFloat":"2.0 L","Engine_InhaleType":"涡轮增压","Engine_Location":"中置","Engine_MaxNJ":"310 N·m","Engine_horsepower":"250 Ps","Oil_FuelCapacity":"54 L","Oil_FuelTab":"97号","Oil_FuelType":"汽油","Oil_SupplyType":"直喷","OutSet_Height":"1281 mm","OutSet_Length":"4379 mm","OutSet_WheelBase":"2475 mm","OutSet_Width":"1801 mm","Perf_AccelerateTime":"5.6 s","Perf_DriveType":"后轮驱动","Perf_MaxSpeed":"260","Perf_SeatNum":"2 个","Perf_ZongHeYouHao":"7.2 L/100km","UnderPan_ForwardGearNum":"7 挡 双离合","id":3878,"model_id":119339},"model_info":{"model_id":119339,"model_name":"2016 718 Boxster 2.0T","model_year":"2016","series_id":4820},"price":73,"sales_volume":0,"series_info":{"brand_id":82,"series_id":4820,"series_name":"718"},"updated":1503043855,"user_info":{"created":0,"mobile":"","profile":{"age":0,"avatar":"http://img.bibicar.cn/FmDMHALgJxKY9Rw3APp5QSsnajuF","constellation":"","gender":0,"nickname":"BiBi Car","signature":""},"user_id":389,"username":""},"visit_num":20,"vr_url":"http://720yun.com/t/bddjzzuyvm4"}}]
+         * has_more : 1
+         * total : 248
          */
 
         private int has_more;
         private int total;
         private List<CarListBean> car_list;
-        private List<?> user_list;
 
         public int getHas_more() {
             return has_more;
@@ -160,22 +158,12 @@ public class CheHangBean extends BaseBean {
             this.car_list = car_list;
         }
 
-        public List<?> getUser_list() {
-            return user_list;
-        }
-
-        public void setUser_list(List<?> user_list) {
-            this.user_list = user_list;
-        }
-
         public static class CarListBean {
             /**
-             * car_info : {"board_time":"2014","brand_info":{"abbre":"A","brand_id":97,"brand_name":"阿斯顿·马丁","brand_url":"http://image.bitautoimg.com/bt/car/default/images/logo/masterbrand/png/100/m_97_100.png"},"car_color":2,"car_id":"583c0b1028d96","car_intro":"雨","car_name":"阿斯顿·马丁 DB9 2014 6.0L 敞篷百年纪念版","car_no":"000000","car_status":1,"car_time":"17天前","car_type":1,"check_expiration_time":"2014-11-01","city_info":{"city_id":93,"city_lat":360,"city_lng":360,"city_name":"深圳"},"contact_address":"78","contact_name":"吧","contact_phone":"8999","created":1480330000,"displacement":"","engine_no":"999","exchange_time":0,"fav_num":0,"files":[{"file_id":"0ad64a89-0bbc-4595-b569-ccb1f5e87c4c_3","file_type":"4","file_url":"http://img.bibicar.cn/0ad64a89-0bbc-4595-b569-ccb1f5e87c4c_3?imageMogr2/auto-orient/thumbnail/1000x/strip"}],"gearbox":"","guide_price":0,"insurance_due_time":"2013-11-01","is_fav":2,"is_like":2,"is_pacted":2,"is_transfer":2,"maintain":1,"mileage":"20","model_detail":{"CarReferPrice":"438.00万","Engine_EnvirStandard":"欧4","Engine_ExhaustForFloat":"6.0 L","Engine_InhaleType":"无","Engine_Location":"前置","Engine_MaxNJ":"620 N·m","Engine_Type":"AM11","Engine_horsepower":"517 Ps","Oil_FuelCapacity":"78 L","Oil_FuelTab":"","Oil_FuelType":"汽油","Oil_SupplyType":"多点电喷","OutSet_Height":"1282 mm","OutSet_Length":"4720 mm","OutSet_WheelBase":"2740 mm","OutSet_Width":"2061 mm","Perf_AccelerateTime":"4.60 s","Perf_DriveType":"后轮驱动","Perf_MaxSpeed":"295","Perf_SeatNum":"4 个","UnderPan_ForwardGearNum":"6 挡 手自一体","id":2501,"model_id":106019},"model_info":{"model_id":106019,"model_name":"2014 6.0L 敞篷百年纪念版","model_year":"2014","series_id":2621},"platform_info":{},"price":20,"sales_volume":0,"series_info":{"brand_id":97,"series_id":2621,"series_name":"DB9"},"style":0,"updated":1480330000,"user_info":{"created":0,"mobile":"","profile":{"age":0,"avatar":"http://img.bibicar.cn/FvLNIJe7tr9CD841bljUbpscp8wF","constellation":"","gender":0,"nickname":"吴简","signature":"","type":2},"user_id":456,"username":""},"verify_status":2,"vin_file":"","vin_no":"999","visit_num":3,"vr_url":""}
-             * car_users : []
+             * car_info : {"board_time":"","brand_info":{"abbre":"B","brand_id":82,"brand_name":"保时捷","brand_url":"http://image.bitautoimg.com/bt/car/default/images/logo/masterbrand/png/100/m_82_100.png"},"car_color":0,"car_id":"597af357ead8d","car_intro":"","car_name":"保时捷 911 2008 Carrera","car_status":2,"car_type":1,"contact_address":"","contact_name":"","contact_phone":"0755-28288778","created":1501229911,"fav_num":1,"file_img":"http://img.bibicar.cn/Fm1Tdjf29hWG7ty6A8WD83M51MTX?imageMogr2/auto-orient/thumbnail/1000x/strip","files":[{"hash":"Fm1Tdjf29hWG7ty6A8WD83M51MTX","key":"Fm1Tdjf29hWG7ty6A8WD83M51MTX","type":"1"},{"hash":"Fpt_vC1zv5rAkAynJjH0CvVreC-g","key":"Fpt_vC1zv5rAkAynJjH0CvVreC-g","type":"3"},{"hash":"FrqHWipJ1zb8pI7mY518_DqLJFW_","key":"FrqHWipJ1zb8pI7mY518_DqLJFW_","type":"4"},{"hash":"FlP_j2rbHMlNw8bDa7AB9nKRJKon","key":"FlP_j2rbHMlNw8bDa7AB9nKRJKon","type":"5"},{"hash":"Fgek3XfAIt8F7tQXJiyuh1CMX_Ll","key":"Fgek3XfAIt8F7tQXJiyuh1CMX_Ll","type":"6"},{"hash":"Fl7WHTg3ZppGaJieojcdWXijn8T_","key":"Fl7WHTg3ZppGaJieojcdWXijn8T_","type":"9"},{"hash":"FlFSWnhv0czIgfInb-_DuUQDieuI","key":"FlFSWnhv0czIgfInb-_DuUQDieuI","type":"11"},{"hash":"FqLfI0H3bFzolWc6LT12uWcLy7vQ","key":"FqLfI0H3bFzolWc6LT12uWcLy7vQ","type":"13"}],"is_pacted":2,"mileage":5.6,"model_detail":{"CarReferPrice":"140.96万","Car_RepairPolicy":"两年不限公里","Engine_EnvirStandard":"欧4","Engine_ExhaustForFloat":"3.6 L","Engine_InhaleType":"无","Engine_Location":"后置","Engine_MaxNJ":"390 N·m","Engine_Type":"MA102","Engine_horsepower":"345 Ps","Oil_FuelCapacity":"64 L","Oil_FuelTab":"","Oil_FuelType":"汽油","Oil_SupplyType":"多点电喷","OutSet_Height":"1310 mm","OutSet_Length":"4435 mm","OutSet_WheelBase":"2350 mm","OutSet_Width":"1808 mm","Perf_AccelerateTime":"4.90 s","Perf_DriveType":"后轮驱动","Perf_MaxSpeed":"287","Perf_SeatNum":"4 个","UnderPan_ForwardGearNum":"6 挡 手动","id":884,"model_id":7011},"model_info":{"model_id":7011,"model_name":"2008 Carrera","model_year":"2008","series_id":2045},"price":48,"sales_volume":0,"series_info":{"brand_id":82,"series_id":2045,"series_name":"911"},"updated":1504494983,"user_info":{"created":0,"mobile":"","profile":{"age":0,"avatar":"http://img.bibicar.cn/FmDMHALgJxKY9Rw3APp5QSsnajuF","constellation":"","gender":0,"nickname":"BiBi Car","signature":""},"user_id":389,"username":""},"visit_num":53,"vr_url":"http://720yun.com/t/60djz0wOeu6"}
              */
 
             private CarInfoBean car_info;
-            private List<?> car_users;
 
             public CarInfoBean getCar_info() {
                 return car_info;
@@ -185,60 +173,34 @@ public class CheHangBean extends BaseBean {
                 this.car_info = car_info;
             }
 
-            public List<?> getCar_users() {
-                return car_users;
-            }
-
-            public void setCar_users(List<?> car_users) {
-                this.car_users = car_users;
-            }
-
             public static class CarInfoBean {
                 /**
-                 * board_time : 2014
-                 * brand_info : {"abbre":"A","brand_id":97,"brand_name":"阿斯顿·马丁","brand_url":"http://image.bitautoimg.com/bt/car/default/images/logo/masterbrand/png/100/m_97_100.png"}
-                 * car_color : 2
-                 * car_id : 583c0b1028d96
-                 * car_intro : 雨
-                 * car_name : 阿斯顿·马丁 DB9 2014 6.0L 敞篷百年纪念版
-                 * car_no : 000000
-                 * car_status : 1
-                 * car_time : 17天前
+                 * board_time :
+                 * brand_info : {"abbre":"B","brand_id":82,"brand_name":"保时捷","brand_url":"http://image.bitautoimg.com/bt/car/default/images/logo/masterbrand/png/100/m_82_100.png"}
+                 * car_color : 0
+                 * car_id : 597af357ead8d
+                 * car_intro :
+                 * car_name : 保时捷 911 2008 Carrera
+                 * car_status : 2
                  * car_type : 1
-                 * check_expiration_time : 2014-11-01
-                 * city_info : {"city_id":93,"city_lat":360,"city_lng":360,"city_name":"深圳"}
-                 * contact_address : 78
-                 * contact_name : 吧
-                 * contact_phone : 8999
-                 * created : 1480330000
-                 * displacement :
-                 * engine_no : 999
-                 * exchange_time : 0
-                 * fav_num : 0
-                 * files : [{"file_id":"0ad64a89-0bbc-4595-b569-ccb1f5e87c4c_3","file_type":"4","file_url":"http://img.bibicar.cn/0ad64a89-0bbc-4595-b569-ccb1f5e87c4c_3?imageMogr2/auto-orient/thumbnail/1000x/strip"}]
-                 * gearbox :
-                 * guide_price : 0
-                 * insurance_due_time : 2013-11-01
-                 * is_fav : 2
-                 * is_like : 2
+                 * contact_address :
+                 * contact_name :
+                 * contact_phone : 0755-28288778
+                 * created : 1501229911
+                 * fav_num : 1
+                 * file_img : http://img.bibicar.cn/Fm1Tdjf29hWG7ty6A8WD83M51MTX?imageMogr2/auto-orient/thumbnail/1000x/strip
+                 * files : [{"hash":"Fm1Tdjf29hWG7ty6A8WD83M51MTX","key":"Fm1Tdjf29hWG7ty6A8WD83M51MTX","type":"1"},{"hash":"Fpt_vC1zv5rAkAynJjH0CvVreC-g","key":"Fpt_vC1zv5rAkAynJjH0CvVreC-g","type":"3"},{"hash":"FrqHWipJ1zb8pI7mY518_DqLJFW_","key":"FrqHWipJ1zb8pI7mY518_DqLJFW_","type":"4"},{"hash":"FlP_j2rbHMlNw8bDa7AB9nKRJKon","key":"FlP_j2rbHMlNw8bDa7AB9nKRJKon","type":"5"},{"hash":"Fgek3XfAIt8F7tQXJiyuh1CMX_Ll","key":"Fgek3XfAIt8F7tQXJiyuh1CMX_Ll","type":"6"},{"hash":"Fl7WHTg3ZppGaJieojcdWXijn8T_","key":"Fl7WHTg3ZppGaJieojcdWXijn8T_","type":"9"},{"hash":"FlFSWnhv0czIgfInb-_DuUQDieuI","key":"FlFSWnhv0czIgfInb-_DuUQDieuI","type":"11"},{"hash":"FqLfI0H3bFzolWc6LT12uWcLy7vQ","key":"FqLfI0H3bFzolWc6LT12uWcLy7vQ","type":"13"}]
                  * is_pacted : 2
-                 * is_transfer : 2
-                 * maintain : 1
-                 * mileage : 20
-                 * model_detail : {"CarReferPrice":"438.00万","Engine_EnvirStandard":"欧4","Engine_ExhaustForFloat":"6.0 L","Engine_InhaleType":"无","Engine_Location":"前置","Engine_MaxNJ":"620 N·m","Engine_Type":"AM11","Engine_horsepower":"517 Ps","Oil_FuelCapacity":"78 L","Oil_FuelTab":"","Oil_FuelType":"汽油","Oil_SupplyType":"多点电喷","OutSet_Height":"1282 mm","OutSet_Length":"4720 mm","OutSet_WheelBase":"2740 mm","OutSet_Width":"2061 mm","Perf_AccelerateTime":"4.60 s","Perf_DriveType":"后轮驱动","Perf_MaxSpeed":"295","Perf_SeatNum":"4 个","UnderPan_ForwardGearNum":"6 挡 手自一体","id":2501,"model_id":106019}
-                 * model_info : {"model_id":106019,"model_name":"2014 6.0L 敞篷百年纪念版","model_year":"2014","series_id":2621}
-                 * platform_info : {}
-                 * price : 20
+                 * mileage : 5.6
+                 * model_detail : {"CarReferPrice":"140.96万","Car_RepairPolicy":"两年不限公里","Engine_EnvirStandard":"欧4","Engine_ExhaustForFloat":"3.6 L","Engine_InhaleType":"无","Engine_Location":"后置","Engine_MaxNJ":"390 N·m","Engine_Type":"MA102","Engine_horsepower":"345 Ps","Oil_FuelCapacity":"64 L","Oil_FuelTab":"","Oil_FuelType":"汽油","Oil_SupplyType":"多点电喷","OutSet_Height":"1310 mm","OutSet_Length":"4435 mm","OutSet_WheelBase":"2350 mm","OutSet_Width":"1808 mm","Perf_AccelerateTime":"4.90 s","Perf_DriveType":"后轮驱动","Perf_MaxSpeed":"287","Perf_SeatNum":"4 个","UnderPan_ForwardGearNum":"6 挡 手动","id":884,"model_id":7011}
+                 * model_info : {"model_id":7011,"model_name":"2008 Carrera","model_year":"2008","series_id":2045}
+                 * price : 48
                  * sales_volume : 0
-                 * series_info : {"brand_id":97,"series_id":2621,"series_name":"DB9"}
-                 * style : 0
-                 * updated : 1480330000
-                 * user_info : {"created":0,"mobile":"","profile":{"age":0,"avatar":"http://img.bibicar.cn/FvLNIJe7tr9CD841bljUbpscp8wF","constellation":"","gender":0,"nickname":"吴简","signature":"","type":2},"user_id":456,"username":""}
-                 * verify_status : 2
-                 * vin_file :
-                 * vin_no : 999
-                 * visit_num : 3
-                 * vr_url :
+                 * series_info : {"brand_id":82,"series_id":2045,"series_name":"911"}
+                 * updated : 1504494983
+                 * user_info : {"created":0,"mobile":"","profile":{"age":0,"avatar":"http://img.bibicar.cn/FmDMHALgJxKY9Rw3APp5QSsnajuF","constellation":"","gender":0,"nickname":"BiBi Car","signature":""},"user_id":389,"username":""}
+                 * visit_num : 53
+                 * vr_url : http://720yun.com/t/60djz0wOeu6
                  */
 
                 private String board_time;
@@ -247,41 +209,23 @@ public class CheHangBean extends BaseBean {
                 private String car_id;
                 private String car_intro;
                 private String car_name;
-                private String car_no;
                 private int car_status;
-                private String car_time;
                 private int car_type;
-                private String check_expiration_time;
-                private CityInfoBean city_info;
                 private String contact_address;
                 private String contact_name;
                 private String contact_phone;
                 private int created;
-                private String displacement;
-                private String engine_no;
-                private int exchange_time;
                 private int fav_num;
-                private String gearbox;
-                private int guide_price;
-                private String insurance_due_time;
-                private int is_fav;
-                private int is_like;
+                private String file_img;
                 private int is_pacted;
-                private int is_transfer;
-                private int maintain;
-                private String mileage;
+                private double mileage;
                 private ModelDetailBean model_detail;
                 private ModelInfoBean model_info;
-                private PlatformInfoBean platform_info;
-                private double price;
+                private int price;
                 private int sales_volume;
                 private SeriesInfoBean series_info;
-                private int style;
                 private int updated;
                 private UserInfoBean user_info;
-                private int verify_status;
-                private String vin_file;
-                private String vin_no;
                 private int visit_num;
                 private String vr_url;
                 private List<FilesBean> files;
@@ -334,14 +278,6 @@ public class CheHangBean extends BaseBean {
                     this.car_name = car_name;
                 }
 
-                public String getCar_no() {
-                    return car_no;
-                }
-
-                public void setCar_no(String car_no) {
-                    this.car_no = car_no;
-                }
-
                 public int getCar_status() {
                     return car_status;
                 }
@@ -350,36 +286,12 @@ public class CheHangBean extends BaseBean {
                     this.car_status = car_status;
                 }
 
-                public String getCar_time() {
-                    return car_time;
-                }
-
-                public void setCar_time(String car_time) {
-                    this.car_time = car_time;
-                }
-
                 public int getCar_type() {
                     return car_type;
                 }
 
                 public void setCar_type(int car_type) {
                     this.car_type = car_type;
-                }
-
-                public String getCheck_expiration_time() {
-                    return check_expiration_time;
-                }
-
-                public void setCheck_expiration_time(String check_expiration_time) {
-                    this.check_expiration_time = check_expiration_time;
-                }
-
-                public CityInfoBean getCity_info() {
-                    return city_info;
-                }
-
-                public void setCity_info(CityInfoBean city_info) {
-                    this.city_info = city_info;
                 }
 
                 public String getContact_address() {
@@ -414,30 +326,6 @@ public class CheHangBean extends BaseBean {
                     this.created = created;
                 }
 
-                public String getDisplacement() {
-                    return displacement;
-                }
-
-                public void setDisplacement(String displacement) {
-                    this.displacement = displacement;
-                }
-
-                public String getEngine_no() {
-                    return engine_no;
-                }
-
-                public void setEngine_no(String engine_no) {
-                    this.engine_no = engine_no;
-                }
-
-                public int getExchange_time() {
-                    return exchange_time;
-                }
-
-                public void setExchange_time(int exchange_time) {
-                    this.exchange_time = exchange_time;
-                }
-
                 public int getFav_num() {
                     return fav_num;
                 }
@@ -446,44 +334,12 @@ public class CheHangBean extends BaseBean {
                     this.fav_num = fav_num;
                 }
 
-                public String getGearbox() {
-                    return gearbox;
+                public String getFile_img() {
+                    return file_img;
                 }
 
-                public void setGearbox(String gearbox) {
-                    this.gearbox = gearbox;
-                }
-
-                public int getGuide_price() {
-                    return guide_price;
-                }
-
-                public void setGuide_price(int guide_price) {
-                    this.guide_price = guide_price;
-                }
-
-                public String getInsurance_due_time() {
-                    return insurance_due_time;
-                }
-
-                public void setInsurance_due_time(String insurance_due_time) {
-                    this.insurance_due_time = insurance_due_time;
-                }
-
-                public int getIs_fav() {
-                    return is_fav;
-                }
-
-                public void setIs_fav(int is_fav) {
-                    this.is_fav = is_fav;
-                }
-
-                public int getIs_like() {
-                    return is_like;
-                }
-
-                public void setIs_like(int is_like) {
-                    this.is_like = is_like;
+                public void setFile_img(String file_img) {
+                    this.file_img = file_img;
                 }
 
                 public int getIs_pacted() {
@@ -494,27 +350,11 @@ public class CheHangBean extends BaseBean {
                     this.is_pacted = is_pacted;
                 }
 
-                public int getIs_transfer() {
-                    return is_transfer;
-                }
-
-                public void setIs_transfer(int is_transfer) {
-                    this.is_transfer = is_transfer;
-                }
-
-                public int getMaintain() {
-                    return maintain;
-                }
-
-                public void setMaintain(int maintain) {
-                    this.maintain = maintain;
-                }
-
-                public String getMileage() {
+                public double getMileage() {
                     return mileage;
                 }
 
-                public void setMileage(String mileage) {
+                public void setMileage(double mileage) {
                     this.mileage = mileage;
                 }
 
@@ -534,19 +374,11 @@ public class CheHangBean extends BaseBean {
                     this.model_info = model_info;
                 }
 
-                public PlatformInfoBean getPlatform_info() {
-                    return platform_info;
-                }
-
-                public void setPlatform_info(PlatformInfoBean platform_info) {
-                    this.platform_info = platform_info;
-                }
-
-                public double getPrice() {
+                public int getPrice() {
                     return price;
                 }
 
-                public void setPrice(double price) {
+                public void setPrice(int price) {
                     this.price = price;
                 }
 
@@ -566,14 +398,6 @@ public class CheHangBean extends BaseBean {
                     this.series_info = series_info;
                 }
 
-                public int getStyle() {
-                    return style;
-                }
-
-                public void setStyle(int style) {
-                    this.style = style;
-                }
-
                 public int getUpdated() {
                     return updated;
                 }
@@ -588,30 +412,6 @@ public class CheHangBean extends BaseBean {
 
                 public void setUser_info(UserInfoBean user_info) {
                     this.user_info = user_info;
-                }
-
-                public int getVerify_status() {
-                    return verify_status;
-                }
-
-                public void setVerify_status(int verify_status) {
-                    this.verify_status = verify_status;
-                }
-
-                public String getVin_file() {
-                    return vin_file;
-                }
-
-                public void setVin_file(String vin_file) {
-                    this.vin_file = vin_file;
-                }
-
-                public String getVin_no() {
-                    return vin_no;
-                }
-
-                public void setVin_no(String vin_no) {
-                    this.vin_no = vin_no;
                 }
 
                 public int getVisit_num() {
@@ -640,10 +440,10 @@ public class CheHangBean extends BaseBean {
 
                 public static class BrandInfoBean {
                     /**
-                     * abbre : A
-                     * brand_id : 97
-                     * brand_name : 阿斯顿·马丁
-                     * brand_url : http://image.bitautoimg.com/bt/car/default/images/logo/masterbrand/png/100/m_97_100.png
+                     * abbre : B
+                     * brand_id : 82
+                     * brand_name : 保时捷
+                     * brand_url : http://image.bitautoimg.com/bt/car/default/images/logo/masterbrand/png/100/m_82_100.png
                      */
 
                     private String abbre;
@@ -684,80 +484,36 @@ public class CheHangBean extends BaseBean {
                     }
                 }
 
-                public static class CityInfoBean {
-                    /**
-                     * city_id : 93
-                     * city_lat : 360
-                     * city_lng : 360
-                     * city_name : 深圳
-                     */
-
-                    private int city_id;
-                    private int city_lat;
-                    private int city_lng;
-                    private String city_name;
-
-                    public int getCity_id() {
-                        return city_id;
-                    }
-
-                    public void setCity_id(int city_id) {
-                        this.city_id = city_id;
-                    }
-
-                    public int getCity_lat() {
-                        return city_lat;
-                    }
-
-                    public void setCity_lat(int city_lat) {
-                        this.city_lat = city_lat;
-                    }
-
-                    public int getCity_lng() {
-                        return city_lng;
-                    }
-
-                    public void setCity_lng(int city_lng) {
-                        this.city_lng = city_lng;
-                    }
-
-                    public String getCity_name() {
-                        return city_name;
-                    }
-
-                    public void setCity_name(String city_name) {
-                        this.city_name = city_name;
-                    }
-                }
-
                 public static class ModelDetailBean {
                     /**
-                     * CarReferPrice : 438.00万
+                     * CarReferPrice : 140.96万
+                     * Car_RepairPolicy : 两年不限公里
                      * Engine_EnvirStandard : 欧4
-                     * Engine_ExhaustForFloat : 6.0 L
+                     * Engine_ExhaustForFloat : 3.6 L
                      * Engine_InhaleType : 无
-                     * Engine_Location : 前置
-                     * Engine_MaxNJ : 620 N·m
-                     * Engine_Type : AM11
-                     * Engine_horsepower : 517 Ps
-                     * Oil_FuelCapacity : 78 L
+                     * Engine_Location : 后置
+                     * Engine_MaxNJ : 390 N·m
+                     * Engine_Type : MA102
+                     * Engine_horsepower : 345 Ps
+                     * Oil_FuelCapacity : 64 L
                      * Oil_FuelTab :
                      * Oil_FuelType : 汽油
                      * Oil_SupplyType : 多点电喷
-                     * OutSet_Height : 1282 mm
-                     * OutSet_Length : 4720 mm
-                     * OutSet_WheelBase : 2740 mm
-                     * OutSet_Width : 2061 mm
-                     * Perf_AccelerateTime : 4.60 s
+                     * OutSet_Height : 1310 mm
+                     * OutSet_Length : 4435 mm
+                     * OutSet_WheelBase : 2350 mm
+                     * OutSet_Width : 1808 mm
+                     * Perf_AccelerateTime : 4.90 s
                      * Perf_DriveType : 后轮驱动
-                     * Perf_MaxSpeed : 295
+                     * Perf_MaxSpeed : 287
                      * Perf_SeatNum : 4 个
-                     * UnderPan_ForwardGearNum : 6 挡 手自一体
-                     * id : 2501
-                     * model_id : 106019
+                     * UnderPan_ForwardGearNum : 6 挡 手动
+                     * id : 884
+                     * model_id : 7011
                      */
 
                     private String CarReferPrice;
+                    private String Car_RepairPolicy;
                     private String Engine_EnvirStandard;
                     private String Engine_ExhaustForFloat;
                     private String Engine_InhaleType;
@@ -787,6 +543,14 @@ public class CheHangBean extends BaseBean {
 
                     public void setCarReferPrice(String CarReferPrice) {
                         this.CarReferPrice = CarReferPrice;
+                    }
+
+                    public String getCar_RepairPolicy() {
+                        return Car_RepairPolicy;
+                    }
+
+                    public void setCar_RepairPolicy(String Car_RepairPolicy) {
+                        this.Car_RepairPolicy = Car_RepairPolicy;
                     }
 
                     public String getEngine_EnvirStandard() {
@@ -967,12 +731,11 @@ public class CheHangBean extends BaseBean {
                 }
 
                 public static class ModelInfoBean {
-
                     /**
-                     * model_id : 106019
-                     * model_name : 2014 6.0L 敞篷百年纪念版
-                     * model_year : 2014
-                     * series_id : 2621
+                     * model_id : 7011
+                     * model_name : 2008 Carrera
+                     * model_year : 2008
+                     * series_id : 2045
                      */
 
                     private int model_id;
@@ -1013,14 +776,11 @@ public class CheHangBean extends BaseBean {
                     }
                 }
 
-                public static class PlatformInfoBean {
-                }
-
                 public static class SeriesInfoBean {
                     /**
-                     * brand_id : 97
-                     * series_id : 2621
-                     * series_name : DB9
+                     * brand_id : 82
+                     * series_id : 2045
+                     * series_name : 911
                      */
 
                     private int brand_id;
@@ -1056,8 +816,8 @@ public class CheHangBean extends BaseBean {
                     /**
                      * created : 0
                      * mobile :
-                     * profile : {"age":0,"avatar":"http://img.bibicar.cn/FvLNIJe7tr9CD841bljUbpscp8wF","constellation":"","gender":0,"nickname":"吴简","signature":"","type":2}
-                     * user_id : 456
+                     * profile : {"age":0,"avatar":"http://img.bibicar.cn/FmDMHALgJxKY9Rw3APp5QSsnajuF","constellation":"","gender":0,"nickname":"BiBi Car","signature":""}
+                     * user_id : 389
                      * username :
                      */
 
@@ -1110,12 +870,11 @@ public class CheHangBean extends BaseBean {
                     public static class ProfileBean {
                         /**
                          * age : 0
-                         * avatar : http://img.bibicar.cn/FvLNIJe7tr9CD841bljUbpscp8wF
+                         * avatar : http://img.bibicar.cn/FmDMHALgJxKY9Rw3APp5QSsnajuF
                          * constellation :
                          * gender : 0
-                         * nickname : 吴简
+                         * nickname : BiBi Car
                          * signature :
-                         * type : 2
                          */
 
                         private int age;
@@ -1124,7 +883,6 @@ public class CheHangBean extends BaseBean {
                         private int gender;
                         private String nickname;
                         private String signature;
-                        private int type;
 
                         public int getAge() {
                             return age;
@@ -1173,50 +931,42 @@ public class CheHangBean extends BaseBean {
                         public void setSignature(String signature) {
                             this.signature = signature;
                         }
-
-                        public int getType() {
-                            return type;
-                        }
-
-                        public void setType(int type) {
-                            this.type = type;
-                        }
                     }
                 }
 
                 public static class FilesBean {
                     /**
-                     * file_id : 0ad64a89-0bbc-4595-b569-ccb1f5e87c4c_3
-                     * file_type : 4
-                     * file_url : http://img.bibicar.cn/0ad64a89-0bbc-4595-b569-ccb1f5e87c4c_3?imageMogr2/auto-orient/thumbnail/1000x/strip
+                     * hash : Fm1Tdjf29hWG7ty6A8WD83M51MTX
+                     * key : Fm1Tdjf29hWG7ty6A8WD83M51MTX
+                     * type : 1
                      */
 
-                    private String file_id;
-                    private String file_type;
-                    private String file_url;
+                    private String hash;
+                    private String key;
+                    private String type;
 
-                    public String getFile_id() {
-                        return file_id;
+                    public String getHash() {
+                        return hash;
                     }
 
-                    public void setFile_id(String file_id) {
-                        this.file_id = file_id;
+                    public void setHash(String hash) {
+                        this.hash = hash;
                     }
 
-                    public String getFile_type() {
-                        return file_type;
+                    public String getKey() {
+                        return key;
                     }
 
-                    public void setFile_type(String file_type) {
-                        this.file_type = file_type;
+                    public void setKey(String key) {
+                        this.key = key;
                     }
 
-                    public String getFile_url() {
-                        return file_url;
+                    public String getType() {
+                        return type;
                     }
 
-                    public void setFile_url(String file_url) {
-                        this.file_url = file_url;
+                    public void setType(String type) {
+                        this.type = type;
                     }
                 }
             }

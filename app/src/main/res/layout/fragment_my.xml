@@ -43,13 +43,14 @@
                     android:textSize="20sp"/>
 
                 <TextView
+                    android:id="@+id/tv_num"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignBottom="@id/iv_circle_image"
                     android:layout_marginBottom="5dp"
                     android:layout_marginLeft="25dp"
                     android:layout_toRightOf="@id/iv_circle_image"
-                    android:text="关注 4 丨 粉丝 12 丨 BiBi号 13456"
+                    android:text="关注 0 丨 粉丝 0 丨 BiBi号 13456"
                     android:textColor="@color/main_text_color"
                     android:textSize="12sp"/>
 
@@ -102,7 +103,7 @@
                                 android:id="@+id/tv_car_price"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="134"
+                                android:text="0"
                                 android:textColor="@color/main_color"
                                 android:textSize="35sp"/>
 
@@ -165,7 +166,7 @@
                                 android:id="@+id/tv_car_num"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="3"
+                                android:text="0"
                                 android:textColor="@color/main_color"
                                 android:textSize="35sp"/>
 

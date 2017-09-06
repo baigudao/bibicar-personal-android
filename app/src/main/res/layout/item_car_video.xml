@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/background_color"
-    android:gravity="center_horizontal"
-    android:orientation="horizontal">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/background_color"
+              android:gravity="center_horizontal"
+              android:orientation="horizontal">
 
     <View
         android:layout_width="15dp"
-        android:layout_height="170dp" />
+        android:layout_height="170dp"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -26,7 +26,7 @@
                 android:layout_width="220dp"
                 android:layout_height="150dp"
                 android:scaleType="fitXY"
-                android:src="@drawable/default_bg_ratio_1" />
+                android:src="@drawable/default_bg_ratio_1"/>
 
             <ImageButton
                 android:id="@+id/image_btn_play"
@@ -36,21 +36,21 @@
                 android:layout_marginBottom="15dp"
                 android:layout_marginLeft="15dp"
                 android:background="@android:color/transparent"
-                android:src="@drawable/btn_play" />
+                android:src="@drawable/btn_play"/>
 
         </RelativeLayout>
 
         <TextView
             android:id="@+id/tv_name"
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="10dp"
             android:ellipsize="end"
             android:maxLines="2"
-            android:text="这是视频的标题，他可以有两行的标题"
+            android:text="这是视频的标题，他可以有两行的标题这是视频的标题，他可以有两行的标题"
             android:textColor="#3a3a3a"
-            android:textSize="15sp" />
+            android:textSize="15sp"/>
 
     </LinearLayout>
 
