@@ -136,6 +136,7 @@ public class Constant {
     private static final String topicDetailUrl = hostUrl + "v3/theme/themeindex";//话题详情
     private static final String myFocusUrl = hostUrl + "v3/theme/myfocus";//我的关注
     private static final String joinTopicUrl = hostUrl + "v3/theme/followtheme";//加入话题
+    private static final String topicMemberUrl = hostUrl + "v3/theme/themeofuser";//话题成员
 
     private static final String balanceUrl = hostUrl + "v3/UserCarPact/getusermoney";//获取余额
     private static final String takeCashUrl = hostUrl + "v3/UserCarPact/sellerrefund";//卖家提现
@@ -166,6 +167,10 @@ public class Constant {
 
     private static final String myFriendsUrl = hostUrl + "v3/Post/publish";//个人的朋友圈
     private static final String commentListUrl = hostUrl + "v3/Comment/list";//评论列表
+
+    private static final String brandUrl = hostUrl +"v4/PollingCar/getPollingCarBrand";
+
+    private static final String carBrandUrl = hostUrl + "car/brand";
 
     public static String getRegisterApp() {
         return registerApp;
@@ -401,5 +406,17 @@ public class Constant {
 
     public static String getJoinTopicUrl() {
         return joinTopicUrl;
+    }
+
+    public static String getTopicMemberUrl() {
+        return topicMemberUrl;
+    }
+
+    public static String getBrandUrl() {
+        return brandUrl;
+    }
+
+    public static String getCarBrandUrl() {
+        return carBrandUrl;
     }
 }

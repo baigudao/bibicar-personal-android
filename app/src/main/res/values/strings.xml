@@ -82,5 +82,16 @@
     <string name="sure">确定</string>
     <string name="yes">是</string>
     <string name="no">否</string>
+    <string name="More_popup_SecondBtnTitle">edit</string>
+    <string name="More_popup_FirstBtnTitle">delete</string>
+    <string name="post_new_car">上传新车</string>
+    <string name="post_second_hanle_car">上传二手车</string>
+    <string name="take_photo">拍照</string>
+    <string name="select_from_album">从手机相册选择</string>
+    <string name="modify_love_car">修改</string>
+    <string name="delete">删除</string>
+    <string name="edit">编辑</string>
+    <string name="save_to_album">保存到相册</string>
+    <string name="error_gif">错误gif</string>
 
 </resources>

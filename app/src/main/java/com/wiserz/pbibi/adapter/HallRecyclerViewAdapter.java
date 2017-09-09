@@ -9,11 +9,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.EmptyUtils;
+import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.activity.BaseActivity;
+import com.wiserz.pbibi.bean.FeedBean;
 import com.wiserz.pbibi.bean.TopicInfoBean;
 import com.wiserz.pbibi.fragment.AllTopicFragment;
 import com.wiserz.pbibi.fragment.TopicDetailFragment;
@@ -36,6 +38,8 @@ public class HallRecyclerViewAdapter extends RecyclerView.Adapter implements Bas
 
     private int currentType = RECOMMEND_TOPIC;
 
+    private static final int MY_STATE_DATA_TYPE = 25;
+
     private static final int RECOMMEND_TOPIC = 0;//推荐的话题
     private static final int MY_TOPIC = 1;//我加入的话题
     private static final int HOT_WEEK = 2;//本周最热
@@ -56,7 +60,7 @@ public class HallRecyclerViewAdapter extends RecyclerView.Adapter implements Bas
         } else if (viewType == MY_TOPIC) {
             viewHolder = new MyJoinTopicViewHolder(View.inflate(mContext, R.layout.item_my_topic, null));
         } else if (viewType == HOT_WEEK) {
-            viewHolder = new MyJoinTopicViewHolder(View.inflate(mContext, R.layout.item_hot_week, null));
+            viewHolder = new HotWeekViewHolder(View.inflate(mContext, R.layout.item_hot_week, null));
         } else {
             viewHolder = null;
         }
@@ -75,7 +79,7 @@ public class HallRecyclerViewAdapter extends RecyclerView.Adapter implements Bas
             });
 
             ArrayList<TopicInfoBean> topicInfoBeanArrayList = getRecommendTopicData(jsonObjectData);
-            if (EmptyUtils.isNotEmpty(topicInfoBeanArrayList)) {
+            if (EmptyUtils.isNotEmpty(topicInfoBeanArrayList) && topicInfoBeanArrayList.size() != 0) {
                 BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, topicInfoBeanArrayList, RECOMMEND_TOPIC_DATA_TYPE);
                 recommendTopicViewHolder.recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
                 recommendTopicViewHolder.recyclerView.setAdapter(baseRecyclerViewAdapter);
@@ -91,14 +95,22 @@ public class HallRecyclerViewAdapter extends RecyclerView.Adapter implements Bas
             });
 
             ArrayList<TopicInfoBean> topicInfoBeanArrayList = getJoinTopicData(jsonObjectData);
-            if (EmptyUtils.isNotEmpty(topicInfoBeanArrayList)) {
+            if (EmptyUtils.isNotEmpty(topicInfoBeanArrayList) && topicInfoBeanArrayList.size() != 0) {
                 BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, topicInfoBeanArrayList, MY_TOPIC_DATA_TYPE);
                 myJoinTopicViewHolder.recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
                 myJoinTopicViewHolder.recyclerView.setAdapter(baseRecyclerViewAdapter);
                 baseRecyclerViewAdapter.setOnItemClickListener(this);
             }
         } else if (currentType == HOT_WEEK) {
+            HotWeekViewHolder hotWeekViewHolder = (HotWeekViewHolder) holder;
 
+            ArrayList<FeedBean> feedBeanArrayList = getHotWeekData(jsonObjectData);
+            if (EmptyUtils.isNotEmpty(feedBeanArrayList) && feedBeanArrayList.size() != 0) {
+                BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, feedBeanArrayList, MY_STATE_DATA_TYPE);
+                hotWeekViewHolder.recyclerView.setAdapter(baseRecyclerViewAdapter);
+                hotWeekViewHolder.recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
+                baseRecyclerViewAdapter.setOnItemClickListener(this);
+            }
         }
     }
 
@@ -138,6 +150,8 @@ public class HallRecyclerViewAdapter extends RecyclerView.Adapter implements Bas
                     ((BaseActivity) mContext).gotoPager(TopicDetailFragment.class, bundle);
                 }
             }
+        } else if (data.getClass().getSimpleName().equals("FeedBean")) {
+            LogUtils.e("FeedBean");
         }
     }
 
@@ -165,6 +179,16 @@ public class HallRecyclerViewAdapter extends RecyclerView.Adapter implements Bas
         }
     }
 
+    private class HotWeekViewHolder extends RecyclerView.ViewHolder {
+
+        private RecyclerView recyclerView;
+
+        HotWeekViewHolder(View itemView) {
+            super(itemView);
+            recyclerView = (RecyclerView) itemView.findViewById(R.id.recyclerView);
+        }
+    }
+
     private ArrayList<TopicInfoBean> getRecommendTopicData(JSONObject jsonObjectData) {
         ArrayList<TopicInfoBean> list = null;
         if (jsonObjectData == null) {
@@ -186,6 +210,19 @@ public class HallRecyclerViewAdapter extends RecyclerView.Adapter implements Bas
             JSONArray jsonArray = jsonObjectData.optJSONArray("theme_join");
             Gson gson = new Gson();
             list = gson.fromJson(jsonArray.toString(), new TypeToken<ArrayList<TopicInfoBean>>() {
+            }.getType());
+        }
+        return list;
+    }
+
+    private ArrayList<FeedBean> getHotWeekData(JSONObject jsonObjectData) {
+        ArrayList<FeedBean> list = null;
+        if (jsonObjectData == null) {
+            return new ArrayList<>();
+        } else {
+            JSONArray jsonArray = jsonObjectData.optJSONObject("feed_list").optJSONArray("feed_list");
+            Gson gson = new Gson();
+            list = gson.fromJson(jsonArray.toString(), new TypeToken<ArrayList<FeedBean>>() {
             }.getType());
         }
         return list;

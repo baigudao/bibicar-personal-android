@@ -1,5 +1,6 @@
 package com.wiserz.pbibi.fragment;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
@@ -178,7 +179,18 @@ public class TopicDetailFragment extends BaseFragment implements BaseRecyclerVie
             JSONObject jsonObjectForThemeUser = jsonObjectData.optJSONObject("theme_user");
             if (EmptyUtils.isNotEmpty(jsonObjectForThemeUser) && getView() != null) {
                 int total = jsonObjectForThemeUser.optInt("total");
-                ((TextView) getView().findViewById(R.id.tv_join_num)).setText(total + "参与");
+                ((TextView) getView().findViewById(R.id.tv_join_num)).setText(total + "人参与");
+
+                getView().findViewById(R.id.rl_topic_join).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (EmptyUtils.isNotEmpty(theme_id)){
+                            Bundle bundle = new Bundle();
+                            bundle.putInt(Constant.THEME_ID,theme_id);
+                            gotoPager(TopicMemberFragment.class, bundle);
+                        }
+                    }
+                });
 
                 JSONArray jsonArrayForThemeUser = jsonObjectForThemeUser.optJSONArray("users");
                 Gson gson = new Gson();

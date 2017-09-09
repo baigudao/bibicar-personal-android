@@ -46,8 +46,6 @@ public class CommunityFragment extends BaseFragment {
             case R.id.tv_create_topic:
                 gotoPager(CreateTopicFragment.class, null);
 
-                //                gotoPager(TopicMemberFragment.class, null);
-
                 //                gotoPager(PublishDynamicStateFragment.class, null);//发布动态
                 break;
             default:

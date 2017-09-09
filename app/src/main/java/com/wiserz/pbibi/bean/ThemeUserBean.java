@@ -22,6 +22,24 @@ public class ThemeUserBean extends BaseBean {
     private String nickname;
     private int theme_id;
     private int user_id;
+    private int fans_num;
+    private int friend_num;
+
+    public int getFans_num() {
+        return fans_num;
+    }
+
+    public void setFans_num(int fans_num) {
+        this.fans_num = fans_num;
+    }
+
+    public int getFriend_num() {
+        return friend_num;
+    }
+
+    public void setFriend_num(int friend_num) {
+        this.friend_num = friend_num;
+    }
 
     public String getAvatar() {
         return avatar;

@@ -24,7 +24,7 @@
             android:layout_marginLeft="15dp"
             android:layout_marginTop="2dp"
             android:layout_toRightOf="@id/iv_circle_image"
-            android:text="只是个水军"
+            android:text=""
             android:textColor="@color/main_text_color"
             android:textSize="14sp"/>
 
@@ -56,17 +56,26 @@
 
     </RelativeLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="15dp"/>
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
         android:layout_marginTop="20dp"
         android:orientation="horizontal">
 
@@ -74,7 +83,6 @@
             android:id="@+id/tv_state_content1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
             android:text="#无差别攻击#"
             android:textColor="@color/main_color"
             android:textSize="15sp"/>
@@ -156,7 +164,7 @@
             android:layout_weight="1"/>
 
         <ImageView
-            android:id="@+id/tv_state_report"
+            android:id="@+id/iv_state_report"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"

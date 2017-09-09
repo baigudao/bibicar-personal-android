@@ -40,7 +40,7 @@
             android:layout_weight="1"
             android:background="@drawable/border_car_center_price"
             android:gravity="center"
-            android:text="京"
+            android:text="湘"
             android:textColor="@color/second_text_color"
             android:textSize="14sp"/>
 
@@ -52,7 +52,7 @@
             android:layout_weight="1"
             android:background="@drawable/border_car_center_price"
             android:gravity="center"
-            android:text="京"
+            android:text="津"
             android:textColor="@color/second_text_color"
             android:textSize="14sp"/>
 
@@ -64,7 +64,7 @@
             android:layout_weight="1"
             android:background="@drawable/border_car_center_price"
             android:gravity="center"
-            android:text="京"
+            android:text="鄂"
             android:textColor="@color/second_text_color"
             android:textSize="14sp"/>
 
@@ -76,7 +76,7 @@
             android:layout_weight="1"
             android:background="@drawable/border_car_center_price"
             android:gravity="center"
-            android:text="京"
+            android:text="沪"
             android:textColor="@color/second_text_color"
             android:textSize="14sp"/>
 
@@ -88,7 +88,7 @@
             android:layout_weight="1"
             android:background="@drawable/border_car_center_price"
             android:gravity="center"
-            android:text="京"
+            android:text="粤"
             android:textColor="@color/second_text_color"
             android:textSize="14sp"/>
 
@@ -108,7 +108,7 @@
             android:layout_weight="1"
             android:background="@drawable/border_car_center_price"
             android:gravity="center"
-            android:text="京"
+            android:text="渝"
             android:textColor="@color/second_text_color"
             android:textSize="14sp"/>
 
@@ -120,7 +120,7 @@
             android:layout_weight="1"
             android:background="@drawable/border_car_center_price"
             android:gravity="center"
-            android:text="京"
+            android:text="琼"
             android:textColor="@color/second_text_color"
             android:textSize="14sp"/>
 
@@ -132,7 +132,7 @@
             android:layout_weight="1"
             android:background="@drawable/border_car_center_price"
             android:gravity="center"
-            android:text="京"
+            android:text="冀"
             android:textColor="@color/second_text_color"
             android:textSize="14sp"/>
 
@@ -144,7 +144,7 @@
             android:layout_weight="1"
             android:background="@drawable/border_car_center_price"
             android:gravity="center"
-            android:text="京"
+            android:text="川"
             android:textColor="@color/second_text_color"
             android:textSize="14sp"/>
 
@@ -156,7 +156,7 @@
             android:layout_weight="1"
             android:background="@drawable/border_car_center_price"
             android:gravity="center"
-            android:text="京"
+            android:text="宁"
             android:textColor="@color/second_text_color"
             android:textSize="14sp"/>
 
@@ -168,7 +168,7 @@
             android:layout_weight="1"
             android:background="@drawable/border_car_center_price"
             android:gravity="center"
-            android:text="京"
+            android:text="藏"
             android:textColor="@color/second_text_color"
             android:textSize="14sp"/>
 
@@ -188,7 +188,7 @@
             android:layout_weight="1"
             android:background="@drawable/border_car_center_price"
             android:gravity="center"
-            android:text="京"
+            android:text="青"
             android:textColor="@color/second_text_color"
             android:textSize="14sp"/>
 
@@ -200,7 +200,7 @@
             android:layout_weight="1"
             android:background="@drawable/border_car_center_price"
             android:gravity="center"
-            android:text="京"
+            android:text="贵"
             android:textColor="@color/second_text_color"
             android:textSize="14sp"/>
 
@@ -212,7 +212,7 @@
             android:layout_weight="1"
             android:background="@drawable/border_car_center_price"
             android:gravity="center"
-            android:text="京"
+            android:text="闽"
             android:textColor="@color/second_text_color"
             android:textSize="14sp"/>
 
@@ -224,7 +224,7 @@
             android:layout_weight="1"
             android:background="@drawable/border_car_center_price"
             android:gravity="center"
-            android:text="京"
+            android:text="吉"
             android:textColor="@color/second_text_color"
             android:textSize="14sp"/>
 
@@ -236,7 +236,7 @@
             android:layout_weight="1"
             android:background="@drawable/border_car_center_price"
             android:gravity="center"
-            android:text="京"
+            android:text="陕"
             android:textColor="@color/second_text_color"
             android:textSize="14sp"/>
 
@@ -248,7 +248,7 @@
             android:layout_weight="1"
             android:background="@drawable/border_car_center_price"
             android:gravity="center"
-            android:text="京"
+            android:text="蒙"
             android:textColor="@color/second_text_color"
             android:textSize="14sp"/>
 
@@ -268,7 +268,7 @@
             android:layout_weight="1"
             android:background="@drawable/border_car_center_price"
             android:gravity="center"
-            android:text="京"
+            android:text="晋"
             android:textColor="@color/second_text_color"
             android:textSize="14sp"/>
 
@@ -280,7 +280,7 @@
             android:layout_weight="1"
             android:background="@drawable/border_car_center_price"
             android:gravity="center"
-            android:text="京"
+            android:text="甘"
             android:textColor="@color/second_text_color"
             android:textSize="14sp"/>
 
@@ -292,7 +292,7 @@
             android:layout_weight="1"
             android:background="@drawable/border_car_center_price"
             android:gravity="center"
-            android:text="京"
+            android:text="桂"
             android:textColor="@color/second_text_color"
             android:textSize="14sp"/>
 
@@ -304,7 +304,7 @@
             android:layout_weight="1"
             android:background="@drawable/border_car_center_price"
             android:gravity="center"
-            android:text="京"
+            android:text="赣"
             android:textColor="@color/second_text_color"
             android:textSize="14sp"/>
 
@@ -316,7 +316,7 @@
             android:layout_weight="1"
             android:background="@drawable/border_car_center_price"
             android:gravity="center"
-            android:text="京"
+            android:text="浙"
             android:textColor="@color/second_text_color"
             android:textSize="14sp"/>
 
@@ -328,7 +328,7 @@
             android:layout_weight="1"
             android:background="@drawable/border_car_center_price"
             android:gravity="center"
-            android:text="京"
+            android:text="苏"
             android:textColor="@color/second_text_color"
             android:textSize="14sp"/>
 
@@ -348,7 +348,7 @@
             android:layout_weight="1"
             android:background="@drawable/border_car_center_price"
             android:gravity="center"
-            android:text="京"
+            android:text="新"
             android:textColor="@color/second_text_color"
             android:textSize="14sp"/>
 
@@ -360,7 +360,7 @@
             android:layout_weight="1"
             android:background="@drawable/border_car_center_price"
             android:gravity="center"
-            android:text="京"
+            android:text="鲁"
             android:textColor="@color/second_text_color"
             android:textSize="14sp"/>
 
@@ -372,7 +372,7 @@
             android:layout_weight="1"
             android:background="@drawable/border_car_center_price"
             android:gravity="center"
-            android:text="京"
+            android:text="皖"
             android:textColor="@color/second_text_color"
             android:textSize="14sp"/>
 
@@ -384,7 +384,7 @@
             android:layout_weight="1"
             android:background="@drawable/border_car_center_price"
             android:gravity="center"
-            android:text="京"
+            android:text="黑"
             android:textColor="@color/second_text_color"
             android:textSize="14sp"/>
 
@@ -396,7 +396,7 @@
             android:layout_weight="1"
             android:background="@drawable/border_car_center_price"
             android:gravity="center"
-            android:text="京"
+            android:text="辽"
             android:textColor="@color/second_text_color"
             android:textSize="14sp"/>
 
@@ -408,7 +408,7 @@
             android:layout_weight="1"
             android:background="@drawable/border_car_center_price"
             android:gravity="center"
-            android:text="京"
+            android:text="云"
             android:textColor="@color/second_text_color"
             android:textSize="14sp"/>
 
@@ -428,7 +428,7 @@
             android:layout_weight="1"
             android:background="@drawable/border_car_center_price"
             android:gravity="center"
-            android:text="京"
+            android:text="豫"
             android:textColor="@color/second_text_color"
             android:textSize="14sp"/>
 
@@ -440,7 +440,7 @@
             android:layout_weight="1"
             android:background="@drawable/border_car_center_price"
             android:gravity="center"
-            android:text="京"
+            android:text="港"
             android:textColor="@color/second_text_color"
             android:textSize="14sp"/>
 
@@ -452,7 +452,7 @@
             android:layout_weight="1"
             android:background="@drawable/border_car_center_price"
             android:gravity="center"
-            android:text="京"
+            android:text="澳"
             android:textColor="@color/second_text_color"
             android:textSize="14sp"/>
 
@@ -464,7 +464,7 @@
             android:layout_weight="1"
             android:background="@drawable/border_car_center_price"
             android:gravity="center"
-            android:text="京"
+            android:text="台"
             android:textColor="@color/second_text_color"
             android:textSize="14sp"/>
 

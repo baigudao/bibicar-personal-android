@@ -66,10 +66,11 @@
         <EditText
             android:id="@+id/et_input_name"
             android:layout_width="160dp"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
+            android:background="@null"
             android:hint="请输入话题名称"
             android:maxLength="10"
             android:textColorHint="@color/third_text_color"

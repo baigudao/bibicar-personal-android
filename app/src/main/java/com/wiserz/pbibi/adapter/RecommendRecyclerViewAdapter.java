@@ -29,7 +29,7 @@ import com.wiserz.pbibi.activity.VRWatchCarActivity;
 import com.wiserz.pbibi.bean.ArticleBean;
 import com.wiserz.pbibi.bean.BannerBean;
 import com.wiserz.pbibi.bean.CarInfoBean;
-import com.wiserz.pbibi.bean.CheHangBean;
+import com.wiserz.pbibi.bean.CheHangHomeBean;
 import com.wiserz.pbibi.bean.LampBean;
 import com.wiserz.pbibi.bean.TopLineBean;
 import com.wiserz.pbibi.bean.VideoBean;
@@ -290,9 +290,9 @@ public class RecommendRecyclerViewAdapter extends RecyclerView.Adapter implement
                 }
             });
 
-            ArrayList<CheHangBean> cheHangBeanArrayList = getCheHangData(jsonObjectData);
-            if (EmptyUtils.isNotEmpty(cheHangBeanArrayList)) {
-                BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, cheHangBeanArrayList, CHE_HANG_HOME_DATA_TYPE);
+            ArrayList<CheHangHomeBean> cheHangHomeBeanArrayList = getCheHangData(jsonObjectData);
+            if (EmptyUtils.isNotEmpty(cheHangHomeBeanArrayList)) {
+                BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, cheHangHomeBeanArrayList, CHE_HANG_HOME_DATA_TYPE);
                 cheHangViewHolder.car_company_recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
                 cheHangViewHolder.car_company_recyclerView.setAdapter(baseRecyclerViewAdapter);
                 baseRecyclerViewAdapter.setOnItemClickListener(this);
@@ -352,9 +352,9 @@ public class RecommendRecyclerViewAdapter extends RecyclerView.Adapter implement
                 DataManager.getInstance().setData1(feed_id);
                 ((BaseActivity) mContext).gotoPager(VideoDetailFragment.class, null);
             }
-        } else if (data.getClass().getSimpleName().equals("CheHangBean")) {
-            CheHangBean cheHangBean = (CheHangBean) data;
-            ToastUtils.showShort(cheHangBean.getNickname());
+        } else if (data.getClass().getSimpleName().equals("CheHangHomeBean")) {
+            CheHangHomeBean cheHangHomeBean = (CheHangHomeBean) data;
+            ToastUtils.showShort(cheHangHomeBean.getNickname());
         }
     }
 
@@ -561,14 +561,14 @@ public class RecommendRecyclerViewAdapter extends RecyclerView.Adapter implement
         return list;
     }
 
-    private ArrayList<CheHangBean> getCheHangData(JSONObject jsonObjectData) {
-        ArrayList<CheHangBean> list = null;
+    private ArrayList<CheHangHomeBean> getCheHangData(JSONObject jsonObjectData) {
+        ArrayList<CheHangHomeBean> list = null;
         if (jsonObjectData == null) {
             return new ArrayList<>();
         } else {
             JSONArray jsonArray = jsonObjectData.optJSONObject("company_list").optJSONArray("user_list");
             Gson gson = new Gson();
-            list = gson.fromJson(jsonArray.toString(), new TypeToken<ArrayList<CheHangBean>>() {
+            list = gson.fromJson(jsonArray.toString(), new TypeToken<ArrayList<CheHangHomeBean>>() {
             }.getType());
         }
         return list;

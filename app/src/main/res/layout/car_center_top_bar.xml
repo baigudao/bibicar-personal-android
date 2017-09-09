@@ -40,6 +40,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
+            android:clickable="true"
             android:scaleType="fitXY"
             android:src="@drawable/v2_uploadcar3x"/>
 

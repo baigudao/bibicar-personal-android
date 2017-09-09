@@ -52,6 +52,7 @@
         android:id="@+id/rl_topic_join"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:background="@drawable/setting_background_selector"
         android:clickable="true">
 
         <TextView

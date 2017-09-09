@@ -121,4 +121,23 @@
         <item name="android:gravity">center</item>
     </style>
 
+    <style name="Matisse.Zhihu" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/background_color</item>
+        <item name="colorPrimaryDark">@color/background_color</item>
+        <item name="toolbar">@style/Toolbar.Zhihu</item>
+        <item name="album.title.color">@color/main_color</item>
+        <item name="album.count.color">@color/zhihu_album_count_text</item>
+        <item name="album.selected">@color/main_color</item>
+        <item name="album.placeholder">@color/zhihu_album_placeholder</item>
+        <item name="album.emptyView">@drawable/ic_empty_zhihu</item>
+        <item name="album.emptyView.color">@color/zhihu_empty_view</item>
+        <item name="item.placeholder">@color/background_color</item>
+        <item name="page.bg">@color/background_color</item>
+        <item name="bottomToolbar.bg">@color/background_color</item>
+        <item name="bottomToolbar.preview.color">@color/zhihu_bottom_toolbar_preview</item>
+        <item name="bottomToolbar.apply.color">@color/zhihu_bottom_toolbar_apply1</item>
+        <item name="listPopupWindowStyle">@style/Popup.Zhihu</item>
+        <item name="capture.color">@color/zhihu_capture</item>
+    </style>
+
 </resources>

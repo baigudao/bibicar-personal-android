@@ -16,6 +16,7 @@ import com.wiserz.pbibi.activity.BaseActivity;
  * Used as : 基类的Fragment
  */
 public abstract class BaseFragment extends Fragment implements View.OnClickListener {
+
     /**
      * 上下文
      */

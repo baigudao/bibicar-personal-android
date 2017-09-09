@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -24,6 +25,7 @@ import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
 import com.wiserz.pbibi.bean.CarInfoBean;
 import com.wiserz.pbibi.util.Constant;
+import com.wiserz.pbibi.view.MorePopupWindow;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -96,7 +98,8 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
 
                 //                gotoPager(ConcreteParameterFragment.class, null);//具体参数
 
-                gotoPager(TestFragment.class, null);
+                //                gotoPager(TestFragment.class, null);//价格筛选车辆
+                showPostCarWindow();
                 break;
             case R.id.ll_sort:
                 PopupWindow popupWindow = new PopupWindow(View.inflate(mContext, R.layout.item_car_sort, null), ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -198,6 +201,39 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                 gotoPager(CarDetailFragment.class, bundle);
             }
         }
+    }
+
+    private void showPostCarWindow() {
+        MorePopupWindow morePopupWindow = new MorePopupWindow(getActivity(), new MorePopupWindow.MorePopupWindowClickListener() {
+            @Override
+            public void onFirstBtnClicked() {
+                //上传新车
+                gotoPager(PostNewCarFragment.class, null);
+            }
+
+            @Override
+            public void onSecondBtnClicked() {
+                //上传二手车
+                gotoPager(PostSecondHandCarFragment.class, null);
+            }
+
+            @Override
+            public void onThirdBtnClicked() {
+
+            }
+
+            @Override
+            public void onFourthBtnClicked() {
+
+            }
+
+            @Override
+            public void onCancelBtnClicked() {
+
+            }
+        }, MorePopupWindow.MORE_POPUP_WINDOW_TYPE.TYPE_SALE_CAR);
+        morePopupWindow.initView();
+        morePopupWindow.showAtLocation(getView(), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
     }
 
     /**
