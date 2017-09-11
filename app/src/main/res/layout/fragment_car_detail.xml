@@ -578,7 +578,7 @@
                     android:id="@+id/tv_car_surface_num"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="(5)"
+                    android:text="(0)"
                     android:textColor="#929292"
                     android:textSize="14sp"/>
 
@@ -613,7 +613,7 @@
                     android:id="@+id/tv_car_inside"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="(13)"
+                    android:text="(0)"
                     android:textColor="#929292"
                     android:textSize="14sp"/>
 
@@ -648,7 +648,7 @@
                     android:id="@+id/tv_car_structure"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="(4)"
+                    android:text="(0)"
                     android:textColor="#929292"
                     android:textSize="14sp"/>
 
@@ -683,7 +683,7 @@
                     android:id="@+id/tv_car_more_detail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="(8)"
+                    android:text="(0)"
                     android:textColor="#929292"
                     android:textSize="14sp"/>
 

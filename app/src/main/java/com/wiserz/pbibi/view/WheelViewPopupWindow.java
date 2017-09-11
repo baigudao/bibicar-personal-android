@@ -70,7 +70,6 @@ public class WheelViewPopupWindow extends PopupWindow implements View.OnClickLis
     private static final int[] GENDERS = {R.string.man, R.string.woman};
     private static final int[] YES_NO = {R.string.yes, R.string.no};
 
-
     public WheelViewPopupWindow(Activity context, OnSelectItemListener onSelectItemListener, WHEEL_VIEW_WINDOW_TYPE type) {
         super(context);
         setContentView(LayoutInflater.from(context).inflate(R.layout.select_by_wheel_view, null));

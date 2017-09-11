@@ -7,7 +7,9 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="70dp">
+        android:layout_height="70dp"
+        android:background="@drawable/setting_background_selector"
+        android:clickable="true">
 
         <com.wiserz.pbibi.view.CircleImageView
             android:id="@+id/iv_circle_image"
@@ -35,7 +37,7 @@
             android:layout_alignBottom="@id/iv_circle_image"
             android:layout_marginLeft="15dp"
             android:layout_toRightOf="@id/iv_circle_image"
-            android:text="我在车主中的排名0"
+            android:text="我在车主中的排名为 0"
             android:textColor="@color/second_text_color"
             android:textSize="12sp"/>
 
@@ -51,7 +53,8 @@
                 android:id="@+id/tv_user_like_num"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="233"
+                android:layout_gravity="center_horizontal"
+                android:text="0"
                 android:textColor="@color/third_text_color"
                 android:textSize="12sp"/>
 

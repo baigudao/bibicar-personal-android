@@ -49,10 +49,13 @@ public class SplashActivity extends AppCompatActivity {
 
     private static final int EXTERNAL_STORAGE_REQ_CODE = 10;//权限请求码
 
+    private int flag;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getAdvertisementImageFromNet();//额外增加线程外任务，用于请求启动页面的数据并保存广告图片到SD卡
+        flag = 0;
         initView();
     }
 
@@ -70,18 +73,21 @@ public class SplashActivity extends AppCompatActivity {
 
             @Override
             public void onFinishCount() {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    //SDK版本大于等于23，也就是Android 6.0
-                    requestPermission();//请求权限 Xiaomi6.0.1
-                } else {
-                    //SDK版本小于23的走这
-                    afterRequestPermission();//请求权限之后 Meizu5.1
+                if (flag == 0) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        //SDK版本大于等于23，也就是Android 6.0
+                        requestPermission();//请求权限 Xiaomi6.0.1
+                    } else {
+                        //SDK版本小于23的走这
+                        afterRequestPermission();//请求权限之后 Meizu5.1
+                    }
                 }
             }
         });
         countDownView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                flag = 1;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     //SDK版本大于等于23，也就是Android 6.0
                     requestPermission();//请求权限 Xiaomi6.0.1

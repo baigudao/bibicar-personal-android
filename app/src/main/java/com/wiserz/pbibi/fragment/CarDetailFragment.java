@@ -86,6 +86,9 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
         iv_image.setVisibility(View.VISIBLE);
         iv_image.setImageResource(R.drawable.share_selector);
         iv_image.setOnClickListener(this);
+        ImageView iv_like_image = (ImageView) view.findViewById(R.id.iv_like_image);
+        iv_like_image.setVisibility(View.VISIBLE);
+        iv_like_image.setOnClickListener(this);
         view.findViewById(R.id.btn_watch_vr).setOnClickListener(this);
         view.findViewById(R.id.btn_line_contact).setOnClickListener(this);
         view.findViewById(R.id.btn_phone_contact).setOnClickListener(this);
@@ -99,6 +102,9 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
                 break;
             case R.id.iv_image:
                 showSharePlatformPopWindow();
+                break;
+            case R.id.iv_like_image:
+                ToastUtils.showShort("收藏or不收藏");
                 break;
             case R.id.btn_watch_vr:
                 if (EmptyUtils.isEmpty(vr_url)) {

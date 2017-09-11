@@ -83,6 +83,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        android:background="@drawable/setting_background_selector"
         android:clickable="true">
 
         <TextView
@@ -100,7 +101,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@id/tv1"
-            android:text="（拥有13辆，总值134万）"
+            android:text="（拥有0辆，总值0.0万）"
             android:textColor="@color/second_text_color"
             android:textSize="12sp"/>
 
@@ -134,7 +135,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="20dp"
-        android:text="动态 （256）"
+        android:text="动态 （0）"
         android:textColor="@color/main_color"
         android:textSize="15sp"/>
 

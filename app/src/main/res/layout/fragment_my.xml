@@ -124,7 +124,6 @@
                                 android:textColor="@color/main_text_color"
                                 android:textSize="12sp"/>
 
-
                         </RelativeLayout>
 
                     </RelativeLayout>
@@ -204,6 +203,7 @@
                 android:id="@+id/rl_like"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
+                android:background="@drawable/setting_background_selector"
                 android:clickable="true">
 
                 <ImageView
@@ -244,6 +244,7 @@
                 android:id="@+id/rl_my_wallet"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
+                android:background="@drawable/setting_background_selector"
                 android:clickable="true">
 
                 <ImageView
@@ -284,6 +285,7 @@
                 android:id="@+id/rl_my_order"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
+                android:background="@drawable/setting_background_selector"
                 android:clickable="true">
 
                 <ImageView
@@ -327,6 +329,7 @@
                 android:id="@+id/rl_car_service"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
+                android:background="@drawable/setting_background_selector"
                 android:clickable="true">
 
                 <ImageView
@@ -367,6 +370,7 @@
                 android:id="@+id/rl_setting"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
+                android:background="@drawable/setting_background_selector"
                 android:clickable="true">
 
                 <ImageView

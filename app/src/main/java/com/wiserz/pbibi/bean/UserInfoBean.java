@@ -10,7 +10,7 @@ public class UserInfoBean extends BaseBean {
     /**
      * created : 1467128731
      * mobile : bibi06
-     * profile : {"age":0,"avatar":"http://img.bibicar.cn/FqKNZJ3khFC9SHdJWTwQ7QYsVW3k","balance":0,"bibi_no":10454,"company":0,"constellation":"","gender":2,"nickname":"馨子","signature":"古月","sort":953,"type":1}
+     * profile : {"age":0,"avatar":"http://img.bibicar.cn/FqKNZJ3khFC9SHdJWTwQ7QYsVW3k","balance":0,"bibi_no":10454,"company":0,"constellation":"","gender":2,"nickname":"馨子","signature":"古月","sort":375,"type":1}
      * total_car : 1
      * total_money : 55.06
      * user_id : 454
@@ -92,7 +92,7 @@ public class UserInfoBean extends BaseBean {
          * gender : 2
          * nickname : 馨子
          * signature : 古月
-         * sort : 953
+         * sort : 375
          * type : 1
          */
 

@@ -133,6 +133,7 @@ public class RichListRecyclerViewAdapter extends RecyclerView.Adapter implements
                         }
                     });
                     otherViewHolder.tv_num.setText(richBean.getTotal_money() + "万");
+                    otherViewHolder.tv_like_num.setText(String.valueOf(richBean.getSort()));
                 }
             }
         }

@@ -61,6 +61,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
             android:background="@null"
+            android:gravity="center"
             android:hint="请输入昵称"
             android:maxLength="8"
             android:textColor="@color/main_text_color"
@@ -76,8 +77,11 @@
         android:background="@color/divider_color"/>
 
     <RelativeLayout
+        android:id="@+id/rl_choose_gender"
         android:layout_width="match_parent"
-        android:layout_height="50dp">
+        android:layout_height="50dp"
+        android:background="@drawable/setting_background_selector"
+        android:clickable="true">
 
         <TextView
             android:id="@+id/tv3"
@@ -89,18 +93,15 @@
             android:textColor="@color/second_text_color"
             android:textSize="15sp"/>
 
-        <EditText
-            android:id="@+id/et_edit_gender"
+        <TextView
+            android:id="@+id/tv_edit_gender"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="15dp"
-            android:background="@null"
-            android:hint="请输入性别"
-            android:maxLength="1"
+            android:layout_marginRight="35dp"
+            android:text="男"
             android:textColor="@color/main_text_color"
-            android:textColorHint="@color/second_text_color"
             android:textSize="15sp"/>
 
     </RelativeLayout>

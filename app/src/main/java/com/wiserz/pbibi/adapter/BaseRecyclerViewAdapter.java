@@ -1119,6 +1119,22 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                     holder.tv_item2.setText("粉丝 " + themeUserBean.getFans_num() + " | " + "关注 " + themeUserBean.getFriend_num());////粉丝 145 丨 关注 12
                 }
             }
+        } else if (dataType == MY_CAR_REPERTORY_DATA_TYPE) {
+            ArrayList<CarInfoBean> carInfoBeanArrayList = (ArrayList<CarInfoBean>) mList;
+
+            if (EmptyUtils.isNotEmpty(carInfoBeanArrayList)) {
+                CarInfoBean carInfoBean = carInfoBeanArrayList.get(position);
+
+                if (EmptyUtils.isNotEmpty(carInfoBean)) {
+                    Glide.with(mContext)
+                            .load(carInfoBean.getFiles_img())
+                            .placeholder(R.drawable.default_bg_ratio_1)
+                            .error(R.drawable.default_bg_ratio_1)
+                            .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
+                            .into(holder.iv_item1);
+                    holder.tv_item1.setText(EmptyUtils.isEmpty(carInfoBean.getCar_name()) ? "" : carInfoBean.getCar_name());
+                }
+            }
         }
     }
 
@@ -1527,6 +1543,19 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                 iv_item1 = (ImageView) itemView.findViewById(R.id.iv_circle_image);
                 tv_item1 = (TextView) itemView.findViewById(R.id.tv_name);
                 tv_item2 = (TextView) itemView.findViewById(R.id.tv_num);
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnItemClickListener != null) {
+                            int position = getLayoutPosition();
+                            mOnItemClickListener.onItemClick(mList.get(position), position);
+                        }
+                    }
+                });
+            } else if (dataType == MY_CAR_REPERTORY_DATA_TYPE) {
+                iv_item1 = (ImageView) itemView.findViewById(R.id.iv_car_image);
+                tv_item1 = (TextView) itemView.findViewById(R.id.tv_car_name);
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override

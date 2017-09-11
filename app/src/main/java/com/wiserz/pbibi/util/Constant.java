@@ -78,6 +78,15 @@ public class Constant {
     public static final String REPLY_ID = "reply_id";
     public static final String FATHER_ID = "father_id";
     public static final String COMMENT_ID = "comment_id";
+    public static final String FILES_TYPE = "files_type";
+    public static final String FILES_ID = "files_id";
+    public static final String CONTACT_NAME = "contact_name";
+    public static final String CAR_INTRO = "car_intro";
+    public static final String PRICE = "price";
+    public static final String CITY_ID = "city_id";
+    public static final String CAR_TYPE = "car_type";
+    public static final String CONTACT_PHONE = "contact_phone";
+    public static final String CONTACT_ADDRESS = "contact_address";
     public static final String ADVERTISEMENT_IMAGE_SUCCESS = "advertisement_image_success";
     public static final String ADVERTISEMENT_IMAGE = "advertisement_image";
     public static final String ADVERTISEMENT_IMAGE_NUM = "advertisement_image_num";
@@ -171,6 +180,10 @@ public class Constant {
     private static final String brandUrl = hostUrl +"v4/PollingCar/getPollingCarBrand";
 
     private static final String carBrandUrl = hostUrl + "car/brand";
+
+    private static final String likeCarListUrl = hostUrl +"v3/Favoritecar/list";//喜欢的车辆
+
+    private static final String publishNewCarUrl = hostUrl +"v3/publishcar/newCar";//上传新车
 
     public static String getRegisterApp() {
         return registerApp;
@@ -418,5 +431,13 @@ public class Constant {
 
     public static String getCarBrandUrl() {
         return carBrandUrl;
+    }
+
+    public static String getLikeCarListUrl() {
+        return likeCarListUrl;
+    }
+
+    public static String getPublishNewCarUrl() {
+        return publishNewCarUrl;
     }
 }

@@ -81,26 +81,33 @@ public class BrandAdapter extends BaseTurboAdapter<BrandInfoBean, BaseViewHolder
 
         BrandHolder(View view) {
             super(view);
-            brand_name = findViewById(R.id.brand_name);
-            iv_image_brand_item = findViewById(R.id.iv_image_brand_item);
+            brand_name = (TextView) view.findViewById(R.id.brand_name);
+            iv_image_brand_item = (ImageView) view.findViewById(R.id.iv_image_brand_item);
 
             iv_image_brand_item.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    LogUtils.e("我无语");
+                    LogUtils.e("iv_image_brand_item");
                 }
             });
 
-            itemView.setOnClickListener(new View.OnClickListener() {
+            view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    LogUtils.e("在这里");
-                    if (mOnItemClickListener != null) {
-                        int position = getLayoutPosition();
-                        mOnItemClickListener.onItemClick(brandInfoBeanArrayList.get(position), position);
-                    }
+                    LogUtils.e("view");
                 }
             });
+
+            //            itemView.setOnClickListener(new View.OnClickListener() {
+            //                @Override
+            //                public void onClick(View v) {
+            //                    LogUtils.e("here  itemView");
+            //                    if (mOnItemClickListener != null) {
+            //                        int position = getLayoutPosition();
+            //                        mOnItemClickListener.onItemClick(brandInfoBeanArrayList.get(position), position);
+            //                    }
+            //                }
+            //            });
         }
     }
 

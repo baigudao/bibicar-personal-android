@@ -1,23 +1,31 @@
 package com.wiserz.pbibi.fragment;
 
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.EmptyUtils;
 import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.qiniu.android.http.ResponseInfo;
 import com.qiniu.android.storage.UpCompletionHandler;
 import com.qiniu.android.storage.UploadManager;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.bean.UploadCarPhotoInfo;
+import com.wiserz.pbibi.util.CommonUtil;
+import com.wiserz.pbibi.util.Constant;
 import com.wiserz.pbibi.util.DataManager;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.UUID;
+
+import okhttp3.Call;
 
 /**
  * Created by jackie on 2017/9/7 16:04.
@@ -26,8 +34,8 @@ import java.util.UUID;
  */
 public class PostNewCarFragment extends BaseFragment {
 
-    private UploadManager uploadManager;
-    private HashMap<Integer, String> stringHashMap;
+    private JSONArray mPhotoTypes;
+    private JSONArray mPhotoFile;
 
     @Override
     protected int getLayoutId() {
@@ -40,6 +48,10 @@ public class PostNewCarFragment extends BaseFragment {
         ((TextView) view.findViewById(R.id.tv_title)).setText("上传新车");
         view.findViewById(R.id.iv_add_car_photo).setOnClickListener(this);
         view.findViewById(R.id.btn_post_new_car).setOnClickListener(this);
+
+        view.findViewById(R.id.rl_choose_car_color).setOnClickListener(this);
+        view.findViewById(R.id.rl_choose_city).setOnClickListener(this);
+        view.findViewById(R.id.rl_choose_car_type).setOnClickListener(this);
     }
 
     @Override
@@ -54,9 +66,38 @@ public class PostNewCarFragment extends BaseFragment {
             case R.id.btn_post_new_car:
                 publishNewCar();
                 break;
+            case R.id.rl_choose_car_type:
+                gotoPager(SelectCarBrandFragment.class, null);
+                break;
+            case R.id.rl_choose_city:
+                ToastUtils.showShort("选择城市");
+                break;
+            case R.id.rl_choose_car_color:
+                gotoPager(SelectCarColorFragment.class, null);
+                break;
             default:
                 break;
         }
+    }
+
+    private String getInputProfile() {
+        return ((EditText) getView().findViewById(R.id.et_input_profile)).getText().toString().trim();
+    }
+
+    private String getInputPhoneNum() {
+        return ((EditText) getView().findViewById(R.id.et_input_phone_num)).getText().toString().trim();
+    }
+
+    private String getInputPlace() {
+        return ((EditText) getView().findViewById(R.id.et_input_place)).getText().toString().trim();
+    }
+
+    private String getInputName() {
+        return ((EditText) getView().findViewById(R.id.et_input_name)).getText().toString().trim();
+    }
+
+    private String getInputPrice() {
+        return ((EditText) getView().findViewById(R.id.et_input_price)).getText().toString().trim();
     }
 
     private void publishNewCar() {
@@ -67,42 +108,99 @@ public class PostNewCarFragment extends BaseFragment {
 
         if (EmptyUtils.isNotEmpty(upload_token) && EmptyUtils.isNotEmpty(uploadCarPhotoInfoArrayList) && uploadCarPhotoInfoArrayList.size() != 0) {
             uploadImage(uploadCarPhotoInfoArrayList, upload_token);
+        } else {
+            ToastUtils.showShort("请填写完整的信息！");
         }
     }
 
     private void uploadImage(ArrayList<UploadCarPhotoInfo> uploadCarPhotoInfoArrayList, String upload_token) {
-        int mSize = uploadCarPhotoInfoArrayList.size();
-        uploadManager = new UploadManager();
+        final int mSize = uploadCarPhotoInfoArrayList.size();
+
+        mPhotoTypes = new JSONArray();
+        mPhotoFile = new JSONArray();
+
+        UploadManager uploadManager = new UploadManager();
+
         for (int i = 0; i < mSize; i++) {
             UploadCarPhotoInfo uploadCarPhotoInfo = uploadCarPhotoInfoArrayList.get(i);
 
             if (EmptyUtils.isNotEmpty(uploadCarPhotoInfo)) {
-                stringHashMap = new HashMap<>();
-                uploadManager.put(uploadCarPhotoInfo.getFile(), UUID.randomUUID().toString() + "_" + String.valueOf(uploadCarPhotoInfo.getFile_type()), upload_token, new UpCompletionHandler() {
-                    @Override
-                    public void complete(String key, ResponseInfo info, JSONObject response) {
-                        LogUtils.e(response);
-                        if (info.isOK()) {
-                            //上传成功
-                            int status = response.optInt("status");
-                            JSONObject jsonObjectData = response.optJSONObject("data");
-                            if (status == 1) {
-                                String hash = jsonObjectData.optString("hash");
-                                LogUtils.e(key + "和" + hash);//例如： ee38b98b-721a-4181-bbbc-a4f444ad0fba_1和ee38b98b-721a-4181-bbbc-a4f444ad0fba_1
-                                //                            stringHashMap.put(key, hash);
-                                //                            if (stringHashMap.size() == 4) {
-                                //                                commitDataToServer(stringHashMap);
-                                //                            }
+                int file_type = uploadCarPhotoInfo.getFile_type();
+                if (EmptyUtils.isNotEmpty(file_type)) {
+                    uploadManager.put(uploadCarPhotoInfo.getFile(), UUID.randomUUID().toString() + "_" + String.valueOf(file_type), upload_token, new UpCompletionHandler() {
+                        @Override
+                        public void complete(String key, ResponseInfo info, JSONObject response) {
+                            if (info.isOK()) {
+                                //上传成功
+                                int status = response.optInt("status");
+                                JSONObject jsonObjectData = response.optJSONObject("data");
+                                if (status == 1) {
+                                    String file_type = key.substring(key.lastIndexOf("_") + 1);
+                                    mPhotoTypes.put(file_type);
+                                    String hash = jsonObjectData.optString("hash");
+                                    mPhotoFile.put(hash);
+                                    if (mPhotoTypes.length() == mSize && mPhotoFile.length() == mSize) {
+                                        commitDataToServer(mPhotoTypes, mPhotoFile);
+                                    }
+                                } else {
+                                    String code = response.optString("code");
+                                    String msg = jsonObjectData.optString("msg");
+                                    ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                }
                             } else {
-                                String code = response.optString("code");
-                                String msg = jsonObjectData.optString("msg");
-                                ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        ToastUtils.showShort("车辆照片上传失败，请重新上传");
+                                    }
+                                });
                             }
-                        } else {
-                            ToastUtils.showShort("车辆照片上传失败，请重新上传");
                         }
-                    }
-                }, null);
+                    }, null);
+                }
+            }
+        }
+    }
+
+    private void commitDataToServer(JSONArray mPhotoTypes, JSONArray mPhotoFile) {
+        if (EmptyUtils.isNotEmpty(mPhotoTypes) && EmptyUtils.isNotEmpty(mPhotoFile)) {
+
+            String profile = getInputProfile();
+            String phone_num = getInputPhoneNum();
+            String place = getInputPlace();
+            String name = getInputName();
+            String car_price = getInputPrice();
+
+            if (EmptyUtils.isNotEmpty(profile) && EmptyUtils.isNotEmpty(phone_num) && EmptyUtils.isNotEmpty(place) && EmptyUtils.isNotEmpty(name) && EmptyUtils.isNotEmpty(car_price)) {
+                OkHttpUtils.post()
+                        .url(Constant.getPublishNewCarUrl())
+                        .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
+                        .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
+                        .addParams(Constant.FILES_TYPE, mPhotoTypes.toString())
+                        .addParams(Constant.FILES_ID, mPhotoFile.toString())
+                        .addParams(Constant.CONTACT_NAME, name)
+                        .addParams(Constant.CAR_INTRO, profile)
+                        .addParams(Constant.PRICE, car_price)
+                        .addParams(Constant.CONTACT_PHONE, phone_num)
+                        .addParams(Constant.CONTACT_ADDRESS, place)
+                        .addParams(Constant.CITY_ID, String.valueOf(0))
+                        .addParams(Constant.CAR_TYPE, String.valueOf(2364))
+                        .build()
+                        .execute(new StringCallback() {
+                            @Override
+                            public void onError(Call call, Exception e, int id) {
+
+                            }
+
+                            @Override
+                            public void onResponse(String response, int id) {
+                                LogUtils.e(response);
+                                CommonUtil.writeToSDCard(mContext, response);
+                            }
+                        });
+
+            } else {
+                ToastUtils.showShort("请填写完整的信息！");
             }
         }
     }
