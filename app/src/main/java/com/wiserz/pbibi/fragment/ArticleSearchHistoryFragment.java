@@ -4,11 +4,13 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.blankj.utilcode.util.EmptyUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
 import com.wiserz.pbibi.bean.ArticleBean;
@@ -33,6 +35,7 @@ import okhttp3.Call;
 public class ArticleSearchHistoryFragment extends BaseFragment implements BaseRecyclerViewAdapter.OnItemClickListener {
 
     private RecyclerView recyclerView;
+    private LinearLayout ll_search_history;
     private int mPage;
 
     private static final int ARTICLE_LIST_DATA_TYPE = 76;
@@ -45,6 +48,7 @@ public class ArticleSearchHistoryFragment extends BaseFragment implements BaseRe
     @Override
     protected void initView(View view) {
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        ll_search_history = (LinearLayout) view.findViewById(R.id.ll_search_history);
 
         mPage = 0;
     }
@@ -95,15 +99,11 @@ public class ArticleSearchHistoryFragment extends BaseFragment implements BaseRe
     }
 
     private void handlerDataForArticleSearchHistory(JSONObject jsonObjectData) {
-        ArrayList<ArticleBean> articleBeanArrayList = new ArrayList<>();
         JSONArray jsonArray = jsonObjectData.optJSONArray("feed_list");
         Gson gson = new Gson();
-        if (EmptyUtils.isNotEmpty(jsonArray) && jsonArray.length() != 0) {
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject jsonObject = jsonArray.optJSONObject(i);
-                ArticleBean articleBean = gson.fromJson(jsonObject.toString(), ArticleBean.class);
-                articleBeanArrayList.add(articleBean);
-            }
+        if (EmptyUtils.isNotEmpty(jsonArray)) {
+            ArrayList<ArticleBean> articleBeanArrayList = gson.fromJson(jsonArray.toString(), new TypeToken<ArrayList<ArticleBean>>() {
+            }.getType());
 
             if (!CommonUtil.isListNullOrEmpty(articleBeanArrayList)) {
                 BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, articleBeanArrayList, ARTICLE_LIST_DATA_TYPE);
@@ -111,6 +111,9 @@ public class ArticleSearchHistoryFragment extends BaseFragment implements BaseRe
                 recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
                 baseRecyclerViewAdapter.setOnItemClickListener(this);
             }
+        } else {
+            recyclerView.setVisibility(View.GONE);
+            ll_search_history.setVisibility(View.VISIBLE);
         }
     }
 

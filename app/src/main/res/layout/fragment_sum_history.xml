@@ -5,20 +5,9 @@
               android:background="@color/background_color"
               android:orientation="vertical">
 
-    <include layout="@layout/title_bar"/>
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="25dp"
-        android:text="快来分享你的新鲜事吧~"
-        android:textColor="@color/fourth_text_color"/>
-
-    <ImageView
-        android:id="@+id/iv_add"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/v3_addphoto3x"/>
+        android:text="出险"/>
 
 </LinearLayout>

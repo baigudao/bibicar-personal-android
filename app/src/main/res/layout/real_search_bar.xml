@@ -14,18 +14,29 @@
         android:scaleType="fitXY"
         android:src="@drawable/back_image_selector"/>
 
-    <EditText
-        android:id="@+id/et_search"
+    <TextView
+        android:id="@+id/tv_background"
         android:layout_width="250dp"
         android:layout_height="30dp"
         android:layout_centerVertical="true"
         android:layout_marginLeft="15dp"
         android:layout_toRightOf="@id/iv_back"
         android:background="@drawable/search_bar_background"
-        android:clickable="true"
         android:drawableLeft="@drawable/v1_search3x"
-        android:hint="  搜索车辆、文章、视频、用户"
-        android:paddingLeft="12dp"
+        android:paddingLeft="12dp"/>
+
+    <EditText
+        android:id="@+id/et_search"
+        android:layout_width="210dp"
+        android:layout_height="30dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="48dp"
+        android:layout_toRightOf="@id/iv_back"
+        android:background="@null"
+        android:hint="搜索车辆、文章、视频、用户"
+        android:imeOptions="actionSearch"
+        android:maxLength="10"
+        android:singleLine="true"
         android:textColor="@color/main_text_color"
         android:textColorHint="@color/second_text_color"
         android:textSize="14sp"/>
@@ -33,11 +44,12 @@
     <Button
         android:id="@+id/btn_search"
         android:layout_width="40dp"
-        android:layout_height="25dp"
+        android:layout_height="20dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="15dp"
-        android:background="@drawable/btn_background_selector"
+        android:background="@drawable/btn_enable_selector"
+        android:enabled="false"
         android:text="搜索"
         android:textColor="@drawable/btn_text_background_selector"
         android:textSize="12sp"/>

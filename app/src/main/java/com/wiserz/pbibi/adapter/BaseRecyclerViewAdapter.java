@@ -1,6 +1,9 @@
 package com.wiserz.pbibi.adapter;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.GridLayoutManager;
@@ -33,6 +36,8 @@ import com.wiserz.pbibi.bean.CheHangUserListBean;
 import com.wiserz.pbibi.bean.DreamCarBean;
 import com.wiserz.pbibi.bean.FeedBean;
 import com.wiserz.pbibi.bean.MyCarRentOrderBean;
+import com.wiserz.pbibi.bean.PeccancyRecordBean;
+import com.wiserz.pbibi.bean.RecommendUserInfoBean;
 import com.wiserz.pbibi.bean.ThemeUserBean;
 import com.wiserz.pbibi.bean.TopicInfoBean;
 import com.wiserz.pbibi.bean.UserBean;
@@ -55,6 +60,8 @@ import java.util.List;
 
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 import okhttp3.Call;
+
+import static com.wiserz.pbibi.R.id.tvCarColor;
 
 /**
  * Created by jackie on 2017/8/10 14:07.
@@ -109,6 +116,12 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
 
     private static final int TOPIC_MEMBER_DATA_TYPE = 32;
 
+    private static final int SELECT_CAR_COLOR_DATA_TYPE = 33;
+
+    private static final int RECOMMEND_USER_DATA_TYPE = 34;
+
+    private static final int PECCANCY_RECORD_DATA_TYPE = 35;
+
     private static final int NEW_CAR_DATA_TYPE = 55;
 
     private static final int CAR_VIDEO_DATA_TYPE = 65;
@@ -136,7 +149,13 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
     @Override
     public BaseRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         ViewHolder viewHolder;
-        if (dataType == TOPIC_MEMBER_DATA_TYPE) {
+        if (dataType == PECCANCY_RECORD_DATA_TYPE) {
+            viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_peccancy_record, null));
+        } else if (dataType == RECOMMEND_USER_DATA_TYPE) {
+            viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_recommend_user, null));
+        } else if (dataType == SELECT_CAR_COLOR_DATA_TYPE) {
+            viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_select_car_color, null));
+        } else if (dataType == TOPIC_MEMBER_DATA_TYPE) {
             viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_topic_member, null));
         } else if (dataType == MY_STATE_INNER_DATA_TYPE) {
             viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_my_state_inner, null));
@@ -1135,6 +1154,70 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                     holder.tv_item1.setText(EmptyUtils.isEmpty(carInfoBean.getCar_name()) ? "" : carInfoBean.getCar_name());
                 }
             }
+        } else if (dataType == SELECT_CAR_COLOR_DATA_TYPE) {
+            Resources resources = mContext.getResources();
+            String text = resources.getString(resources.getIdentifier("car_color_" + (position + 1), "string", mContext.getPackageName()));
+            int color = resources.getColor(resources.getIdentifier("car_color_" + (position + 1), "color", mContext.getPackageName()));
+
+            GradientDrawable background = (GradientDrawable) holder.tv_item1.getBackground();
+
+            if (position == 6 || position == 13) {
+                holder.tv_item1.setTextColor(resources.getColor(R.color.seventh_background_color));
+                background.setColor(Color.TRANSPARENT);
+                background.setStroke(SizeUtils.dp2px(1), resources.getColor(R.color.seventh_background_color));
+            } else {
+                holder.tv_item1.setTextColor(Color.WHITE);
+                background.setColor(color);
+                background.setStroke(SizeUtils.dp2px(1), color);
+            }
+            holder.tv_item1.setText(text);
+        } else if (dataType == RECOMMEND_USER_DATA_TYPE) {
+            ArrayList<RecommendUserInfoBean> recommendUserInfoBeanArrayList = (ArrayList<RecommendUserInfoBean>) mList;
+
+            if (EmptyUtils.isNotEmpty(recommendUserInfoBeanArrayList)) {
+                RecommendUserInfoBean recommendUserInfoBean = recommendUserInfoBeanArrayList.get(position);
+                if (EmptyUtils.isNotEmpty(recommendUserInfoBean)) {
+                    Glide.with(mContext)
+                            .load(recommendUserInfoBean.getAvatar())
+                            .placeholder(R.drawable.user_photo)
+                            .error(R.drawable.user_photo)
+                            .into(holder.iv_item1);
+                    holder.tv_item1.setText(recommendUserInfoBean.getNickname() == null ? "" : recommendUserInfoBean.getNickname());
+                    holder.tv_item2.setText(recommendUserInfoBean.getSignature() == null ? "" : recommendUserInfoBean.getSignature());
+                    holder.tv_item3.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ToastUtils.showShort("关注");
+                        }
+                    });
+                }
+            }
+        } else if (dataType == PECCANCY_RECORD_DATA_TYPE) {
+            List<PeccancyRecordBean.ListsBean> listsBeanList = (List<PeccancyRecordBean.ListsBean>) mList;
+
+            if (EmptyUtils.isNotEmpty(listsBeanList) && listsBeanList.size() != 0) {
+                PeccancyRecordBean.ListsBean listsBean = listsBeanList.get(position);
+                if (EmptyUtils.isNotEmpty(listsBean)) {
+                    String handled = listsBean.getHandled();
+                    if (EmptyUtils.isNotEmpty(handled)) {
+                        switch (handled) {
+                            case "0"://未处理
+                                holder.iv_item1.setImageResource(R.drawable.peccancy_record_red3x);
+                                holder.tv_item1.setText(listsBean.getDate());
+                                holder.tv_item1.setTextColor(mContext.getResources().getColor(R.color.warning_color));
+                                holder.tv_item2.setText("未处理");
+                                holder.tv_item2.setTextColor(mContext.getResources().getColor(R.color.warning_color));
+                                break;
+                            case "1":
+                                holder.tv_item1.setText(listsBean.getDate());
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    holder.tv_item3.setText(listsBean.getAct());
+                }
+            }
         }
     }
 
@@ -1566,6 +1649,38 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                         }
                     }
                 });
+            } else if (dataType == SELECT_CAR_COLOR_DATA_TYPE) {
+                tv_item1 = (TextView) itemView.findViewById(tvCarColor);
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnItemClickListener != null) {
+                            int position = getLayoutPosition();
+                            mOnItemClickListener.onItemClick(mList.get(position), position);
+                        }
+                    }
+                });
+            } else if (dataType == RECOMMEND_USER_DATA_TYPE) {
+                iv_item1 = (ImageView) itemView.findViewById(R.id.iv_circle_image);
+                tv_item1 = (TextView) itemView.findViewById(R.id.tv_user_name);
+                tv_item2 = (TextView) itemView.findViewById(R.id.tv_user_profile);
+                tv_item3 = (TextView) itemView.findViewById(R.id.tv_follow);
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnItemClickListener != null) {
+                            int position = getLayoutPosition();
+                            mOnItemClickListener.onItemClick(mList.get(position), position);
+                        }
+                    }
+                });
+            } else if (dataType == PECCANCY_RECORD_DATA_TYPE) {
+                iv_item1 = (ImageView) itemView.findViewById(R.id.iv1);
+                tv_item1 = (TextView) itemView.findViewById(R.id.tv_peccancy_time);
+                tv_item2 = (TextView) itemView.findViewById(R.id.tv_handle_or_not);
+                tv_item3 = (TextView) itemView.findViewById(R.id.tv_peccancy_content);
             }
         }
     }

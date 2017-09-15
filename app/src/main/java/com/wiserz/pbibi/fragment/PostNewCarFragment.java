@@ -80,6 +80,16 @@ public class PostNewCarFragment extends BaseFragment {
         }
     }
 
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!isHidden()) {
+            LogUtils.e("heard");
+        } else {
+            LogUtils.e("hehe");
+        }
+    }
+
     private String getInputProfile() {
         return ((EditText) getView().findViewById(R.id.et_input_profile)).getText().toString().trim();
     }

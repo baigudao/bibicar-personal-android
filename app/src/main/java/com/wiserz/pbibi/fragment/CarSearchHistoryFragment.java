@@ -4,11 +4,13 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.blankj.utilcode.util.EmptyUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
 import com.wiserz.pbibi.bean.CarInfoBean;
@@ -33,6 +35,7 @@ import okhttp3.Call;
 public class CarSearchHistoryFragment extends BaseFragment implements BaseRecyclerViewAdapter.OnItemClickListener {
 
     private RecyclerView recyclerView;
+    private LinearLayout ll_search_history;
     private int mPage;
 
     private static final int CAR_LIST_FOR_CAR_CENTER = 100;
@@ -45,6 +48,7 @@ public class CarSearchHistoryFragment extends BaseFragment implements BaseRecycl
     @Override
     protected void initView(View view) {
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        ll_search_history = (LinearLayout) view.findViewById(R.id.ll_search_history);
 
         mPage = 0;
     }
@@ -95,21 +99,23 @@ public class CarSearchHistoryFragment extends BaseFragment implements BaseRecycl
     }
 
     private void handlerDataForCarSearchHistory(JSONObject jsonObjectData) {
-        ArrayList<CarInfoBean> carInfoBeanArrayList = new ArrayList<>();
-        JSONArray jsonArray = jsonObjectData.optJSONArray("car_list");
-        Gson gson = new Gson();
-        if (EmptyUtils.isNotEmpty(jsonArray) && jsonArray.length() != 0) {
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject jsonObject = jsonArray.optJSONObject(i);
-                CarInfoBean carInfoBean = gson.fromJson(jsonObject.toString(), CarInfoBean.class);
-                carInfoBeanArrayList.add(carInfoBean);
-            }
+        if (EmptyUtils.isNotEmpty(jsonObjectData)) {
+            JSONArray jsonArray = jsonObjectData.optJSONArray("car_list");
+            Gson gson = new Gson();
+            if (EmptyUtils.isNotEmpty(jsonArray)) {
 
-            if (!CommonUtil.isListNullOrEmpty(carInfoBeanArrayList)) {
-                BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, carInfoBeanArrayList, CAR_LIST_FOR_CAR_CENTER);
-                recyclerView.setAdapter(baseRecyclerViewAdapter);
-                recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
-                baseRecyclerViewAdapter.setOnItemClickListener(this);
+                ArrayList<CarInfoBean> carInfoBeanArrayList = gson.fromJson(jsonArray.toString(), new TypeToken<ArrayList<CarInfoBean>>() {
+                }.getType());
+
+                if (!CommonUtil.isListNullOrEmpty(carInfoBeanArrayList)) {
+                    BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, carInfoBeanArrayList, CAR_LIST_FOR_CAR_CENTER);
+                    recyclerView.setAdapter(baseRecyclerViewAdapter);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
+                    baseRecyclerViewAdapter.setOnItemClickListener(this);
+                }
+            } else {
+                recyclerView.setVisibility(View.GONE);
+                ll_search_history.setVisibility(View.VISIBLE);
             }
         }
     }

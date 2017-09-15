@@ -7,4 +7,55 @@
 
     <include layout="@layout/title_bar"/>
 
+    <!--头部：RadioGroup-->
+    <RadioGroup
+        android:id="@+id/rg_main"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/rb_peccancy"
+            style="@style/top_tag_style"
+            android:layout_height="40dp"
+            android:text="违章"
+            android:textSize="15sp"/>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="40dp"
+            android:background="@color/divider_color"/>
+
+        <RadioButton
+            android:id="@+id/rb_sum"
+            style="@style/top_tag_style"
+            android:layout_height="40dp"
+            android:text="出险"
+            android:textSize="15sp"/>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="40dp"
+            android:background="@color/divider_color"/>
+
+        <RadioButton
+            android:id="@+id/rb_guarantee"
+            style="@style/top_tag_style"
+            android:layout_height="40dp"
+            android:text="维保"
+            android:textSize="15sp"/>
+
+    </RadioGroup>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider_color"/>
+
+    <!--FrameLayout-->
+    <FrameLayout
+        android:id="@+id/fl_content_check_history"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
 </LinearLayout>

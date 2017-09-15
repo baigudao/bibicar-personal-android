@@ -99,4 +99,15 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     public void goBack() {
         ((BaseActivity) mContext).goBack();
     }
+
+    //    @Override
+    //    public void onHiddenChanged(boolean hidden) {
+    //        super.onHiddenChanged(hidden);
+    //        if (!isHidden()) {
+    //            //如果没有隐藏
+    //            if (BaseApplication.getCurFragment() == null || !BaseApplication.getCurFragment().getClass().getName().equals(getClass().getName())) {
+    //                BaseApplication.setCurFragment(this);
+    //            }
+    //        }
+    //    }
 }

@@ -37,7 +37,13 @@ public class Constant {
     public static final int PAGE_NUM = 10;//刷新一页的数据
     public static final String IS_ENTER_GUIDE_VIEW = "is_enter_guide_view";
     public static final String IS_USER_LOGIN = "is_user_login";
+    public static final String S_TYPE = "s_type";
     public static final String PAGE = "page";
+    public static final String VIN = "vin";
+    public static final String CITY = "city";
+    public static final String HPHM = "hphm";
+    public static final String ENGINENO = "engineno";
+    public static final String CLASSNO = "classno";
     public static final String ACCOUNT = "account";
     public static final String CHAT_TOKEN = "chat_token";
     public static final String USER_ID = "user_id";
@@ -85,6 +91,7 @@ public class Constant {
     public static final String PRICE = "price";
     public static final String CITY_ID = "city_id";
     public static final String CAR_TYPE = "car_type";
+    public static final String POST_CONTENT = "post_content";
     public static final String CONTACT_PHONE = "contact_phone";
     public static final String CONTACT_ADDRESS = "contact_address";
     public static final String ADVERTISEMENT_IMAGE_SUCCESS = "advertisement_image_success";
@@ -177,13 +184,24 @@ public class Constant {
     private static final String myFriendsUrl = hostUrl + "v3/Post/publish";//个人的朋友圈
     private static final String commentListUrl = hostUrl + "v3/Comment/list";//评论列表
 
-    private static final String brandUrl = hostUrl +"v4/PollingCar/getPollingCarBrand";
+    private static final String brandUrl = hostUrl + "v4/PollingCar/getPollingCarBrand";
 
     private static final String carBrandUrl = hostUrl + "car/brand";
 
-    private static final String likeCarListUrl = hostUrl +"v3/Favoritecar/list";//喜欢的车辆
+    private static final String likeCarListUrl = hostUrl + "v3/Favoritecar/list";//喜欢的车辆
 
-    private static final String publishNewCarUrl = hostUrl +"v3/publishcar/newCar";//上传新车
+    private static final String publishNewCarUrl = hostUrl + "v3/publishcar/newCar";//上传新车
+
+    private static final String createFollowUrl = hostUrl + "v3/friendship/create";//关注
+    private static final String deleteFollowUrl = hostUrl + "v3/friendship/delete";//取消关注
+
+    private static final String createPostUrl = hostUrl + "v3/post/create";//发布动态
+
+    private static final String checkPeccancyUrl = hostUrl + "v4/pollingcar/checkcarrule";//查违章
+    private static final String checkHistoryUrl = hostUrl + "v4/pollingcar/history";//查询历史
+    private static final String checkGuaranteeUrl = hostUrl + "v4/PollingCar/PollingCarPay";//查维保支付费用
+    private static final String checkSumUrl = hostUrl + "v4/PollingCar/CheckIns";//查出险支付费用
+    private static final String peccancyListUrl = hostUrl + "v4/pollingcar/checkcarrulelist";//违章列表
 
     public static String getRegisterApp() {
         return registerApp;
@@ -439,5 +457,37 @@ public class Constant {
 
     public static String getPublishNewCarUrl() {
         return publishNewCarUrl;
+    }
+
+    public static String getCreateFollowUrl() {
+        return createFollowUrl;
+    }
+
+    public static String getDeleteFollowUrl() {
+        return deleteFollowUrl;
+    }
+
+    public static String getCreatePostUrl() {
+        return createPostUrl;
+    }
+
+    public static String getCheckPeccancyUrl() {
+        return checkPeccancyUrl;
+    }
+
+    public static String getCheckHistoryUrl() {
+        return checkHistoryUrl;
+    }
+
+    public static String getCheckGuaranteeUrl() {
+        return checkGuaranteeUrl;
+    }
+
+    public static String getCheckSumUrl() {
+        return checkSumUrl;
+    }
+
+    public static String getPeccancyListUrl() {
+        return peccancyListUrl;
     }
 }

@@ -51,7 +51,6 @@ public class RechargeFragment extends BaseFragment {
     private RadioButton rb_500;
     private RadioButton rb_1000;
     private RadioButton rb_other;
-    private String money;
     private String pay_type;
     private IWXAPI api;
     private MyBroadcastReceiver broadcastReceiver;
@@ -223,7 +222,7 @@ public class RechargeFragment extends BaseFragment {
     }
 
     private void makeSurePay() {
-        money = tv_recharge.getText().toString().trim().substring(1);
+        String money = tv_recharge.getText().toString().trim().substring(1);
         if (money.equals("0")) {
             String money_et = et_input_place.getText().toString().trim();
             if (money_et.isEmpty()) {

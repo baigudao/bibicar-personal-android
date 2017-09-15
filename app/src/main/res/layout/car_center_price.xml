@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/pure_white_color"
-    android:orientation="vertical">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/background_color"
+              android:orientation="vertical">
+
+    <include layout="@layout/title_bar"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,7 +25,7 @@
             android:gravity="center"
             android:text="全部价格"
             android:textColor="@color/main_text_color"
-            android:textSize="14sp" />
+            android:textSize="14sp"/>
 
         <TextView
             android:id="@+id/tv1"
@@ -37,7 +39,7 @@
             android:gravity="center"
             android:text="15万以下"
             android:textColor="@color/main_text_color"
-            android:textSize="14sp" />
+            android:textSize="14sp"/>
 
         <TextView
             android:id="@+id/tv2"
@@ -49,7 +51,7 @@
             android:gravity="center"
             android:text="15-30万"
             android:textColor="@color/main_text_color"
-            android:textSize="14sp" />
+            android:textSize="14sp"/>
 
     </LinearLayout>
 
@@ -71,7 +73,7 @@
             android:gravity="center"
             android:text="30-50万"
             android:textColor="@color/main_text_color"
-            android:textSize="14sp" />
+            android:textSize="14sp"/>
 
         <TextView
             android:id="@+id/tv4"
@@ -85,7 +87,7 @@
             android:gravity="center"
             android:text="50-100万"
             android:textColor="@color/main_text_color"
-            android:textSize="14sp" />
+            android:textSize="14sp"/>
 
         <TextView
             android:id="@+id/tv5"
@@ -97,7 +99,7 @@
             android:gravity="center"
             android:text="100-200万"
             android:textColor="@color/main_text_color"
-            android:textSize="14sp" />
+            android:textSize="14sp"/>
 
     </LinearLayout>
 
@@ -119,19 +121,19 @@
             android:gravity="center"
             android:text="200万以上"
             android:textColor="@color/main_text_color"
-            android:textSize="14sp" />
+            android:textSize="14sp"/>
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="45dp"
             android:layout_weight="1"
-            android:gravity="center" />
+            android:gravity="center"/>
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="45dp"
             android:layout_weight="1"
-            android:gravity="center" />
+            android:gravity="center"/>
 
     </LinearLayout>
 
@@ -147,25 +149,25 @@
             android:layout_height="wrap_content"
             android:text="自定义价格"
             android:textColor="@color/main_text_color"
-            android:textSize="15sp" />
+            android:textSize="15sp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="/万"
             android:textColor="@color/second_text_color"
-            android:textSize="15dp" />
+            android:textSize="15dp"/>
 
     </LinearLayout>
 
     <SeekBar
         android:id="@+id/seekBar"
+        style="@style/Base.Widget.AppCompat.SeekBar"
         android:layout_width="320dp"
         android:layout_height="5dp"
-        android:layout_marginTop="40dp"
         android:layout_gravity="center_horizontal"
-        style="@style/Base.Widget.AppCompat.SeekBar"
+        android:layout_marginTop="40dp"
         android:max="100"
-        android:progress="0" />
+        android:progress="0"/>
 
 </LinearLayout>

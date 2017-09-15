@@ -2,11 +2,16 @@ package com.wiserz.pbibi.fragment;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import com.blankj.utilcode.util.KeyboardUtils;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.wiserz.pbibi.R;
@@ -28,6 +33,7 @@ public class SearchFragment extends BaseFragment {
 
     private EditText et_search;
     private RadioGroup mRg_main;
+    private Button btn_search;
 
     @Override
     protected int getLayoutId() {
@@ -38,7 +44,20 @@ public class SearchFragment extends BaseFragment {
     protected void initView(View view) {
         view.findViewById(R.id.iv_back).setOnClickListener(this);
         et_search = (EditText) view.findViewById(R.id.et_search);
-        view.findViewById(R.id.btn_search).setOnClickListener(this);
+        et_search.addTextChangedListener(new MyTextWatcher());
+        et_search.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                    // 先隐藏键盘
+                    KeyboardUtils.hideSoftInput(getActivity());
+                    //                    search();
+                }
+                return false;
+            }
+        });
+        btn_search = (Button) view.findViewById(R.id.btn_search);
+        btn_search.setOnClickListener(this);
 
         initFragment();
         mRg_main = (RadioGroup) view.findViewById(R.id.rg_main);
@@ -91,9 +110,30 @@ public class SearchFragment extends BaseFragment {
     }
 
     private void switchFragment(Fragment from, Fragment to) {
+        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
         if (from != to) {
+            LogUtils.e("switchFragment");
             fromFragment = to;
-            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+            //判断有没有被添加
+            if (!to.isAdded()) {
+                //to没有被添加
+                //from隐藏
+                if (from != null) {
+                    ft.remove(from);
+                }
+                //添加to
+                ft.add(R.id.fl_search_content, to).commit();
+            } else {
+                //to已经被添加
+                // from隐藏
+                if (from != null) {
+                    ft.remove(from);
+                }
+                //显示to
+                ft.show(to).commit();
+            }
+        } else {
+            LogUtils.e("to与from相等");
             //判断有没有被添加
             if (!to.isAdded()) {
                 //to没有被添加
@@ -127,6 +167,7 @@ public class SearchFragment extends BaseFragment {
                 break;
             case R.id.btn_search:
                 ToastUtils.showShort("搜索");
+                KeyboardUtils.hideSoftInput(getActivity());
                 checkRadioButton();
                 break;
             default:
@@ -135,25 +176,26 @@ public class SearchFragment extends BaseFragment {
     }
 
     private void checkRadioButton() {
-        switch (position) {
-            case 0:
-                mRg_main.check(R.id.rb_car);
-                LogUtils.e("hehe0");
-                break;
-            case 1:
-                mRg_main.check(R.id.rb_article);
-                LogUtils.e("hehe1");
-                break;
-            case 2:
-                mRg_main.check(R.id.rb_user);
-                LogUtils.e("hehe2");
-                break;
-            case 3:
-                mRg_main.check(R.id.rb_topic);
-                LogUtils.e("hehe3");
-                break;
-            default:
-                break;
+        if (getView() != null) {
+            switch (position) {
+                case 0:
+                    setCheck((RadioButton) getView().findViewById(R.id.rb_car));
+                    break;
+                case 1:
+                    mRg_main.check(R.id.rb_article);
+                    setCheck((RadioButton) getView().findViewById(R.id.rb_article));
+                    break;
+                case 2:
+                    mRg_main.check(R.id.rb_user);
+                    setCheck((RadioButton) getView().findViewById(R.id.rb_user));
+                    break;
+                case 3:
+                    mRg_main.check(R.id.rb_topic);
+                    setCheck((RadioButton) getView().findViewById(R.id.rb_topic));
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
@@ -165,5 +207,27 @@ public class SearchFragment extends BaseFragment {
             ((RadioButton) getView().findViewById(R.id.rb_topic)).setChecked(false);
         }
         radioButton.setChecked(true);
+    }
+
+    private class MyTextWatcher implements TextWatcher {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            boolean search = et_search.getText().length() > 0;
+            if (search) {
+                btn_search.setEnabled(true);
+            } else {
+                btn_search.setEnabled(false);
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
     }
 }

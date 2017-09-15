@@ -41,6 +41,8 @@ public class RichListRecyclerViewAdapter extends RecyclerView.Adapter implements
     private String nickname;
 
     private int size;
+    private int rank;
+    private double total_money;
 
     public RichListRecyclerViewAdapter(Context mContext, JSONObject jsonObjectData) {
         this.mContext = mContext;
@@ -74,7 +76,7 @@ public class RichListRecyclerViewAdapter extends RecyclerView.Adapter implements
         if (currentType == TOP) {
             TopViewHolder topViewHolder = (TopViewHolder) holder;
 
-            Double total_money = getTopData(jsonObjectData);
+            getTopAndSecondData(jsonObjectData);
 
             if (EmptyUtils.isNotEmpty(total_money)) {
                 topViewHolder.tv_total_property.setText("您当前资产为" + total_money + "万");
@@ -82,7 +84,7 @@ public class RichListRecyclerViewAdapter extends RecyclerView.Adapter implements
         } else if (currentType == SECOND) {
             SecondViewHolder secondViewHolder = (SecondViewHolder) holder;
 
-            getSecondData(jsonObjectData);
+            getTopAndSecondData(jsonObjectData);
 
             if (EmptyUtils.isNotEmpty(avatar)) {
                 Glide.with(mContext)
@@ -210,29 +212,14 @@ public class RichListRecyclerViewAdapter extends RecyclerView.Adapter implements
         }
     }
 
-    private Double getTopData(JSONObject jsonObjectData) {
-        double total_money = 0.0;
+    private void getTopAndSecondData(JSONObject jsonObjectData) {
         if (EmptyUtils.isNotEmpty(jsonObjectData)) {
-            JSONArray jsonArray = jsonObjectData.optJSONArray("user_info");
-            if (EmptyUtils.isNotEmpty(jsonArray)) {
-                JSONObject jsonObject = jsonArray.optJSONObject(0);
-                if (EmptyUtils.isNotEmpty(jsonObject)) {
-                    total_money = jsonObject.optDouble("total_money");
-                }
-            }
-        }
-        return total_money;
-    }
-
-    private void getSecondData(JSONObject jsonObjectData) {
-        if (EmptyUtils.isNotEmpty(jsonObjectData)) {
-            JSONArray jsonArray = jsonObjectData.optJSONArray("user_info");
-            if (EmptyUtils.isNotEmpty(jsonArray)) {
-                JSONObject jsonObject = jsonArray.optJSONObject(0);
-                if (EmptyUtils.isNotEmpty(jsonObject)) {
-                    avatar = jsonObject.optString("avatar");
-                    nickname = jsonObject.optString("nickname");
-                }
+            JSONObject jsonObject = jsonObjectData.optJSONObject("user_info");
+            if (EmptyUtils.isNotEmpty(jsonObject)) {
+                total_money = jsonObject.optDouble("total_money");
+                avatar = jsonObject.optString("avatar");
+                nickname = jsonObject.optString("nickname");
+                rank = jsonObject.optInt("rank");
             }
         }
     }

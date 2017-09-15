@@ -94,4 +94,19 @@
     <string name="save_to_album">保存到相册</string>
     <string name="error_gif">错误gif</string>
 
+    <string name="car_color_1">黑色</string>
+    <string name="car_color_2">红色</string>
+    <string name="car_color_3">深灰色</string>
+    <string name="car_color_4">粉红色</string>
+    <string name="car_color_5">银灰色</string>
+    <string name="car_color_6">紫色</string>
+    <string name="car_color_7">白色</string>
+    <string name="car_color_8">蓝色</string>
+    <string name="car_color_9">香槟色</string>
+    <string name="car_color_10">绿色</string>
+    <string name="car_color_11">黄色</string>
+    <string name="car_color_12">咖啡色</string>
+    <string name="car_color_13">橙色</string>
+    <string name="car_color_14">多彩色</string>
+
 </resources>
