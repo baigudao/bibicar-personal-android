@@ -13,7 +13,7 @@
     <string name="header_refreshing">正在刷新...</string>
     <string name="header_completed">刷新成功</string>
 
-    <string name="rb_recommend">推荐</string>
+    <string name="rb_recommend">主页</string>
     <string name="rb_community">圈子</string>
     <string name="rb_message">消息</string>
     <string name="rb_mine">我的</string>
@@ -108,5 +108,6 @@
     <string name="car_color_12">咖啡色</string>
     <string name="car_color_13">橙色</string>
     <string name="car_color_14">多彩色</string>
+    <string name="car_center">车市</string>
 
 </resources>

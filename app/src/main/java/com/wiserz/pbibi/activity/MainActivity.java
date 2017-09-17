@@ -1,13 +1,16 @@
 package com.wiserz.pbibi.activity;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.ToastUtils;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.fragment.BaseFragment;
 import com.wiserz.pbibi.fragment.CarCenterFragment;
@@ -24,6 +27,7 @@ import java.util.List;
 public class MainActivity extends BaseActivity {
 
     private RadioGroup mRg_main;
+    private RadioButton rb_community;
     private List<BaseFragment> mBaseFragment;
     private int position;
     private Fragment fromFragment;
@@ -42,13 +46,14 @@ public class MainActivity extends BaseActivity {
     private void initView() {
         setContentView(R.layout.activity_main);
         mRg_main = (RadioGroup) findViewById(R.id.rg_main);
+        rb_community = (RadioButton) findViewById(R.id.rb_community);
     }
 
     private void initFragment() {
         mBaseFragment = new ArrayList<>();
-        mBaseFragment.add(new RecommendFragment());//推荐
+        mBaseFragment.add(new RecommendFragment());//主页
+        mBaseFragment.add(new CarCenterFragment());//车市
         mBaseFragment.add(new CommunityFragment());//圈子
-        mBaseFragment.add(new CarCenterFragment());//汽车中心
         mBaseFragment.add(new MessageFragment());//消息
         mBaseFragment.add(new MyFragment());//我的
         mBaseFragment.add(new MyFragmentForCompany());//企业中心
@@ -60,19 +65,28 @@ public class MainActivity extends BaseActivity {
         mRg_main.check(R.id.rb_recommend);
     }
 
-    class MyOnCheckedChangeListener implements RadioGroup.OnCheckedChangeListener {
+    private class MyOnCheckedChangeListener implements RadioGroup.OnCheckedChangeListener {
 
         @Override
         public void onCheckedChanged(RadioGroup group, int checkedId) {
             switch (checkedId) {
-                case R.id.rb_recommend://推荐
+                case R.id.rb_recommend://主页
                     position = 0;
                     break;
-                case R.id.rb_community://圈子
+                case R.id.rb_car_center://车市
                     position = 1;
                     break;
-                case R.id.rb_car_center://汽车中心
+                case R.id.rb_community://圈子
                     position = 2;
+                    Drawable top = getResources().getDrawable(R.drawable.tab_circle_c3x);
+                    rb_community.setCompoundDrawablesWithIntrinsicBounds(null, top , null, null);
+                    rb_community.setText(null);
+                    rb_community.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            ToastUtils.showShort("呵呵");
+                        }
+                    });
                     break;
                 case R.id.rb_message://消息
                     position = 3;
