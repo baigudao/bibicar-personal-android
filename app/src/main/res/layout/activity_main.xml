@@ -20,43 +20,239 @@
         android:layout_height="1dp"
         android:background="@color/divider_color"/>
 
-    <!--底部：RadioGroup-->
-    <RadioGroup
-        android:id="@+id/rg_main"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:orientation="horizontal">
 
-        <RadioButton
-            android:id="@+id/rb_recommend"
-            style="@style/bottom_tag_style"
-            android:drawableTop="@drawable/rb_recommend_selector"
-            android:text="@string/rb_recommend"/>
+        <LinearLayout
+            android:id="@+id/ll_home"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-        <RadioButton
-            android:id="@+id/rb_car_center"
-            style="@style/bottom_tag_style"
-            android:drawableTop="@drawable/rb_car_center_selector"
-            android:text="@string/car_center"/>
+            <ImageView
+                android:id="@+id/iv_home"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="8dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/tab_home3x"/>
 
-        <RadioButton
-            android:id="@+id/rb_community"
-            style="@style/bottom_tag_style"
-            android:drawableTop="@drawable/tab_circle3x"
-            android:text="@string/rb_community"/>
+            <TextView
+                android:id="@+id/tv_home"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="2dp"
+                android:text="@string/rb_recommend"
+                android:textColor="@color/second_text_color"
+                android:textSize="12sp"/>
 
-        <RadioButton
-            android:id="@+id/rb_message"
-            style="@style/bottom_tag_style"
-            android:drawableTop="@drawable/rb_message_selector"
-            android:text="@string/rb_message"/>
+        </LinearLayout>
 
-        <RadioButton
-            android:id="@+id/rb_mine"
-            style="@style/bottom_tag_style"
-            android:drawableTop="@drawable/rb_my_selector"
-            android:text="@string/rb_mine"/>
+        <LinearLayout
+            android:id="@+id/ll_car_center"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-    </RadioGroup>
+            <ImageView
+                android:id="@+id/iv_car_center"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="8dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/tab_market3x"/>
+
+            <TextView
+                android:id="@+id/tv_car_center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="2dp"
+                android:text="@string/car_center"
+                android:textColor="@color/second_text_color"
+                android:textSize="12sp"/>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_community"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/iv_community"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="8dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/tab_circle3x"/>
+
+            <TextView
+                android:id="@+id/tv_community"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/iv_community"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="2dp"
+                android:text="@string/rb_community"
+                android:textColor="@color/second_text_color"
+                android:textSize="12sp"/>
+
+            <ImageView
+                android:id="@+id/iv_publish_state"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:onClick="publishState"
+                android:src="@drawable/tab_circle_c3x"
+                android:visibility="gone"/>
+
+        </RelativeLayout>
+
+
+        <!--<LinearLayout-->
+        <!--android:id="@+id/ll_community"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="50dp"-->
+        <!--android:layout_weight="1"-->
+        <!--android:orientation="vertical">-->
+
+        <!--<ImageView-->
+        <!--android:id="@+id/iv_community"-->
+        <!--android:layout_width="22dp"-->
+        <!--android:layout_height="22dp"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:layout_marginTop="8dp"-->
+        <!--android:scaleType="fitXY"-->
+        <!--android:visibility="gone"-->
+        <!--android:src="@drawable/tab_circle3x"/>-->
+
+        <!--<TextView-->
+        <!--android:id="@+id/tv_community"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:layout_marginTop="2dp"-->
+        <!--android:visibility="gone"-->
+        <!--android:text="@string/rb_community"-->
+        <!--android:textColor="@color/second_text_color"-->
+        <!--android:textSize="12sp"/>-->
+        <!---->
+        <!--<ImageView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_gravity="center_vertical"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:onClick="publishState"-->
+        <!--android:src="@drawable/tab_circle_c3x"/>-->
+
+        <!--</LinearLayout>-->
+
+
+        <LinearLayout
+            android:id="@+id/ll_message"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/iv_message"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="8dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/tab_news3x"/>
+
+            <TextView
+                android:id="@+id/tv_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="2dp"
+                android:text="@string/rb_message"
+                android:textColor="@color/second_text_color"
+                android:textSize="12sp"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/ll_me"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/iv_me"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="8dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/tab_me3x"/>
+
+            <TextView
+                android:id="@+id/tv_me"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="2dp"
+                android:text="@string/rb_mine"
+                android:textColor="@color/second_text_color"
+                android:textSize="12sp"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!--底部：RadioGroup-->
+    <!--<RadioGroup-->
+    <!--android:id="@+id/rg_main"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="50dp"-->
+    <!--android:orientation="horizontal">-->
+
+    <!--<RadioButton-->
+    <!--android:id="@+id/rb_recommend"-->
+    <!--style="@style/bottom_tag_style"-->
+    <!--android:drawableTop="@drawable/rb_recommend_selector"-->
+    <!--android:text="@string/rb_recommend"/>-->
+
+    <!--<RadioButton-->
+    <!--android:id="@+id/rb_car_center"-->
+    <!--style="@style/bottom_tag_style"-->
+    <!--android:drawableTop="@drawable/rb_car_center_selector"-->
+    <!--android:text="@string/car_center"/>-->
+
+    <!--<RadioButton-->
+    <!--android:id="@+id/rb_community"-->
+    <!--style="@style/bottom_tag_style"-->
+    <!--android:drawableTop="@drawable/tab_circle3x"-->
+    <!--android:text="@string/rb_community"/>-->
+
+    <!--<RadioButton-->
+    <!--android:id="@+id/rb_message"-->
+    <!--style="@style/bottom_tag_style"-->
+    <!--android:drawableTop="@drawable/rb_message_selector"-->
+    <!--android:text="@string/rb_message"/>-->
+
+    <!--<RadioButton-->
+    <!--android:id="@+id/rb_mine"-->
+    <!--style="@style/bottom_tag_style"-->
+    <!--android:drawableTop="@drawable/rb_my_selector"-->
+    <!--android:text="@string/rb_mine"/>-->
+
+    <!--</RadioGroup>-->
 
 </LinearLayout>

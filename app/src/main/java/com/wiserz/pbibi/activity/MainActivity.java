@@ -1,15 +1,15 @@
 package com.wiserz.pbibi.activity;
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.fragment.BaseFragment;
@@ -19,20 +19,39 @@ import com.wiserz.pbibi.fragment.MessageFragment;
 import com.wiserz.pbibi.fragment.MyFragment;
 import com.wiserz.pbibi.fragment.MyFragmentForCompany;
 import com.wiserz.pbibi.fragment.RecommendFragment;
-import com.wiserz.pbibi.util.DataManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends BaseActivity {
 
-    private RadioGroup mRg_main;
-    private RadioButton rb_community;
+public class MainActivity extends BaseActivity implements View.OnClickListener {
+
+    //    private RadioGroup mRg_main;
+    //    private RadioButton rb_community;
     private List<BaseFragment> mBaseFragment;
     private int position;
     private Fragment fromFragment;
 
-    private int flag;
+    //    private int flag;
+
+    private LinearLayout ll_home;
+    private LinearLayout ll_car_center;
+    private RelativeLayout rl_community;
+    private LinearLayout ll_message;
+    private LinearLayout ll_me;
+
+    private ImageView iv_home;
+    private TextView tv_home;
+    private ImageView iv_car_center;
+    private TextView tv_car_center;
+    private ImageView iv_community;
+    private TextView tv_community;
+    private ImageView iv_message;
+    private TextView tv_message;
+    private ImageView iv_me;
+    private TextView tv_me;
+
+    private ImageView iv_publish_state;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +66,27 @@ public class MainActivity extends BaseActivity {
 
     private void initView() {
         setContentView(R.layout.activity_main);
-        flag = 0;
-        mRg_main = (RadioGroup) findViewById(R.id.rg_main);
-        rb_community = (RadioButton) findViewById(R.id.rb_community);
+        ll_home = (LinearLayout) findViewById(R.id.ll_home);
+        ll_car_center = (LinearLayout) findViewById(R.id.ll_car_center);
+        rl_community = (RelativeLayout) findViewById(R.id.rl_community);
+        ll_message = (LinearLayout) findViewById(R.id.ll_message);
+        ll_me = (LinearLayout) findViewById(R.id.ll_me);
+
+        iv_home = (ImageView) findViewById(R.id.iv_home);
+        tv_home = (TextView) findViewById(R.id.tv_home);
+        iv_car_center = (ImageView) findViewById(R.id.iv_car_center);
+        tv_car_center = (TextView) findViewById(R.id.tv_car_center);
+        iv_community = (ImageView) findViewById(R.id.iv_community);
+        tv_community = (TextView) findViewById(R.id.tv_community);
+        iv_message = (ImageView) findViewById(R.id.iv_message);
+        tv_message = (TextView) findViewById(R.id.tv_message);
+        iv_me = (ImageView) findViewById(R.id.iv_me);
+        tv_me = (TextView) findViewById(R.id.tv_me);
+
+        iv_publish_state = (ImageView) findViewById(R.id.iv_publish_state);
+        //        flag = 0;
+        //        mRg_main = (RadioGroup) findViewById(R.id.rg_main);
+        //        rb_community = (RadioButton) findViewById(R.id.rb_community);
     }
 
     private void initFragment() {
@@ -63,69 +100,78 @@ public class MainActivity extends BaseActivity {
     }
 
     private void setListener() {
-        mRg_main.setOnCheckedChangeListener(new MyOnCheckedChangeListener());
-        //设置默认选中常用框架
-        mRg_main.check(R.id.rb_recommend);
+        ll_home.setOnClickListener(this);
+        ll_car_center.setOnClickListener(this);
+        rl_community.setOnClickListener(this);
+        ll_message.setOnClickListener(this);
+        ll_me.setOnClickListener(this);
+
+        position = 0;
+        setCheck(0);
+        switchFragment(fromFragment, getFragment());
+        //        mRg_main.setOnCheckedChangeListener(new MyOnCheckedChangeListener());
+        //        //设置默认选中常用框架
+        //        mRg_main.check(R.id.rb_recommend);
     }
 
-    private class MyOnCheckedChangeListener implements RadioGroup.OnCheckedChangeListener {
-
-        @Override
-        public void onCheckedChanged(RadioGroup group, int checkedId) {
-            Drawable top_normal = getResources().getDrawable(R.drawable.tab_circle3x);
-            switch (checkedId) {
-                case R.id.rb_recommend://主页
-                    position = 0;
-                    rb_community.setCompoundDrawablesWithIntrinsicBounds(null, top_normal, null, null);
-                    rb_community.setText("圈子");
-                    break;
-                case R.id.rb_car_center://车市
-                    position = 1;
-                    rb_community.setCompoundDrawablesWithIntrinsicBounds(null, top_normal, null, null);
-                    rb_community.setText("圈子");
-                    break;
-                case R.id.rb_community://圈子
-                    position = 2;
-                    flag++;
-                    Drawable top = getResources().getDrawable(R.drawable.tab_circle_c3x);
-                    rb_community.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null);
-                    rb_community.setText(null);
-                    if (flag == 2) {
-                        rb_community.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                ToastUtils.showShort("呵呵");
-                            }
-                        });
-                        flag = 1;
-                    }
-                    break;
-                case R.id.rb_message://消息
-                    position = 3;
-                    rb_community.setCompoundDrawablesWithIntrinsicBounds(null, top_normal, null, null);
-                    rb_community.setText("圈子");
-                    break;
-                case R.id.rb_mine://我的
-                    int type = DataManager.getInstance().getUserInfo().getProfile().getType();//1,表示个人用户；2，表示企业用户
-                    LogUtils.e("用户类型===" + type);
-                    if (type == 1) {
-                        position = 4;
-                    } else if (type == 2) {
-                        position = 5;
-                    }
-                    rb_community.setCompoundDrawablesWithIntrinsicBounds(null, top_normal, null, null);
-                    rb_community.setText("圈子");
-                    break;
-                default:
-                    position = 0;
-                    break;
-            }
-            //根据位置得到对应的Fragment
-            BaseFragment toFragment = getFragment();
-            //切换Fragment
-            switchFragment(fromFragment, toFragment);
-        }
-    }
+    //    private class MyOnCheckedChangeListener implements RadioGroup.OnCheckedChangeListener {
+    //
+    //        @Override
+    //        public void onCheckedChanged(RadioGroup group, int checkedId) {
+    //            Drawable top_normal = getResources().getDrawable(R.drawable.tab_circle3x);
+    //            switch (checkedId) {
+    //                case R.id.rb_recommend://主页
+    //                    position = 0;
+    //                    rb_community.setCompoundDrawablesWithIntrinsicBounds(null, top_normal, null, null);
+    //                    rb_community.setText("圈子");
+    //                    break;
+    //                case R.id.rb_car_center://车市
+    //                    position = 1;
+    //                    rb_community.setCompoundDrawablesWithIntrinsicBounds(null, top_normal, null, null);
+    //                    rb_community.setText("圈子");
+    //                    break;
+    //                case R.id.rb_community://圈子
+    //                    position = 2;
+    //                    flag++;
+    //                    Drawable top = getResources().getDrawable(R.drawable.tab_circle_c3x);
+    //                    rb_community.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null);
+    //                    rb_community.setText(null);
+    //                    if (flag == 2) {
+    //                        rb_community.setOnClickListener(new View.OnClickListener() {
+    //                            @Override
+    //                            public void onClick(View view) {
+    //                                ToastUtils.showShort("呵呵");
+    //                            }
+    //                        });
+    //                        flag = 1;
+    //                    }
+    //                    break;
+    //                case R.id.rb_message://消息
+    //                    position = 3;
+    //                    rb_community.setCompoundDrawablesWithIntrinsicBounds(null, top_normal, null, null);
+    //                    rb_community.setText("圈子");
+    //                    break;
+    //                case R.id.rb_mine://我的
+    //                    int type = DataManager.getInstance().getUserInfo().getProfile().getType();//1,表示个人用户；2，表示企业用户
+    //                    LogUtils.e("用户类型===" + type);
+    //                    if (type == 1) {
+    //                        position = 4;
+    //                    } else if (type == 2) {
+    //                        position = 5;
+    //                    }
+    //                    rb_community.setCompoundDrawablesWithIntrinsicBounds(null, top_normal, null, null);
+    //                    rb_community.setText("圈子");
+    //                    break;
+    //                default:
+    //                    position = 0;
+    //                    break;
+    //            }
+    //            //根据位置得到对应的Fragment
+    //            BaseFragment toFragment = getFragment();
+    //            //切换Fragment
+    //            switchFragment(fromFragment, toFragment);
+    //        }
+    //    }
 
     /**
      * @param from 刚显示的Fragment,马上就要被隐藏了
@@ -166,14 +212,14 @@ public class MainActivity extends BaseActivity {
         return mBaseFragment.get(position);
     }
 
-    public void setCheck(RadioButton radioButton) {
-        ((RadioButton) findViewById(R.id.rb_recommend)).setChecked(false);
-        ((RadioButton) findViewById(R.id.rb_community)).setChecked(false);
-        ((RadioButton) findViewById(R.id.rb_car_center)).setChecked(false);
-        ((RadioButton) findViewById(R.id.rb_message)).setChecked(false);
-        ((RadioButton) findViewById(R.id.rb_mine)).setChecked(false);
-        radioButton.setChecked(true);
-    }
+    //    public void setCheck(RadioButton radioButton) {
+    //        ((RadioButton) findViewById(R.id.rb_recommend)).setChecked(false);
+    //        ((RadioButton) findViewById(R.id.rb_community)).setChecked(false);
+    //        ((RadioButton) findViewById(R.id.rb_car_center)).setChecked(false);
+    //        ((RadioButton) findViewById(R.id.rb_message)).setChecked(false);
+    //        ((RadioButton) findViewById(R.id.rb_mine)).setChecked(false);
+    //        radioButton.setChecked(true);
+    //    }
 
     long startTime = 0;
 
@@ -186,5 +232,88 @@ public class MainActivity extends BaseActivity {
         } else {
             finish();
         }
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.ll_home:
+                position = 0;
+                break;
+            case R.id.ll_car_center:
+                position = 1;
+                break;
+            case R.id.rl_community:
+                position = 2;
+                break;
+            case R.id.ll_message:
+                position = 3;
+                break;
+            case R.id.ll_me:
+                position = 4;
+                break;
+            default:
+                break;
+        }
+        setCheck(position);
+        //根据位置得到对应的Fragment
+        BaseFragment toFragment = getFragment();
+        //切换Fragment
+        switchFragment(fromFragment, toFragment);
+    }
+
+    private void setCheck(int position) {
+        switch (position) {
+            case 0:
+                resetTab();
+                iv_home.setBackgroundResource(R.drawable.tab_home_c3x);
+                tv_home.setTextColor(getResources().getColor(R.color.main_color));
+                break;
+            case 1:
+                resetTab();
+                iv_car_center.setBackgroundResource(R.drawable.tab_market_c3x);
+                tv_car_center.setTextColor(getResources().getColor(R.color.main_color));
+                break;
+            case 2:
+                resetTab();
+                //                iv_community.setBackgroundResource(R.drawable.tab_circle_c3x);
+                //                tv_community.setTextColor(getResources().getColor(R.color.main_color));
+                iv_community.setVisibility(View.GONE);
+                tv_community.setVisibility(View.GONE);
+                iv_publish_state.setVisibility(View.VISIBLE);
+                break;
+            case 3:
+                resetTab();
+                iv_message.setBackgroundResource(R.drawable.tab_news_c3x);
+                tv_message.setTextColor(getResources().getColor(R.color.main_color));
+                break;
+            case 4:
+                resetTab();
+                iv_me.setBackgroundResource(R.drawable.tab_me_c3x);
+                tv_me.setTextColor(getResources().getColor(R.color.main_color));
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void resetTab() {
+        iv_home.setBackgroundResource(R.drawable.tab_home3x);
+        tv_home.setTextColor(getResources().getColor(R.color.second_text_color));
+        iv_car_center.setBackgroundResource(R.drawable.tab_market3x);
+        tv_car_center.setTextColor(getResources().getColor(R.color.second_text_color));
+        //        iv_community.setBackgroundResource(R.drawable.tab_circle3x);
+        //        tv_community.setTextColor(getResources().getColor(R.color.second_text_color));
+        iv_community.setVisibility(View.VISIBLE);
+        tv_community.setVisibility(View.VISIBLE);
+        iv_publish_state.setVisibility(View.GONE);
+        iv_message.setBackgroundResource(R.drawable.tab_news3x);
+        tv_message.setTextColor(getResources().getColor(R.color.second_text_color));
+        iv_me.setBackgroundResource(R.drawable.tab_me3x);
+        tv_me.setTextColor(getResources().getColor(R.color.second_text_color));
+    }
+
+    public void publishState(View view) {
+        ToastUtils.showShort("发布动态");
     }
 }

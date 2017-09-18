@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -191,7 +190,7 @@ public class RecommendRecyclerViewAdapter extends RecyclerView.Adapter implement
             newCarViewHolder.tv_more_new_car.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ((MainActivity) mContext).setCheck((RadioButton) ((MainActivity) mContext).findViewById(R.id.rb_car_center));
+                    //                    ((MainActivity) mContext).setCheck((RadioButton) ((MainActivity) mContext).findViewById(R.id.rb_car_center));
                 }
             });
 
