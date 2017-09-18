@@ -16,6 +16,7 @@ import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
 import com.wiserz.pbibi.adapter.BrandAdapter;
 import com.wiserz.pbibi.bean.BrandInfoBean;
 import com.wiserz.pbibi.util.Constant;
+import com.wiserz.pbibi.util.DataManager;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -184,9 +185,15 @@ public class SelectCarBrandFragment extends BaseFragment implements BaseRecycler
 
     @Override
     public void onItemClick(Object data, int position) {
-        LogUtils.e("wowowow");
         if (data.getClass().getSimpleName().equals("BrandInfoBean")) {
-            LogUtils.e("hehe");
+            BrandInfoBean brandInfoBean = (BrandInfoBean) data;
+            if (EmptyUtils.isNotEmpty(brandInfoBean)) {
+                LogUtils.e(brandInfoBean.getBrand_name());
+                LogUtils.e(brandInfoBean.getBrand_id());
+                DataManager.getInstance().setData1(brandInfoBean.getBrand_name());
+                DataManager.getInstance().setData2(brandInfoBean.getBrand_id());
+                goBack();
+            }
         }
     }
 }

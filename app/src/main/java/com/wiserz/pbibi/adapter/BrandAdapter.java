@@ -4,9 +4,9 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SizeUtils;
 import com.bumptech.glide.Glide;
 import com.wiserz.pbibi.R;
@@ -78,36 +78,23 @@ public class BrandAdapter extends BaseTurboAdapter<BrandInfoBean, BaseViewHolder
 
         private TextView brand_name;
         private ImageView iv_image_brand_item;
+        private RelativeLayout rl_item_brand;
 
         BrandHolder(View view) {
             super(view);
             brand_name = (TextView) view.findViewById(R.id.brand_name);
             iv_image_brand_item = (ImageView) view.findViewById(R.id.iv_image_brand_item);
+            rl_item_brand = (RelativeLayout) view.findViewById(R.id.rl_item_brand);
 
-            iv_image_brand_item.setOnClickListener(new View.OnClickListener() {
+            rl_item_brand.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    LogUtils.e("iv_image_brand_item");
+                    if (mOnItemClickListener != null) {
+                        int position = getLayoutPosition();
+                        mOnItemClickListener.onItemClick(brandInfoBeanArrayList.get(position), position);
+                    }
                 }
             });
-
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    LogUtils.e("view");
-                }
-            });
-
-            //            itemView.setOnClickListener(new View.OnClickListener() {
-            //                @Override
-            //                public void onClick(View v) {
-            //                    LogUtils.e("here  itemView");
-            //                    if (mOnItemClickListener != null) {
-            //                        int position = getLayoutPosition();
-            //                        mOnItemClickListener.onItemClick(brandInfoBeanArrayList.get(position), position);
-            //                    }
-            //                }
-            //            });
         }
     }
 

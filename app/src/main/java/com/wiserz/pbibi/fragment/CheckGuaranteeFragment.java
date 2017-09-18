@@ -18,6 +18,7 @@ import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.alipay.PayResult;
 import com.wiserz.pbibi.util.Constant;
+import com.wiserz.pbibi.util.DataManager;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -40,6 +41,8 @@ public class CheckGuaranteeFragment extends BaseFragment {
     private IWXAPI api;
     private TextView tv_brand;
 
+    private String report_sn;
+
     private static final int SDK_PAY_FLAG = 1;
     private Handler mHandler = new Handler() {
         @Override
@@ -53,6 +56,8 @@ public class CheckGuaranteeFragment extends BaseFragment {
                     if (TextUtils.equals(resultStatus, "9000")) {
                         // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
                         ToastUtils.showShort("支付成功");
+                        DataManager.getInstance().setData1(report_sn);
+                        gotoPager(GuaranteeDetailFragment.class, null);
                     } else {
                         // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
                         ToastUtils.showShort("支付失败");
@@ -159,13 +164,14 @@ public class CheckGuaranteeFragment extends BaseFragment {
             ToastUtils.showShort("请选择车辆的品牌！");
             return;
         }
+        //测试数据：vin=LGBP12E21DY196239&brand_id=4
         OkHttpUtils.post()
                 .url(Constant.getCheckGuaranteeUrl())
                 .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
                 .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
                 .addParams(Constant.PAY_TYPE, pay_type)
-                .addParams(Constant.VIN, "LGBP12E21DY196239")//测试数据：vin=LGBP12E21DY196239&brand_id=4
-                .addParams(Constant.BRAND_ID, "4")
+                .addParams(Constant.VIN, vin_string)
+                .addParams(Constant.BRAND_ID, brand_info)
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -181,6 +187,7 @@ public class CheckGuaranteeFragment extends BaseFragment {
                             int status = jsonObject.optInt("status");
                             JSONObject jsonObjectData = jsonObject.optJSONObject("data");
                             if (status == 1) {
+                                report_sn = jsonObjectData.optString("report_sn");
                                 if (getView() != null) {
                                     handlerDataForPay(jsonObjectData);
                                 }
@@ -239,4 +246,26 @@ public class CheckGuaranteeFragment extends BaseFragment {
             }
         }
     }
+
+    //    @Override
+    //    public void onHiddenChanged(boolean hidden) {
+    //        super.onHiddenChanged(hidden);
+    //        if (hidden) {   // 不在最前端显示 相当于调用了onPause();
+    //            LogUtils.e("onHiddenChanged");
+    //            return;
+    //        } else {  // 在最前端显示 相当于调用了onResume();
+    //            //网络数据刷新
+    //            LogUtils.e("否则");
+    //        }
+    //    }
+    //
+    //    @Override
+    //    public void setUserVisibleHint(boolean isVisibleToUser) {
+    //        super.setUserVisibleHint(isVisibleToUser);
+    //        if (isVisibleToUser) {
+    //            LogUtils.e("setUserVisibleHint");
+    //        } else {
+    //            LogUtils.e("否则");
+    //        }
+    //    }
 }

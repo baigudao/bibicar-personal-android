@@ -22,6 +22,7 @@ import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
 import com.wiserz.pbibi.bean.ThemeUserBean;
 import com.wiserz.pbibi.bean.TopicInfoBean;
 import com.wiserz.pbibi.util.Constant;
+import com.wiserz.pbibi.util.DataManager;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -78,8 +79,8 @@ public class TopicDetailFragment extends BaseFragment implements BaseRecyclerVie
 
     private void initFragment() {
         mBaseFragment = new ArrayList<>();
-        mBaseFragment.add(new MostNewTopicFragment());//最新话题
         mBaseFragment.add(new MostHotTopicFragment());//最热话题
+        mBaseFragment.add(new MostNewTopicFragment());//最新话题
     }
 
     @Override
@@ -184,9 +185,9 @@ public class TopicDetailFragment extends BaseFragment implements BaseRecyclerVie
                 getView().findViewById(R.id.rl_topic_join).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (EmptyUtils.isNotEmpty(theme_id)){
+                        if (EmptyUtils.isNotEmpty(theme_id)) {
                             Bundle bundle = new Bundle();
-                            bundle.putInt(Constant.THEME_ID,theme_id);
+                            bundle.putInt(Constant.THEME_ID, theme_id);
                             gotoPager(TopicMemberFragment.class, bundle);
                         }
                     }
@@ -256,12 +257,13 @@ public class TopicDetailFragment extends BaseFragment implements BaseRecyclerVie
             switch (checkedId) {
                 case R.id.rb_most_hot://最热
                     position = 0;
+                    DataManager.getInstance().setData1(theme_id);
                     break;
                 case R.id.rb_most_new://最新
                     position = 1;
+                    DataManager.getInstance().setData1(theme_id);
                     break;
                 default:
-                    position = 0;
                     break;
             }
             //根据位置得到对应的Fragment

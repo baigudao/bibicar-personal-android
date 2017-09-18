@@ -25,8 +25,8 @@ public class EmptyActivity extends BaseActivity {
         super.onNewIntent(intent);
         String fragmentName = intent.getStringExtra(Constant.FRAGMENT_NAME);
         BaseFragment fragment = (BaseFragment) Fragment.instantiate(this, fragmentName);
-        Bundle b = intent.getExtras();
-        fragment.setArguments(b);
+        Bundle bundle = intent.getExtras();
+        fragment.setArguments(bundle);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         Fragment currentFragment = getVisibleFragment();
         if (currentFragment != null) {

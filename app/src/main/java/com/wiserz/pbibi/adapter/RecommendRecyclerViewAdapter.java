@@ -36,10 +36,10 @@ import com.wiserz.pbibi.bean.VideoBean;
 import com.wiserz.pbibi.fragment.ArticleDetailFragment;
 import com.wiserz.pbibi.fragment.ArticleListFragment;
 import com.wiserz.pbibi.fragment.BannerFragment;
+import com.wiserz.pbibi.fragment.CarCheckServiceFragment;
 import com.wiserz.pbibi.fragment.CarDetailFragment;
 import com.wiserz.pbibi.fragment.CarRentFragment;
 import com.wiserz.pbibi.fragment.CheHangListFragment;
-import com.wiserz.pbibi.fragment.TestFragment;
 import com.wiserz.pbibi.fragment.VideoDetailFragment;
 import com.wiserz.pbibi.fragment.VideoListFragment;
 import com.wiserz.pbibi.util.Constant;
@@ -149,8 +149,8 @@ public class RecommendRecyclerViewAdapter extends RecyclerView.Adapter implement
             twoBigButtonViewHolder.iv_car_check.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //                    ((BaseActivity) mContext).gotoPager(CarCheckServiceFragment.class, null);
-                    ((BaseActivity) mContext).gotoPager(TestFragment.class, null);
+                    ((BaseActivity) mContext).gotoPager(CarCheckServiceFragment.class, null);
+                    //                    ((BaseActivity) mContext).gotoPager(TestFragment.class, null);
                     //这样也可以
                     //                    Intent intent = new Intent(mContext, EmptyActivity.class);
                     //                    intent.putExtra(Constant.FRAGMENT_NAME, CarCheckServiceFragment.class.getName());

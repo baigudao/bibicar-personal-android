@@ -35,7 +35,9 @@ import com.wiserz.pbibi.bean.CheHangHomeBean;
 import com.wiserz.pbibi.bean.CheHangUserListBean;
 import com.wiserz.pbibi.bean.DreamCarBean;
 import com.wiserz.pbibi.bean.FeedBean;
+import com.wiserz.pbibi.bean.GuaranteeHistoryBean;
 import com.wiserz.pbibi.bean.MyCarRentOrderBean;
+import com.wiserz.pbibi.bean.PeccancyHistoryBean;
 import com.wiserz.pbibi.bean.PeccancyRecordBean;
 import com.wiserz.pbibi.bean.RecommendUserInfoBean;
 import com.wiserz.pbibi.bean.ThemeUserBean;
@@ -122,6 +124,10 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
 
     private static final int PECCANCY_RECORD_DATA_TYPE = 35;
 
+    private static final int HPHM_DATA_TYPE = 36;
+
+    private static final int GUARANTEE_HISTORY_DATA_TYPE = 37;
+
     private static final int NEW_CAR_DATA_TYPE = 55;
 
     private static final int CAR_VIDEO_DATA_TYPE = 65;
@@ -149,7 +155,11 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
     @Override
     public BaseRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         ViewHolder viewHolder;
-        if (dataType == PECCANCY_RECORD_DATA_TYPE) {
+        if (dataType == GUARANTEE_HISTORY_DATA_TYPE) {
+            viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_guarantee_history, null));
+        } else if (dataType == HPHM_DATA_TYPE) {
+            viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_hphm_image, null));
+        } else if (dataType == PECCANCY_RECORD_DATA_TYPE) {
             viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_peccancy_record, null));
         } else if (dataType == RECOMMEND_USER_DATA_TYPE) {
             viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_recommend_user, null));
@@ -340,7 +350,7 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                             .bitmapTransform(new RoundedCornersTransformation(mContext, SizeUtils.dp2px(8), 0, RoundedCornersTransformation.CornerType.ALL))
                             .into(holder.iv_item1);
                     holder.tv_item1.setText(topicInfoBean.getTheme());
-                    //                    holder.tv_item2.setText(fuLiBean.getDesc());//35参与丨155内容
+                    holder.tv_item2.setText(topicInfoBean.getFeed_num() + "参与丨" + topicInfoBean.getIs_skip() + "内容");//35参与丨155内容
                     //                    holder.tv_item3.setText(fuLiBean.getDesc());//12条更新
                 }
             }
@@ -1089,8 +1099,21 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                     holder.tv_item5.setText(String.valueOf(feedBean.getComment_num()));
                     holder.tv_item6.setText(String.valueOf(feedBean.getLike_num()));
 
-                    holder.tv_item7.setVisibility(View.GONE);
-                    holder.tv_item8.setText(feedBean.getPost_content());
+                    String post_content = feedBean.getPost_content();
+                    if (EmptyUtils.isNotEmpty(post_content)) {
+                        if (post_content.contains("#")) {
+                            int start_index = post_content.indexOf("#");
+                            int last_index = post_content.lastIndexOf("#");
+
+                            holder.tv_item7.setText(post_content.substring(start_index, (last_index + 1)));
+                            holder.tv_item8.setText(post_content.substring((last_index + 1)));
+                        } else {
+                            holder.tv_item8.setText(post_content);
+                        }
+                    } else {
+                        holder.tv_item7.setVisibility(View.GONE);
+                        holder.tv_item8.setVisibility(View.GONE);
+                    }
                 }
             }
         } else if (dataType == MY_STATE_INNER_DATA_TYPE) {
@@ -1216,6 +1239,60 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                         }
                     }
                     holder.tv_item3.setText(listsBean.getAct());
+                }
+            }
+        } else if (dataType == HPHM_DATA_TYPE) {
+            ArrayList<PeccancyHistoryBean> peccancyHistoryBeanArrayList = (ArrayList<PeccancyHistoryBean>) mList;
+
+            if (EmptyUtils.isNotEmpty(peccancyHistoryBeanArrayList)) {
+                PeccancyHistoryBean peccancyHistoryBean = peccancyHistoryBeanArrayList.get(position);
+                if (EmptyUtils.isNotEmpty(peccancyHistoryBean)) {
+                    holder.tv_item1.setText(peccancyHistoryBean.getHphm());
+                    holder.tv_item2.setText(TimeUtils.date2String(new Date(Long.valueOf(peccancyHistoryBean.getCreated()) * 1000), new SimpleDateFormat("yyyy.MM.dd")));
+                }
+            }
+        } else if (dataType == GUARANTEE_HISTORY_DATA_TYPE) {
+            ArrayList<GuaranteeHistoryBean> guaranteeHistoryBeanArrayList = (ArrayList<GuaranteeHistoryBean>) mList;
+
+            if (EmptyUtils.isNotEmpty(guaranteeHistoryBeanArrayList)) {
+                GuaranteeHistoryBean guaranteeHistoryBean = guaranteeHistoryBeanArrayList.get(position);
+                if (EmptyUtils.isNotEmpty(guaranteeHistoryBean)) {
+                    int status = guaranteeHistoryBean.getStatus();//1:待支付 2:支付成功(报告生成中) 3:支付失败 4:报告已生成 5:报告异常
+                    if (EmptyUtils.isNotEmpty(status)) {
+                        switch (status) {
+                            case 1:
+                                holder.tv_item1.setText("待支付");
+                                break;
+                            case 2:
+                                holder.tv_item1.setText("报告生成中");
+                                break;
+                            case 3:
+                                holder.tv_item1.setText("支付失败");
+                                holder.tv_item1.setTextColor(mContext.getResources().getColor(R.color.warning_color));
+                                holder.iv_item2.setBackgroundResource(R.drawable.double_oval_warning);
+                                break;
+                            case 4:
+                                holder.tv_item1.setText("报告已生成");
+                                break;
+                            case 5:
+                                holder.tv_item1.setText("报告异常");
+                                holder.tv_item1.setTextColor(mContext.getResources().getColor(R.color.warning_color));
+                                holder.iv_item2.setBackgroundResource(R.drawable.double_oval_warning);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    String created_at = guaranteeHistoryBean.getCreated_at();
+                    holder.tv_item2.setText(TimeUtils.date2String(new Date(Long.valueOf(created_at) * 1000), new SimpleDateFormat("yyyy.MM.dd")));
+                    Glide.with(mContext)
+                            .load(guaranteeHistoryBean.getBrand_logo())
+                            .placeholder(R.drawable.default_bg_ratio_1)
+                            .error(R.drawable.default_bg_ratio_1)
+                            .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
+                            .into(holder.iv_item1);
+                    holder.tv_item3.setText(guaranteeHistoryBean.getBrand_name());
+                    holder.tv_item4.setText("VIN：" + guaranteeHistoryBean.getVin());//VIN：WPGAFG343TMJOTH
                 }
             }
         }
@@ -1681,6 +1758,37 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                 tv_item1 = (TextView) itemView.findViewById(R.id.tv_peccancy_time);
                 tv_item2 = (TextView) itemView.findViewById(R.id.tv_handle_or_not);
                 tv_item3 = (TextView) itemView.findViewById(R.id.tv_peccancy_content);
+            } else if (dataType == HPHM_DATA_TYPE) {
+                tv_item1 = (TextView) itemView.findViewById(R.id.tv_car_hphm);
+                tv_item2 = (TextView) itemView.findViewById(R.id.tv_record_time);
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnItemClickListener != null) {
+                            int position = getLayoutPosition();
+                            mOnItemClickListener.onItemClick(mList.get(position), position);
+                        }
+                    }
+                });
+            } else if (dataType == GUARANTEE_HISTORY_DATA_TYPE) {
+                tv_item1 = (TextView) itemView.findViewById(R.id.tv_record_status);
+                tv_item2 = (TextView) itemView.findViewById(R.id.tv_record_time);
+
+                iv_item1 = (ImageView) itemView.findViewById(R.id.iv_car_image);
+                iv_item2 = (ImageView) itemView.findViewById(R.id.iv1);
+                tv_item3 = (TextView) itemView.findViewById(R.id.tv_car_name);
+                tv_item4 = (TextView) itemView.findViewById(R.id.tv_car_vin);
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnItemClickListener != null) {
+                            int position = getLayoutPosition();
+                            mOnItemClickListener.onItemClick(mList.get(position), position);
+                        }
+                    }
+                });
             }
         }
     }

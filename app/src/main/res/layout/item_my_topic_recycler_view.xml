@@ -30,6 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
+            android:layout_marginTop="2dp"
             android:layout_toRightOf="@id/iv_image"
             android:text="#野马专区#"
             android:textColor="@color/main_text_color"
@@ -40,6 +41,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/iv_image"
+            android:layout_marginBottom="2dp"
             android:layout_marginLeft="15dp"
             android:layout_toRightOf="@id/iv_image"
             android:text="35参与丨155内容"
@@ -57,7 +59,8 @@
             android:gravity="center"
             android:text="12条更新"
             android:textColor="@color/pure_white_color"
-            android:textSize="11sp"/>
+            android:textSize="11sp"
+            android:visibility="gone"/>
 
     </RelativeLayout>
 

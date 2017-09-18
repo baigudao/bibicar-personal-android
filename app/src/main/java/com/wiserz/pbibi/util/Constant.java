@@ -42,6 +42,7 @@ public class Constant {
     public static final String VIN = "vin";
     public static final String CITY = "city";
     public static final String HPHM = "hphm";
+    public static final String TAG = "tag";
     public static final String ENGINENO = "engineno";
     public static final String CLASSNO = "classno";
     public static final String ACCOUNT = "account";
@@ -90,6 +91,7 @@ public class Constant {
     public static final String CAR_INTRO = "car_intro";
     public static final String PRICE = "price";
     public static final String CITY_ID = "city_id";
+    public static final String REPORT_SN = "report_sn";
     public static final String CAR_TYPE = "car_type";
     public static final String POST_CONTENT = "post_content";
     public static final String CONTACT_PHONE = "contact_phone";
@@ -153,6 +155,7 @@ public class Constant {
     private static final String myFocusUrl = hostUrl + "v3/theme/myfocus";//我的关注
     private static final String joinTopicUrl = hostUrl + "v3/theme/followtheme";//加入话题
     private static final String topicMemberUrl = hostUrl + "v3/theme/themeofuser";//话题成员
+    private static final String allTopicUrl = hostUrl + "v3/theme/alltheme";//全部话题
 
     private static final String balanceUrl = hostUrl + "v3/UserCarPact/getusermoney";//获取余额
     private static final String takeCashUrl = hostUrl + "v3/UserCarPact/sellerrefund";//卖家提现
@@ -202,6 +205,9 @@ public class Constant {
     private static final String checkGuaranteeUrl = hostUrl + "v4/PollingCar/PollingCarPay";//查维保支付费用
     private static final String checkSumUrl = hostUrl + "v4/PollingCar/CheckIns";//查出险支付费用
     private static final String peccancyListUrl = hostUrl + "v4/pollingcar/checkcarrulelist";//违章列表
+    private static final String checkDetailUrl = hostUrl + "v4/pollingcar/getreport";//维保，出险详情
+    private static final String sumListUrl = hostUrl + "v4/pollingcar/Inslist";//出险列表
+    private static final String guaranteeListUrl = hostUrl + "v4/pollingcar/PollingCarList";//维保列表
 
     public static String getRegisterApp() {
         return registerApp;
@@ -489,5 +495,21 @@ public class Constant {
 
     public static String getPeccancyListUrl() {
         return peccancyListUrl;
+    }
+
+    public static String getCheckDetailUrl() {
+        return checkDetailUrl;
+    }
+
+    public static String getSumListUrl() {
+        return sumListUrl;
+    }
+
+    public static String getGuaranteeListUrl() {
+        return guaranteeListUrl;
+    }
+
+    public static String getAllTopicUrl() {
+        return allTopicUrl;
     }
 }

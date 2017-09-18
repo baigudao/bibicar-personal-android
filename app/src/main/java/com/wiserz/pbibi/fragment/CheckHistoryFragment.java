@@ -3,6 +3,7 @@ package com.wiserz.pbibi.fragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -108,5 +109,14 @@ public class CheckHistoryFragment extends BaseFragment {
 
     private BaseFragment getFragment() {
         return mBaseFragment.get(position);
+    }
+
+    public void setHistoryCheck(RadioButton radioButton) {
+        if (getView() != null) {
+            ((RadioButton) getView().findViewById(R.id.rb_peccancy)).setChecked(false);
+            ((RadioButton) getView().findViewById(R.id.rb_sum)).setChecked(false);
+            ((RadioButton) getView().findViewById(R.id.rb_guarantee)).setChecked(false);
+            radioButton.setChecked(true);
+        }
     }
 }

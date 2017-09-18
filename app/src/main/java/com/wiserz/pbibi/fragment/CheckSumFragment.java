@@ -165,8 +165,8 @@ public class CheckSumFragment extends BaseFragment {
                 .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
                 .addParams(Constant.PAY_TYPE, pay_type)
                 .addParams(Constant.S_TYPE, String.valueOf(1))//1：vin码搜索 2：车牌号搜索
-                .addParams(Constant.VIN, "LGBP12E21DY196239")//测试数据：vin=LGBP12E21DY196239&brand_id=4
-                .addParams(Constant.BRAND_ID, "4")
+                .addParams(Constant.VIN, vin_string)//测试数据：vin=LGBP12E21DY196239&brand_id=4
+                .addParams(Constant.BRAND_ID, brand_info)
                 .build()
                 .execute(new StringCallback() {
                     @Override

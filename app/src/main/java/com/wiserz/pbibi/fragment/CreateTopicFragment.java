@@ -85,7 +85,6 @@ public class CreateTopicFragment extends BaseFragment {
                 postDataToQiNiu();
                 break;
             case R.id.ll_setting_background:
-                ToastUtils.showShort("设置背景");
                 selectImage();
                 break;
             default:
@@ -178,6 +177,8 @@ public class CreateTopicFragment extends BaseFragment {
                     }
                 }
             }, null);//如果需要进度通知、crc 校验、中途取消、指定 mimeType，则需要填写相应字段，详见下面的 UploadOptions 参数说明
+        } else {
+            ToastUtils.showShort("请设置话题背景图！");
         }
     }
 
@@ -186,7 +187,7 @@ public class CreateTopicFragment extends BaseFragment {
                 .url(Constant.getCreateTopicUrl())
                 .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
                 .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
-                .addParams(Constant.THEME, getTopicTitle())
+                .addParams(Constant.THEME, "#" + getTopicTitle() + "#")
                 .addParams(Constant.POST_FILE, hash)
                 .addParams(Constant.TITLE, getTopicContent())
                 .build()
@@ -205,6 +206,7 @@ public class CreateTopicFragment extends BaseFragment {
                             JSONObject jsonObjectData = jsonObject.optJSONObject("data");
                             if (status == 1) {
                                 ToastUtils.showShort("创建话题成功");
+                                goBack();
                             } else {
                                 String code = jsonObject.optString("code");
                                 String msg = jsonObjectData.optString("msg");

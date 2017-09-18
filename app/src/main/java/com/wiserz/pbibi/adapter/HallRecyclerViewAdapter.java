@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import com.blankj.utilcode.util.EmptyUtils;
 import com.blankj.utilcode.util.LogUtils;
-import com.blankj.utilcode.util.ToastUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wiserz.pbibi.R;
@@ -90,7 +89,7 @@ public class HallRecyclerViewAdapter extends RecyclerView.Adapter implements Bas
             myJoinTopicViewHolder.tv_check_all.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ToastUtils.showShort("全部话题");
+                    ((BaseActivity) mContext).gotoPager(AllTopicFragment.class, null);
                 }
             });
 
@@ -132,7 +131,6 @@ public class HallRecyclerViewAdapter extends RecyclerView.Adapter implements Bas
                 currentType = HOT_WEEK;
                 break;
             default:
-                currentType = RECOMMEND_TOPIC;
                 break;
         }
         return currentType;

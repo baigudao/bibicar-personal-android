@@ -32,6 +32,8 @@ public class MainActivity extends BaseActivity {
     private int position;
     private Fragment fromFragment;
 
+    private int flag;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +47,7 @@ public class MainActivity extends BaseActivity {
 
     private void initView() {
         setContentView(R.layout.activity_main);
+        flag = 0;
         mRg_main = (RadioGroup) findViewById(R.id.rg_main);
         rb_community = (RadioButton) findViewById(R.id.rb_community);
     }
@@ -69,27 +72,38 @@ public class MainActivity extends BaseActivity {
 
         @Override
         public void onCheckedChanged(RadioGroup group, int checkedId) {
+            Drawable top_normal = getResources().getDrawable(R.drawable.tab_circle3x);
             switch (checkedId) {
                 case R.id.rb_recommend://主页
                     position = 0;
+                    rb_community.setCompoundDrawablesWithIntrinsicBounds(null, top_normal, null, null);
+                    rb_community.setText("圈子");
                     break;
                 case R.id.rb_car_center://车市
                     position = 1;
+                    rb_community.setCompoundDrawablesWithIntrinsicBounds(null, top_normal, null, null);
+                    rb_community.setText("圈子");
                     break;
                 case R.id.rb_community://圈子
                     position = 2;
+                    flag++;
                     Drawable top = getResources().getDrawable(R.drawable.tab_circle_c3x);
-                    rb_community.setCompoundDrawablesWithIntrinsicBounds(null, top , null, null);
+                    rb_community.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null);
                     rb_community.setText(null);
-                    rb_community.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            ToastUtils.showShort("呵呵");
-                        }
-                    });
+                    if (flag == 2) {
+                        rb_community.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                ToastUtils.showShort("呵呵");
+                            }
+                        });
+                        flag = 1;
+                    }
                     break;
                 case R.id.rb_message://消息
                     position = 3;
+                    rb_community.setCompoundDrawablesWithIntrinsicBounds(null, top_normal, null, null);
+                    rb_community.setText("圈子");
                     break;
                 case R.id.rb_mine://我的
                     int type = DataManager.getInstance().getUserInfo().getProfile().getType();//1,表示个人用户；2，表示企业用户
@@ -99,6 +113,8 @@ public class MainActivity extends BaseActivity {
                     } else if (type == 2) {
                         position = 5;
                     }
+                    rb_community.setCompoundDrawablesWithIntrinsicBounds(null, top_normal, null, null);
+                    rb_community.setText("圈子");
                     break;
                 default:
                     position = 0;
