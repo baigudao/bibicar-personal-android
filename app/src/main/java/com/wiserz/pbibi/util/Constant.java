@@ -141,6 +141,15 @@ public class Constant {
     private final static String commentLikeDelete = hostUrl + "v3/article/commentlikedelete";//取消点赞
     private final static String articleCollectURl = hostUrl + "v3/article/collectcreate";//收藏
     private final static String articleDeleteURl = hostUrl + "v3/article/collectdelete";//取消收藏
+    private final static String carDeleteURl = hostUrl + "v3/Favoritecar/delete";//取消车辆收藏
+    private final static String carCollectURl = hostUrl + "v3/Favoritecar/create";//车辆收藏
+    private final static String articleCollectListURl = hostUrl + "v3/Article/collectlist";//文章收藏列表
+    private final static String videoCollectListURl = hostUrl + "v3/Video/collectlist";//视频收藏列表
+
+    private final static String likeCreateURl = hostUrl + "v3/Like/create";//朋友圈点赞
+    private final static String likeDeleteURl = hostUrl + "v3/Like/delete";//朋友圈取消点赞
+    private final static String deleteCommentUrl = hostUrl + "v3/comment/delete";//删除朋友圈
+    private final static String postDetailUrl = hostUrl + "v4/Post/index";//朋友圈详情
 
     private final static String userSearchUrl = hostUrl + "v3/user/search";//用户搜索
 
@@ -169,7 +178,7 @@ public class Constant {
     private static final String sellingCarUrl = hostUrl + "v3/publishcar/list";//在售车辆
     private static final String salesConsultantUrl = hostUrl + "v3/user/getsaleslist";//销售顾问
 
-    private static final String userLoveCarUrl = hostUrl + "v3/car/userFavCars";//用户爱车
+    private static final String userLoveCarUrl = hostUrl + "v4/car/userFavCars";//用户爱车
     private static final String dreamCarUrl = hostUrl + "v3/DreamCar/list";//梦想车
 
     private static final String cityListUrl = hostUrl + "car/city/province_id/";//城市列表
@@ -208,6 +217,8 @@ public class Constant {
     private static final String checkDetailUrl = hostUrl + "v4/pollingcar/getreport";//维保，出险详情
     private static final String sumListUrl = hostUrl + "v4/pollingcar/Inslist";//出险列表
     private static final String guaranteeListUrl = hostUrl + "v4/pollingcar/PollingCarList";//维保列表
+
+    private static final String orderListUrl = hostUrl + "v3/shop/orderlist";//订单列表
 
     public static String getRegisterApp() {
         return registerApp;
@@ -511,5 +522,41 @@ public class Constant {
 
     public static String getAllTopicUrl() {
         return allTopicUrl;
+    }
+
+    public static String getCarDeleteURl() {
+        return carDeleteURl;
+    }
+
+    public static String getCarCollectURl() {
+        return carCollectURl;
+    }
+
+    public static String getArticleCollectListURl() {
+        return articleCollectListURl;
+    }
+
+    public static String getVideoCollectListURl() {
+        return videoCollectListURl;
+    }
+
+    public static String getOrderListUrl() {
+        return orderListUrl;
+    }
+
+    public static String getLikeCreateURl() {
+        return likeCreateURl;
+    }
+
+    public static String getLikeDeleteURl() {
+        return likeDeleteURl;
+    }
+
+    public static String getDeleteCommentUrl() {
+        return deleteCommentUrl;
+    }
+
+    public static String getPostDetailUrl() {
+        return postDetailUrl;
     }
 }

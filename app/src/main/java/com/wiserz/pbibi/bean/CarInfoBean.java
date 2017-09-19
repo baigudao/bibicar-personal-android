@@ -58,6 +58,24 @@ public class CarInfoBean extends BaseBean {
     private String mileage;
     private String board_time;
     private String exchange_time;
+    private int is_like;
+    private int is_fav;
+
+    public int getIs_fav() {
+        return is_fav;
+    }
+
+    public void setIs_fav(int is_fav) {
+        this.is_fav = is_fav;
+    }
+
+    public int getIs_like() {
+        return is_like;
+    }
+
+    public void setIs_like(int is_like) {
+        this.is_like = is_like;
+    }
 
     public String getExchange_time() {
         return exchange_time;

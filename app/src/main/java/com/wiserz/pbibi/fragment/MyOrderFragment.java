@@ -3,7 +3,14 @@ package com.wiserz.pbibi.fragment;
 import android.view.View;
 import android.widget.TextView;
 
+import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.SPUtils;
 import com.wiserz.pbibi.R;
+import com.wiserz.pbibi.util.Constant;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
+
+import okhttp3.Call;
 
 /**
  * Created by jackie on 2017/8/21 18:21.
@@ -38,5 +45,25 @@ public class MyOrderFragment extends BaseFragment {
     @Override
     protected void initData() {
         super.initData();
+        getDataFromNet();
+    }
+
+    private void getDataFromNet() {
+        OkHttpUtils.post()
+                .url(Constant.getOrderListUrl())
+                .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
+                .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+                        LogUtils.e(response);//预约订单和租车订单两个tab
+                    }
+                });
     }
 }

@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.wiserz.pbibi.BaseApplication;
 import com.wiserz.pbibi.activity.BaseActivity;
 
@@ -106,9 +107,18 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
         super.onHiddenChanged(hidden);
         if (!isHidden()) {
             //如果没有隐藏
+            LogUtils.e("BaseFragment onHiddenChanged");
             if (BaseApplication.getCurFragment() == null || !BaseApplication.getCurFragment().getClass().getName().equals(getClass().getName())) {
                 BaseApplication.setCurFragment(this);
             }
         }
+    }
+
+    @Override
+    public void onResume() {
+        if (BaseApplication.getCurFragment() == null || !BaseApplication.getCurFragment().getClass().getName().equals(getClass().getName())) {
+            BaseApplication.setCurFragment(this);
+        }
+        super.onResume();
     }
 }

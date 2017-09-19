@@ -353,7 +353,7 @@ public class ArticleDetailFragment extends BaseFragment implements BaseRecyclerV
     /**
      * 收藏or不收藏
      */
-    private void collectOrNot(int feed_ids, final int is_collects) {
+    private void collectOrNot(int feed_ids, int is_collects) {
         if (is_collects == 1) {
             //为1已经收藏了 需要取消收藏
             OkHttpUtils.post()

@@ -10,7 +10,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.blankj.utilcode.util.ToastUtils;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.fragment.BaseFragment;
 import com.wiserz.pbibi.fragment.CarCenterFragment;
@@ -18,6 +17,7 @@ import com.wiserz.pbibi.fragment.CommunityFragment;
 import com.wiserz.pbibi.fragment.MessageFragment;
 import com.wiserz.pbibi.fragment.MyFragment;
 import com.wiserz.pbibi.fragment.MyFragmentForCompany;
+import com.wiserz.pbibi.fragment.PublishStateFragment;
 import com.wiserz.pbibi.fragment.RecommendFragment;
 
 import java.util.ArrayList;
@@ -26,13 +26,9 @@ import java.util.List;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
-    //    private RadioGroup mRg_main;
-    //    private RadioButton rb_community;
     private List<BaseFragment> mBaseFragment;
     private int position;
     private Fragment fromFragment;
-
-    //    private int flag;
 
     private LinearLayout ll_home;
     private LinearLayout ll_car_center;
@@ -84,9 +80,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         tv_me = (TextView) findViewById(R.id.tv_me);
 
         iv_publish_state = (ImageView) findViewById(R.id.iv_publish_state);
-        //        flag = 0;
-        //        mRg_main = (RadioGroup) findViewById(R.id.rg_main);
-        //        rb_community = (RadioButton) findViewById(R.id.rb_community);
     }
 
     private void initFragment() {
@@ -109,9 +102,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         position = 0;
         setCheck(0);
         switchFragment(fromFragment, getFragment());
-        //        mRg_main.setOnCheckedChangeListener(new MyOnCheckedChangeListener());
-        //        //设置默认选中常用框架
-        //        mRg_main.check(R.id.rb_recommend);
     }
 
     //    private class MyOnCheckedChangeListener implements RadioGroup.OnCheckedChangeListener {
@@ -212,15 +202,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         return mBaseFragment.get(position);
     }
 
-    //    public void setCheck(RadioButton radioButton) {
-    //        ((RadioButton) findViewById(R.id.rb_recommend)).setChecked(false);
-    //        ((RadioButton) findViewById(R.id.rb_community)).setChecked(false);
-    //        ((RadioButton) findViewById(R.id.rb_car_center)).setChecked(false);
-    //        ((RadioButton) findViewById(R.id.rb_message)).setChecked(false);
-    //        ((RadioButton) findViewById(R.id.rb_mine)).setChecked(false);
-    //        radioButton.setChecked(true);
-    //    }
-
     long startTime = 0;
 
     @Override
@@ -267,17 +248,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             case 0:
                 resetTab();
                 iv_home.setBackgroundResource(R.drawable.tab_home_c3x);
-                tv_home.setTextColor(getResources().getColor(R.color.main_color));
+                tv_home.setTextColor(getResources().getColor(R.color.main_text_color));
                 break;
             case 1:
                 resetTab();
                 iv_car_center.setBackgroundResource(R.drawable.tab_market_c3x);
-                tv_car_center.setTextColor(getResources().getColor(R.color.main_color));
+                tv_car_center.setTextColor(getResources().getColor(R.color.main_text_color));
                 break;
             case 2:
                 resetTab();
-                //                iv_community.setBackgroundResource(R.drawable.tab_circle_c3x);
-                //                tv_community.setTextColor(getResources().getColor(R.color.main_color));
                 iv_community.setVisibility(View.GONE);
                 tv_community.setVisibility(View.GONE);
                 iv_publish_state.setVisibility(View.VISIBLE);
@@ -285,12 +264,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             case 3:
                 resetTab();
                 iv_message.setBackgroundResource(R.drawable.tab_news_c3x);
-                tv_message.setTextColor(getResources().getColor(R.color.main_color));
+                tv_message.setTextColor(getResources().getColor(R.color.main_text_color));
                 break;
             case 4:
                 resetTab();
                 iv_me.setBackgroundResource(R.drawable.tab_me_c3x);
-                tv_me.setTextColor(getResources().getColor(R.color.main_color));
+                tv_me.setTextColor(getResources().getColor(R.color.main_text_color));
                 break;
             default:
                 break;
@@ -302,8 +281,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         tv_home.setTextColor(getResources().getColor(R.color.second_text_color));
         iv_car_center.setBackgroundResource(R.drawable.tab_market3x);
         tv_car_center.setTextColor(getResources().getColor(R.color.second_text_color));
-        //        iv_community.setBackgroundResource(R.drawable.tab_circle3x);
-        //        tv_community.setTextColor(getResources().getColor(R.color.second_text_color));
         iv_community.setVisibility(View.VISIBLE);
         tv_community.setVisibility(View.VISIBLE);
         iv_publish_state.setVisibility(View.GONE);
@@ -314,6 +291,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     public void publishState(View view) {
-        ToastUtils.showShort("发布动态");
+        gotoPager(PublishStateFragment.class, null);//发布动态
     }
 }

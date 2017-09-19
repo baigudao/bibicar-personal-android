@@ -69,7 +69,10 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
     private String contact_phone;
     private CarInfoBean carInfoBean;
 
+    private ImageView iv_like_image;
+
     private static final int SAME_STYLE_CAR_DATA_TYPE = 28;
+    private int is_fav;
 
     @Override
     protected int getLayoutId() {
@@ -86,7 +89,7 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
         iv_image.setVisibility(View.VISIBLE);
         iv_image.setImageResource(R.drawable.share_selector);
         iv_image.setOnClickListener(this);
-        ImageView iv_like_image = (ImageView) view.findViewById(R.id.iv_like_image);
+        iv_like_image = (ImageView) view.findViewById(R.id.iv_like_image);
         iv_like_image.setVisibility(View.VISIBLE);
         iv_like_image.setOnClickListener(this);
         view.findViewById(R.id.btn_watch_vr).setOnClickListener(this);
@@ -104,7 +107,9 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
                 showSharePlatformPopWindow();
                 break;
             case R.id.iv_like_image:
-                ToastUtils.showShort("收藏or不收藏");
+                if (EmptyUtils.isNotEmpty(car_id) && EmptyUtils.isNotEmpty(is_fav)) {
+                    collectCarOrNot(car_id, is_fav);
+                }
                 break;
             case R.id.btn_watch_vr:
                 if (EmptyUtils.isEmpty(vr_url)) {
@@ -151,6 +156,82 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
                 break;
         }
     }
+
+    private void collectCarOrNot(String car_id, int is_favs) {
+        if (is_favs == 1) {
+            //为1已经收藏了 需要取消收藏
+            OkHttpUtils.post()
+                    .url(Constant.getCarDeleteURl())
+                    .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
+                    .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
+                    .addParams(Constant.CAR_ID, car_id)
+                    .build()
+                    .execute(new StringCallback() {
+                        @Override
+                        public void onError(Call call, Exception e, int id) {
+                            ToastUtils.showShort("取消收藏失败");
+                        }
+
+                        @Override
+                        public void onResponse(String response, int id) {
+                            JSONObject jsonObject = null;
+                            try {
+                                jsonObject = new JSONObject(response);
+                                int status = jsonObject.optInt("status");
+                                JSONObject jsonObjectData = jsonObject.optJSONObject("data");
+                                if (status == 1) {
+                                    iv_like_image.setImageResource(R.drawable.v1_like3x);
+                                    is_fav = 2;
+                                    ToastUtils.showShort("取消收藏成功");
+                                } else {
+                                    String code = jsonObject.optString("code");
+                                    String msg = jsonObjectData.optString("msg");
+                                    ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+
+        } else if (is_favs == 2) {
+            //为2点赞  还没收藏需要收藏
+            OkHttpUtils.post()
+                    .url(Constant.getCarCollectURl())
+                    .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
+                    .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
+                    .addParams(Constant.CAR_ID, car_id)
+                    .build()
+                    .execute(new StringCallback() {
+                        @Override
+                        public void onError(Call call, Exception e, int id) {
+                            ToastUtils.showShort("收藏车辆失败");
+                        }
+
+                        @Override
+                        public void onResponse(String response, int id) {
+                            JSONObject jsonObject = null;
+                            try {
+                                jsonObject = new JSONObject(response);
+                                int status = jsonObject.optInt("status");
+                                JSONObject jsonObjectData = jsonObject.optJSONObject("data");
+                                if (status == 1) {
+                                    iv_like_image.setImageResource(R.drawable.v1_like_selected3x);
+                                    is_fav = 1;
+                                    ToastUtils.showShort("收藏车辆成功");
+                                } else {
+                                    String code = jsonObject.optString("code");
+                                    String msg = jsonObjectData.optString("msg");
+                                    ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+        }
+    }
+
 
     @Override
     protected void initData() {
@@ -213,10 +294,12 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
                 Gson gson = new Gson();
                 ArrayList<CarInfoBean> carInfoBeanArrayList = gson.fromJson(related_price_car_list.toString(), new TypeToken<ArrayList<CarInfoBean>>() {
                 }.getType());
-                BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, carInfoBeanArrayList, SAME_STYLE_CAR_DATA_TYPE);
-                recycler_view_same_style.setAdapter(baseRecyclerViewAdapter);
-                recycler_view_same_style.setLayoutManager(new GridLayoutManager(mContext, 2, LinearLayoutManager.VERTICAL, false));
-                baseRecyclerViewAdapter.setOnItemClickListener(this);
+                if (EmptyUtils.isNotEmpty(carInfoBeanArrayList) && carInfoBeanArrayList.size() != 0) {
+                    BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, carInfoBeanArrayList, SAME_STYLE_CAR_DATA_TYPE);
+                    recycler_view_same_style.setAdapter(baseRecyclerViewAdapter);
+                    recycler_view_same_style.setLayoutManager(new GridLayoutManager(mContext, 2, LinearLayoutManager.VERTICAL, false));
+                    baseRecyclerViewAdapter.setOnItemClickListener(this);
+                }
             } else {
                 tv_same_style_car.setVisibility(View.GONE);
                 recycler_view_same_style.setVisibility(View.GONE);
@@ -237,10 +320,12 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
                 Gson gson = new Gson();
                 ArrayList<CarInfoBean> carInfoBeanArrayList = gson.fromJson(related_style_car_list.toString(), new TypeToken<ArrayList<CarInfoBean>>() {
                 }.getType());
-                BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, carInfoBeanArrayList, SAME_STYLE_CAR_DATA_TYPE);
-                recycler_view_same_style.setAdapter(baseRecyclerViewAdapter);
-                recycler_view_same_style.setLayoutManager(new GridLayoutManager(mContext, 2, LinearLayoutManager.VERTICAL, false));
-                baseRecyclerViewAdapter.setOnItemClickListener(this);
+                if (EmptyUtils.isNotEmpty(carInfoBeanArrayList) && carInfoBeanArrayList.size() != 0) {
+                    BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, carInfoBeanArrayList, SAME_STYLE_CAR_DATA_TYPE);
+                    recycler_view_same_style.setAdapter(baseRecyclerViewAdapter);
+                    recycler_view_same_style.setLayoutManager(new GridLayoutManager(mContext, 2, LinearLayoutManager.VERTICAL, false));
+                    baseRecyclerViewAdapter.setOnItemClickListener(this);
+                }
             } else {
                 tv_same_style_car.setVisibility(View.GONE);
                 recycler_view_same_style.setVisibility(View.GONE);
@@ -256,6 +341,20 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
             vr_url = carInfoBean.getVr_url();
             contact_phone = carInfoBean.getContact_phone();
             ((TextView) getView().findViewById(R.id.tv_title)).setText(carInfoBean.getBrand_info().getBrand_name() + " " + carInfoBean.getSeries_info().getSeries_name());
+
+            is_fav = carInfoBean.getIs_fav();
+            if (EmptyUtils.isNotEmpty(is_fav)) {
+                switch (is_fav) {
+                    case 1:
+                        iv_like_image.setImageResource(R.drawable.v1_like_selected3x);
+                        break;
+                    case 2:
+                        iv_like_image.setImageResource(R.drawable.v1_like3x);
+                        break;
+                    default:
+                        break;
+                }
+            }
 
             final CarInfoBean.FilesBean filesBean = carInfoBean.getFiles();
             if (EmptyUtils.isNotEmpty(filesBean)) {

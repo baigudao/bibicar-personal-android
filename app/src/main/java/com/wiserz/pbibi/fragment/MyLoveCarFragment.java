@@ -2,6 +2,7 @@ package com.wiserz.pbibi.fragment;
 
 import android.view.View;
 
+import com.blankj.utilcode.util.EmptyUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.wiserz.pbibi.R;
@@ -63,6 +64,7 @@ public class MyLoveCarFragment extends BaseFragment {
                             JSONObject jsonObjectData = jsonObject.optJSONObject("data");
                             if (status == 1) {
                                 //处理数据
+                                handlerData(jsonObjectData);
                             } else {
                                 String code = jsonObject.optString("code");
                                 String msg = jsonObjectData.optString("msg");
@@ -73,5 +75,11 @@ public class MyLoveCarFragment extends BaseFragment {
                         }
                     }
                 });
+    }
+
+    private void handlerData(JSONObject jsonObjectData) {
+        if (EmptyUtils.isNotEmpty(jsonObjectData)){
+
+        }
     }
 }

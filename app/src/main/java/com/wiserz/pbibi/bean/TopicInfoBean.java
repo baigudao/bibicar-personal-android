@@ -19,6 +19,7 @@ public class TopicInfoBean extends BaseBean {
      * user_id : 389
      */
 
+    private String address;
     private String created;
     private int feed_num;
     private int id;
@@ -28,6 +29,14 @@ public class TopicInfoBean extends BaseBean {
     private String theme;
     private String title;
     private int user_id;
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
     public String getCreated() {
         return created;

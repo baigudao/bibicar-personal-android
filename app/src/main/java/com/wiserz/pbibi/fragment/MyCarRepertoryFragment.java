@@ -116,7 +116,6 @@ public class MyCarRepertoryFragment extends BaseFragment {
     }
 
     private BaseFragment getFragment() {
-        BaseFragment fragment = mBaseFragment.get(position);
-        return fragment;
+        return mBaseFragment.get(position);
     }
 }

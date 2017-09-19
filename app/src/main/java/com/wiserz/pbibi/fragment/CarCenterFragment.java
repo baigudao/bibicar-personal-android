@@ -168,10 +168,12 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
 
     private void handlerCarListData(JSONObject jsonObjectData) {
         ArrayList<CarInfoBean> carInfoBeanArrayList = getCarListData(jsonObjectData);
-        BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, carInfoBeanArrayList, CAR_LIST_FOR_CAR_CENTER);
-        recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
-        recyclerView.setAdapter(baseRecyclerViewAdapter);
-        baseRecyclerViewAdapter.setOnItemClickListener(this);
+        if (EmptyUtils.isNotEmpty(carInfoBeanArrayList)&&carInfoBeanArrayList.size()!=0){
+            BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, carInfoBeanArrayList, CAR_LIST_FOR_CAR_CENTER);
+            recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
+            recyclerView.setAdapter(baseRecyclerViewAdapter);
+            baseRecyclerViewAdapter.setOnItemClickListener(this);
+        }
     }
 
     private ArrayList<CarInfoBean> getCarListData(JSONObject jsonObjectData) {

@@ -1,9 +1,12 @@
 package com.wiserz.pbibi.adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.GridLayoutManager;
@@ -11,6 +14,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -46,6 +51,7 @@ import com.wiserz.pbibi.bean.UserBean;
 import com.wiserz.pbibi.bean.VideoBean;
 import com.wiserz.pbibi.fragment.CommentDetailFragment;
 import com.wiserz.pbibi.fragment.ShowAllImageFragment;
+import com.wiserz.pbibi.fragment.StateDetailFragment;
 import com.wiserz.pbibi.fragment.VideoDetailFragment;
 import com.wiserz.pbibi.util.Constant;
 import com.wiserz.pbibi.util.DataManager;
@@ -128,6 +134,8 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
 
     private static final int GUARANTEE_HISTORY_DATA_TYPE = 37;
 
+    private static final int SELECT_TOPIC_DATA_TYPE = 38;
+
     private static final int NEW_CAR_DATA_TYPE = 55;
 
     private static final int CAR_VIDEO_DATA_TYPE = 65;
@@ -146,6 +154,8 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
 
     private static final int CAR_LIST_FOR_CAR_CENTER = 100;//汽车中心的汽车列表
 
+    private ArrayList<String> topic_string = new ArrayList<>();
+
     public BaseRecyclerViewAdapter(Context context, List<T> tList, int dataType) {
         this.mContext = context;
         this.mList = tList;
@@ -155,7 +165,9 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
     @Override
     public BaseRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         ViewHolder viewHolder;
-        if (dataType == GUARANTEE_HISTORY_DATA_TYPE) {
+        if (dataType == SELECT_TOPIC_DATA_TYPE) {
+            viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_select_topic, null));
+        } else if (dataType == GUARANTEE_HISTORY_DATA_TYPE) {
             viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_guarantee_history, null));
         } else if (dataType == HPHM_DATA_TYPE) {
             viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_hphm_image, null));
@@ -368,6 +380,32 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                 holder.tv_item1.setText(topicInfoBean.getTheme());
                 holder.tv_item2.setText(topicInfoBean.getTitle());
                 holder.tv_item3.setText(topicInfoBean.getFeed_num() + "参与丨" + topicInfoBean.getIs_skip() + "内容");
+            }
+        } else if (dataType == SELECT_TOPIC_DATA_TYPE) {
+            ArrayList<TopicInfoBean> topicInfoBeanArrayList = (ArrayList<TopicInfoBean>) mList;
+
+            if (EmptyUtils.isNotEmpty(topicInfoBeanArrayList)) {
+                final TopicInfoBean topicInfoBean = topicInfoBeanArrayList.get(position);
+
+                Glide.with(mContext)
+                        .load(topicInfoBean.getPost_file())
+                        .placeholder(R.drawable.user_photo)
+                        .bitmapTransform(new RoundedCornersTransformation(mContext, SizeUtils.dp2px(8), 0, RoundedCornersTransformation.CornerType.ALL))
+                        .into(holder.iv_item1);
+                holder.tv_item1.setText(topicInfoBean.getTheme());
+                holder.tv_item2.setText(topicInfoBean.getTitle());
+                holder.tv_item3.setText(topicInfoBean.getFeed_num() + "参与丨" + topicInfoBean.getIs_skip() + "内容");
+
+                holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if (isChecked) {
+                            topic_string.add(topicInfoBean.getTheme());
+                        } else {
+                            topic_string.remove(topicInfoBean.getTheme());
+                        }
+                    }
+                });
             }
         } else if (dataType == ARTICLE_LIST_DATA_TYPE) {
             ArrayList<ArticleBean> articleBeanArrayList = (ArrayList<ArticleBean>) mList;
@@ -1028,7 +1066,7 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                         .into(holder.iv_item1);
             }
         } else if (dataType == MY_STATE_DATA_TYPE) {
-            ArrayList<FeedBean> feedBeanArrayList = (ArrayList<FeedBean>) mList;
+            final ArrayList<FeedBean> feedBeanArrayList = (ArrayList<FeedBean>) mList;
 
             if (EmptyUtils.isNotEmpty(feedBeanArrayList)) {
                 final FeedBean feedBean = feedBeanArrayList.get(position);
@@ -1073,25 +1111,127 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                     holder.iv_item2.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            ToastUtils.showShort("分享");
+                            if (EmptyUtils.isNotEmpty(mOnShareToPlatform)) {
+                                mOnShareToPlatform.share();
+                            }
                         }
                     });
                     holder.iv_item3.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            ToastUtils.showShort("评论");
+                            Bundle bundle = new Bundle();
+                            bundle.putInt(Constant.FEED_ID, feedBean.getFeed_id());
+                            ((BaseActivity) mContext).gotoPager(StateDetailFragment.class, bundle);//动态详情
                         }
                     });
+
+                    final String is_like = feedBean.getIs_like();
+                    if (EmptyUtils.isNotEmpty(is_like)) {
+                        switch (is_like) {
+                            case "1":
+                                holder.iv_item4.setImageResource(R.drawable.v1_like_selected3x);
+                                break;
+                            case "2":
+                                holder.iv_item4.setImageResource(R.drawable.v1_like3x);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
                     holder.iv_item4.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            ToastUtils.showShort("收藏");
+                            final Handler handler = new Handler() {
+                                @Override
+                                public void handleMessage(Message msg) {
+                                    super.handleMessage(msg);
+                                    if (msg.what == 555) {
+                                        //取消点赞
+                                        OkHttpUtils.post()
+                                                .url(Constant.getLikeDeleteURl())
+                                                .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
+                                                .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
+                                                .addParams(Constant.FEED_ID, String.valueOf(feedBean.getFeed_id()))
+                                                .build()
+                                                .execute(new StringCallback() {
+                                                    @Override
+                                                    public void onError(Call call, Exception e, int id) {
+                                                        ToastUtils.showShort("取消点赞失败");
+                                                    }
+
+                                                    @Override
+                                                    public void onResponse(String response, int id) {
+                                                        JSONObject jsonObject = null;
+                                                        try {
+                                                            jsonObject = new JSONObject(response);
+                                                            int status = jsonObject.optInt("status");
+                                                            JSONObject jsonObjectData = jsonObject.optJSONObject("data");
+                                                            if (status == 1) {
+                                                                holder.iv_item4.setImageResource(R.drawable.v1_like3x);
+                                                                int like_num = Integer.valueOf(holder.tv_item6.getText().toString());
+                                                                --like_num;
+                                                                holder.tv_item6.setText(String.valueOf(like_num));
+                                                                ToastUtils.showShort("取消点赞成功");
+                                                            } else {
+                                                                String code = jsonObject.optString("code");
+                                                                String msg = jsonObjectData.optString("msg");
+                                                                ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                                            }
+                                                        } catch (JSONException e) {
+                                                            e.printStackTrace();
+                                                        }
+                                                    }
+                                                });
+                                    }
+                                }
+                            };
+                            //点赞
+                            OkHttpUtils.post()
+                                    .url(Constant.getLikeCreateURl())
+                                    .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
+                                    .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
+                                    .addParams(Constant.FEED_ID, String.valueOf(feedBean.getFeed_id()))
+                                    .build()
+                                    .execute(new StringCallback() {
+                                        @Override
+                                        public void onError(Call call, Exception e, int id) {
+                                            ToastUtils.showShort("点赞失败");
+                                        }
+
+                                        @Override
+                                        public void onResponse(String response, int id) {
+                                            JSONObject jsonObject = null;
+                                            try {
+                                                jsonObject = new JSONObject(response);
+                                                int status = jsonObject.optInt("status");
+                                                JSONObject jsonObjectData = jsonObject.optJSONObject("data");
+                                                if (status == 1) {
+                                                    holder.iv_item4.setImageResource(R.drawable.v1_like_selected3x);
+                                                    int like_num = Integer.valueOf(holder.tv_item6.getText().toString());
+                                                    ++like_num;
+                                                    holder.tv_item6.setText(String.valueOf(like_num));
+                                                    ToastUtils.showShort("点赞成功");
+                                                } else {
+                                                    String code = jsonObject.optString("code");
+                                                    if (code.equals("67000")) {
+                                                        handler.sendEmptyMessage(555);
+                                                        return;
+                                                    }
+                                                    String msg = jsonObjectData.optString("msg");
+                                                    ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                                }
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    });
                         }
                     });
+
                     holder.iv_item5.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            ToastUtils.showShort("举报或者删除");
+                            showDialog(v, feedBean, feedBeanArrayList);
                         }
                     });
 
@@ -1298,6 +1438,94 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
         }
     }
 
+    private void showDialog(View v, final FeedBean feedBean, final ArrayList<FeedBean> feedBeanArrayList) {
+        //        先判断该动态是否是自己的
+        String[] items1 = {"删除"};
+        String[] items2 = {"举报"};
+        if (SPUtils.getInstance().getInt(Constant.USER_ID) == feedBean.getPost_user_info().getUser_id()) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);  //先得到构造器
+            builder.setTitle("提示"); //设置标题
+            //builder.setMessage("是否确认退出?"); //设置内容
+            builder.setIcon(R.mipmap.ic_launcher);//设置图标，图片id即可
+            //设置列表显示，注意设置了列表显示就不要设置builder.setMessage()了，否则列表不起作用。
+            builder.setItems(items1, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    final AlertDialog.Builder mDialog = new AlertDialog.Builder(mContext);
+                    mDialog.setTitle("警告");
+                    mDialog.setMessage("是否要删除此动态?");
+                    mDialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            feedBeanArrayList.remove(feedBean);
+                            notifyDataSetChanged();
+                            OkHttpUtils.post()
+                                    .url(Constant.getDeleteCommentUrl())
+                                    .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
+                                    .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
+                                    .addParams(Constant.FEED_ID, String.valueOf(feedBean.getFeed_id()))
+                                    .addParams(Constant.COMMENT_ID, "")
+                                    .build()
+                                    .execute(new StringCallback() {
+                                        @Override
+                                        public void onError(Call call, Exception e, int id) {
+
+                                        }
+
+                                        @Override
+                                        public void onResponse(String response, int id) {
+                                            JSONObject jsonObject = null;
+                                            try {
+                                                jsonObject = new JSONObject(response);
+                                                int status = jsonObject.optInt("status");
+                                                JSONObject jsonObjectData = jsonObject.optJSONObject("data");
+                                                if (status == 1) {
+                                                    ToastUtils.showShort("删除成功!");
+                                                } else {
+                                                    String code = jsonObject.optString("code");
+                                                    String msg = jsonObjectData.optString("msg");
+                                                    ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                                }
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    });
+                        }
+                    });
+                    mDialog.setNegativeButton("取消", null);
+                    mDialog.create().show();
+                }
+            });
+            builder.create().show();
+        } else {
+            //别人发的
+            //dialog参数设置
+            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);  //先得到构造器
+            builder.setTitle("提示"); //设置标题
+            //builder.setMessage("是否确认退出?"); //设置内容
+            builder.setIcon(R.mipmap.ic_launcher);//设置图标，图片id即可
+            //设置列表显示，注意设置了列表显示就不要设置builder.setMessage()了，否则列表不起作用。
+            builder.setItems(items2, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    //--------------------------延迟一秒---------------------------------
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    //-----------------------------------------------------------
+                    ToastUtils.showLong("^_^ 我们已收到您的举报，会尽快处理！\n" +
+                            "                    感谢您的支持！");
+                }
+            });
+            builder.create().show();
+        }
+    }
+
     @Override
     public int getItemCount() {
         return mList == null ? 0 : mList.size();
@@ -1326,6 +1554,8 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
         private LinearLayout linearLayout2;
 
         private RelativeLayout relativeLayout;
+
+        private CheckBox checkBox;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -1422,6 +1652,23 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                 tv_item1 = (TextView) itemView.findViewById(R.id.tv_name);
                 tv_item2 = (TextView) itemView.findViewById(R.id.tv_content);
                 tv_item3 = (TextView) itemView.findViewById(R.id.tv_num);
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnItemClickListener != null) {
+                            int position = getLayoutPosition();
+                            mOnItemClickListener.onItemClick(mList.get(position), position);
+                        }
+                    }
+                });
+            } else if (dataType == SELECT_TOPIC_DATA_TYPE) {
+                iv_item1 = (ImageView) itemView.findViewById(R.id.iv_image);
+                tv_item1 = (TextView) itemView.findViewById(R.id.tv_name);
+                tv_item2 = (TextView) itemView.findViewById(R.id.tv_content);
+                tv_item3 = (TextView) itemView.findViewById(R.id.tv_num);
+
+                checkBox = (CheckBox) itemView.findViewById(R.id.checkBox);
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -1804,5 +2051,20 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
 
     public void setOnItemClickListener(OnItemClickListener mOnItemClickListener) {
         this.mOnItemClickListener = mOnItemClickListener;
+    }
+
+
+    public interface OnShareToPlatform {
+        void share();
+    }
+
+    public OnShareToPlatform mOnShareToPlatform;
+
+    public void setOnShareToPlatform(OnShareToPlatform mOnShareToPlatform) {
+        this.mOnShareToPlatform = mOnShareToPlatform;
+    }
+
+    public ArrayList<String> getTopic_string() {
+        return topic_string;
     }
 }

@@ -1,8 +1,10 @@
 package com.wiserz.pbibi.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -20,6 +22,7 @@ import com.wiserz.pbibi.bean.CarInfoBean;
 import com.wiserz.pbibi.bean.FeedBean;
 import com.wiserz.pbibi.bean.UserInfoBean;
 import com.wiserz.pbibi.util.Constant;
+import com.wiserz.pbibi.view.SharePlatformPopupWindow;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -29,6 +32,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import cn.sharesdk.onekeyshare.OnekeyShare;
+import cn.sharesdk.onekeyshare.OnekeyShareTheme;
 import okhttp3.Call;
 
 /**
@@ -36,7 +41,7 @@ import okhttp3.Call;
  * QQ : 971060378
  * Used as : 我的主页的页面
  */
-public class MyHomePageFragment extends BaseFragment implements BaseRecyclerViewAdapter.OnItemClickListener {
+public class MyHomePageFragment extends BaseFragment implements BaseRecyclerViewAdapter.OnItemClickListener, BaseRecyclerViewAdapter.OnShareToPlatform {
 
     private static final int MY_CAR_REPERTORY_DATA_TYPE = 24;
 
@@ -49,6 +54,11 @@ public class MyHomePageFragment extends BaseFragment implements BaseRecyclerView
     private int feed_num;
 
     private LinearLayout ll_follow_and_message;
+
+    private String share_img;
+    private String share_title;
+    private String share_txt;
+    private String share_url;
 
     @Override
     protected int getLayoutId() {
@@ -166,10 +176,10 @@ public class MyHomePageFragment extends BaseFragment implements BaseRecyclerView
                             int status = jsonObject.optInt("status");
                             JSONObject jsonObjectData = jsonObject.optJSONObject("data");
                             if (status == 1) {
-                                String share_img = jsonObjectData.optString("share_img");
-                                String share_title = jsonObjectData.optString("share_title");
-                                String share_txt = jsonObjectData.optString("share_txt");
-                                String share_url = jsonObjectData.optString("share_url");
+                                share_img = jsonObjectData.optString("share_img");
+                                share_title = jsonObjectData.optString("share_title");
+                                share_txt = jsonObjectData.optString("share_txt");
+                                share_url = jsonObjectData.optString("share_url");
                                 int total = jsonObjectData.optInt("total");
                                 if (getView() != null && EmptyUtils.isNotEmpty(total)) {
                                     ((TextView) getView().findViewById(R.id.tv_state_num)).setText("动态 (" + total + ")");//动态 （0）
@@ -230,6 +240,7 @@ public class MyHomePageFragment extends BaseFragment implements BaseRecyclerView
                     state_recyclerView.setAdapter(baseRecyclerViewAdapter);
                     state_recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
                     baseRecyclerViewAdapter.setOnItemClickListener(this);
+                    baseRecyclerViewAdapter.setOnShareToPlatform(this);
                 }
             }
         }
@@ -266,6 +277,78 @@ public class MyHomePageFragment extends BaseFragment implements BaseRecyclerView
                 bundle.putString(Constant.CAR_ID, carInfoBean.getCar_id());
                 gotoPager(CarDetailFragment.class, bundle);
             }
+        } else if (data.getClass().getSimpleName().equals("FeedBean")) {
+            FeedBean feedBean = (FeedBean) data;
+            if (EmptyUtils.isNotEmpty(feedBean)) {
+                Bundle bundle = new Bundle();
+                bundle.putInt(Constant.FEED_ID, feedBean.getFeed_id());
+                gotoPager(StateDetailFragment.class, bundle);//动态详情
+            }
         }
+    }
+
+    @Override
+    public void share() {
+        showSharePlatformPopWindow();
+    }
+
+    private void showSharePlatformPopWindow() {
+        SharePlatformPopupWindow sharePlatformPopWindow = new SharePlatformPopupWindow(getActivity(), new SharePlatformPopupWindow.SharePlatformListener() {
+            @Override
+            public void onSinaWeiboClicked() {
+                showShare(mContext, "SinaWeibo", true);
+            }
+
+            @Override
+            public void onWeChatClicked() {
+                showShare(mContext, "Wechat", true);
+            }
+
+            @Override
+            public void onWechatMomentsClicked() {
+                showShare(mContext, "WechatMoments", true);
+            }
+
+            @Override
+            public void onCancelBtnClicked() {
+
+            }
+        });
+        sharePlatformPopWindow.initView();
+        sharePlatformPopWindow.showAtLocation(getView(), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+    }
+
+    /**
+     * 演示调用ShareSDK执行分享
+     *
+     * @param context
+     * @param platformToShare 指定直接分享平台名称（一旦设置了平台名称，则九宫格将不会显示）
+     * @param showContentEdit 是否显示编辑页
+     */
+    private void showShare(Context context, String platformToShare, boolean showContentEdit) {
+
+        OnekeyShare oks = new OnekeyShare();
+        oks.setSilent(!showContentEdit);
+        if (platformToShare != null) {
+            oks.setPlatform(platformToShare);
+        }
+        //ShareSDK快捷分享提供两个界面第一个是九宫格 CLASSIC  第二个是SKYBLUE
+        oks.setTheme(OnekeyShareTheme.CLASSIC);
+        // 令编辑页面显示为Dialog模式
+        //        oks.setDialogMode();
+        // 在自动授权时可以禁用SSO方式
+        oks.disableSSOWhenAuthorize();
+
+        oks.setTitle(share_title);
+        if (platformToShare.equalsIgnoreCase("SinaWeibo")) {
+            oks.setText(share_txt + "\n" + share_url);
+        } else {
+            oks.setText(share_img);
+            oks.setImageUrl(share_img);
+            oks.setUrl(share_url);
+        }
+
+        // 启动分享
+        oks.show(context);
     }
 }
