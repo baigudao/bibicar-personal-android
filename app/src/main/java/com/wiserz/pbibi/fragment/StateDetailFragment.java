@@ -4,12 +4,15 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.EmptyUtils;
+import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.TimeUtils;
 import com.blankj.utilcode.util.ToastUtils;
@@ -26,10 +29,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import cn.sharesdk.onekeyshare.OnekeyShare;
 import cn.sharesdk.onekeyshare.OnekeyShareTheme;
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 import okhttp3.Call;
 
 
@@ -118,6 +124,7 @@ public class StateDetailFragment extends BaseFragment {
 
                     @Override
                     public void onResponse(String response, int id) {
+                        LogUtils.e(response);
                         JSONObject jsonObject = null;
                         try {
                             jsonObject = new JSONObject(response);
@@ -274,9 +281,45 @@ public class StateDetailFragment extends BaseFragment {
                                 });
                     }
                 });
+
+                //添加图片内容
+                addImageContent(feedInfoDetailBean.getPost_files());
             }
         }
     }
+
+    private void addImageContent(List<FeedInfoDetailBean.PostFilesBean> post_files) {
+        if (EmptyUtils.isNotEmpty(post_files) && getView() != null) {
+            ArrayList<FeedInfoDetailBean.PostFilesBean> postFilesBeanArrayList = (ArrayList<FeedInfoDetailBean.PostFilesBean>) post_files;
+            LinearLayout ll_image_container = (LinearLayout) getView().findViewById(R.id.ll_image_container);
+
+            if (EmptyUtils.isNotEmpty(postFilesBeanArrayList) && postFilesBeanArrayList.size() != 0) {
+
+                int content_size = postFilesBeanArrayList.size();
+                if (ll_image_container.getChildCount() != content_size) {
+                    ll_image_container.removeAllViews();
+                    LayoutInflater layoutInflater = LayoutInflater.from(mContext);
+                    for (int i = 0; i < content_size; i++) {
+                        ll_image_container.addView(layoutInflater.inflate(R.layout.show_state_image_content, null));
+                    }
+                }
+                View content_view;
+                for (int i = 0; i < content_size; i++) {
+                    content_view = ll_image_container.getChildAt(i);
+                    final ImageView iv_show_state_content = (ImageView) content_view.findViewById(R.id.iv_show_state_content);
+                    //图片
+                    iv_show_state_content.setVisibility(View.VISIBLE);
+                    Glide.with(mContext)
+                            .load(postFilesBeanArrayList.get(i).getFile_url())
+                            .placeholder(R.drawable.default_bg_ratio_1)
+                            .error(R.drawable.default_bg_ratio_1)
+                            .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
+                            .into(iv_show_state_content); //方法中设置asBitmap可以设置回调类型
+                }
+            }
+        }
+    }
+
 
     private void showSharePlatformPopWindow() {
         SharePlatformPopupWindow sharePlatformPopWindow = new SharePlatformPopupWindow(getActivity(), new SharePlatformPopupWindow.SharePlatformListener() {

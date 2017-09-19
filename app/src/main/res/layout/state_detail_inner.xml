@@ -71,14 +71,13 @@
         android:id="@+id/ll_image_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
+        android:layout_marginTop="15dp"
         android:orientation="vertical"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="10dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="5dp"
         android:background="@color/divider_color"/>
 
     <RelativeLayout
@@ -94,7 +93,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
-            android:text="32人赞过"
+            android:text="0人赞过"
             android:textColor="@color/second_text_color"
             android:textSize="14sp"/>
 
