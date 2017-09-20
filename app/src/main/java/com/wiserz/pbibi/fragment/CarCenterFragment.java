@@ -1,13 +1,17 @@
 package com.wiserz.pbibi.fragment;
 
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.baidu.location.BDAbstractLocationListener;
@@ -100,9 +104,54 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                 showPostCarWindow();
                 break;
             case R.id.ll_sort:
-                //                PopupWindow popupWindow = new PopupWindow(View.inflate(mContext, R.layout.item_car_sort, null), ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                //                popupWindow.setOutsideTouchable(true);
-                //                popupWindow.showAsDropDown(ll_sort);
+                View car_sort_view = View.inflate(mContext, R.layout.item_car_sort, null);
+                final PopupWindow popupWindow = new PopupWindow(car_sort_view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                //外部是否可以点击
+                popupWindow.setBackgroundDrawable(new BitmapDrawable());
+                popupWindow.setOutsideTouchable(true);
+                popupWindow.showAsDropDown(ll_sort);
+
+                car_sort_view.findViewById(R.id.ll_container_sort).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        popupWindow.dismiss();
+                    }
+                });
+//                car_sort_view.setFocusableInTouchMode(true);
+                popupWindow.setTouchable(true);
+                car_sort_view.setOnKeyListener(new View.OnKeyListener() {
+                    @Override
+                    public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                        if (i == KeyEvent.KEYCODE_BACK) {
+                            popupWindow.dismiss();
+                        }
+                        return false;
+                    }
+                });
+                TextView tv_sort_most_low = (TextView) car_sort_view.findViewById(R.id.tv_sort_most_low);
+                TextView tv_sort_most_top = (TextView) car_sort_view.findViewById(R.id.tv_sort_most_top);
+                TextView tv_sort_most_short = (TextView) car_sort_view.findViewById(R.id.tv_sort_most_short);
+                tv_sort_most_low.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        ToastUtils.showShort("最低");
+                        popupWindow.dismiss();
+                    }
+                });
+                tv_sort_most_top.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        ToastUtils.showShort("最高");
+                        popupWindow.dismiss();
+                    }
+                });
+                tv_sort_most_short.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        ToastUtils.showShort("最短");
+                        popupWindow.dismiss();
+                    }
+                });
                 break;
             default:
                 break;
