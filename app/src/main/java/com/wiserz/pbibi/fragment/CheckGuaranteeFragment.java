@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.alipay.sdk.app.PayTask;
 import com.blankj.utilcode.util.EmptyUtils;
+import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.tencent.mm.opensdk.modelpay.PayReq;
@@ -247,25 +248,24 @@ public class CheckGuaranteeFragment extends BaseFragment {
         }
     }
 
-    //    @Override
-    //    public void onHiddenChanged(boolean hidden) {
-    //        super.onHiddenChanged(hidden);
-    //        if (hidden) {   // 不在最前端显示 相当于调用了onPause();
-    //            LogUtils.e("onHiddenChanged");
-    //            return;
-    //        } else {  // 在最前端显示 相当于调用了onResume();
-    //            //网络数据刷新
-    //            LogUtils.e("否则");
-    //        }
-    //    }
-    //
-    //    @Override
-    //    public void setUserVisibleHint(boolean isVisibleToUser) {
-    //        super.setUserVisibleHint(isVisibleToUser);
-    //        if (isVisibleToUser) {
-    //            LogUtils.e("setUserVisibleHint");
-    //        } else {
-    //            LogUtils.e("否则");
-    //        }
-    //    }
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (hidden) {   // 不在最前端显示 相当于调用了onPause();
+            LogUtils.e("onHiddenChanged");
+        } else {  // 在最前端显示 相当于调用了onResume();
+            //网络数据刷新
+            LogUtils.e("否则");
+        }
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            LogUtils.e("setUserVisibleHint");
+        } else {
+            LogUtils.e("否则");
+        }
+    }
 }

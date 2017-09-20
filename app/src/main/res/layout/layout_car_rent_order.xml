@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/background_color"
-    android:orientation="vertical">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/background_color"
+              android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -16,7 +16,7 @@
             android:layout_height="80dp"
             android:layout_marginLeft="15dp"
             android:scaleType="fitXY"
-            android:src="@drawable/default_bg_ratio_1" />
+            android:src="@drawable/default_bg_ratio_1"/>
 
         <TextView
             android:id="@+id/tv_car_name"
@@ -30,7 +30,7 @@
             android:maxLines="2"
             android:text="丰田 埃尔法（进口）2015 3.5L 自动尊贵版"
             android:textColor="@color/main_text_color"
-            android:textSize="18sp" />
+            android:textSize="18sp"/>
 
     </RelativeLayout>
 
@@ -39,7 +39,7 @@
         android:layout_height="1dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
-        android:background="@color/divider_color" />
+        android:background="@color/divider_color"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -48,7 +48,7 @@
         android:layout_marginTop="20dp"
         android:text="选择提车日期"
         android:textColor="@color/fifth_text_color"
-        android:textSize="14sp" />
+        android:textSize="14sp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -69,7 +69,7 @@
                 android:layout_gravity="center_horizontal"
                 android:text="07-13"
                 android:textColor="@color/main_text_color"
-                android:textSize="14sp" />
+                android:textSize="14sp"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -84,7 +84,7 @@
                     android:layout_height="wrap_content"
                     android:text="18:00"
                     android:textColor="@color/main_color"
-                    android:textSize="24sp" />
+                    android:textSize="24sp"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -92,7 +92,7 @@
                     android:layout_marginLeft="5dp"
                     android:text="租"
                     android:textColor="@color/main_text_color"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"/>
 
             </LinearLayout>
 
@@ -106,7 +106,7 @@
             android:background="@drawable/btn_background_selector"
             android:text="选择"
             android:textColor="@drawable/btn_text_background_selector"
-            android:textSize="16sp" />
+            android:textSize="16sp"/>
 
         <LinearLayout
             android:layout_width="0dp"
@@ -121,7 +121,7 @@
                 android:layout_gravity="center_horizontal"
                 android:text="07-13"
                 android:textColor="@color/main_text_color"
-                android:textSize="14sp" />
+                android:textSize="14sp"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -136,7 +136,7 @@
                     android:layout_marginRight="5dp"
                     android:text="还"
                     android:textColor="@color/main_text_color"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"/>
 
                 <TextView
                     android:id="@+id/tv_back_time"
@@ -144,7 +144,7 @@
                     android:layout_height="wrap_content"
                     android:text="18:00"
                     android:textColor="@color/main_color"
-                    android:textSize="24sp" />
+                    android:textSize="24sp"/>
 
             </LinearLayout>
 
@@ -157,7 +157,7 @@
         android:layout_height="1dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
-        android:background="@color/divider_color" />
+        android:background="@color/divider_color"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -170,7 +170,7 @@
             android:layout_marginLeft="15dp"
             android:text="租金"
             android:textColor="@color/main_text_color"
-            android:textSize="15sp" />
+            android:textSize="15sp"/>
 
         <TextView
             android:id="@+id/tv_rent_price"
@@ -181,7 +181,7 @@
             android:layout_marginRight="15dp"
             android:text="¥2300元/天"
             android:textColor="@color/main_text_color"
-            android:textSize="15sp" />
+            android:textSize="15sp"/>
 
     </RelativeLayout>
 
@@ -189,7 +189,7 @@
         android:layout_width="345dp"
         android:layout_height="1dp"
         android:layout_gravity="center_horizontal"
-        android:background="@color/divider_color" />
+        android:background="@color/divider_color"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -202,7 +202,7 @@
             android:layout_marginLeft="15dp"
             android:text="押金"
             android:textColor="@color/main_text_color"
-            android:textSize="15sp" />
+            android:textSize="15sp"/>
 
         <TextView
             android:id="@+id/tv_deposit"
@@ -213,7 +213,7 @@
             android:layout_marginRight="15dp"
             android:text="¥20000元/天"
             android:textColor="@color/main_text_color"
-            android:textSize="15sp" />
+            android:textSize="15sp"/>
 
     </RelativeLayout>
 
@@ -221,7 +221,7 @@
         android:layout_width="345dp"
         android:layout_height="1dp"
         android:layout_gravity="center_horizontal"
-        android:background="@color/divider_color" />
+        android:background="@color/divider_color"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -234,7 +234,7 @@
             android:layout_marginLeft="15dp"
             android:text="订金"
             android:textColor="@color/main_text_color"
-            android:textSize="15sp" />
+            android:textSize="15sp"/>
 
         <TextView
             android:id="@+id/tv_subscription"
@@ -245,7 +245,7 @@
             android:layout_marginRight="15dp"
             android:text="¥1000元/天"
             android:textColor="@color/main_text_color"
-            android:textSize="15sp" />
+            android:textSize="15sp"/>
 
     </RelativeLayout>
 
@@ -253,7 +253,7 @@
         android:layout_width="345dp"
         android:layout_height="1dp"
         android:layout_gravity="center_horizontal"
-        android:background="@color/divider_color" />
+        android:background="@color/divider_color"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -262,7 +262,7 @@
         android:layout_marginTop="20dp"
         android:text="填写提车人信息"
         android:textColor="@color/fifth_text_color"
-        android:textSize="14sp" />
+        android:textSize="14sp"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -276,7 +276,7 @@
             android:layout_marginLeft="15dp"
             android:text="提车人姓名"
             android:textColor="@color/main_text_color"
-            android:textSize="15sp" />
+            android:textSize="15sp"/>
 
         <EditText
             android:id="@+id/et_input_name"
@@ -285,12 +285,13 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
+            android:background="@null"
             android:hint="请输入姓名"
             android:inputType="text"
             android:maxLength="5"
             android:textColor="@color/main_text_color"
             android:textColorHint="@color/second_text_color"
-            android:textSize="15sp" />
+            android:textSize="15sp"/>
 
     </RelativeLayout>
 
@@ -298,7 +299,7 @@
         android:layout_width="345dp"
         android:layout_height="1dp"
         android:layout_gravity="center_horizontal"
-        android:background="@color/divider_color" />
+        android:background="@color/divider_color"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -311,7 +312,7 @@
             android:layout_marginLeft="15dp"
             android:text="联系方式"
             android:textColor="@color/main_text_color"
-            android:textSize="15sp" />
+            android:textSize="15sp"/>
 
         <EditText
             android:id="@+id/et_input_phone"
@@ -320,12 +321,13 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
+            android:background="@null"
             android:hint="请输入联系方式"
             android:inputType="number"
             android:maxLength="11"
             android:textColor="@color/main_text_color"
             android:textColorHint="@color/second_text_color"
-            android:textSize="15sp" />
+            android:textSize="15sp"/>
 
     </RelativeLayout>
 
@@ -333,7 +335,7 @@
         android:layout_width="345dp"
         android:layout_height="1dp"
         android:layout_gravity="center_horizontal"
-        android:background="@color/divider_color" />
+        android:background="@color/divider_color"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -342,7 +344,7 @@
         android:layout_marginTop="20dp"
         android:text="选择支付方式"
         android:textColor="@color/fifth_text_color"
-        android:textSize="14sp" />
+        android:textSize="14sp"/>
 
     <RelativeLayout
         android:id="@+id/rl_alipay"
@@ -357,7 +359,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
-            android:src="@drawable/business_alipay3x" />
+            android:src="@drawable/business_alipay3x"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -367,7 +369,7 @@
             android:layout_toRightOf="@id/iv2"
             android:text="支付宝支付"
             android:textColor="@color/fifth_background_color"
-            android:textSize="15sp" />
+            android:textSize="15sp"/>
 
         <ImageView
             android:id="@+id/iv_alipay_choose"
@@ -376,7 +378,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
-            android:src="@drawable/business_choose3x" />
+            android:src="@drawable/business_choose3x"/>
 
     </RelativeLayout>
 
@@ -384,7 +386,7 @@
         android:layout_width="345dp"
         android:layout_height="1dp"
         android:layout_gravity="center_horizontal"
-        android:background="@color/divider_color" />
+        android:background="@color/divider_color"/>
 
     <RelativeLayout
         android:id="@+id/rl_weixinpay"
@@ -398,7 +400,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
-            android:src="@drawable/business_wepay3x" />
+            android:src="@drawable/business_wepay3x"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -408,7 +410,7 @@
             android:layout_toRightOf="@id/iv3"
             android:text="微信支付"
             android:textColor="@color/fifth_background_color"
-            android:textSize="15sp" />
+            android:textSize="15sp"/>
 
         <ImageView
             android:id="@+id/iv_weixin_choose"
@@ -417,7 +419,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
-            android:src="@drawable/business_choose3x" />
+            android:src="@drawable/business_choose3x"/>
 
     </RelativeLayout>
 
@@ -425,7 +427,7 @@
         android:layout_width="345dp"
         android:layout_height="1dp"
         android:layout_gravity="center_horizontal"
-        android:background="@color/divider_color" />
+        android:background="@color/divider_color"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -440,14 +442,14 @@
             android:layout_height="wrap_content"
             android:text="支付定金表示您阅读并同意"
             android:textColor="@color/second_text_color"
-            android:textSize="14sp" />
+            android:textSize="14sp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="《订单说明规则》"
             android:textColor="@color/main_color"
-            android:textSize="14sp" />
+            android:textSize="14sp"/>
 
     </LinearLayout>
 

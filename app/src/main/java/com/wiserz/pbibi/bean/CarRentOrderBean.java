@@ -8,17 +8,17 @@ package com.wiserz.pbibi.bean;
 public class CarRentOrderBean extends BaseBean {
 
     /**
-     * car_id : 576bb64e3e231
-     * created_at : 1502788137
+     * car_id : 5969d55b09904
+     * created_at : 1505888544
      * created_by : 454
-     * id : 37
-     * order_sn : 2017081557489754
+     * id : 63
+     * order_sn : 2017092048525255
      * pay_fee : 0
      * pay_type : 0
-     * rental_time_end : 9854
-     * rental_time_start : 450
+     * rental_time_end : 07-1318:00
+     * rental_time_start : 07-1318:00
      * status : 1
-     * total_price : 1000
+     * total_price : 0.01
      * user_id : 454
      */
 
@@ -32,7 +32,7 @@ public class CarRentOrderBean extends BaseBean {
     private String rental_time_end;
     private String rental_time_start;
     private int status;
-    private int total_price;
+    private double total_price;
     private int user_id;
 
     public String getCar_id() {
@@ -115,11 +115,11 @@ public class CarRentOrderBean extends BaseBean {
         this.status = status;
     }
 
-    public int getTotal_price() {
+    public double getTotal_price() {
         return total_price;
     }
 
-    public void setTotal_price(int total_price) {
+    public void setTotal_price(double total_price) {
         this.total_price = total_price;
     }
 

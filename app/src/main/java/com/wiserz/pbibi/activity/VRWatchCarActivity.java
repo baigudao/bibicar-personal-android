@@ -6,10 +6,13 @@ import android.support.annotation.Nullable;
 
 import com.blankj.utilcode.util.BarUtils;
 import com.blankj.utilcode.util.EmptyUtils;
+import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.SPUtils;
 import com.tencent.smtt.sdk.WebSettings;
 import com.tencent.smtt.sdk.WebView;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.bean.BannerBean;
+import com.wiserz.pbibi.util.Constant;
 import com.wiserz.pbibi.util.DataManager;
 
 /**
@@ -37,7 +40,8 @@ public class VRWatchCarActivity extends BaseActivity {
 
         if (EmptyUtils.isNotEmpty(bannerBean)) {
             if (bannerBean.getType().equals("0")) {
-                String vrUrl = bannerBean.getAppUrl();
+                String vrUrl = bannerBean.getAppUrl() + "?ident=" + SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER) + "&session=" + SPUtils.getInstance().getString(Constant.SESSION_ID);
+                LogUtils.e(vrUrl);
                 if (EmptyUtils.isNotEmpty(vrUrl)) {
 
                     WebSettings ws = webView.getSettings();

@@ -25,6 +25,7 @@ import com.wiserz.pbibi.view.SharePlatformPopupWindow;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -53,6 +54,9 @@ public class StateDetailFragment extends BaseFragment {
     private String share_txt;
     private String share_url;
 
+    private ImageView iv3;
+    private TextView tv_like_num;
+
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_state_detail;
@@ -72,6 +76,9 @@ public class StateDetailFragment extends BaseFragment {
         iv_image.setLayoutParams(layoutParams);
         iv_image.setImageResource(R.drawable.report_selector);
         iv_image.setOnClickListener(this);
+
+        iv3 = (ImageView) view.findViewById(R.id.iv3);
+        tv_like_num = (TextView) view.findViewById(R.id.tv_like_num);
 
         view.findViewById(R.id.rl_share).setOnClickListener(this);
         view.findViewById(R.id.rl_comment).setOnClickListener(this);
@@ -94,11 +101,100 @@ public class StateDetailFragment extends BaseFragment {
                 ToastUtils.showShort("评论");
                 break;
             case R.id.rl_like:
-                ToastUtils.showShort("喜欢");
+                if (EmptyUtils.isNotEmpty(feed_id)) {
+                    likeOrNot();
+                }
                 break;
             default:
                 break;
         }
+    }
+
+    private void likeOrNot() {
+        final Handler handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                if (msg.what == 555) {
+                    //取消点赞
+                    OkHttpUtils.post()
+                            .url(Constant.getLikeDeleteURl())
+                            .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
+                            .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
+                            .addParams(Constant.FEED_ID, String.valueOf(feed_id))
+                            .build()
+                            .execute(new StringCallback() {
+                                @Override
+                                public void onError(Call call, Exception e, int id) {
+                                    ToastUtils.showShort("取消点赞失败");
+                                }
+
+                                @Override
+                                public void onResponse(String response, int id) {
+                                    JSONObject jsonObject = null;
+                                    try {
+                                        jsonObject = new JSONObject(response);
+                                        int status = jsonObject.optInt("status");
+                                        JSONObject jsonObjectData = jsonObject.optJSONObject("data");
+                                        if (status == 1) {
+                                            iv3.setImageResource(R.drawable.v1_like3x);
+                                            int like_num = Integer.valueOf(tv_like_num.getText().toString());
+                                            --like_num;
+                                            tv_like_num.setText(String.valueOf(like_num));
+                                            ToastUtils.showShort("取消点赞成功");
+                                        } else {
+                                            String code = jsonObject.optString("code");
+                                            String msg = jsonObjectData.optString("msg");
+                                            ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
+                }
+            }
+        };
+        //点赞
+        OkHttpUtils.post()
+                .url(Constant.getLikeCreateURl())
+                .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
+                .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
+                .addParams(Constant.FEED_ID, String.valueOf(feed_id))
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        ToastUtils.showShort("点赞失败");
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+                        JSONObject jsonObject = null;
+                        try {
+                            jsonObject = new JSONObject(response);
+                            int status = jsonObject.optInt("status");
+                            JSONObject jsonObjectData = jsonObject.optJSONObject("data");
+                            if (status == 1) {
+                                iv3.setImageResource(R.drawable.v1_like_selected3x);
+                                int like_num = Integer.valueOf(tv_like_num.getText().toString());
+                                ++like_num;
+                                tv_like_num.setText(String.valueOf(like_num));
+                                ToastUtils.showShort("点赞成功");
+                            } else {
+                                String code = jsonObject.optString("code");
+                                if (code.equals("67000")) {
+                                    handler.sendEmptyMessage(555);
+                                    return;
+                                }
+                                String msg = jsonObjectData.optString("msg");
+                                ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
     }
 
     @Override
@@ -136,6 +232,7 @@ public class StateDetailFragment extends BaseFragment {
                                 share_txt = jsonObjectData.optString("share_txt");
                                 share_url = jsonObjectData.optString("share_url");
                                 handlerDataForFeedInfo(jsonObjectData.optJSONObject("feed_info"));
+                                handlerDataForLikeList(jsonObjectData.optJSONArray("like_list"));
                             } else {
                                 String code = jsonObject.optString("code");
                                 String msg = jsonObjectData.optString("msg");
@@ -146,6 +243,13 @@ public class StateDetailFragment extends BaseFragment {
                         }
                     }
                 });
+    }
+
+    private void handlerDataForLikeList(JSONArray like_list) {
+        if (EmptyUtils.isNotEmpty(like_list)) {
+            int size = like_list.length();
+
+        }
     }
 
     private void handlerDataForFeedInfo(JSONObject jsonObjectData) {
@@ -178,7 +282,6 @@ public class StateDetailFragment extends BaseFragment {
                 ((TextView) getView().findViewById(R.id.tv_comment_num)).setText(String.valueOf(feedInfoDetailBean.getComment_num()));
                 ((TextView) getView().findViewById(R.id.tv_like_num)).setText(String.valueOf(feedInfoDetailBean.getLike_num()));
 
-                final ImageView iv3 = (ImageView) getView().findViewById(R.id.iv3);
                 int is_collect = feedInfoDetailBean.getIs_collect();
                 if (EmptyUtils.isNotEmpty(is_collect)) {
                     switch (is_collect) {
@@ -192,95 +295,6 @@ public class StateDetailFragment extends BaseFragment {
                             break;
                     }
                 }
-                iv3.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        final Handler handler = new Handler() {
-                            @Override
-                            public void handleMessage(Message msg) {
-                                super.handleMessage(msg);
-                                if (msg.what == 555) {
-                                    //取消点赞
-                                    OkHttpUtils.post()
-                                            .url(Constant.getLikeDeleteURl())
-                                            .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
-                                            .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
-                                            .addParams(Constant.FEED_ID, String.valueOf(feedInfoDetailBean.getFeed_id()))
-                                            .build()
-                                            .execute(new StringCallback() {
-                                                @Override
-                                                public void onError(Call call, Exception e, int id) {
-                                                    ToastUtils.showShort("取消点赞失败");
-                                                }
-
-                                                @Override
-                                                public void onResponse(String response, int id) {
-                                                    JSONObject jsonObject = null;
-                                                    try {
-                                                        jsonObject = new JSONObject(response);
-                                                        int status = jsonObject.optInt("status");
-                                                        JSONObject jsonObjectData = jsonObject.optJSONObject("data");
-                                                        if (status == 1) {
-                                                            iv3.setImageResource(R.drawable.v1_like3x);
-                                                            int like_num = Integer.valueOf(((TextView) getView().findViewById(R.id.tv_like_num)).getText().toString());
-                                                            --like_num;
-                                                            ((TextView) getView().findViewById(R.id.tv_like_num)).setText(String.valueOf(like_num));
-                                                            ToastUtils.showShort("取消点赞成功");
-                                                        } else {
-                                                            String code = jsonObject.optString("code");
-                                                            String msg = jsonObjectData.optString("msg");
-                                                            ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
-                                                        }
-                                                    } catch (JSONException e) {
-                                                        e.printStackTrace();
-                                                    }
-                                                }
-                                            });
-                                }
-                            }
-                        };
-                        //点赞
-                        OkHttpUtils.post()
-                                .url(Constant.getLikeCreateURl())
-                                .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
-                                .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
-                                .addParams(Constant.FEED_ID, String.valueOf(feedInfoDetailBean.getFeed_id()))
-                                .build()
-                                .execute(new StringCallback() {
-                                    @Override
-                                    public void onError(Call call, Exception e, int id) {
-                                        ToastUtils.showShort("点赞失败");
-                                    }
-
-                                    @Override
-                                    public void onResponse(String response, int id) {
-                                        JSONObject jsonObject = null;
-                                        try {
-                                            jsonObject = new JSONObject(response);
-                                            int status = jsonObject.optInt("status");
-                                            JSONObject jsonObjectData = jsonObject.optJSONObject("data");
-                                            if (status == 1) {
-                                                iv3.setImageResource(R.drawable.v1_like_selected3x);
-                                                int like_num = Integer.valueOf(((TextView) getView().findViewById(R.id.tv_like_num)).getText().toString());
-                                                ++like_num;
-                                                ((TextView) getView().findViewById(R.id.tv_like_num)).setText(String.valueOf(like_num));
-                                                ToastUtils.showShort("点赞成功");
-                                            } else {
-                                                String code = jsonObject.optString("code");
-                                                if (code.equals("67000")) {
-                                                    handler.sendEmptyMessage(555);
-                                                    return;
-                                                }
-                                                String msg = jsonObjectData.optString("msg");
-                                                ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
-                                            }
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                });
-                    }
-                });
 
                 //添加图片内容
                 addImageContent(feedInfoDetailBean.getPost_files());
@@ -314,12 +328,11 @@ public class StateDetailFragment extends BaseFragment {
                             .placeholder(R.drawable.default_bg_ratio_1)
                             .error(R.drawable.default_bg_ratio_1)
                             .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
-                            .into(iv_show_state_content); //方法中设置asBitmap可以设置回调类型
+                            .into(iv_show_state_content);
                 }
             }
         }
     }
-
 
     private void showSharePlatformPopWindow() {
         SharePlatformPopupWindow sharePlatformPopWindow = new SharePlatformPopupWindow(getActivity(), new SharePlatformPopupWindow.SharePlatformListener() {

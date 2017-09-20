@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.blankj.utilcode.util.EmptyUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.google.gson.Gson;
@@ -64,7 +65,7 @@ public class CarRentFragment extends BaseFragment implements BaseRecyclerViewAda
                 goBack();
                 break;
             case R.id.btn_register:
-                gotoPager(MyCarRentFragment.class,null);//我的租车
+                gotoPager(MyCarRentFragment.class, null);//我的租车
                 break;
             default:
                 break;
@@ -110,16 +111,19 @@ public class CarRentFragment extends BaseFragment implements BaseRecyclerViewAda
     private void handlerDataForCarRent(JSONObject jsonObjectData) {
         ArrayList<CarRentInfoBean> carRentInfoBeanArrayList = getCarRentData(jsonObjectData);
 
-        BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, carRentInfoBeanArrayList, CAR_RENT_DATA_TYPE);
-        recyclerView.setLayoutManager(new GridLayoutManager(mContext, 2, LinearLayoutManager.VERTICAL, false));
-        recyclerView.setAdapter(baseRecyclerViewAdapter);
-        baseRecyclerViewAdapter.setOnItemClickListener(this);
+        if (EmptyUtils.isNotEmpty(carRentInfoBeanArrayList)) {
+            BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, carRentInfoBeanArrayList, CAR_RENT_DATA_TYPE);
+            recyclerView.setLayoutManager(new GridLayoutManager(mContext, 2, LinearLayoutManager.VERTICAL, false));
+            recyclerView.setAdapter(baseRecyclerViewAdapter);
+            baseRecyclerViewAdapter.setOnItemClickListener(this);
+        }
     }
 
     private ArrayList<CarRentInfoBean> getCarRentData(JSONObject jsonObjectData) {
         ArrayList<CarRentInfoBean> list = new ArrayList<>();
         JSONArray jsonArray = jsonObjectData.optJSONArray("car_list");
         Gson gson = new Gson();
+
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject jsonObject = jsonArray.optJSONObject(i).optJSONObject("car_info");
             CarRentInfoBean carRentInfoBean = gson.fromJson(jsonObject.toString(), CarRentInfoBean.class);

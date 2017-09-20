@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.alipay.sdk.app.PayTask;
 import com.blankj.utilcode.util.EmptyUtils;
+import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.SizeUtils;
 import com.blankj.utilcode.util.ToastUtils;
@@ -91,7 +92,7 @@ public class CreateCarRentOrderFragment extends BaseFragment {
 
         if (EmptyUtils.isNotEmpty(carRentDetailInfoBean)) {
             Glide.with(mContext)
-                    .load(carRentDetailInfoBean.getFiles().get(0).getFile_url())
+                    .load(carRentDetailInfoBean.getFiles().getType1().get(0).getFile_url())
                     .placeholder(R.drawable.default_bg_ratio_1)
                     .bitmapTransform(new RoundedCornersTransformation(mContext, SizeUtils.dp2px(8), 0, RoundedCornersTransformation.CornerType.ALL))
                     .into((ImageView) view.findViewById(R.id.iv_car_image));
@@ -274,6 +275,7 @@ public class CreateCarRentOrderFragment extends BaseFragment {
 
                     @Override
                     public void onResponse(String response, int id) {
+                        LogUtils.e(response);
                         JSONObject jsonObject = null;
                         try {
                             jsonObject = new JSONObject(response);

@@ -52,6 +52,7 @@ public class MyFragmentForCompany extends BaseFragment {
     private int feed_num;
     private int friend_num;
     private int is_friend;
+    private int user_id;//传过来的user_id
 
     @Override
     protected int getLayoutId() {
@@ -60,6 +61,7 @@ public class MyFragmentForCompany extends BaseFragment {
 
     @Override
     protected void initView(View view) {
+        user_id = getArguments().getInt(Constant.USER_ID);
         ll_follow_consult = (LinearLayout) view.findViewById(R.id.ll_follow_consult);
         ivSettings = (ImageView) view.findViewById(R.id.ivSettings);
         ivSettings.setOnClickListener(this);
@@ -112,15 +114,15 @@ public class MyFragmentForCompany extends BaseFragment {
             switch (checkedId) {
                 case R.id.rb_state://动态
                     position = 1;
-                    DataManager.getInstance().setData1(mUserId);
+                    DataManager.getInstance().setData1(user_id);
                     break;
                 case R.id.rb_selling_car://在售车辆
                     position = 0;
-                    DataManager.getInstance().setData1(mUserId);
+                    DataManager.getInstance().setData1(user_id);
                     break;
                 case R.id.rb_sales_consultant://销售顾问
                     position = 2;
-                    DataManager.getInstance().setData1(mUserId);
+                    DataManager.getInstance().setData1(user_id);
                     break;
                 default:
                     break;
@@ -138,8 +140,7 @@ public class MyFragmentForCompany extends BaseFragment {
      * @return
      */
     protected BaseFragment getFragment() {
-        BaseFragment fragment = mBaseFragment.get(position);
-        return fragment;
+        return mBaseFragment.get(position);
     }
 
     /**
@@ -175,7 +176,7 @@ public class MyFragmentForCompany extends BaseFragment {
     protected void initUserInfo() {
         mUserId = SPUtils.getInstance().getInt(Constant.USER_ID);//456
         showPostNowViewByUserId();
-        getHomePageInfo(mUserId);
+        getHomePageInfo(user_id);
     }
 
     /**
@@ -257,11 +258,13 @@ public class MyFragmentForCompany extends BaseFragment {
 
             Glide.with(mContext)
                     .load(myInfo.getProfile().getAvatar())
+                    .error(R.drawable.user_photo)
                     .placeholder(R.drawable.user_photo)
                     .into((ImageView) getView().findViewById(R.id.ivAvater));
 
             Glide.with(mContext)
                     .load(myInfo.getProfile().getAvatar())
+                    .placeholder(R.drawable.user_photo)
                     .bitmapTransform(new BlurTransformation(mContext, 5))
                     .into(((ImageView) getView().findViewById(R.id.iv_image)));
 

@@ -54,11 +54,13 @@ public class MyHomePageFragment extends BaseFragment implements BaseRecyclerView
     private int feed_num;
 
     private LinearLayout ll_follow_and_message;
+    private View view_bottom_line;
 
     private String share_img;
     private String share_title;
     private String share_txt;
     private String share_url;
+    private int user_id_from_net;
 
     @Override
     protected int getLayoutId() {
@@ -72,7 +74,10 @@ public class MyHomePageFragment extends BaseFragment implements BaseRecyclerView
         view.findViewById(R.id.tv_edit).setOnClickListener(this);
         view.findViewById(R.id.rl_my_car_repertory).setOnClickListener(this);
 
+        view_bottom_line = view.findViewById(R.id.view_bottom_line);
+        view_bottom_line.setVisibility(View.GONE);
         ll_follow_and_message = (LinearLayout) view.findViewById(R.id.ll_follow_and_message);
+        ll_follow_and_message.setVisibility(View.GONE);
         view.findViewById(R.id.rl_follow).setOnClickListener(this);
         view.findViewById(R.id.rl_message).setOnClickListener(this);
 
@@ -254,6 +259,7 @@ public class MyHomePageFragment extends BaseFragment implements BaseRecyclerView
 
             if (EmptyUtils.isNotEmpty(userInfoBean) && getView() != null) {
                 if (EmptyUtils.isNotEmpty(userInfoBean.getProfile())) {
+                    user_id_from_net = userInfoBean.getUser_id();
                     Glide.with(mContext)
                             .load(userInfoBean.getProfile().getAvatar())
                             .placeholder(R.drawable.user_photo)

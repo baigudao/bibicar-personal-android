@@ -117,11 +117,11 @@ public class Constant {
     private static final String userLoginUrl = hostUrl + "v3/user/login";//用户登录
     private static final String newHomeUrl = hostUrl + "v3/theme/homepage";//首页
 
-    private final static String carRentListUrl = hostUrl + "v3/rentalcar/list";//可租车辆列表
-    private final static String createCarRentOrderUrl = hostUrl + "v3/rentalcar/createrentalorder";//创建租车订单
-    private final static String createCarRentPayUrl = hostUrl + "v3/rentalcar/rentalorderpay";//创建租车支付
-    private static final String rentCarDetailUrl = hostUrl + "v3/rentalcar/index";//租车详情
-    private static final String myCarRentUrl = hostUrl + "v3/rentalcar/rentalorderlist";//我的租车
+    private final static String carRentListUrl = hostUrl + "v4/rentalcar/list";//可租车辆列表
+    private final static String createCarRentOrderUrl = hostUrl + "v4/rentalcar/createrentalorder";//创建租车订单
+    private final static String createCarRentPayUrl = hostUrl + "v4/rentalcar/rentalorderpay";//创建租车支付
+    private static final String rentCarDetailUrl = hostUrl + "v4/rentalcar/index";//租车详情
+    private static final String myCarRentUrl = hostUrl + "v4/rentalcar/rentalorderlist";//我的租车
 
     private final static String uploadTokenUrl = hostUrl + "app/uploadtoken";//上传文件的Token
 
@@ -194,6 +194,7 @@ public class Constant {
     private static final String myRichListUrl = hostUrl + "v4/User/getrichlist";//财富排行
 
     private static final String myFriendsUrl = hostUrl + "v3/Post/publish";//个人的朋友圈
+    //    private static final String friendsUrl = hostUrl + "v3/post/publish";//朋友圈
     private static final String commentListUrl = hostUrl + "v3/Comment/list";//评论列表
 
     private static final String brandUrl = hostUrl + "v4/PollingCar/getPollingCarBrand";

@@ -216,8 +216,26 @@ public class CarRentDetailFragment extends BaseFragment implements BaseRecyclerV
         if (EmptyUtils.isNotEmpty(carRentDetailInfoBean) && getView() != null) {
             tv_title.setText(carRentDetailInfoBean.getBrand_info().getBrand_name());
 
-            ArrayList<CarRentDetailInfoBean.FilesBean> filesBeanArrayList = (ArrayList<CarRentDetailInfoBean.FilesBean>) carRentDetailInfoBean.getFiles();
-            if (EmptyUtils.isNotEmpty(filesBeanArrayList)) {
+            CarRentDetailInfoBean.FilesBean filesBean = carRentDetailInfoBean.getFiles();
+            if (EmptyUtils.isNotEmpty(filesBean)) {
+                ArrayList<String> strings = new ArrayList<>();
+                ArrayList<CarRentDetailInfoBean.FilesBean.Type1Bean> type1BeanArrayList = (ArrayList<CarRentDetailInfoBean.FilesBean.Type1Bean>) filesBean.getType1();
+                ArrayList<CarRentDetailInfoBean.FilesBean.Type2Bean> type2BeanArrayList = (ArrayList<CarRentDetailInfoBean.FilesBean.Type2Bean>) filesBean.getType2();
+                ArrayList<CarRentDetailInfoBean.FilesBean.Type3Bean> type3BeanArrayList = (ArrayList<CarRentDetailInfoBean.FilesBean.Type3Bean>) filesBean.getType3();
+                ArrayList<CarRentDetailInfoBean.FilesBean.Type4Bean> type4BeanArrayList = (ArrayList<CarRentDetailInfoBean.FilesBean.Type4Bean>) filesBean.getType4();
+                for (int i = 0; i < type1BeanArrayList.size(); i++) {
+                    strings.add(type1BeanArrayList.get(i).getFile_url());
+                }
+                for (int i = 0; i < type2BeanArrayList.size(); i++) {
+                    strings.add(type2BeanArrayList.get(i).getFile_url());
+                }
+                for (int i = 0; i < type3BeanArrayList.size(); i++) {
+                    strings.add(type3BeanArrayList.get(i).getFile_url());
+                }
+                for (int i = 0; i < type4BeanArrayList.size(); i++) {
+                    strings.add(type4BeanArrayList.get(i).getFile_url());
+                }
+
                 //自定义你的Holder，实现更多复杂的界面，不一定是图片翻页，其他任何控件翻页亦可。
                 //                convenientBanner.startTurning(5000);
                 convenientBanner.setPages(new CBViewHolderCreator<LocalImageHolderView>() {
@@ -225,7 +243,7 @@ public class CarRentDetailFragment extends BaseFragment implements BaseRecyclerV
                     public LocalImageHolderView createHolder() {
                         return new LocalImageHolderView();
                     }
-                }, filesBeanArrayList)
+                }, strings)
                         //设置两个点图片作为翻页指示器，不设置则没有指示器，可以根据自己需求自行配合自己的指示器,不需要圆点指示器可用不设
                         //                        .setPageIndicator(new int[]{R.drawable.point_normal1, R.drawable.point_checked})
                         //设置指示器的方向
@@ -334,7 +352,7 @@ public class CarRentDetailFragment extends BaseFragment implements BaseRecyclerV
         }
     }
 
-    private class LocalImageHolderView implements Holder<CarRentDetailInfoBean.FilesBean> {
+    private class LocalImageHolderView implements Holder<String> {
 
         private ImageView iv_image;
         private RelativeLayout rl_topic;
@@ -352,10 +370,10 @@ public class CarRentDetailFragment extends BaseFragment implements BaseRecyclerV
         }
 
         @Override
-        public void UpdateUI(Context context, int position, CarRentDetailInfoBean.FilesBean data) {
+        public void UpdateUI(Context context, int position, String data) {
             if (data != null) {
                 Glide.with(context)
-                        .load(data.getFile_url())
+                        .load(data)
                         .error(R.drawable.default_bg_ratio_1)
                         .placeholder(R.drawable.default_bg_ratio_1)
                         .into(iv_image);

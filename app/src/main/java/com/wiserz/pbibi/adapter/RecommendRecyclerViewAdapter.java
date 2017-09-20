@@ -17,7 +17,6 @@ import com.bigkoo.convenientbanner.holder.Holder;
 import com.bigkoo.convenientbanner.listener.OnItemClickListener;
 import com.blankj.utilcode.util.EmptyUtils;
 import com.blankj.utilcode.util.SizeUtils;
-import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -34,11 +33,12 @@ import com.wiserz.pbibi.bean.TopLineBean;
 import com.wiserz.pbibi.bean.VideoBean;
 import com.wiserz.pbibi.fragment.ArticleDetailFragment;
 import com.wiserz.pbibi.fragment.ArticleListFragment;
-import com.wiserz.pbibi.fragment.BannerFragment;
 import com.wiserz.pbibi.fragment.CarCheckServiceFragment;
 import com.wiserz.pbibi.fragment.CarDetailFragment;
 import com.wiserz.pbibi.fragment.CarRentFragment;
 import com.wiserz.pbibi.fragment.CheHangListFragment;
+import com.wiserz.pbibi.fragment.MyFragmentForCompany;
+import com.wiserz.pbibi.fragment.TopicDetailFragment;
 import com.wiserz.pbibi.fragment.VideoDetailFragment;
 import com.wiserz.pbibi.fragment.VideoListFragment;
 import com.wiserz.pbibi.util.Constant;
@@ -130,12 +130,15 @@ public class RecommendRecyclerViewAdapter extends RecyclerView.Adapter implement
                             BannerBean bannerBean = bannerBeanArrayList.get(position);
                             if (EmptyUtils.isNotEmpty(bannerBean)) {
                                 String type = bannerBean.getType();
-                                if (type.equals("0")) {
+                                if (type.equals("0")) {//VR看车
                                     DataManager.getInstance().setData1(bannerBean);
                                     ((MainActivity) mContext).gotoPager(VRWatchCarActivity.class, null);
                                 } else {
-                                    DataManager.getInstance().setData1(bannerBean);
-                                    ((BaseActivity) mContext).gotoPager(BannerFragment.class, null);
+                                    //                                    DataManager.getInstance().setData1(bannerBean);
+                                    //                                    ((BaseActivity) mContext).gotoPager(BannerFragment.class, null);
+                                    Bundle bundle = new Bundle();
+                                    bundle.putInt(Constant.THEME_ID,Integer.valueOf(bannerBean.getType()));
+                                    ((BaseActivity) mContext).gotoPager(TopicDetailFragment.class, bundle);
                                 }
                             }
                         }
@@ -354,7 +357,12 @@ public class RecommendRecyclerViewAdapter extends RecyclerView.Adapter implement
             }
         } else if (data.getClass().getSimpleName().equals("CheHangHomeBean")) {
             CheHangHomeBean cheHangHomeBean = (CheHangHomeBean) data;
-            ToastUtils.showShort(cheHangHomeBean.getNickname());
+            if (EmptyUtils.isNotEmpty(cheHangHomeBean)) {
+                int user_id = cheHangHomeBean.getUser_id();
+                Bundle bundle = new Bundle();
+                bundle.putInt(Constant.USER_ID, user_id);
+                ((BaseActivity) mContext).gotoPager(MyFragmentForCompany.class, bundle);
+            }
         }
     }
 

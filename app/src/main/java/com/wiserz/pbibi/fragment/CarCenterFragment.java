@@ -7,9 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.baidu.location.BDAbstractLocationListener;
@@ -102,9 +100,9 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                 showPostCarWindow();
                 break;
             case R.id.ll_sort:
-                PopupWindow popupWindow = new PopupWindow(View.inflate(mContext, R.layout.item_car_sort, null), ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                popupWindow.setOutsideTouchable(true);
-                popupWindow.showAsDropDown(ll_sort);
+                //                PopupWindow popupWindow = new PopupWindow(View.inflate(mContext, R.layout.item_car_sort, null), ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                //                popupWindow.setOutsideTouchable(true);
+                //                popupWindow.showAsDropDown(ll_sort);
                 break;
             default:
                 break;
@@ -168,10 +166,13 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
 
     private void handlerCarListData(JSONObject jsonObjectData) {
         ArrayList<CarInfoBean> carInfoBeanArrayList = getCarListData(jsonObjectData);
-        if (EmptyUtils.isNotEmpty(carInfoBeanArrayList)&&carInfoBeanArrayList.size()!=0){
+        if (EmptyUtils.isNotEmpty(carInfoBeanArrayList) && carInfoBeanArrayList.size() != 0) {
             BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, carInfoBeanArrayList, CAR_LIST_FOR_CAR_CENTER);
             recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
             recyclerView.setAdapter(baseRecyclerViewAdapter);
+            //            recyclerView.setPullRefreshEnabled(false);
+            //            recyclerView.setLoadingMoreEnabled(false);
+            //            recyclerView.setLoadingListener(this);
             baseRecyclerViewAdapter.setOnItemClickListener(this);
         }
     }

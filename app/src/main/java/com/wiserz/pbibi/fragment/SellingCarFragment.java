@@ -1,18 +1,29 @@
 package com.wiserz.pbibi.fragment;
 
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.TextView;
 
+import com.blankj.utilcode.util.EmptyUtils;
+import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
+import com.wiserz.pbibi.bean.CarInfoBean;
 import com.wiserz.pbibi.util.Constant;
 import com.wiserz.pbibi.util.DataManager;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 import okhttp3.Call;
 
@@ -26,7 +37,7 @@ public class SellingCarFragment extends BaseFragment implements BaseRecyclerView
     private int mPageNo;
     private int userId;
 
-    private static final int SELLING_CAR_DATA_TYPE = 21;
+    private static final int CAR_LIST_FOR_CAR_CENTER = 100;
 
     @Override
     protected int getLayoutId() {
@@ -91,57 +102,64 @@ public class SellingCarFragment extends BaseFragment implements BaseRecyclerView
     }
 
     private void parseDataForSellingCar(JSONObject dataJsonObject) {
-        //        JSONObject jsonObjectForSelling = dataJsonObject.optJSONObject("saleing");
-        //
-        //        int total = jsonObjectForSelling.optInt("total");//在售车辆总数
-        //        if (getView() != null) {
-        //            ((TextView) getView().findViewById(R.id.tv_selling_car)).setText("在售车辆" + total + "辆");
-        //
-        //            if (total == 0) {
-        //                getView().findViewById(R.id.tv_total).setVisibility(View.INVISIBLE);
-        //            }
-        //
-        //            JSONArray car_list = jsonObjectForSelling.optJSONArray("car_list");
-        //            Gson gson = new Gson();
-        //            ArrayList<CheHangHomeBean.CarListBeanX.CarListBean> carListBeanArrayList = gson.fromJson(car_list.toString(), new TypeToken<ArrayList<CheHangHomeBean.CarListBeanX.CarListBean>>() {
-        //            }.getType());
-        //
-        //            RecyclerView recycler_view_selling_car = (RecyclerView) getView().findViewById(R.id.recycler_view_selling_car);
-        //            BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, carListBeanArrayList, SELLING_CAR_DATA_TYPE);
-        //            recycler_view_selling_car.setAdapter(baseRecyclerViewAdapter);
-        //            recycler_view_selling_car.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
-        //            baseRecyclerViewAdapter.setOnItemClickListener(this);
-        //        }
+        if (EmptyUtils.isNotEmpty(dataJsonObject)) {
+            JSONObject jsonObjectForSelling = dataJsonObject.optJSONObject("saleing");
+
+            int total = jsonObjectForSelling.optInt("total");//在售车辆总数
+            if (getView() != null) {
+                ((TextView) getView().findViewById(R.id.tv_selling_car)).setText("在售车辆" + total + "辆");
+
+                if (total == 0) {
+                    getView().findViewById(R.id.tv_total).setVisibility(View.INVISIBLE);
+                }
+
+                JSONArray car_list = jsonObjectForSelling.optJSONArray("car_list");
+                Gson gson = new Gson();
+                ArrayList<CarInfoBean> carInfoBeanArrayList = gson.fromJson(car_list.toString(), new TypeToken<ArrayList<CarInfoBean>>() {
+                }.getType());
+
+                if (EmptyUtils.isNotEmpty(carInfoBeanArrayList) && carInfoBeanArrayList.size() != 0) {
+                    RecyclerView recycler_view_selling_car = (RecyclerView) getView().findViewById(R.id.recycler_view_selling_car);
+                    BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, carInfoBeanArrayList, CAR_LIST_FOR_CAR_CENTER);
+                    recycler_view_selling_car.setAdapter(baseRecyclerViewAdapter);
+                    recycler_view_selling_car.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
+                    baseRecyclerViewAdapter.setOnItemClickListener(this);
+                }
+            }
+        }
     }
 
     private void parseDataForSoldCar(JSONObject dataJsonObject) {
-        //        JSONObject jsonObjectForSelling = dataJsonObject.optJSONObject("sold");
-        //        int total = jsonObjectForSelling.optInt("total");//已售车辆总数
-        //        if (getView() != null) {
-        //            ((TextView) getView().findViewById(R.id.tv_sold_car)).setText("已售车辆" + total + "辆");
-        //            if (total == 0) {
-        //                getView().findViewById(R.id.tv_sold_car).setVisibility(View.INVISIBLE);
-        //            }
-        //            JSONArray car_list = jsonObjectForSelling.optJSONArray("car_list");
-        //            Gson gson = new Gson();
-        //
-        //            ArrayList<CheHangHomeBean.CarListBeanX.CarListBean> carListBeanArrayList = gson.fromJson(car_list.toString(), new TypeToken<ArrayList<CheHangHomeBean.CarListBeanX.CarListBean>>() {
-        //            }.getType());
-        //
-        //            RecyclerView recycler_view_sold_car = (RecyclerView) getView().findViewById(R.id.recycler_view_sold_car);
-        //            BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, carListBeanArrayList, SELLING_CAR_DATA_TYPE);
-        //            recycler_view_sold_car.setAdapter(baseRecyclerViewAdapter);
-        //            recycler_view_sold_car.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
-        //            baseRecyclerViewAdapter.setOnItemClickListener(this);
-        //        }
+        if (EmptyUtils.isNotEmpty(dataJsonObject)) {
+            JSONObject jsonObjectForSelling = dataJsonObject.optJSONObject("sold");
+            int total = jsonObjectForSelling.optInt("total");//已售车辆总数
+            if (getView() != null) {
+                ((TextView) getView().findViewById(R.id.tv_sold_car)).setText("已售车辆" + total + "辆");
+                if (total == 0) {
+                    getView().findViewById(R.id.tv_sold_car).setVisibility(View.INVISIBLE);
+                }
+                JSONArray car_list = jsonObjectForSelling.optJSONArray("car_list");
+                Gson gson = new Gson();
+
+                ArrayList<CarInfoBean> carInfoBeanArrayList = gson.fromJson(car_list.toString(), new TypeToken<ArrayList<CarInfoBean>>() {
+                }.getType());
+
+                RecyclerView recycler_view_sold_car = (RecyclerView) getView().findViewById(R.id.recycler_view_sold_car);
+                BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, carInfoBeanArrayList, CAR_LIST_FOR_CAR_CENTER);
+                recycler_view_sold_car.setAdapter(baseRecyclerViewAdapter);
+                recycler_view_sold_car.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
+                baseRecyclerViewAdapter.setOnItemClickListener(this);
+            }
+        }
     }
 
     @Override
     public void onItemClick(Object data, int position) {
-        //        if (data.getClass().getSimpleName().equals("CarListBean")) {
-        //            CheHangHomeBean.CarListBeanX.CarListBean carListBean = (CheHangHomeBean.CarListBeanX.CarListBean) data;
-        //            CheHangHomeBean.CarListBeanX.CarListBean.CarInfoBean carInfoBean = carListBean.getCar_info();
-        //            ToastUtils.showShort(carInfoBean.getCar_name());
-        //        }
+        if (data.getClass().getSimpleName().equals("CarInfoBean")) {
+            CarInfoBean carInfoBean = (CarInfoBean) data;
+            if (EmptyUtils.isNotEmpty(carInfoBean)) {
+                LogUtils.e(carInfoBean.getCar_name());
+            }
+        }
     }
 }

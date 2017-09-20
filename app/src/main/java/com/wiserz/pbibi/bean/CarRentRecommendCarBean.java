@@ -12,8 +12,8 @@ public class CarRentRecommendCarBean extends BaseBean {
     /**
      * board_time : 2016
      * brand_info : {"abbre":"M","brand_id":93,"brand_name":"玛莎拉蒂","brand_url":"http://image.bitautoimg.com/bt/car/default/images/logo/masterbrand/png/100/m_93_100.png"}
-     * car_color : 0
-     * car_id : 576bb220c300c
+     * car_color : 2
+     * car_id : 576bb93391e06
      * car_intro : 新车出售
      * car_name : 玛莎拉蒂 总裁 2013款 3.8T 自动 标准型
      * car_no : 000000
@@ -25,12 +25,12 @@ public class CarRentRecommendCarBean extends BaseBean {
      * contact_address : 南山
      * contact_name : 李
      * contact_phone : 400-113-8778
-     * created : 1466675744
+     * created : 1466677555
      * displacement :
-     * engine_no : 1
+     * engine_no :
      * exchange_time : 0
-     * fav_num : 11
-     * files : [{"file_id":"FgIhXEE04pqgXC9wUv2qWCX03q1I","file_type":"1","file_url":"http://img.bibicar.cn/FgIhXEE04pqgXC9wUv2qWCX03q1I?imageMogr2/auto-orient/thumbnail/1000x/strip"},{"file_id":"Fnvfr06Kwve4YVQaZbHnXKkz2BHe","file_type":"2","file_url":"http://img.bibicar.cn/Fnvfr06Kwve4YVQaZbHnXKkz2BHe?imageMogr2/auto-orient/thumbnail/1000x/strip"},{"file_id":"FvOq8pp-2jPcwIvaU3tiSqSvsu7X","file_type":"3","file_url":"http://img.bibicar.cn/FvOq8pp-2jPcwIvaU3tiSqSvsu7X?imageMogr2/auto-orient/thumbnail/1000x/strip"},{"file_id":"FoG1dHZ3fOjjM-9SS1B2NUfLiW9n","file_type":"4","file_url":"http://img.bibicar.cn/FoG1dHZ3fOjjM-9SS1B2NUfLiW9n?imageMogr2/auto-orient/thumbnail/1000x/strip"},{"file_id":"FifpJCxrp5GyaYlLLPwD702ym9Y7","file_type":"5","file_url":"http://img.bibicar.cn/FifpJCxrp5GyaYlLLPwD702ym9Y7?imageMogr2/auto-orient/thumbnail/1000x/strip"},{"file_id":"FuF0EInbJe8FNfXraoQUNfciu16a","file_type":"6","file_url":"http://img.bibicar.cn/FuF0EInbJe8FNfXraoQUNfciu16a?imageMogr2/auto-orient/thumbnail/1000x/strip"},{"file_id":"FuMXFWXb3zyel1GH98tIXfsmWKdV","file_type":"7","file_url":"http://img.bibicar.cn/FuMXFWXb3zyel1GH98tIXfsmWKdV?imageMogr2/auto-orient/thumbnail/1000x/strip"},{"file_id":"FmabJusA_ejcKLXGAvkRVh9UB5ID","file_type":"8","file_url":"http://img.bibicar.cn/FmabJusA_ejcKLXGAvkRVh9UB5ID?imageMogr2/auto-orient/thumbnail/1000x/strip"},{"file_id":"FrVZD2zigmB63IJ_oTFaEtC8v5ab","file_type":"9","file_url":"http://img.bibicar.cn/FrVZD2zigmB63IJ_oTFaEtC8v5ab?imageMogr2/auto-orient/thumbnail/1000x/strip"},{"file_id":"FpeoCTNyq3WXeODHXy43uRti22SI","file_type":"11","file_url":"http://img.bibicar.cn/FpeoCTNyq3WXeODHXy43uRti22SI?imageMogr2/auto-orient/thumbnail/1000x/strip"},{"file_id":"FrHOZ3qdw2cBW5W_9kLp4_IHVE7e","file_type":"12","file_url":"http://img.bibicar.cn/FrHOZ3qdw2cBW5W_9kLp4_IHVE7e?imageMogr2/auto-orient/thumbnail/1000x/strip"},{"file_id":"Fkmc__EhCJqdn9VzA3lClpuophWr","file_type":"13","file_url":"http://img.bibicar.cn/Fkmc__EhCJqdn9VzA3lClpuophWr?imageMogr2/auto-orient/thumbnail/1000x/strip"},{"file_id":"FuRTC8Uy9JciHR48PzL37OJFsXMT","file_type":"14","file_url":"http://img.bibicar.cn/FuRTC8Uy9JciHR48PzL37OJFsXMT?imageMogr2/auto-orient/thumbnail/1000x/strip"},{"file_id":"FuQkUCuVUs2v0tphQ-Dcy-5597GQ","file_type":"15","file_url":"http://img.bibicar.cn/FuQkUCuVUs2v0tphQ-Dcy-5597GQ?imageMogr2/auto-orient/thumbnail/1000x/strip"},{"file_id":"FqkZuBY6x5XGYGtqVH90F2m_2YC0","file_type":"16","file_url":"http://img.bibicar.cn/FqkZuBY6x5XGYGtqVH90F2m_2YC0?imageMogr2/auto-orient/thumbnail/1000x/strip"}]
+     * fav_num : 17
+     * files : {"type1":[{"file_id":"FpCfQFMl0tNa4xifAAuCB_AgKMSB","file_type":"1","file_url":"http://img.bibicar.cn/FpCfQFMl0tNa4xifAAuCB_AgKMSB?imageMogr2/auto-orient/thumbnail/1000x/strip"},{"file_id":"FppK2jw3rFeD6r25-nqyeu8qS3Bl","file_type":"5","file_url":"http://img.bibicar.cn/FppK2jw3rFeD6r25-nqyeu8qS3Bl?imageMogr2/auto-orient/thumbnail/1000x/strip"},{"file_id":"FinY2N-r2a5baajDJ_7LULjsUgpi","file_type":"9","file_url":"http://img.bibicar.cn/FinY2N-r2a5baajDJ_7LULjsUgpi?imageMogr2/auto-orient/thumbnail/1000x/strip"},{"file_id":"FuUL7vg18dq5PdIM7Bx_uev3xI2J","file_type":"15","file_url":"http://img.bibicar.cn/FuUL7vg18dq5PdIM7Bx_uev3xI2J?imageMogr2/auto-orient/thumbnail/1000x/strip"},{"file_id":"Fmj7GDsOOTRUXRrbR54GgMVSBHjT","file_type":"16","file_url":"http://img.bibicar.cn/Fmj7GDsOOTRUXRrbR54GgMVSBHjT?imageMogr2/auto-orient/thumbnail/1000x/strip"}],"type2":[{"file_id":"Fnvfr06Kwve4YVQaZbHnXKkz2BHe","file_type":"2","file_url":"http://img.bibicar.cn/Fnvfr06Kwve4YVQaZbHnXKkz2BHe?imageMogr2/auto-orient/thumbnail/1000x/strip"},{"file_id":"Fm2DxTeC-ekR03BrTyMUajCJxApx","file_type":"7","file_url":"http://img.bibicar.cn/Fm2DxTeC-ekR03BrTyMUajCJxApx?imageMogr2/auto-orient/thumbnail/1000x/strip"},{"file_id":"Fss89daLHODt9EX86Thn99QHNtuJ","file_type":"8","file_url":"http://img.bibicar.cn/Fss89daLHODt9EX86Thn99QHNtuJ?imageMogr2/auto-orient/thumbnail/1000x/strip"},{"file_id":"Fo1nBHXqPzmRCULEuc3iGdXyNwwe","file_type":"12","file_url":"http://img.bibicar.cn/Fo1nBHXqPzmRCULEuc3iGdXyNwwe?imageMogr2/auto-orient/thumbnail/1000x/strip"},{"file_id":"FgltDNECpK8cB1us4fj4PhHM8N1V","file_type":"14","file_url":"http://img.bibicar.cn/FgltDNECpK8cB1us4fj4PhHM8N1V?imageMogr2/auto-orient/thumbnail/1000x/strip"}],"type3":[{"file_id":"Fi5tfPPgPgQ3KTErh1uzLSl5-hQi","file_type":"3","file_url":"http://img.bibicar.cn/Fi5tfPPgPgQ3KTErh1uzLSl5-hQi?imageMogr2/auto-orient/thumbnail/1000x/strip"}],"type4":[{"file_id":"FgOaB30U5wpvSsCgYKkzpRSB9Kiu","file_type":"4","file_url":"http://img.bibicar.cn/FgOaB30U5wpvSsCgYKkzpRSB9Kiu?imageMogr2/auto-orient/thumbnail/1000x/strip"}]}
      * gearbox :
      * guide_price : 0
      * insurance_due_time : 16-06-23
@@ -43,18 +43,18 @@ public class CarRentRecommendCarBean extends BaseBean {
      * model_detail : {"CarReferPrice":"142.15万","Car_RepairPolicy":"三年不限公里","Engine_EnvirStandard":"欧5","Engine_ExhaustForFloat":"3.0 L","Engine_InhaleType":"双涡轮增压","Engine_Location":"前置","Engine_MaxNJ":"500 N·m","Engine_Type":"M156C","Engine_horsepower":"330 Ps","Oil_FuelCapacity":"80 L","Oil_FuelTab":"97号","Oil_FuelType":"汽油","Oil_SupplyType":"直喷","OutSet_Height":"1481 mm","OutSet_Length":"5262 mm","OutSet_WheelBase":"3171 mm","OutSet_Width":"1948 mm","Perf_AccelerateTime":"5.6 s","Perf_DriveType":"后轮驱动","Perf_MaxSpeed":"263","Perf_SeatNum":"5 个","Perf_ZongHeYouHao":"9.8 L/100km","UnderPan_ForwardGearNum":"8 挡 手自一体","id":1465,"model_id":120223}
      * model_info : {"model_id":120223,"model_name":"2015 3.0T 标准型","model_year":"2015","series_id":2120}
      * platform_info : {}
-     * price : 170.649994
+     * price : 169.800003
      * ren_num : 0
-     * rental_info : {"deposit":1000,"four":1000,"one":1000,"pick_address":"南山","pick_lat":"","pick_lng":"","rental_time_end":"9854","status":2,"subscription":1000,"three":1000,"two":1000}
+     * rental_info : {"deposit":0.01,"four":10000,"one":0.01,"pick_address":"南山","pick_lat":"","pick_lng":"","rental_end_time":0,"status":1,"subscription":0.01,"three":10000,"two":1000}
      * sales_volume : 0
      * series_info : {"brand_id":93,"series_id":2120,"series_name":"总裁"}
      * style : 0
-     * updated : 1466676948
+     * updated : 1466677555
      * user_info : {}
-     * verify_status : 1
+     * verify_status : 11
      * vin_file :
-     * vin_no : 1
-     * visit_num : 27
+     * vin_no : 1098036
+     * visit_num : 38
      * vr_url : http://vr.bibicar.cn/Maserati/Quattroporte
      */
 
@@ -78,6 +78,7 @@ public class CarRentRecommendCarBean extends BaseBean {
     private String engine_no;
     private int exchange_time;
     private int fav_num;
+    private FilesBean files;
     private String gearbox;
     private int guide_price;
     private String insurance_due_time;
@@ -103,7 +104,6 @@ public class CarRentRecommendCarBean extends BaseBean {
     private String vin_no;
     private int visit_num;
     private String vr_url;
-    private List<FilesBean> files;
 
     public String getBoard_time() {
         return board_time;
@@ -263,6 +263,14 @@ public class CarRentRecommendCarBean extends BaseBean {
 
     public void setFav_num(int fav_num) {
         this.fav_num = fav_num;
+    }
+
+    public FilesBean getFiles() {
+        return files;
+    }
+
+    public void setFiles(FilesBean files) {
+        this.files = files;
     }
 
     public String getGearbox() {
@@ -465,14 +473,6 @@ public class CarRentRecommendCarBean extends BaseBean {
         this.vr_url = vr_url;
     }
 
-    public List<FilesBean> getFiles() {
-        return files;
-    }
-
-    public void setFiles(List<FilesBean> files) {
-        this.files = files;
-    }
-
     public static class BrandInfoBean {
         /**
          * abbre : M
@@ -562,6 +562,189 @@ public class CarRentRecommendCarBean extends BaseBean {
 
         public void setCity_name(String city_name) {
             this.city_name = city_name;
+        }
+    }
+
+    public static class FilesBean {
+        private List<Type1Bean> type1;
+        private List<Type2Bean> type2;
+        private List<Type3Bean> type3;
+        private List<Type4Bean> type4;
+
+        public List<Type1Bean> getType1() {
+            return type1;
+        }
+
+        public void setType1(List<Type1Bean> type1) {
+            this.type1 = type1;
+        }
+
+        public List<Type2Bean> getType2() {
+            return type2;
+        }
+
+        public void setType2(List<Type2Bean> type2) {
+            this.type2 = type2;
+        }
+
+        public List<Type3Bean> getType3() {
+            return type3;
+        }
+
+        public void setType3(List<Type3Bean> type3) {
+            this.type3 = type3;
+        }
+
+        public List<Type4Bean> getType4() {
+            return type4;
+        }
+
+        public void setType4(List<Type4Bean> type4) {
+            this.type4 = type4;
+        }
+
+        public static class Type1Bean {
+            /**
+             * file_id : FpCfQFMl0tNa4xifAAuCB_AgKMSB
+             * file_type : 1
+             * file_url : http://img.bibicar.cn/FpCfQFMl0tNa4xifAAuCB_AgKMSB?imageMogr2/auto-orient/thumbnail/1000x/strip
+             */
+
+            private String file_id;
+            private String file_type;
+            private String file_url;
+
+            public String getFile_id() {
+                return file_id;
+            }
+
+            public void setFile_id(String file_id) {
+                this.file_id = file_id;
+            }
+
+            public String getFile_type() {
+                return file_type;
+            }
+
+            public void setFile_type(String file_type) {
+                this.file_type = file_type;
+            }
+
+            public String getFile_url() {
+                return file_url;
+            }
+
+            public void setFile_url(String file_url) {
+                this.file_url = file_url;
+            }
+        }
+
+        public static class Type2Bean {
+            /**
+             * file_id : Fnvfr06Kwve4YVQaZbHnXKkz2BHe
+             * file_type : 2
+             * file_url : http://img.bibicar.cn/Fnvfr06Kwve4YVQaZbHnXKkz2BHe?imageMogr2/auto-orient/thumbnail/1000x/strip
+             */
+
+            private String file_id;
+            private String file_type;
+            private String file_url;
+
+            public String getFile_id() {
+                return file_id;
+            }
+
+            public void setFile_id(String file_id) {
+                this.file_id = file_id;
+            }
+
+            public String getFile_type() {
+                return file_type;
+            }
+
+            public void setFile_type(String file_type) {
+                this.file_type = file_type;
+            }
+
+            public String getFile_url() {
+                return file_url;
+            }
+
+            public void setFile_url(String file_url) {
+                this.file_url = file_url;
+            }
+        }
+
+        public static class Type3Bean {
+            /**
+             * file_id : Fi5tfPPgPgQ3KTErh1uzLSl5-hQi
+             * file_type : 3
+             * file_url : http://img.bibicar.cn/Fi5tfPPgPgQ3KTErh1uzLSl5-hQi?imageMogr2/auto-orient/thumbnail/1000x/strip
+             */
+
+            private String file_id;
+            private String file_type;
+            private String file_url;
+
+            public String getFile_id() {
+                return file_id;
+            }
+
+            public void setFile_id(String file_id) {
+                this.file_id = file_id;
+            }
+
+            public String getFile_type() {
+                return file_type;
+            }
+
+            public void setFile_type(String file_type) {
+                this.file_type = file_type;
+            }
+
+            public String getFile_url() {
+                return file_url;
+            }
+
+            public void setFile_url(String file_url) {
+                this.file_url = file_url;
+            }
+        }
+
+        public static class Type4Bean {
+            /**
+             * file_id : FgOaB30U5wpvSsCgYKkzpRSB9Kiu
+             * file_type : 4
+             * file_url : http://img.bibicar.cn/FgOaB30U5wpvSsCgYKkzpRSB9Kiu?imageMogr2/auto-orient/thumbnail/1000x/strip
+             */
+
+            private String file_id;
+            private String file_type;
+            private String file_url;
+
+            public String getFile_id() {
+                return file_id;
+            }
+
+            public void setFile_id(String file_id) {
+                this.file_id = file_id;
+            }
+
+            public String getFile_type() {
+                return file_type;
+            }
+
+            public void setFile_type(String file_type) {
+                this.file_type = file_type;
+            }
+
+            public String getFile_url() {
+                return file_url;
+            }
+
+            public void setFile_url(String file_url) {
+                this.file_url = file_url;
+            }
         }
     }
 
@@ -829,52 +1012,52 @@ public class CarRentRecommendCarBean extends BaseBean {
 
     public static class RentalInfoBean {
         /**
-         * deposit : 1000
-         * four : 1000
-         * one : 1000
+         * deposit : 0.01
+         * four : 10000
+         * one : 0.01
          * pick_address : 南山
          * pick_lat :
          * pick_lng :
-         * rental_time_end : 9854
-         * status : 2
-         * subscription : 1000
-         * three : 1000
+         * rental_end_time : 0
+         * status : 1
+         * subscription : 0.01
+         * three : 10000
          * two : 1000
          */
 
-        private int deposit;
-        private int four;
-        private int one;
+        private double deposit;
+        private double four;
+        private double one;
         private String pick_address;
         private String pick_lat;
         private String pick_lng;
-        private String rental_time_end;
+        private int rental_end_time;
         private int status;
-        private int subscription;
-        private int three;
-        private int two;
+        private double subscription;
+        private double three;
+        private double two;
 
-        public int getDeposit() {
+        public double getDeposit() {
             return deposit;
         }
 
-        public void setDeposit(int deposit) {
+        public void setDeposit(double deposit) {
             this.deposit = deposit;
         }
 
-        public int getFour() {
+        public double getFour() {
             return four;
         }
 
-        public void setFour(int four) {
+        public void setFour(double four) {
             this.four = four;
         }
 
-        public int getOne() {
+        public double getOne() {
             return one;
         }
 
-        public void setOne(int one) {
+        public void setOne(double one) {
             this.one = one;
         }
 
@@ -902,12 +1085,12 @@ public class CarRentRecommendCarBean extends BaseBean {
             this.pick_lng = pick_lng;
         }
 
-        public String getRental_time_end() {
-            return rental_time_end;
+        public int getRental_end_time() {
+            return rental_end_time;
         }
 
-        public void setRental_time_end(String rental_time_end) {
-            this.rental_time_end = rental_time_end;
+        public void setRental_end_time(int rental_end_time) {
+            this.rental_end_time = rental_end_time;
         }
 
         public int getStatus() {
@@ -918,15 +1101,15 @@ public class CarRentRecommendCarBean extends BaseBean {
             this.status = status;
         }
 
-        public int getSubscription() {
+        public double getSubscription() {
             return subscription;
         }
 
-        public void setSubscription(int subscription) {
+        public void setSubscription(double subscription) {
             this.subscription = subscription;
         }
 
-        public int getThree() {
+        public double getThree() {
             return three;
         }
 
@@ -934,7 +1117,7 @@ public class CarRentRecommendCarBean extends BaseBean {
             this.three = three;
         }
 
-        public int getTwo() {
+        public double getTwo() {
             return two;
         }
 
@@ -947,41 +1130,5 @@ public class CarRentRecommendCarBean extends BaseBean {
     }
 
     public static class UserInfoBean {
-    }
-
-    public static class FilesBean {
-        /**
-         * file_id : FgIhXEE04pqgXC9wUv2qWCX03q1I
-         * file_type : 1
-         * file_url : http://img.bibicar.cn/FgIhXEE04pqgXC9wUv2qWCX03q1I?imageMogr2/auto-orient/thumbnail/1000x/strip
-         */
-
-        private String file_id;
-        private String file_type;
-        private String file_url;
-
-        public String getFile_id() {
-            return file_id;
-        }
-
-        public void setFile_id(String file_id) {
-            this.file_id = file_id;
-        }
-
-        public String getFile_type() {
-            return file_type;
-        }
-
-        public void setFile_type(String file_type) {
-            this.file_type = file_type;
-        }
-
-        public String getFile_url() {
-            return file_url;
-        }
-
-        public void setFile_url(String file_url) {
-            this.file_url = file_url;
-        }
     }
 }
