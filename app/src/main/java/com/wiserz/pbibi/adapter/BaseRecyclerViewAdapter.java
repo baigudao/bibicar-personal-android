@@ -166,6 +166,19 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
         this.dataType = dataType;
     }
 
+    /**
+     * 添加数据集合
+     *
+     * @param dataList
+     */
+    public void addDatas(List<T> dataList) {
+        if (mList == null) {
+            mList = new ArrayList<>();
+        }
+        mList.addAll(dataList);
+        notifyDataSetChanged();
+    }
+
     @Override
     public BaseRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         ViewHolder viewHolder;

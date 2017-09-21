@@ -48,7 +48,7 @@ import okhttp3.Call;
  * QQ : 971060378
  * Used as : 汽车中心页面
  */
-public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewAdapter.OnItemClickListener {
+public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewAdapter.OnItemClickListener, OnLoadmoreListener, OnRefreshListener {
 
     public LocationClient mLocationClient;
     //BDAbstractLocationListener为7.2版本新增的Abstract类型的监听接口，原有BDLocationListener接口暂时同步保留。具体介绍请参考后文中的说明
@@ -60,6 +60,10 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
     private SmartRefreshLayout smartRefreshLayout;
     private RecyclerView recyclerView;
     private int mPage;
+
+    private BaseRecyclerViewAdapter baseRecyclerViewAdapter;
+
+    private int refresh_or_load;//0或1
 
     private static final int CAR_LIST_FOR_CAR_CENTER = 100;
 
@@ -94,8 +98,11 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
         ll_sort.setOnClickListener(this);
 
         smartRefreshLayout = (SmartRefreshLayout) view.findViewById(R.id.smartRefreshLayout);
+        smartRefreshLayout.setOnRefreshListener(this);
+        smartRefreshLayout.setOnLoadmoreListener(this);
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         mPage = 0;
+        refresh_or_load = 0;
     }
 
     @Override
@@ -215,7 +222,18 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                             int status = jsonObject.optInt("status");
                             JSONObject jsonObjectData = jsonObject.optJSONObject("data");
                             if (status == 1) {
-                                handlerCarListData(jsonObjectData);
+                                switch (refresh_or_load) {
+                                    case 0:
+                                        smartRefreshLayout.finishRefresh();
+                                        handlerCarListData(jsonObjectData);
+                                        break;
+                                    case 1:
+                                        smartRefreshLayout.finishLoadmore();
+                                        handlerCarListMoreData(jsonObjectData);
+                                        break;
+                                    default:
+                                        break;
+                                }
                             } else {
                                 String code = jsonObject.optString("code");
                                 String msg = jsonObjectData.optString("msg");
@@ -228,27 +246,23 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                 });
     }
 
+    private void handlerCarListMoreData(JSONObject jsonObjectData) {
+        if (EmptyUtils.isNotEmpty(jsonObjectData)) {
+            ArrayList<CarInfoBean> carInfoBeanArrayList = getCarListData(jsonObjectData);
+            if (EmptyUtils.isNotEmpty(carInfoBeanArrayList) && carInfoBeanArrayList.size() != 0) {
+                baseRecyclerViewAdapter.addDatas(carInfoBeanArrayList);
+            } else {
+                ToastUtils.showShort("没有更多了");
+            }
+        }
+    }
+
     private void handlerCarListData(JSONObject jsonObjectData) {
         ArrayList<CarInfoBean> carInfoBeanArrayList = getCarListData(jsonObjectData);
         if (EmptyUtils.isNotEmpty(carInfoBeanArrayList) && carInfoBeanArrayList.size() != 0) {
-            BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, carInfoBeanArrayList, CAR_LIST_FOR_CAR_CENTER);
+            baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, carInfoBeanArrayList, CAR_LIST_FOR_CAR_CENTER);
             recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
             recyclerView.setAdapter(baseRecyclerViewAdapter);
-            //            recyclerView.setPullRefreshEnabled(false);
-            //            recyclerView.setLoadingMoreEnabled(false);
-            //            recyclerView.setLoadingListener(this);
-            smartRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
-                @Override
-                public void onRefresh(RefreshLayout refreshlayout) {
-                    smartRefreshLayout.finishRefresh(3000);
-                }
-            });
-            smartRefreshLayout.setOnLoadmoreListener(new OnLoadmoreListener() {
-                @Override
-                public void onLoadmore(RefreshLayout refreshlayout) {
-                    smartRefreshLayout.finishLoadmore(3000);
-                }
-            });
             baseRecyclerViewAdapter.setOnItemClickListener(this);
         }
     }
@@ -313,6 +327,20 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
         }, MorePopupWindow.MORE_POPUP_WINDOW_TYPE.TYPE_SALE_CAR);
         morePopupWindow.initView();
         morePopupWindow.showAtLocation(getView(), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+    }
+
+    @Override
+    public void onLoadmore(RefreshLayout refreshlayout) {
+        ++mPage;
+        refresh_or_load = 1;
+        getCarListDataFromNet(null, null, null, null, null, null, null, null, null, null, null, null, null);
+    }
+
+    @Override
+    public void onRefresh(RefreshLayout refreshlayout) {
+        mPage = 0;
+        refresh_or_load = 0;
+        getCarListDataFromNet(null, null, null, null, null, null, null, null, null, null, null, null, null);
     }
 
     /**

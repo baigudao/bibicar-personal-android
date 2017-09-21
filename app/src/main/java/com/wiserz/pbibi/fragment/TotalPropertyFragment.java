@@ -4,8 +4,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.blankj.utilcode.util.EmptyUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.adapter.RichListRecyclerViewAdapter;
 import com.wiserz.pbibi.util.Constant;
@@ -22,9 +27,16 @@ import okhttp3.Call;
  * QQ : 971060378
  * Used as : 总资产的页面
  */
-public class TotalPropertyFragment extends BaseFragment {
+public class TotalPropertyFragment extends BaseFragment implements OnRefreshListener, OnLoadmoreListener {
 
     private RecyclerView recyclerView;
+
+    private SmartRefreshLayout smartRefreshLayout;
+    private int refresh_or_load;//0或1
+
+    private int mPage;
+
+    private RichListRecyclerViewAdapter richListRecyclerViewAdapter;
 
     @Override
     protected int getLayoutId() {
@@ -37,6 +49,13 @@ public class TotalPropertyFragment extends BaseFragment {
         view.findViewById(R.id.tv_title).setVisibility(View.GONE);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+
+        smartRefreshLayout = (SmartRefreshLayout) view.findViewById(R.id.smartRefreshLayout);
+        smartRefreshLayout.setOnRefreshListener(this);
+        smartRefreshLayout.setOnLoadmoreListener(this);
+        refresh_or_load = 0;
+
+        mPage = 0;
     }
 
     @Override
@@ -53,10 +72,15 @@ public class TotalPropertyFragment extends BaseFragment {
     @Override
     protected void initData() {
         super.initData();
+        getDataFromNet();
+    }
+
+    private void getDataFromNet() {
         OkHttpUtils.post()
                 .url(Constant.getMyRichListUrl())
                 .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
                 .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
+                .addParams(Constant.PAGE, String.valueOf(mPage))
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -72,9 +96,18 @@ public class TotalPropertyFragment extends BaseFragment {
                             int status = jsonObject.optInt("status");
                             JSONObject jsonObjectData = jsonObject.optJSONObject("data");
                             if (status == 1) {
-                                RichListRecyclerViewAdapter richListRecyclerViewAdapter = new RichListRecyclerViewAdapter(mContext, jsonObjectData);
-                                recyclerView.setAdapter(richListRecyclerViewAdapter);
-                                recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
+                                switch (refresh_or_load) {
+                                    case 0:
+                                        smartRefreshLayout.finishRefresh();
+                                        handlerDataForTotalProperty(jsonObjectData);
+                                        break;
+                                    case 1:
+                                        smartRefreshLayout.finishLoadmore();
+                                        handlerMoreDataForTotalProperty(jsonObjectData);
+                                        break;
+                                    default:
+                                        break;
+                                }
                             } else {
                                 String code = jsonObject.optString("code");
                                 String msg = jsonObjectData.optString("msg");
@@ -85,5 +118,35 @@ public class TotalPropertyFragment extends BaseFragment {
                         }
                     }
                 });
+    }
+
+    private void handlerMoreDataForTotalProperty(JSONObject jsonObjectData) {
+        if (EmptyUtils.isNotEmpty(jsonObjectData)) {
+            richListRecyclerViewAdapter.addDatas(jsonObjectData);
+        } else {
+            ToastUtils.showShort("没有更多了");
+        }
+    }
+
+    private void handlerDataForTotalProperty(JSONObject jsonObjectData) {
+        if (EmptyUtils.isNotEmpty(jsonObjectData)) {
+            richListRecyclerViewAdapter = new RichListRecyclerViewAdapter(mContext, jsonObjectData);
+            recyclerView.setAdapter(richListRecyclerViewAdapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
+        }
+    }
+
+    @Override
+    public void onRefresh(RefreshLayout refreshlayout) {
+        mPage = 0;
+        refresh_or_load = 0;
+        getDataFromNet();
+    }
+
+    @Override
+    public void onLoadmore(RefreshLayout refreshlayout) {
+        ++mPage;
+        refresh_or_load = 1;
+        getDataFromNet();
     }
 }

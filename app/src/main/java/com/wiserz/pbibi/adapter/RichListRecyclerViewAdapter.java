@@ -44,6 +44,8 @@ public class RichListRecyclerViewAdapter extends RecyclerView.Adapter implements
     private int rank;
     private double total_money;
 
+    private ArrayList<RichBean> richBeanArrayList;
+
     public RichListRecyclerViewAdapter(Context mContext, JSONObject jsonObjectData) {
         this.mContext = mContext;
         this.jsonObjectData = jsonObjectData;
@@ -99,7 +101,7 @@ public class RichListRecyclerViewAdapter extends RecyclerView.Adapter implements
         } else if (currentType == OTHER) {
             OtherViewHolder otherViewHolder = (OtherViewHolder) holder;
 
-            ArrayList<RichBean> richBeanArrayList = getRichListData(jsonObjectData);
+            richBeanArrayList = getRichListData(jsonObjectData);
 
             if (EmptyUtils.isNotEmpty(richBeanArrayList) && richBeanArrayList.size() != 0) {
                 final RichBean richBean = richBeanArrayList.get(position - 2);
@@ -240,5 +242,17 @@ public class RichListRecyclerViewAdapter extends RecyclerView.Adapter implements
     @Override
     public void onItemClick(Object data, int position) {
 
+    }
+
+    /**
+     * 添加数据集合
+     *
+     * @param jsonObjectData
+     */
+    public void addDatas(JSONObject jsonObjectData) {
+        if (EmptyUtils.isNotEmpty(jsonObjectData)) {
+            richBeanArrayList.addAll(getRichListData(jsonObjectData));
+            notifyDataSetChanged();
+        }
     }
 }

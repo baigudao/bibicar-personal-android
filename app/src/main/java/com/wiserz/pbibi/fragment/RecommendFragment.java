@@ -6,6 +6,9 @@ import android.view.View;
 
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.adapter.RecommendRecyclerViewAdapter;
 import com.wiserz.pbibi.util.Constant;
@@ -22,9 +25,10 @@ import okhttp3.Call;
  * QQ : 971060378
  * Used as : 推荐页面
  */
-public class RecommendFragment extends BaseFragment {
+public class RecommendFragment extends BaseFragment implements OnRefreshListener {
 
     private RecyclerView recyclerView;
+    private SmartRefreshLayout smartRefreshLayout;
 
     @Override
     protected int getLayoutId() {
@@ -36,6 +40,9 @@ public class RecommendFragment extends BaseFragment {
         view.findViewById(R.id.tv_top_search).setOnClickListener(this);
         view.findViewById(R.id.iv_top_search_history).setOnClickListener(this);
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        smartRefreshLayout = (SmartRefreshLayout) view.findViewById(R.id.smartRefreshLayout);
+        smartRefreshLayout.setOnRefreshListener(this);
+        smartRefreshLayout.setEnableLoadmore(false);//是否启用上拉加载功能
     }
 
     @Override
@@ -78,6 +85,7 @@ public class RecommendFragment extends BaseFragment {
                             int status = jsonObject.optInt("status");
                             JSONObject jsonObjectData = jsonObject.optJSONObject("data");
                             if (status == 1) {
+                                smartRefreshLayout.finishRefresh();
                                 RecommendRecyclerViewAdapter recommendRecyclerViewAdapter = new RecommendRecyclerViewAdapter(mContext, jsonObjectData);
                                 recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
                                 recyclerView.setAdapter(recommendRecyclerViewAdapter);
@@ -91,5 +99,10 @@ public class RecommendFragment extends BaseFragment {
                         }
                     }
                 });
+    }
+
+    @Override
+    public void onRefresh(RefreshLayout refreshlayout) {
+        getDataFromNet();
     }
 }

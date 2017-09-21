@@ -11,6 +11,10 @@ import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
 import com.wiserz.pbibi.bean.CarInfoBean;
@@ -32,11 +36,15 @@ import okhttp3.Call;
  * QQ : 971060378
  * Used as : 车辆浏览历史
  */
-public class CarSearchHistoryFragment extends BaseFragment implements BaseRecyclerViewAdapter.OnItemClickListener {
+public class CarSearchHistoryFragment extends BaseFragment implements BaseRecyclerViewAdapter.OnItemClickListener, OnRefreshListener, OnLoadmoreListener {
 
     private RecyclerView recyclerView;
     private LinearLayout ll_search_history;
     private int mPage;
+
+    private SmartRefreshLayout smartRefreshLayout;
+    private BaseRecyclerViewAdapter baseRecyclerViewAdapter;
+    private int refresh_or_load;//0或1
 
     private static final int CAR_LIST_FOR_CAR_CENTER = 100;
 
@@ -49,6 +57,11 @@ public class CarSearchHistoryFragment extends BaseFragment implements BaseRecycl
     protected void initView(View view) {
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         ll_search_history = (LinearLayout) view.findViewById(R.id.ll_search_history);
+
+        smartRefreshLayout = (SmartRefreshLayout) view.findViewById(R.id.smartRefreshLayout);
+        smartRefreshLayout.setOnRefreshListener(this);
+        smartRefreshLayout.setOnLoadmoreListener(this);
+        refresh_or_load = 0;
 
         mPage = 0;
     }
@@ -85,7 +98,18 @@ public class CarSearchHistoryFragment extends BaseFragment implements BaseRecycl
                             int status = jsonObject.optInt("status");
                             JSONObject jsonObjectData = jsonObject.optJSONObject("data");
                             if (status == 1) {
-                                handlerDataForCarSearchHistory(jsonObjectData);
+                                switch (refresh_or_load) {
+                                    case 0:
+                                        smartRefreshLayout.finishRefresh();
+                                        handlerDataForCarSearchHistory(jsonObjectData);
+                                        break;
+                                    case 1:
+                                        smartRefreshLayout.finishLoadmore();
+                                        handlerMoreDataForCarSearchHistory(jsonObjectData);
+                                        break;
+                                    default:
+                                        break;
+                                }
                             } else {
                                 String code = jsonObject.optString("code");
                                 String msg = jsonObjectData.optString("msg");
@@ -98,6 +122,23 @@ public class CarSearchHistoryFragment extends BaseFragment implements BaseRecycl
                 });
     }
 
+    private void handlerMoreDataForCarSearchHistory(JSONObject jsonObjectData) {
+        if (EmptyUtils.isNotEmpty(jsonObjectData)) {
+            JSONArray jsonArray = jsonObjectData.optJSONArray("car_list");
+            Gson gson = new Gson();
+            if (EmptyUtils.isNotEmpty(jsonArray)) {
+
+                ArrayList<CarInfoBean> carInfoBeanArrayList = gson.fromJson(jsonArray.toString(), new TypeToken<ArrayList<CarInfoBean>>() {
+                }.getType());
+                if (EmptyUtils.isNotEmpty(carInfoBeanArrayList) && carInfoBeanArrayList.size() != 0) {
+                    baseRecyclerViewAdapter.addDatas(carInfoBeanArrayList);
+                } else {
+                    ToastUtils.showShort("没有更多了");
+                }
+            }
+        }
+    }
+
     private void handlerDataForCarSearchHistory(JSONObject jsonObjectData) {
         if (EmptyUtils.isNotEmpty(jsonObjectData)) {
             JSONArray jsonArray = jsonObjectData.optJSONArray("car_list");
@@ -108,7 +149,7 @@ public class CarSearchHistoryFragment extends BaseFragment implements BaseRecycl
                 }.getType());
 
                 if (!CommonUtil.isListNullOrEmpty(carInfoBeanArrayList)) {
-                    BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, carInfoBeanArrayList, CAR_LIST_FOR_CAR_CENTER);
+                    baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, carInfoBeanArrayList, CAR_LIST_FOR_CAR_CENTER);
                     recyclerView.setAdapter(baseRecyclerViewAdapter);
                     recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
                     baseRecyclerViewAdapter.setOnItemClickListener(this);
@@ -130,5 +171,19 @@ public class CarSearchHistoryFragment extends BaseFragment implements BaseRecycl
                 gotoPager(CarDetailFragment.class, bundle);
             }
         }
+    }
+
+    @Override
+    public void onRefresh(RefreshLayout refreshlayout) {
+        mPage = 0;
+        refresh_or_load = 0;
+        getDataFromNet();
+    }
+
+    @Override
+    public void onLoadmore(RefreshLayout refreshlayout) {
+        ++mPage;
+        refresh_or_load = 1;
+        getDataFromNet();
     }
 }
