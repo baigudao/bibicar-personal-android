@@ -1,11 +1,10 @@
-package com.wiserz.pbibi.activity;
+package com.wiserz.pbibi.fragment;
 
 import android.os.Build;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.view.View;
 
-import com.blankj.utilcode.util.BarUtils;
 import com.blankj.utilcode.util.EmptyUtils;
+import com.blankj.utilcode.util.LogUtils;
 import com.tencent.smtt.sdk.WebSettings;
 import com.tencent.smtt.sdk.WebView;
 import com.wiserz.pbibi.R;
@@ -13,25 +12,32 @@ import com.wiserz.pbibi.bean.BannerBean;
 import com.wiserz.pbibi.util.DataManager;
 
 /**
- * Created by jackie on 2017/8/29 14:02.
+ * Created by jackie on 2017/9/21 16:37.
  * QQ : 971060378
- * Used as : VR看车的界面
+ * Used as : 备用
  */
-public class VRWatchCarActivity extends BaseActivity {
+public class VRWatchCarFragment extends BaseFragment {
 
     private WebView webView;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        BarUtils.hideStatusBar(this);//隐藏状态栏
-        setContentView(R.layout.activity_vr_watch_car);
-        webView = (WebView) findViewById(R.id.tencent_web_view);
+    protected int getLayoutId() {
+        return R.layout.fragment_vr_watch_car;
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void initView(View view) {
+        webView = (WebView) view.findViewById(R.id.tencent_web_view);
+    }
+
+    @Override
+    public void onClick(View v) {
+
+    }
+
+    @Override
+    protected void initData() {
+        super.initData();
         BannerBean bannerBean = (BannerBean) DataManager.getInstance().getData1();
         DataManager.getInstance().setData1(null);
 
@@ -62,5 +68,17 @@ public class VRWatchCarActivity extends BaseActivity {
                 }
             }
         }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        LogUtils.e("onStop");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        LogUtils.e("onDestroy");
     }
 }

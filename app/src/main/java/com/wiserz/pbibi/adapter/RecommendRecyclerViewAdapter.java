@@ -22,8 +22,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.activity.BaseActivity;
-import com.wiserz.pbibi.activity.MainActivity;
-import com.wiserz.pbibi.activity.VRWatchCarActivity;
 import com.wiserz.pbibi.bean.ArticleBean;
 import com.wiserz.pbibi.bean.BannerBean;
 import com.wiserz.pbibi.bean.CarInfoBean;
@@ -37,8 +35,10 @@ import com.wiserz.pbibi.fragment.CarCheckServiceFragment;
 import com.wiserz.pbibi.fragment.CarDetailFragment;
 import com.wiserz.pbibi.fragment.CarRentFragment;
 import com.wiserz.pbibi.fragment.CheHangListFragment;
+import com.wiserz.pbibi.fragment.LotteryDrawFragment;
 import com.wiserz.pbibi.fragment.MyFragmentForCompany;
 import com.wiserz.pbibi.fragment.TopicDetailFragment;
+import com.wiserz.pbibi.fragment.VRWatchCarFragment;
 import com.wiserz.pbibi.fragment.VideoDetailFragment;
 import com.wiserz.pbibi.fragment.VideoListFragment;
 import com.wiserz.pbibi.util.Constant;
@@ -131,13 +131,18 @@ public class RecommendRecyclerViewAdapter extends RecyclerView.Adapter implement
                             if (EmptyUtils.isNotEmpty(bannerBean)) {
                                 String type = bannerBean.getType();
                                 if (type.equals("0")) {//VR看车
-                                    DataManager.getInstance().setData1(bannerBean);
-                                    ((MainActivity) mContext).gotoPager(VRWatchCarActivity.class, null);
+                                    String appUrl = bannerBean.getAppUrl();
+                                    if (appUrl.equals("http://192.168.1.182:4000/views/center/raffle.html")) {
+                                        Bundle bundle = new Bundle();
+                                        bundle.putString(Constant.APP_URL, appUrl);
+                                        ((BaseActivity) mContext).gotoPager(LotteryDrawFragment.class, bundle);//抽奖的页面
+                                    } else {
+                                        DataManager.getInstance().setData1(bannerBean);
+                                        ((BaseActivity) mContext).gotoPager(VRWatchCarFragment.class, null);
+                                    }
                                 } else {
-                                    //                                    DataManager.getInstance().setData1(bannerBean);
-                                    //                                    ((BaseActivity) mContext).gotoPager(BannerFragment.class, null);
                                     Bundle bundle = new Bundle();
-                                    bundle.putInt(Constant.THEME_ID,Integer.valueOf(bannerBean.getType()));
+                                    bundle.putInt(Constant.THEME_ID, Integer.valueOf(bannerBean.getType()));
                                     ((BaseActivity) mContext).gotoPager(TopicDetailFragment.class, bundle);
                                 }
                             }

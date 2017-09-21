@@ -13,13 +13,13 @@ import com.qiniu.android.storage.UpCompletionHandler;
 import com.qiniu.android.storage.UploadManager;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.bean.UploadCarPhotoInfo;
-import com.wiserz.pbibi.util.CommonUtil;
 import com.wiserz.pbibi.util.Constant;
 import com.wiserz.pbibi.util.DataManager;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -188,13 +188,29 @@ public class PostNewCarFragment extends BaseFragment {
                         .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
                         .addParams(Constant.FILES_TYPE, mPhotoTypes.toString())
                         .addParams(Constant.FILES_ID, mPhotoFile.toString())
+                        .addParams(Constant.CAR_COLOR, String.valueOf(2))
                         .addParams(Constant.CONTACT_NAME, name)
                         .addParams(Constant.CAR_INTRO, profile)
                         .addParams(Constant.PRICE, car_price)
                         .addParams(Constant.CONTACT_PHONE, phone_num)
                         .addParams(Constant.CONTACT_ADDRESS, place)
                         .addParams(Constant.CITY_ID, String.valueOf(0))
-                        .addParams(Constant.CAR_TYPE, String.valueOf(2364))
+                        .addParams(Constant.BRAND_ID, String.valueOf(96))//车品牌id                    ooo(必填)
+                        .addParams(Constant.MODEL_ID, String.valueOf(122458))//车型id                  ooo(必填)
+                        .addParams(Constant.CAR_TYPE, String.valueOf(1))
+                        .addParams(Constant.SERIES_ID, String.valueOf(2149))//车系列id                  ooo(必填)
+                        .addParams(Constant.CAR_NO, "")//车牌号码
+                        .addParams(Constant.ACTION, String.valueOf(1))//上传车类型
+                        .addParams(Constant.IS_TRANSFER, String.valueOf(0))//是否过户
+                        .addParams(Constant.CAR_STATUS, String.valueOf(0))//车辆状态
+                        .addParams(Constant.VIN_NO, "")//vin码
+                        .addParams(Constant.EXCHANGE_TIME, String.valueOf(0))//交易时间
+                        .addParams(Constant.ENGINE_NO, "")//发动机号
+                        .addParams(Constant.VIN_FILE, "")//vin文件
+                        .addParams(Constant.MAINTAIN, String.valueOf(0))
+                        .addParams(Constant.BOARD_TIME, "")
+                        .addParams(Constant.MILEAGE, String.valueOf(0.000000))
+                        .addParams(Constant.CAR_ID, "")
                         .build()
                         .execute(new StringCallback() {
                             @Override
@@ -204,8 +220,22 @@ public class PostNewCarFragment extends BaseFragment {
 
                             @Override
                             public void onResponse(String response, int id) {
-                                LogUtils.e(response);
-                                CommonUtil.writeToSDCard(mContext, response);
+                                JSONObject jsonObject = null;
+                                try {
+                                    jsonObject = new JSONObject(response);
+                                    int status = jsonObject.optInt("status");
+                                    JSONObject jsonObjectData = jsonObject.optJSONObject("data");
+                                    if (status == 1) {
+                                        ToastUtils.showShort("上传新车成功！");
+                                        goBack();
+                                    } else {
+                                        String code = jsonObject.optString("code");
+                                        String msg = jsonObjectData.optString("msg");
+                                        ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         });
 

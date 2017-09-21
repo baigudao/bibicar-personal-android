@@ -22,6 +22,7 @@ public class Constant {
     public static final String COMPANY = "company";
     public static final String NAME = "name";
     public static final String CODE = "code";
+    public static final String APP_URL = "app_url";
     public static final String PASSWORD = "password";
     public static final String CARD_FILE = "card_file";
     public static final String TELENUMBER = "telenumber";
@@ -47,6 +48,8 @@ public class Constant {
     public static final String CLASSNO = "classno";
     public static final String ACCOUNT = "account";
     public static final String CHAT_TOKEN = "chat_token";
+    public static final String INSURANCE_DUE_TIME = "insurance_due_time";
+    public static final String CHECK_EXPIRATION_TIME = "check_expiration_time";
     public static final String USER_ID = "user_id";
     public static final String MY_USER_INFO = "my_user_info";
     public static final String CAR_ID = "car_id";
@@ -57,7 +60,19 @@ public class Constant {
     public static final String KEY_WORD = "keyword";
     public static final String ORDER_ID = "order_id";
     public static final String BRAND_ID = "brand_id";
+    public static final String CAR_NO = "car_no";
+    public static final String ACTION = "action";
+    public static final String IS_TRANSFER = "is_transfer";
+    public static final String CAR_STATUS = "car_status";
+    public static final String VIN_NO = "vin_no";
+    public static final String MODEL_ID = "model_id";
+    public static final String EXCHANGE_TIME = "exchange_time";
     public static final String SERIES_ID = "series_id";
+    public static final String BOARD_TIME = "board_time";
+    public static final String MILEAGE = "mileage";
+    public static final String MAINTAIN = "maintain";
+    public static final String VIN_FILE = "vin_file";
+    public static final String ENGINE_NO = "engine_no";
     public static final String MIN_PRICE = "min_price";
     public static final String MAX_PRICE = "max_price";
     public static final String MIN_MILEAGE = "min_mileage";
@@ -77,6 +92,7 @@ public class Constant {
     public static final String POST_FILE = "post_file";
     public static final String TITLE = "title";
     public static final String MONEY = "money";
+    public static final String CAR_COLOR = "car_color";
     public static final String AVATAR = "avatar";
     public static final String COMPANY_ID = "company_id";
     public static final String THEME_ID = "theme_id";
@@ -204,6 +220,7 @@ public class Constant {
     private static final String likeCarListUrl = hostUrl + "v3/Favoritecar/list";//喜欢的车辆
 
     private static final String publishNewCarUrl = hostUrl + "v3/publishcar/newCar";//上传新车
+    private static final String publishSecondCarUrl = hostUrl + "v3/publishcar/create";//上传二手车
 
     private static final String createFollowUrl = hostUrl + "v3/friendship/create";//关注
     private static final String deleteFollowUrl = hostUrl + "v3/friendship/delete";//取消关注
@@ -559,5 +576,9 @@ public class Constant {
 
     public static String getPostDetailUrl() {
         return postDetailUrl;
+    }
+
+    public static String getPublishSecondCarUrl() {
+        return publishSecondCarUrl;
     }
 }
