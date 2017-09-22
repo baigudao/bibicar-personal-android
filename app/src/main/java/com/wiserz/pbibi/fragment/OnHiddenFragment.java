@@ -42,6 +42,6 @@ public class OnHiddenFragment extends BaseFragment {
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        LogUtils.e("onHiddenChanged");
+        LogUtils.e("OnHiddenFragment onHiddenChanged");
     }
 }

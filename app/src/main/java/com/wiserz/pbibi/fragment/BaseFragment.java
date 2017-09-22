@@ -105,7 +105,7 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if (!isHidden()) {
-            //如果没有隐藏
+            //显示
             if (BaseApplication.getCurFragment() == null || !BaseApplication.getCurFragment().getClass().getName().equals(getClass().getName())) {
                 BaseApplication.setCurFragment(this);
             }

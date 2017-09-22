@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.wiserz.pbibi.BaseApplication;
 import com.wiserz.pbibi.fragment.BaseFragment;
 import com.wiserz.pbibi.util.Constant;
@@ -71,8 +72,10 @@ public class BaseActivity extends AppCompatActivity {
         int nSize = getSupportFragmentManager().getBackStackEntryCount();
         if (nSize > 1) {
             getSupportFragmentManager().popBackStack();
+            LogUtils.e("大于1");
         } else {
             finish();
+            LogUtils.e("finish" + "=" + getClass().getSimpleName());
         }
     }
 
@@ -85,6 +88,7 @@ public class BaseActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         List<Fragment> fragments = fragmentManager.getFragments();
         if (fragments == null) {
+            LogUtils.e("getVisibleFragment为空");
             return null;
         }
         for (Fragment fragment : fragments) {
@@ -93,5 +97,4 @@ public class BaseActivity extends AppCompatActivity {
         }
         return BaseApplication.getCurFragment();
     }
-
 }

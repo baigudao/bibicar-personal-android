@@ -3,6 +3,7 @@ package com.wiserz.pbibi.fragment;
 import android.view.View;
 import android.widget.TextView;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.wiserz.pbibi.R;
 
 /**
@@ -32,5 +33,11 @@ public class OnHiddenFragment2 extends BaseFragment {
             default:
                 break;
         }
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        LogUtils.e("OnHiddenFragment2 onHiddenChanged");
     }
 }
