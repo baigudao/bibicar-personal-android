@@ -32,12 +32,12 @@
         "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_item_public_service_input_menus.xml"
     },
     {
-        "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\debug\\layout\\rc_ext_emoji_item.xml",
-        "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_ext_emoji_item.xml"
-    },
-    {
         "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\debug\\layout\\rc_ac_webview.xml",
         "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_ac_webview.xml"
+    },
+    {
+        "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\debug\\layout\\rc_ext_emoji_item.xml",
+        "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_ext_emoji_item.xml"
     },
     {
         "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\debug\\layout\\rc_dialog_popup_prompt_warning.xml",
@@ -80,12 +80,12 @@
         "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_item_public_service_input_menu_item.xml"
     },
     {
-        "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\debug\\layout\\rc_picsel_preview.xml",
-        "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_picsel_preview.xml"
-    },
-    {
         "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\debug\\layout\\rc_item_information_notification_message.xml",
         "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_item_information_notification_message.xml"
+    },
+    {
+        "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\debug\\layout\\rc_picsel_preview.xml",
+        "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_picsel_preview.xml"
     },
     {
         "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\debug\\layout\\rc_dialog_popup_prompt.xml",
@@ -108,12 +108,12 @@
         "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_item_discussion_notification_message.xml"
     },
     {
-        "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\debug\\layout\\rc_item_public_service_rich_content_message.xml",
-        "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_item_public_service_rich_content_message.xml"
-    },
-    {
         "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\debug\\layout\\rc_fr_conversation.xml",
         "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_fr_conversation.xml"
+    },
+    {
+        "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\debug\\layout\\rc_item_public_service_rich_content_message.xml",
+        "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_item_public_service_rich_content_message.xml"
     },
     {
         "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\debug\\layout\\rc_item_location_message.xml",
@@ -188,12 +188,12 @@
         "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_item_public_service_search.xml"
     },
     {
-        "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\debug\\layout\\rc_fr_messagelist.xml",
-        "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_fr_messagelist.xml"
-    },
-    {
         "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\debug\\layout\\rc_item_discussion_conversation.xml",
         "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_item_discussion_conversation.xml"
+    },
+    {
+        "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\debug\\layout\\rc_fr_messagelist.xml",
+        "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\src\\main\\res\\layout\\rc_fr_messagelist.xml"
     },
     {
         "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\debug\\layout\\rc_plugin_location_activity.xml",

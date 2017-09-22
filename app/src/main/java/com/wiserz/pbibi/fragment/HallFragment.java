@@ -6,6 +6,10 @@ import android.view.View;
 
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.adapter.HallRecyclerViewAdapter;
 import com.wiserz.pbibi.util.Constant;
@@ -22,10 +26,13 @@ import okhttp3.Call;
  * QQ : 971060378
  * Used as : 大厅的页面
  */
-public class HallFragment extends BaseFragment {
+public class HallFragment extends BaseFragment implements OnRefreshListener, OnLoadmoreListener {
 
     private RecyclerView recyclerView;
     private int mPage;
+
+    private SmartRefreshLayout smartRefreshLayout;
+    private int refresh_or_load;//0或1
 
     @Override
     protected int getLayoutId() {
@@ -35,6 +42,11 @@ public class HallFragment extends BaseFragment {
     @Override
     protected void initView(View view) {
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+
+        smartRefreshLayout = (SmartRefreshLayout) view.findViewById(R.id.smartRefreshLayout);
+        smartRefreshLayout.setOnRefreshListener(this);
+        smartRefreshLayout.setOnLoadmoreListener(this);
+        refresh_or_load = 0;
 
         mPage = 0;
     }
@@ -51,22 +63,6 @@ public class HallFragment extends BaseFragment {
     }
 
     private void getDataFromNet() {
-        OkHttpUtils.post()
-                .url(Constant.getAllTopicUrl())
-                .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
-                .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
-                .build()
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-
-                    }
-
-                    @Override
-                    public void onResponse(String response, int id) {
-
-                    }
-                });
         OkHttpUtils.post()
                 .url(Constant.getHallUrl())
                 .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
@@ -87,9 +83,19 @@ public class HallFragment extends BaseFragment {
                             int status = jsonObject.optInt("status");
                             JSONObject jsonObjectData = jsonObject.optJSONObject("data");
                             if (status == 1) {
-                                HallRecyclerViewAdapter hallRecyclerViewAdapter = new HallRecyclerViewAdapter(mContext, jsonObjectData);
-                                recyclerView.setAdapter(hallRecyclerViewAdapter);
-                                recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
+                                switch (refresh_or_load) {
+                                    case 0:
+                                        smartRefreshLayout.finishRefresh();
+                                        HallRecyclerViewAdapter hallRecyclerViewAdapter = new HallRecyclerViewAdapter(mContext, jsonObjectData);
+                                        recyclerView.setAdapter(hallRecyclerViewAdapter);
+                                        recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
+                                        break;
+                                    case 1:
+                                        smartRefreshLayout.finishLoadmore();
+                                        break;
+                                    default:
+                                        break;
+                                }
                             } else {
                                 String code = jsonObject.optString("code");
                                 String msg = jsonObjectData.optString("msg");
@@ -100,5 +106,19 @@ public class HallFragment extends BaseFragment {
                         }
                     }
                 });
+    }
+
+    @Override
+    public void onRefresh(RefreshLayout refreshlayout) {
+        mPage = 0;
+        refresh_or_load = 0;
+        getDataFromNet();
+    }
+
+    @Override
+    public void onLoadmore(RefreshLayout refreshlayout) {
+        ++mPage;
+        refresh_or_load = 1;
+        getDataFromNet();
     }
 }

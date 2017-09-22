@@ -51,18 +51,14 @@
             android:textColor="@color/second_text_color"
             android:textSize="11sp"/>
 
-        <TextView
-            android:id="@+id/tv_follow"
+        <ImageView
+            android:id="@+id/iv_follow"
             android:layout_width="55dp"
             android:layout_height="25dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="10dp"
-            android:background="@drawable/border_city_name_short"
-            android:clickable="true"
-            android:gravity="center"
-            android:text="关注"
-            android:textColor="@color/main_color"
-            android:textSize="11sp"/>
+            android:scaleType="fitXY"
+            android:src="@drawable/other_follow"/>
 
     </LinearLayout>
 

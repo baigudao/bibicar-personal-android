@@ -209,7 +209,7 @@ public class Constant {
     private static final String myUserPageUrl = hostUrl + "v4/user/userpage";//个人主页
     private static final String myRichListUrl = hostUrl + "v4/User/getrichlist";//财富排行
 
-    private static final String myFriendsUrl = hostUrl + "v3/Post/publish";//个人的朋友圈
+    private static final String myFriendsUrl = hostUrl + "v3/post/publish";//个人的朋友圈
     //    private static final String friendsUrl = hostUrl + "v3/post/publish";//朋友圈
     private static final String commentListUrl = hostUrl + "v3/Comment/list";//评论列表
 

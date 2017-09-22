@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.EmptyUtils;
-import com.blankj.utilcode.util.LogUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wiserz.pbibi.R;
@@ -17,6 +16,7 @@ import com.wiserz.pbibi.activity.BaseActivity;
 import com.wiserz.pbibi.bean.FeedBean;
 import com.wiserz.pbibi.bean.TopicInfoBean;
 import com.wiserz.pbibi.fragment.AllTopicFragment;
+import com.wiserz.pbibi.fragment.StateDetailFragment;
 import com.wiserz.pbibi.fragment.TopicDetailFragment;
 import com.wiserz.pbibi.util.Constant;
 
@@ -149,7 +149,12 @@ public class HallRecyclerViewAdapter extends RecyclerView.Adapter implements Bas
                 }
             }
         } else if (data.getClass().getSimpleName().equals("FeedBean")) {
-            LogUtils.e("FeedBean");
+            FeedBean feedBean = (FeedBean) data;
+            if (EmptyUtils.isNotEmpty(feedBean)) {
+                Bundle bundle = new Bundle();
+                bundle.putInt(Constant.FEED_ID, feedBean.getFeed_id());
+                ((BaseActivity) mContext).gotoPager(StateDetailFragment.class, bundle);//动态详情
+            }
         }
     }
 

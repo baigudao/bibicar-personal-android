@@ -8,13 +8,14 @@ package com.wiserz.pbibi.bean;
 public class FollowInfoBean extends BaseBean {
 
     /**
-     * avatar : http://wx.qlogo.cn/mmopen/rW0WlPujxmPYyxJN5ibh86A5VekeKiaxkZEDAN2ZWFcvc7mg3Op81Mc6wMmUBvyFyZd8w6qm2fFxgrzQ2ibqzfEoebibgibTh96Eic/0
-     * created_at : 1502693404
-     * id : 6
-     * nickname : 青柳居士
-     * type : 2
-     * type_id : 38
-     * user_id : 545
+     * avatar : http://wx.qlogo.cn/mmopen/vi_32/PiajxSqBRaEJEZywakwtSMKYTRaTS53g74C2niaWBf1qOgK2w12iapmcvPMvVYIkgwHiabG7hyX6VTCDsicuB5nf0dw/0
+     * created_at : 1506044513
+     * id : 38
+     * nickname : youth
+     * type : 1
+     * type_id : 59c46a6156cb2
+     * type_info : {"car_intro":"","car_name":"兰博基尼 Aventador 2011 LP700-4","car_type":1,"file_img":"http://img.bibicar.cn/FoZ3PkBM3IgRb6wQoBqezDM3RP6Q?imageMogr2/auto-orient/thumbnail/1000x/strip","hash":"59c46a6156cb2","price":350}
+     * user_id : 342
      */
 
     private String avatar;

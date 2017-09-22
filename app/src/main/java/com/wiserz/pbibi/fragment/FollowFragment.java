@@ -16,7 +16,12 @@ import com.blankj.utilcode.util.TimeUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
+import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
 import com.wiserz.pbibi.bean.FollowInfoBean;
@@ -39,7 +44,7 @@ import okhttp3.Call;
  * QQ : 971060378
  * Used as : 关注的页面
  */
-public class FollowFragment extends BaseFragment implements BaseRecyclerViewAdapter.OnItemClickListener {
+public class FollowFragment extends BaseFragment implements BaseRecyclerViewAdapter.OnItemClickListener, OnRefreshListener, OnLoadmoreListener {
 
     private LinearLayout ll_recommend_follow;
     private RecyclerView recommend_recyclerView;
@@ -53,6 +58,9 @@ public class FollowFragment extends BaseFragment implements BaseRecyclerViewAdap
     private static final int FOLLOW_USER = 3;
     private static final int ARTICLE_COMMENT = 4;
     private static final int VIDEO_COMMENT = 5;
+
+    private SmartRefreshLayout smartRefreshLayout;
+    private int refresh_or_load;//0或1
 
     private static final int RECOMMEND_USER_DATA_TYPE = 34;
 
@@ -71,6 +79,11 @@ public class FollowFragment extends BaseFragment implements BaseRecyclerViewAdap
         view.findViewById(R.id.iv_close).setOnClickListener(this);
 
         my_follow_recyclerView = (RecyclerView) view.findViewById(R.id.my_follow_recyclerView);
+
+        smartRefreshLayout = (SmartRefreshLayout) view.findViewById(R.id.smartRefreshLayout);
+        smartRefreshLayout.setOnRefreshListener(this);
+        smartRefreshLayout.setOnLoadmoreListener(this);
+        refresh_or_load = 0;
 
         mPage = 0;
     }
@@ -114,8 +127,18 @@ public class FollowFragment extends BaseFragment implements BaseRecyclerViewAdap
                             int status = jsonObject.optInt("status");
                             JSONObject jsonObjectData = jsonObject.optJSONObject("data");
                             if (status == 1) {
-                                handlerDataForRecommend(jsonObjectData);
-                                handlerDataForMyFollow(jsonObjectData);
+                                switch (refresh_or_load) {
+                                    case 0:
+                                        smartRefreshLayout.finishRefresh();
+                                        handlerDataForRecommend(jsonObjectData);
+                                        handlerDataForMyFollow(jsonObjectData);
+                                        break;
+                                    case 1:
+                                        smartRefreshLayout.finishLoadmore();
+                                        break;
+                                    default:
+                                        break;
+                                }
                             } else {
                                 String code = jsonObject.optString("code");
                                 String msg = jsonObjectData.optString("msg");
@@ -193,6 +216,23 @@ public class FollowFragment extends BaseFragment implements BaseRecyclerViewAdap
             this.followInfoBeanArrayList = followInfoBeanArrayList;
             this.jsonArray = jsonArray;
         }
+
+        /**
+         * 添加数据集合
+         *
+         * @param dataList
+         */
+        public void addDatas(ArrayList<FollowInfoBean> dataList, JSONArray jsonArray) {
+            if (followInfoBeanArrayList == null) {
+                followInfoBeanArrayList = new ArrayList<>();
+            }
+            followInfoBeanArrayList.addAll(dataList);
+            String jsonArrayNew = this.jsonArray.toString() + jsonArray.toString();
+            JsonParser jsonParser = new JsonParser();
+            //            this.jsonArray = jsonParser.parse(jsonArrayNew).getAsJsonArray();
+            notifyDataSetChanged();
+        }
+
 
         @Override
         public MyRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -397,5 +437,19 @@ public class FollowFragment extends BaseFragment implements BaseRecyclerViewAdap
                 }
             }
         }
+    }
+
+    @Override
+    public void onRefresh(RefreshLayout refreshlayout) {
+        mPage = 0;
+        refresh_or_load = 0;
+        getDataFromNet();
+    }
+
+    @Override
+    public void onLoadmore(RefreshLayout refreshlayout) {
+        ++mPage;
+        refresh_or_load = 1;
+        getDataFromNet();
     }
 }

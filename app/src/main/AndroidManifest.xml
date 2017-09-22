@@ -11,24 +11,26 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
     <uses-permission android:name="android.permission.GET_TASKS"/>
-    <!-- 这个权限用于进行网络定位-->
+    <!-- 这个权限用于进行网络定位 -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <!-- 这个权限用于访问GPS定位-->
+    <!-- 这个权限用于访问GPS定位 -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <!-- 用于访问wifi网络信息，wifi信息会用于进行网络定位-->
+    <!-- 用于访问wifi网络信息，wifi信息会用于进行网络定位 -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <!-- 获取运营商信息，用于支持提供运营商信息相关的接口-->
+    <!-- 获取运营商信息，用于支持提供运营商信息相关的接口 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <!-- 这个权限用于获取wifi的获取权限，wifi信息会用来进行网络定位-->
+    <!-- 这个权限用于获取wifi的获取权限，wifi信息会用来进行网络定位 -->
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
-    <!-- 用于读取手机当前的状态-->
+    <!-- 用于读取手机当前的状态 -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <!-- 写入扩展存储，向扩展卡写入数据，用于写入离线定位数据-->
+    <!-- 写入扩展存储，向扩展卡写入数据，用于写入离线定位数据 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <!-- 访问网络，网络定位需要上网-->
+    <!-- 访问网络，网络定位需要上网 -->
     <uses-permission android:name="android.permission.INTERNET"/>
-    <!-- SD卡读取权限，用户写入离线定位数据-->
+    <!-- SD卡读取权限，用户写入离线定位数据 -->
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application
         android:name=".BaseApplication"
@@ -39,28 +41,20 @@
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
             android:name=".activity.SplashActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
+            <!--lds-->
         </activity>
-
         <activity
             android:name=".activity.MainActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
-
         <activity
             android:name=".activity.RegisterAndLoginActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
-
         <activity
             android:name=".activity.GuideActivity"
             android:screenOrientation="portrait"
@@ -97,18 +91,17 @@
             android:name=".activity.EmptyActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
-
         <activity
             android:name=".activity.VRWatchCarActivity"
             android:windowSoftInputMode="stateAlwaysHidden"/>
 
-        <!--微信支付回调-->
+        <!-- 微信支付回调 -->
         <activity
             android:name=".wxapi.WXPayEntryActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
             android:label="@string/app_name"/>
-        <!--微信分享回调-->
+        <!-- 微信分享回调 -->
         <activity
             android:name=".wxapi.WXEntryActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -116,7 +109,7 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
 
-        <!--支付宝支付-->
+        <!-- 支付宝支付 -->
         <activity
             android:name="com.alipay.sdk.app.H5PayActivity"
             android:configChanges="orientation|keyboardHidden|navigation|screenSize"
@@ -136,9 +129,9 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="stateHidden|adjustResize">
-
             <intent-filter>
                 <data android:scheme="tencent100371282"/>
+
                 <action android:name="android.intent.action.VIEW"/>
 
                 <category android:name="android.intent.category.BROWSABLE"/>
@@ -148,18 +141,19 @@
             <!-- 调用新浪原生SDK，需要注册的回调activity -->
             <intent-filter>
                 <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY"/>
+
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
 
-            <!--集成line客户端登录授权，需要添如下格式的过滤器-->
+            <!-- 集成line客户端登录授权，需要添如下格式的过滤器 -->
             <intent-filter>
                 <data android:scheme="line.1477692153"/>
+
                 <action android:name="android.intent.action.VIEW"/>
 
                 <category android:name="android.intent.category.BROWSABLE"/>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
-
         </activity>
         <!-- 填写您从Mob开发者后台中得到的Appkey和AppSecret -->
         <meta-data
@@ -169,15 +163,23 @@
             android:name="Mob-AppSecret"
             android:value="您的AppSecret"/>
 
-        <!--百度定位-->
+        <!-- 百度定位 -->
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
             android:process=":remote"/>
+
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="bSQBbBf6E1FAHgyYwcSqlwzgXo1lIhDf"/>
 
+        <activity android:name=".activity.TestActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

@@ -51,6 +51,7 @@ import com.wiserz.pbibi.bean.UserBean;
 import com.wiserz.pbibi.bean.UserInfoForSalesConsultant;
 import com.wiserz.pbibi.bean.VideoBean;
 import com.wiserz.pbibi.fragment.CommentDetailFragment;
+import com.wiserz.pbibi.fragment.OtherHomePageFragment;
 import com.wiserz.pbibi.fragment.ShowAllImageFragment;
 import com.wiserz.pbibi.fragment.StateDetailFragment;
 import com.wiserz.pbibi.fragment.VideoDetailFragment;
@@ -1097,28 +1098,117 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                                 .placeholder(R.drawable.user_photo)
                                 .error(R.drawable.user_photo)
                                 .into(holder.iv_item1);
-                        holder.iv_item1.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                ToastUtils.showShort(feedBean.getFeed_id() + "");
-                            }
-                        });
-                        holder.tv_item1.setText(feedBean.getPost_user_info().getProfile().getNickname() == null ? "" : feedBean.getPost_user_info().getProfile().getNickname());
-                        holder.tv_item1.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                ToastUtils.showShort(feedBean.getFeed_id() + "");
-                            }
-                        });
+
+                        int user_id = feedBean.getPost_user_info().getUser_id();
+                        if (EmptyUtils.isNotEmpty(user_id)){
+                            holder.iv_item1.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Bundle bundle = new Bundle();
+                                    bundle.putInt(Constant.USER_ID,feedBean.getPost_user_info().getUser_id());
+                                    ((BaseActivity) mContext).gotoPager(OtherHomePageFragment.class, bundle);
+                                }
+                            });
+                            holder.tv_item1.setText(feedBean.getPost_user_info().getProfile().getNickname() == null ? "" : feedBean.getPost_user_info().getProfile().getNickname());
+                            holder.tv_item1.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Bundle bundle = new Bundle();
+                                    bundle.putInt(Constant.USER_ID,feedBean.getPost_user_info().getUser_id());
+                                    ((BaseActivity) mContext).gotoPager(OtherHomePageFragment.class, bundle);
+                                }
+                            });
+                        }
                     }
                     holder.tv_item2.setText(TimeUtils.date2String(new Date(Long.valueOf(feedBean.getCreated()) * 1000), new SimpleDateFormat("yy-MM-dd HH:mm")));
 
-                    holder.tv_item3.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            ToastUtils.showShort("关注");
-                        }
-                    });
+                    if (SPUtils.getInstance().getInt(Constant.USER_ID) != feedBean.getPost_user_info().getUser_id()) {
+                        final int is_friend = feedBean.getPost_user_info().getIs_friend();
+                        resetFollowView(holder, is_friend);
+
+                        holder.iv_item6.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                int is_friend = feedBean.getPost_user_info().getIs_friend();
+                                switch (is_friend) {
+                                    case 1:
+                                        //已经关注，取消关注
+                                        OkHttpUtils.post()
+                                                .url(Constant.getDeleteFollowUrl())
+                                                .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
+                                                .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
+                                                .addParams(Constant.USER_ID, String.valueOf(feedBean.getPost_user_info().getUser_id()))
+                                                .build()
+                                                .execute(new StringCallback() {
+                                                    @Override
+                                                    public void onError(Call call, Exception e, int id) {
+
+                                                    }
+
+                                                    @Override
+                                                    public void onResponse(String response, int id) {
+                                                        JSONObject jsonObject = null;
+                                                        try {
+                                                            jsonObject = new JSONObject(response);
+                                                            int status = jsonObject.optInt("status");
+                                                            JSONObject jsonObjectData = jsonObject.optJSONObject("data");
+                                                            if (status == 1) {
+                                                                feedBean.getPost_user_info().setIs_friend(2);
+                                                                resetFollowView(holder, 2);
+                                                            } else {
+                                                                String code = jsonObject.optString("code");
+                                                                String msg = jsonObjectData.optString("msg");
+                                                                ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                                            }
+                                                        } catch (JSONException e) {
+                                                            e.printStackTrace();
+                                                        }
+                                                    }
+                                                });
+                                        break;
+                                    case 2:
+                                        //已经取消关注，再关注
+                                        OkHttpUtils.post()
+                                                .url(Constant.getCreateFollowUrl())
+                                                .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
+                                                .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
+                                                .addParams(Constant.USER_ID, String.valueOf(feedBean.getPost_user_info().getUser_id()))
+                                                .build()
+                                                .execute(new StringCallback() {
+                                                    @Override
+                                                    public void onError(Call call, Exception e, int id) {
+
+                                                    }
+
+                                                    @Override
+                                                    public void onResponse(String response, int id) {
+                                                        JSONObject jsonObject = null;
+                                                        try {
+                                                            jsonObject = new JSONObject(response);
+                                                            int status = jsonObject.optInt("status");
+                                                            JSONObject jsonObjectData = jsonObject.optJSONObject("data");
+                                                            if (status == 1) {
+                                                                feedBean.getPost_user_info().setIs_friend(1);
+                                                                resetFollowView(holder, 1);
+                                                            } else {
+                                                                String code = jsonObject.optString("code");
+                                                                String msg = jsonObjectData.optString("msg");
+                                                                ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                                            }
+                                                        } catch (JSONException e) {
+                                                            e.printStackTrace();
+                                                        }
+                                                    }
+                                                });
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                        });
+                    } else {
+                        holder.iv_item6.setVisibility(View.GONE);
+                    }
 
                     ArrayList<FeedBean.PostFilesBeanX> postFilesBeanXArrayList = (ArrayList<FeedBean.PostFilesBeanX>) feedBean.getPost_files();
                     if (EmptyUtils.isNotEmpty(postFilesBeanXArrayList) && postFilesBeanXArrayList.size() != 0) {
@@ -1357,7 +1447,7 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
             ArrayList<RecommendUserInfoBean> recommendUserInfoBeanArrayList = (ArrayList<RecommendUserInfoBean>) mList;
 
             if (EmptyUtils.isNotEmpty(recommendUserInfoBeanArrayList)) {
-                RecommendUserInfoBean recommendUserInfoBean = recommendUserInfoBeanArrayList.get(position);
+                final RecommendUserInfoBean recommendUserInfoBean = recommendUserInfoBeanArrayList.get(position);
                 if (EmptyUtils.isNotEmpty(recommendUserInfoBean)) {
                     Glide.with(mContext)
                             .load(recommendUserInfoBean.getAvatar())
@@ -1366,12 +1456,47 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                             .into(holder.iv_item1);
                     holder.tv_item1.setText(recommendUserInfoBean.getNickname() == null ? "" : recommendUserInfoBean.getNickname());
                     holder.tv_item2.setText(recommendUserInfoBean.getSignature() == null ? "" : recommendUserInfoBean.getSignature());
-                    holder.tv_item3.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            ToastUtils.showShort("关注");
-                        }
-                    });
+
+                    final int user_id = recommendUserInfoBean.getUser_id();
+                    if (EmptyUtils.isNotEmpty(user_id)) {
+                        holder.iv_item2.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                OkHttpUtils.post()
+                                        .url(Constant.getCreateFollowUrl())
+                                        .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
+                                        .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
+                                        .addParams(Constant.USER_ID, String.valueOf(user_id))
+                                        .build()
+                                        .execute(new StringCallback() {
+                                            @Override
+                                            public void onError(Call call, Exception e, int id) {
+
+                                            }
+
+                                            @Override
+                                            public void onResponse(String response, int id) {
+                                                JSONObject jsonObject = null;
+                                                try {
+                                                    jsonObject = new JSONObject(response);
+                                                    int status = jsonObject.optInt("status");
+                                                    JSONObject jsonObjectData = jsonObject.optJSONObject("data");
+                                                    if (status == 1) {
+                                                        ToastUtils.showShort("关注成功！");
+                                                        holder.iv_item2.setImageResource(R.drawable.other_followed);
+                                                    } else {
+                                                        String code = jsonObject.optString("code");
+                                                        String msg = jsonObjectData.optString("msg");
+                                                        ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                                    }
+                                                } catch (JSONException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                        });
+                            }
+                        });
+                    }
                 }
             }
         } else if (dataType == PECCANCY_RECORD_DATA_TYPE) {
@@ -1468,6 +1593,19 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                     holder.tv_item2.setText(userInfoForSalesConsultant.getIntro());
                 }
             }
+        }
+    }
+
+    private void resetFollowView(ViewHolder holder, int is_friend) {
+        switch (is_friend) {
+            case 1:
+                holder.iv_item6.setImageResource(R.drawable.other_followed);
+                break;
+            case 2:
+                holder.iv_item6.setImageResource(R.drawable.other_follow);
+                break;
+            default:
+                break;
         }
     }
 
@@ -1571,6 +1709,7 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
         private ImageView iv_item3;
         private ImageView iv_item4;
         private ImageView iv_item5;
+        private ImageView iv_item6;
 
         private TextView tv_item1;
         private TextView tv_item2;
@@ -1953,11 +2092,11 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                 iv_item1 = (ImageView) itemView.findViewById(R.id.iv_circle_image);
                 tv_item1 = (TextView) itemView.findViewById(R.id.tv_state_name);
                 tv_item2 = (TextView) itemView.findViewById(R.id.tv_state_time);
-                tv_item3 = (TextView) itemView.findViewById(R.id.tv_follow);
                 iv_item2 = (ImageView) itemView.findViewById(R.id.iv_state_share);
                 iv_item3 = (ImageView) itemView.findViewById(R.id.iv_state_comment);
                 iv_item4 = (ImageView) itemView.findViewById(R.id.iv_state_like);
                 iv_item5 = (ImageView) itemView.findViewById(R.id.iv_state_report);
+                iv_item6 = (ImageView) itemView.findViewById(R.id.iv_follow);
 
                 tv_item4 = (TextView) itemView.findViewById(R.id.tv_state_share_num);
                 tv_item5 = (TextView) itemView.findViewById(R.id.tv_state_comment_num);
@@ -2020,9 +2159,9 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                 });
             } else if (dataType == RECOMMEND_USER_DATA_TYPE) {
                 iv_item1 = (ImageView) itemView.findViewById(R.id.iv_circle_image);
+                iv_item2 = (ImageView) itemView.findViewById(R.id.iv_follow);
                 tv_item1 = (TextView) itemView.findViewById(R.id.tv_user_name);
                 tv_item2 = (TextView) itemView.findViewById(R.id.tv_user_profile);
-                tv_item3 = (TextView) itemView.findViewById(R.id.tv_follow);
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
