@@ -6,9 +6,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
+import com.blankj.utilcode.util.EmptyUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.google.gson.Gson;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
 import com.wiserz.pbibi.bean.ArticleBean;
@@ -29,12 +34,16 @@ import okhttp3.Call;
  * QQ : 971060378
  * Used as : 文章列表的页面
  */
-public class ArticleListFragment extends BaseFragment implements BaseRecyclerViewAdapter.OnItemClickListener {
+public class ArticleListFragment extends BaseFragment implements BaseRecyclerViewAdapter.OnItemClickListener, OnRefreshListener, OnLoadmoreListener {
 
     private RecyclerView recyclerView;
     private static final int ARTICLE_LIST_DATA_TYPE = 76;
 
     private int mPage;
+
+    private SmartRefreshLayout smartRefreshLayout;
+    private BaseRecyclerViewAdapter baseRecyclerViewAdapter;
+    private int refresh_or_load;//0或1
 
     @Override
     protected int getLayoutId() {
@@ -47,6 +56,11 @@ public class ArticleListFragment extends BaseFragment implements BaseRecyclerVie
         ((TextView) view.findViewById(R.id.tv_title)).setText("文章列表");
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+
+        smartRefreshLayout = (SmartRefreshLayout) view.findViewById(R.id.smartRefreshLayout);
+        smartRefreshLayout.setOnRefreshListener(this);
+        smartRefreshLayout.setOnLoadmoreListener(this);
+        refresh_or_load = 0;
 
         mPage = 0;
     }
@@ -89,7 +103,18 @@ public class ArticleListFragment extends BaseFragment implements BaseRecyclerVie
                             int status = jsonObject.optInt("status");
                             JSONObject jsonObjectData = jsonObject.optJSONObject("data");
                             if (status == 1) {
-                                handlerArticleListData(jsonObjectData);
+                                switch (refresh_or_load) {
+                                    case 0:
+                                        smartRefreshLayout.finishRefresh();
+                                        handlerArticleListData(jsonObjectData);
+                                        break;
+                                    case 1:
+                                        smartRefreshLayout.finishLoadmore();
+                                        handlerArticleListMoreData(jsonObjectData);
+                                        break;
+                                    default:
+                                        break;
+                                }
                             } else {
                                 String code = jsonObject.optString("code");
                                 String msg = jsonObjectData.optString("msg");
@@ -102,20 +127,46 @@ public class ArticleListFragment extends BaseFragment implements BaseRecyclerVie
                 });
     }
 
-    private void handlerArticleListData(JSONObject jsonObject) {
-        ArrayList<ArticleBean> articleBeanArrayList = new ArrayList<>();
-        JSONArray jsonArray = jsonObject.optJSONArray("list");
-        Gson gson = new Gson();
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject jsonObjectForArticleList = jsonArray.optJSONObject(i);
-            ArticleBean articleBean = gson.fromJson(jsonObjectForArticleList.toString(), ArticleBean.class);
-            articleBeanArrayList.add(articleBean);
+    private void handlerArticleListMoreData(JSONObject jsonObjectData) {
+        if (EmptyUtils.isNotEmpty(jsonObjectData)) {
+            ArrayList<ArticleBean> articleBeanArrayList = new ArrayList<>();
+            JSONArray jsonArray = jsonObjectData.optJSONArray("list");
+            Gson gson = new Gson();
+            if (EmptyUtils.isNotEmpty(jsonArray)) {
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObjectForArticleList = jsonArray.optJSONObject(i);
+                    ArticleBean articleBean = gson.fromJson(jsonObjectForArticleList.toString(), ArticleBean.class);
+                    articleBeanArrayList.add(articleBean);
+                }
+                if (EmptyUtils.isNotEmpty(articleBeanArrayList) && articleBeanArrayList.size() != 0) {
+                    baseRecyclerViewAdapter.addDatas(articleBeanArrayList);
+                }
+            } else {
+                ToastUtils.showShort("没有更多了");
+            }
         }
+    }
 
-        BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, articleBeanArrayList, ARTICLE_LIST_DATA_TYPE);
-        recyclerView.setAdapter(baseRecyclerViewAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
-        baseRecyclerViewAdapter.setOnItemClickListener(this);
+    private void handlerArticleListData(JSONObject jsonObject) {
+        if (EmptyUtils.isNotEmpty(jsonObject)) {
+            ArrayList<ArticleBean> articleBeanArrayList = new ArrayList<>();
+            JSONArray jsonArray = jsonObject.optJSONArray("list");
+            Gson gson = new Gson();
+            if (EmptyUtils.isNotEmpty(jsonArray)) {
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObjectForArticleList = jsonArray.optJSONObject(i);
+                    ArticleBean articleBean = gson.fromJson(jsonObjectForArticleList.toString(), ArticleBean.class);
+                    articleBeanArrayList.add(articleBean);
+                }
+
+                if (EmptyUtils.isNotEmpty(articleBeanArrayList) && articleBeanArrayList.size() != 0) {
+                    baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, articleBeanArrayList, ARTICLE_LIST_DATA_TYPE);
+                    recyclerView.setAdapter(baseRecyclerViewAdapter);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
+                    baseRecyclerViewAdapter.setOnItemClickListener(this);
+                }
+            }
+        }
     }
 
     @Override
@@ -126,5 +177,19 @@ public class ArticleListFragment extends BaseFragment implements BaseRecyclerVie
             bundle.putInt(Constant.FEED_ID, articleBean.getFeed_id());
             gotoPager(ArticleDetailFragment.class, bundle);
         }
+    }
+
+    @Override
+    public void onRefresh(RefreshLayout refreshlayout) {
+        mPage = 0;
+        refresh_or_load = 0;
+        getDataFromNet();
+    }
+
+    @Override
+    public void onLoadmore(RefreshLayout refreshlayout) {
+        ++mPage;
+        refresh_or_load = 1;
+        getDataFromNet();
     }
 }

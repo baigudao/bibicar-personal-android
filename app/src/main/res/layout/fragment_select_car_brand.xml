@@ -21,6 +21,27 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
+        <RelativeLayout
+            android:id="@+id/rlSelectSeries"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/half_transparent"
+            android:visibility="gone">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="100dp"
+                android:background="@color/background_color"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerViewCarSeries"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="100dp"/>
+
+        </RelativeLayout>
+
     </RelativeLayout>
 
 </LinearLayout>

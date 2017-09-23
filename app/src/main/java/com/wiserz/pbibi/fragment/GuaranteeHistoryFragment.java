@@ -10,6 +10,10 @@ import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
 import com.wiserz.pbibi.bean.GuaranteeHistoryBean;
@@ -30,12 +34,16 @@ import okhttp3.Call;
  * QQ : 971060378
  * Used as : 维保历史的页面
  */
-public class GuaranteeHistoryFragment extends BaseFragment implements BaseRecyclerViewAdapter.OnItemClickListener {
+public class GuaranteeHistoryFragment extends BaseFragment implements BaseRecyclerViewAdapter.OnItemClickListener, OnRefreshListener, OnLoadmoreListener {
 
     private int mPage;
     private RecyclerView recyclerView;
 
     private static final int GUARANTEE_HISTORY_DATA_TYPE = 37;
+
+    private SmartRefreshLayout smartRefreshLayout;
+    private BaseRecyclerViewAdapter baseRecyclerViewAdapter;
+    private int refresh_or_load;//0或1
 
     @Override
     protected int getLayoutId() {
@@ -45,6 +53,12 @@ public class GuaranteeHistoryFragment extends BaseFragment implements BaseRecycl
     @Override
     protected void initView(View view) {
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+
+        smartRefreshLayout = (SmartRefreshLayout) view.findViewById(R.id.smartRefreshLayout);
+        smartRefreshLayout.setOnRefreshListener(this);
+        smartRefreshLayout.setOnLoadmoreListener(this);
+        refresh_or_load = 0;
+
         mPage = 0;
     }
 
@@ -80,7 +94,18 @@ public class GuaranteeHistoryFragment extends BaseFragment implements BaseRecycl
                             int status = jsonObject.optInt("status");
                             JSONObject jsonObjectData = jsonObject.optJSONObject("data");
                             if (status == 1) {
-                                handlerData(jsonObjectData);
+                                switch (refresh_or_load) {
+                                    case 0:
+                                        smartRefreshLayout.finishRefresh();
+                                        handlerData(jsonObjectData);
+                                        break;
+                                    case 1:
+                                        smartRefreshLayout.finishLoadmore();
+                                        handlerMoreData(jsonObjectData);
+                                        break;
+                                    default:
+                                        break;
+                                }
                             } else {
                                 String code = jsonObject.optString("code");
                                 String msg = jsonObjectData.optString("msg");
@@ -93,6 +118,22 @@ public class GuaranteeHistoryFragment extends BaseFragment implements BaseRecycl
                 });
     }
 
+    private void handlerMoreData(JSONObject jsonObjectData) {
+        if (EmptyUtils.isNotEmpty(jsonObjectData)) {
+            JSONArray jsonArray = jsonObjectData.optJSONArray("list");
+            if (EmptyUtils.isNotEmpty(jsonArray) && jsonArray.length() != 0) {
+                Gson gson = new Gson();
+                ArrayList<GuaranteeHistoryBean> guaranteeHistoryBeanArrayList = gson.fromJson(jsonArray.toString(), new TypeToken<ArrayList<GuaranteeHistoryBean>>() {
+                }.getType());
+                if (EmptyUtils.isNotEmpty(guaranteeHistoryBeanArrayList) && guaranteeHistoryBeanArrayList.size() != 0) {
+                    baseRecyclerViewAdapter.addDatas(guaranteeHistoryBeanArrayList);
+                }
+            }else {
+                ToastUtils.showShort("没有更多了");
+            }
+        }
+    }
+
     private void handlerData(JSONObject jsonObjectData) {
         if (EmptyUtils.isNotEmpty(jsonObjectData)) {
             JSONArray jsonArray = jsonObjectData.optJSONArray("list");
@@ -101,7 +142,7 @@ public class GuaranteeHistoryFragment extends BaseFragment implements BaseRecycl
                 ArrayList<GuaranteeHistoryBean> guaranteeHistoryBeanArrayList = gson.fromJson(jsonArray.toString(), new TypeToken<ArrayList<GuaranteeHistoryBean>>() {
                 }.getType());
                 if (EmptyUtils.isNotEmpty(guaranteeHistoryBeanArrayList)) {
-                    BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, guaranteeHistoryBeanArrayList, GUARANTEE_HISTORY_DATA_TYPE);
+                    baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, guaranteeHistoryBeanArrayList, GUARANTEE_HISTORY_DATA_TYPE);
                     recyclerView.setAdapter(baseRecyclerViewAdapter);
                     recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
                     baseRecyclerViewAdapter.setOnItemClickListener(this);
@@ -115,5 +156,19 @@ public class GuaranteeHistoryFragment extends BaseFragment implements BaseRecycl
         if (data.getClass().getSimpleName().equals("GuaranteeHistoryBean")) {
             LogUtils.e("点击事件");
         }
+    }
+
+    @Override
+    public void onRefresh(RefreshLayout refreshlayout) {
+        mPage = 0;
+        refresh_or_load = 0;
+        getDataFromNet();
+    }
+
+    @Override
+    public void onLoadmore(RefreshLayout refreshlayout) {
+        ++mPage;
+        refresh_or_load = 1;
+        getDataFromNet();
     }
 }

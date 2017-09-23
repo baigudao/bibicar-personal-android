@@ -2,11 +2,13 @@ package com.wiserz.pbibi.fragment;
 
 import android.os.Build;
 import android.view.View;
+import android.widget.TextView;
 
 import com.blankj.utilcode.util.EmptyUtils;
 import com.blankj.utilcode.util.LogUtils;
 import com.tencent.smtt.sdk.WebSettings;
 import com.tencent.smtt.sdk.WebView;
+import com.tencent.smtt.sdk.WebViewClient;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.bean.BannerBean;
 import com.wiserz.pbibi.util.DataManager;
@@ -28,11 +30,19 @@ public class VRWatchCarFragment extends BaseFragment {
     @Override
     protected void initView(View view) {
         webView = (WebView) view.findViewById(R.id.tencent_web_view);
+        view.findViewById(R.id.iv_back).setOnClickListener(this);
+        ((TextView) view.findViewById(R.id.tv_title)).setText("VR看车");
     }
 
     @Override
     public void onClick(View v) {
-
+        switch (v.getId()) {
+            case R.id.iv_back:
+                goBack();
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
@@ -43,7 +53,7 @@ public class VRWatchCarFragment extends BaseFragment {
 
         if (EmptyUtils.isNotEmpty(bannerBean)) {
             if (bannerBean.getType().equals("0")) {
-                String vrUrl = bannerBean.getAppUrl();
+                final String vrUrl = bannerBean.getAppUrl();
                 if (EmptyUtils.isNotEmpty(vrUrl)) {
 
                     WebSettings ws = webView.getSettings();
@@ -65,6 +75,14 @@ public class VRWatchCarFragment extends BaseFragment {
                         }
                     }
                     webView.loadUrl(vrUrl);
+
+                    webView.setWebViewClient(new WebViewClient() {
+                        @Override
+                        public boolean shouldOverrideUrlLoading(WebView webView, String s) {
+                            webView.loadUrl(vrUrl);
+                            return true;
+                        }
+                    });
                 }
             }
         }

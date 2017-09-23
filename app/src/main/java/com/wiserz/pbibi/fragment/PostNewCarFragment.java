@@ -1,11 +1,11 @@
 package com.wiserz.pbibi.fragment;
 
+import android.content.res.Resources;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.EmptyUtils;
-import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.qiniu.android.http.ResponseInfo;
@@ -37,6 +37,8 @@ public class PostNewCarFragment extends BaseFragment {
     private JSONArray mPhotoTypes;
     private JSONArray mPhotoFile;
 
+    private TextView tvCarColor;
+
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_post_new_car;
@@ -52,6 +54,8 @@ public class PostNewCarFragment extends BaseFragment {
         view.findViewById(R.id.rl_choose_car_color).setOnClickListener(this);
         view.findViewById(R.id.rl_choose_city).setOnClickListener(this);
         view.findViewById(R.id.rl_choose_car_type).setOnClickListener(this);
+
+        tvCarColor = (TextView) view.findViewById(R.id.tvCarColor);
     }
 
     @Override
@@ -84,10 +88,24 @@ public class PostNewCarFragment extends BaseFragment {
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if (!isHidden()) {
-            LogUtils.e("heard");
-        } else {
-            LogUtils.e("hehe");
+            Object data = DataManager.getInstance().getData1();
+            if (EmptyUtils.isNotEmpty(data)) {
+                if (data instanceof Integer) {
+                    //颜色回调
+                    int mColor = (int) data;
+                    resetColorView(mColor);
+                } else {
+
+                }
+                DataManager.getInstance().setData1(null);
+            }
         }
+    }
+
+    private void resetColorView(int color) {
+        Resources res = getResources();
+        String text = res.getString(res.getIdentifier("car_color_" + (color + 1), "string", getActivity().getPackageName()));
+        tvCarColor.setText(text);
     }
 
     private String getInputProfile() {

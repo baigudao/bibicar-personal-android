@@ -41,6 +41,7 @@
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
             android:name=".activity.SplashActivity"
             android:screenOrientation="portrait"
@@ -53,7 +54,6 @@
         </activity>
         <activity
             android:name=".activity.MainActivity"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"/>
         <activity
@@ -99,6 +99,7 @@
             android:windowSoftInputMode="stateHidden"/><!--这里是重点，解决onHidden之道-->
         <activity
             android:name=".activity.VRWatchCarActivity"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="stateAlwaysHidden"/>
 
         <!-- 微信支付回调 -->
@@ -179,8 +180,6 @@
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="bSQBbBf6E1FAHgyYwcSqlwzgXo1lIhDf"/>
 
-        <activity android:name=".activity.TestActivity">
-        </activity>
     </application>
 
 </manifest>

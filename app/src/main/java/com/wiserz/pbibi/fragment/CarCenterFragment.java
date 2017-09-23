@@ -57,12 +57,11 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
     private TextView tvLocation;
     private LinearLayout ll_sort;
 
-    private SmartRefreshLayout smartRefreshLayout;
     private RecyclerView recyclerView;
     private int mPage;
 
+    private SmartRefreshLayout smartRefreshLayout;
     private BaseRecyclerViewAdapter baseRecyclerViewAdapter;
-
     private int refresh_or_load;//0或1
 
     private static final int CAR_LIST_FOR_CAR_CENTER = 100;
@@ -100,9 +99,10 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
         smartRefreshLayout = (SmartRefreshLayout) view.findViewById(R.id.smartRefreshLayout);
         smartRefreshLayout.setOnRefreshListener(this);
         smartRefreshLayout.setOnLoadmoreListener(this);
+        refresh_or_load = 0;
+
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         mPage = 0;
-        refresh_or_load = 0;
     }
 
     @Override

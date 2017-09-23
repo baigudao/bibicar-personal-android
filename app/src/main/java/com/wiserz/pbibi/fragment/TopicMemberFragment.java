@@ -1,5 +1,6 @@
 package com.wiserz.pbibi.fragment;
 
+import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -147,7 +148,14 @@ public class TopicMemberFragment extends BaseFragment implements BaseRecyclerVie
                     getView().findViewById(R.id.include_topic_member).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            ToastUtils.showShort(themeInfoBean.getTheme());
+                            int user_id = themeInfoBean.getUser_info().getUser_id();
+                            if (user_id == SPUtils.getInstance().getInt(Constant.USER_ID)) {
+                                gotoPager(MyHomePageFragment.class, null);
+                            } else {
+                                Bundle bundle = new Bundle();
+                                bundle.putInt(Constant.USER_ID, user_id);
+                                gotoPager(OtherHomePageFragment.class, bundle);
+                            }
                         }
                     });
                 }
@@ -161,7 +169,14 @@ public class TopicMemberFragment extends BaseFragment implements BaseRecyclerVie
         if (data.getClass().getSimpleName().equals("ThemeUserBean")) {
             ThemeUserBean themeUserBean = (ThemeUserBean) data;
             if (EmptyUtils.isNotEmpty(themeUserBean)) {
-                ToastUtils.showShort(themeUserBean.getNickname());
+                int user_id = themeUserBean.getUser_id();
+                if (user_id == SPUtils.getInstance().getInt(Constant.USER_ID)) {
+                    gotoPager(MyHomePageFragment.class, null);
+                } else {
+                    Bundle bundle = new Bundle();
+                    bundle.putInt(Constant.USER_ID, user_id);
+                    gotoPager(OtherHomePageFragment.class, bundle);
+                }
             }
         }
     }

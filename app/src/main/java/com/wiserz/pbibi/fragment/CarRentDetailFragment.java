@@ -11,7 +11,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bigkoo.convenientbanner.ConvenientBanner;
@@ -355,17 +354,17 @@ public class CarRentDetailFragment extends BaseFragment implements BaseRecyclerV
     private class LocalImageHolderView implements Holder<String> {
 
         private ImageView iv_image;
-        private RelativeLayout rl_topic;
-        private TextView tv_title;
+        //        private RelativeLayout rl_topic;
+        //        private TextView tv_title;
 
         @Override
         public View createView(Context context) {
             View view = View.inflate(context, R.layout.item_banner, null);
             iv_image = (ImageView) view.findViewById(R.id.iv_image);
-            rl_topic = (RelativeLayout) view.findViewById(R.id.rl_topic);
-            rl_topic.setVisibility(View.GONE);
-            tv_title = (TextView) view.findViewById(R.id.tv_title);
-            tv_title.setVisibility(View.GONE);
+            //            rl_topic = (RelativeLayout) view.findViewById(R.id.rl_topic);
+            //            rl_topic.setVisibility(View.GONE);
+            //            tv_title = (TextView) view.findViewById(R.id.tv_title);
+            //            tv_title.setVisibility(View.GONE);
             return view;
         }
 
@@ -376,6 +375,7 @@ public class CarRentDetailFragment extends BaseFragment implements BaseRecyclerV
                         .load(data)
                         .error(R.drawable.default_bg_ratio_1)
                         .placeholder(R.drawable.default_bg_ratio_1)
+                        .error(R.drawable.default_bg_ratio_1)
                         .into(iv_image);
             }
         }

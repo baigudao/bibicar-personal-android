@@ -41,6 +41,8 @@ public class SelectTopicFragment extends BaseFragment implements BaseRecyclerVie
     private static final int SELECT_TOPIC_DATA_TYPE = 38;
     private BaseRecyclerViewAdapter baseRecyclerViewAdapter;
 
+
+
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_select_topic;
@@ -136,6 +138,7 @@ public class SelectTopicFragment extends BaseFragment implements BaseRecyclerVie
     @Override
     public void onItemClick(Object data, int position) {
         if (data.getClass().getSimpleName().equals("TopicInfoBean")) {
+            TopicInfoBean topicInfoBean = (TopicInfoBean) data;
             LogUtils.e(String.valueOf(position));
         }
     }

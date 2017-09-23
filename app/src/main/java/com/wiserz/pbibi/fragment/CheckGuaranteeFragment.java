@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import com.alipay.sdk.app.PayTask;
 import com.blankj.utilcode.util.EmptyUtils;
-import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.tencent.mm.opensdk.modelpay.PayReq;
@@ -41,6 +40,7 @@ public class CheckGuaranteeFragment extends BaseFragment {
     private String pay_type;
     private IWXAPI api;
     private TextView tv_brand;
+    private int brand_id;
 
     private String report_sn;
 
@@ -97,6 +97,7 @@ public class CheckGuaranteeFragment extends BaseFragment {
 
         regToWx();//注册微信支付
         wechatPay();//默认选择微信支付
+        brand_id = 94;
     }
 
     private void wechatPay() {
@@ -125,7 +126,7 @@ public class CheckGuaranteeFragment extends BaseFragment {
     }
 
     private String getBrandInfo() {
-        return tv_brand.getText().toString().trim();
+        return String.valueOf(brand_id);
     }
 
     @Override
@@ -156,7 +157,7 @@ public class CheckGuaranteeFragment extends BaseFragment {
 
     private void startCheck() {
         String vin_string = getInputVin();
-        String brand_info = getBrandInfo();
+        final String brand_info = getBrandInfo();
         if (EmptyUtils.isEmpty(vin_string)) {
             ToastUtils.showShort("请输入VIN码！");
             return;
@@ -251,21 +252,19 @@ public class CheckGuaranteeFragment extends BaseFragment {
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        if (hidden) {   // 不在最前端显示 相当于调用了onPause();
-            LogUtils.e("onHiddenChanged");
-        } else {  // 在最前端显示 相当于调用了onResume();
-            //网络数据刷新
-            LogUtils.e("否则");
-        }
-    }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser) {
-            LogUtils.e("setUserVisibleHint");
+        if (!hidden) {
+            // 在最前端显示 相当于调用了onResume();
+            Object object_name = DataManager.getInstance().getData1();
+            Object object_id = DataManager.getInstance().getData2();
+            if (EmptyUtils.isNotEmpty(object_name) && EmptyUtils.isNotEmpty(object_id)) {
+                String name = (String) object_name;
+                brand_id = (int) object_id;
+                tv_brand.setText(name);
+                DataManager.getInstance().setData1(null);
+                DataManager.getInstance().setData2(null);
+            }
         } else {
-            LogUtils.e("否则");
+            // 不在最前端显示 相当于调用了onPause();
         }
     }
 }

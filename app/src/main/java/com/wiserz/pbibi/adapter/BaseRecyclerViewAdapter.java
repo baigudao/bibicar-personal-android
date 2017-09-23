@@ -23,6 +23,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.EmptyUtils;
+import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.SizeUtils;
 import com.blankj.utilcode.util.TimeUtils;
@@ -36,6 +37,7 @@ import com.wiserz.pbibi.bean.ArticleCommentBean;
 import com.wiserz.pbibi.bean.CarInfoBean;
 import com.wiserz.pbibi.bean.CarRentInfoBean;
 import com.wiserz.pbibi.bean.CarRentRecommendCarBean;
+import com.wiserz.pbibi.bean.CarSeriesBean;
 import com.wiserz.pbibi.bean.CheHangHomeBean;
 import com.wiserz.pbibi.bean.CheHangUserListBean;
 import com.wiserz.pbibi.bean.DreamCarBean;
@@ -141,6 +143,8 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
 
     private static final int SALES_CONSULTANT_DATA_TYPE = 39;
 
+    private static final int CAR_SERIES_DATA_TYPE = 40;
+
     private static final int NEW_CAR_DATA_TYPE = 55;
 
     private static final int CAR_VIDEO_DATA_TYPE = 65;
@@ -183,7 +187,9 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
     @Override
     public BaseRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         ViewHolder viewHolder;
-        if (dataType == SALES_CONSULTANT_DATA_TYPE) {
+        if (dataType == CAR_SERIES_DATA_TYPE) {
+            viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_car_series, null));
+        } else if (dataType == SALES_CONSULTANT_DATA_TYPE) {
             viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_sales_consultant, null));
         } else if (dataType == SELECT_TOPIC_DATA_TYPE) {
             viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_select_topic, null));
@@ -1100,12 +1106,12 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                                 .into(holder.iv_item1);
 
                         int user_id = feedBean.getPost_user_info().getUser_id();
-                        if (EmptyUtils.isNotEmpty(user_id)){
+                        if (EmptyUtils.isNotEmpty(user_id)) {
                             holder.iv_item1.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
                                     Bundle bundle = new Bundle();
-                                    bundle.putInt(Constant.USER_ID,feedBean.getPost_user_info().getUser_id());
+                                    bundle.putInt(Constant.USER_ID, feedBean.getPost_user_info().getUser_id());
                                     ((BaseActivity) mContext).gotoPager(OtherHomePageFragment.class, bundle);
                                 }
                             });
@@ -1114,7 +1120,7 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                                 @Override
                                 public void onClick(View v) {
                                     Bundle bundle = new Bundle();
-                                    bundle.putInt(Constant.USER_ID,feedBean.getPost_user_info().getUser_id());
+                                    bundle.putInt(Constant.USER_ID, feedBean.getPost_user_info().getUser_id());
                                     ((BaseActivity) mContext).gotoPager(OtherHomePageFragment.class, bundle);
                                 }
                             });
@@ -1408,6 +1414,13 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                             .into(holder.iv_item1);
                     holder.tv_item1.setText(themeUserBean.getNickname());
                     holder.tv_item2.setText("粉丝 " + themeUserBean.getFans_num() + " | " + "关注 " + themeUserBean.getFriend_num());////粉丝 145 丨 关注 12
+
+                    holder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            LogUtils.e("hehheheh");
+                        }
+                    });
                 }
             }
         } else if (dataType == MY_CAR_REPERTORY_DATA_TYPE) {
@@ -1593,6 +1606,16 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                     holder.tv_item2.setText(userInfoForSalesConsultant.getIntro());
                 }
             }
+        } else if (dataType == CAR_SERIES_DATA_TYPE) {
+            ArrayList<CarSeriesBean> carSeriesBeanArrayList = (ArrayList<CarSeriesBean>) mList;
+
+            if (EmptyUtils.isNotEmpty(carSeriesBeanArrayList)) {
+                CarSeriesBean carSeriesBean = carSeriesBeanArrayList.get(position);
+
+                if (EmptyUtils.isNotEmpty(carSeriesBean)) {
+                    holder.tv_item1.setText(carSeriesBean.getSeries_name());
+                }
+            }
         }
     }
 
@@ -1704,6 +1727,8 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
+        private View itemView;
+
         private ImageView iv_item1;
         private ImageView iv_item2;
         private ImageView iv_item3;
@@ -1731,6 +1756,7 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
 
         ViewHolder(View itemView) {
             super(itemView);
+            this.itemView = itemView;
             if (dataType == NEW_CAR_DATA_TYPE) {
                 iv_item1 = (ImageView) itemView.findViewById(R.id.iv_most_new_car);
                 tv_item1 = (TextView) itemView.findViewById(R.id.tv_most_new_car_name);
@@ -2212,6 +2238,18 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                 iv_item1 = (ImageView) itemView.findViewById(R.id.iv_picture);
                 tv_item1 = (TextView) itemView.findViewById(R.id.tv_name);
                 tv_item2 = (TextView) itemView.findViewById(R.id.tv_brief);
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnItemClickListener != null) {
+                            int position = getLayoutPosition();
+                            mOnItemClickListener.onItemClick(mList.get(position), position);
+                        }
+                    }
+                });
+            } else if (dataType == CAR_SERIES_DATA_TYPE) {
+                tv_item1 = (TextView) itemView.findViewById(R.id.tvSeriesName);
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override

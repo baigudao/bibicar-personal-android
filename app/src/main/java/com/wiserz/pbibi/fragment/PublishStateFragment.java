@@ -14,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.EmptyUtils;
-import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
@@ -25,6 +24,7 @@ import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.bean.UploadCarPhotoInfo;
 import com.wiserz.pbibi.util.CommonUtil;
 import com.wiserz.pbibi.util.Constant;
+import com.wiserz.pbibi.util.DataManager;
 import com.wiserz.pbibi.util.GifSizeFilter;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
@@ -62,6 +62,8 @@ public class PublishStateFragment extends BaseFragment {
     private ArrayList<UploadCarPhotoInfo> uploadCarPhotoInfoArrayList;
     private String upload_token;
 
+    private TextView tv_choose_topic;
+
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_publish_state;
@@ -83,6 +85,8 @@ public class PublishStateFragment extends BaseFragment {
         iv_add.setOnClickListener(this);
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         view.findViewById(R.id.rl_choose_topic).setOnClickListener(this);
+
+        tv_choose_topic = (TextView) view.findViewById(R.id.tv_choose_topic);
 
         uploadCarPhotoInfoArrayList = new ArrayList<>();
     }
@@ -115,14 +119,19 @@ public class PublishStateFragment extends BaseFragment {
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if (!hidden) {
-            LogUtils.e("onHiddenChanged");
+            Object object = DataManager.getInstance().getData4();
+            if (EmptyUtils.isNotEmpty(object)) {
+                ArrayList<String> stringArrayList = (ArrayList<String>) object;
+                if (EmptyUtils.isNotEmpty(stringArrayList) && stringArrayList.size() != 0) {
+                    StringBuffer stringBuffer = new StringBuffer();
+                    for (int i = 0; i < stringArrayList.size(); i++) {
+                        stringBuffer.append(stringArrayList.get(i));
+                    }
+                    tv_choose_topic.setText(stringBuffer);
+                }
+                DataManager.getInstance().setData4(null);
+            }
         }
-    }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        LogUtils.e("setUserVisibleHint");
     }
 
     @Override
@@ -224,7 +233,7 @@ public class PublishStateFragment extends BaseFragment {
                     .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
                     .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
                     .addParams(Constant.FILES_ID, mPhotoFile.toString())
-                    .addParams(Constant.POST_CONTENT, getInputContent())
+                    .addParams(Constant.POST_CONTENT, tv_choose_topic.getText() + getInputContent())
                     .build()
                     .execute(new StringCallback() {
                         @Override

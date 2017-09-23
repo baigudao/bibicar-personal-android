@@ -52,8 +52,7 @@ public class RecommendFragment extends BaseFragment implements OnRefreshListener
                 gotoPager(SearchFragment.class, null);
                 break;
             case R.id.iv_top_search_history:
-                //                gotoPager(SearchHistoryFragment.class, null);
-                gotoPager(OnHiddenFragment.class, null);
+                gotoPager(SearchHistoryFragment.class, null);
                 break;
             default:
                 break;

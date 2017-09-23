@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/background_color"
-    android:orientation="vertical">
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@color/background_color"
+              android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -21,7 +21,7 @@
                 android:layout_height="wrap_content"
                 android:text="车拍档"
                 android:textColor="#3a3a3a"
-                android:textSize="18sp" />
+                android:textSize="18sp"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -29,7 +29,7 @@
                 android:layout_marginTop="10dp"
                 android:text="非专业不正经的汽车脱口秀"
                 android:textColor="#929292"
-                android:textSize="12sp" />
+                android:textSize="12sp"/>
 
         </LinearLayout>
 
@@ -43,7 +43,7 @@
             android:clickable="true"
             android:text="查看更多"
             android:textColor="#929292"
-            android:textSize="14sp" />
+            android:textSize="14sp"/>
 
     </RelativeLayout>
 
@@ -51,6 +51,8 @@
         android:id="@+id/car_video_recyclerView"
         android:layout_width="match_parent"
         android:layout_height="185dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"/>
 
     <LinearLayout
@@ -62,17 +64,17 @@
         <View
             android:layout_width="0dp"
             android:layout_height="1dp"
-            android:layout_weight="1" />
+            android:layout_weight="1"/>
 
         <View
             android:layout_width="345dp"
             android:layout_height="1dp"
-            android:background="#e6e6e6" />
+            android:background="#e6e6e6"/>
 
         <View
             android:layout_width="0dp"
             android:layout_height="1dp"
-            android:layout_weight="1" />
+            android:layout_weight="1"/>
 
     </LinearLayout>
 

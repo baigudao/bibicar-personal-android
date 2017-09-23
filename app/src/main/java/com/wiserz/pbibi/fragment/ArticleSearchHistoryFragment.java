@@ -132,9 +132,9 @@ public class ArticleSearchHistoryFragment extends BaseFragment implements BaseRe
 
                 if (EmptyUtils.isNotEmpty(articleBeanArrayList) && articleBeanArrayList.size() != 0) {
                     baseRecyclerViewAdapter.addDatas(articleBeanArrayList);
-                } else {
-                    ToastUtils.showShort("没有更多了");
                 }
+            } else {
+                ToastUtils.showShort("没有更多了");
             }
         }
     }

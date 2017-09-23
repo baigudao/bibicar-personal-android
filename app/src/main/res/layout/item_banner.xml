@@ -10,39 +10,39 @@
         android:scaleType="fitXY"
         android:src="@drawable/default_bg_ratio_1"/>
 
-    <RelativeLayout
-        android:id="@+id/rl_topic"
-        android:layout_width="38dp"
-        android:layout_height="22dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="60dp">
+    <!--<RelativeLayout-->
+    <!--android:id="@+id/rl_topic"-->
+    <!--android:layout_width="38dp"-->
+    <!--android:layout_height="22dp"-->
+    <!--android:layout_marginLeft="20dp"-->
+    <!--android:layout_marginTop="60dp">-->
 
-        <View
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="#D52E2E"/>
+    <!--<View-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:background="#D52E2E"/>-->
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="话题"
-            android:textColor="@color/pure_white_color"
-            android:textSize="14sp"/>
+    <!--<TextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_centerInParent="true"-->
+    <!--android:text="话题"-->
+    <!--android:textColor="@color/pure_white_color"-->
+    <!--android:textSize="14sp"/>-->
 
-    </RelativeLayout>
+    <!--</RelativeLayout>-->
 
-    <TextView
-        android:id="@+id/tv_title"
-        android:layout_width="220dp"
-        android:layout_height="60dp"
-        android:layout_below="@id/rl_topic"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="15dp"
-        android:ellipsize="end"
-        android:maxLines="2"
-        android:text="你的诗和远方在哪里"
-        android:textColor="@color/pure_white_color"
-        android:textSize="24sp"/>
+    <!--<TextView-->
+    <!--android:id="@+id/tv_title"-->
+    <!--android:layout_width="220dp"-->
+    <!--android:layout_height="60dp"-->
+    <!--android:layout_below="@id/rl_topic"-->
+    <!--android:layout_marginLeft="20dp"-->
+    <!--android:layout_marginTop="15dp"-->
+    <!--android:ellipsize="end"-->
+    <!--android:maxLines="2"-->
+    <!--android:text="你的诗和远方在哪里"-->
+    <!--android:textColor="@color/pure_white_color"-->
+    <!--android:textSize="24sp"/>-->
 
 </RelativeLayout>

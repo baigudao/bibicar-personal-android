@@ -1,10 +1,12 @@
 package com.wiserz.pbibi.util;
 
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -15,10 +17,14 @@ import android.widget.Toast;
 import com.blankj.utilcode.util.DeviceUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.google.gson.Gson;
+import com.wiserz.pbibi.R;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by jackie on 2017/8/9 10:33.
@@ -26,6 +32,10 @@ import java.util.List;
  * Used as : 一般工具类
  */
 public class CommonUtil {
+
+    public static ContentValues mContentValues = null;
+    public final static String IMAGE_EXTENSION = ".jpg";
+    public final static String GIF_EXTENSION = ".gif";
 
     /**
      * 获取diviceId,在测试升级时可能用到，上线时可以不再获取，可重写此方法返回一个固定的字符串，如：android，
@@ -109,7 +119,8 @@ public class CommonUtil {
      * @return the file path or null
      */
     public static String getRealFilePath(final Context context, final Uri uri) {
-        if (null == uri) return null;
+        if (null == uri)
+            return null;
         final String scheme = uri.getScheme();
         String data = null;
         if (scheme == null)
@@ -161,5 +172,106 @@ public class CommonUtil {
      */
     public static boolean isListNullOrEmpty(List list) {
         return list == null || list.isEmpty();
+    }
+
+    /**
+     * 保存到相册
+     *
+     * @param bmp
+     */
+    public static String savePhotoToAppAlbum(Bitmap bmp, Context context) {
+        String folder = createAppAlbumImagePath(context);
+        FileOutputStream fout = null;
+        BufferedOutputStream bos = null;
+        try {
+            fout = new FileOutputStream(folder);
+            bos = new BufferedOutputStream(fout);
+            bmp.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (fout != null) {
+                    fout.close();
+                }
+                if (bos != null) {
+                    bos.flush();
+                    bos.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, mContentValues);
+        mContentValues = null;
+        return folder;
+    }
+
+    /**
+     * 保存到相册
+     */
+    public static String saveGifToAppAlbum(byte[] bytes, Context context) {
+        String folder = createAppGifAlbumImagePath(context);
+        FileOutputStream fout = null;
+        BufferedOutputStream bos = null;
+        try {
+            fout = new FileOutputStream(folder);
+            bos = new BufferedOutputStream(fout);
+            bos.write(bytes);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (fout != null) {
+                    fout.close();
+                }
+                if (bos != null) {
+                    bos.flush();
+                    bos.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, mContentValues);
+        mContentValues = null;
+        return folder;
+    }
+
+    public static String createAppAlbumImagePath(Context context) {
+        String title = UUID.randomUUID().toString();
+        String filename = title + GIF_EXTENSION;
+
+        String dirPath = Environment.getExternalStorageDirectory() + "/" + context.getString(R.string.app_name);
+        File file = new File(dirPath);
+        if (!file.exists() || !file.isDirectory())
+            file.mkdirs();
+        String filePath = dirPath + "/" + filename;
+        ContentValues values = new ContentValues(7);
+        values.put(MediaStore.Images.ImageColumns.TITLE, title);
+        values.put(MediaStore.Images.ImageColumns.DISPLAY_NAME, filename);
+        values.put(MediaStore.Images.ImageColumns.DATE_TAKEN, System.currentTimeMillis());
+        values.put(MediaStore.Images.ImageColumns.MIME_TYPE, "image/jpeg");
+        values.put(MediaStore.Images.ImageColumns.DATA, filePath);
+        mContentValues = values;
+        return filePath;
+    }
+
+    public static String createAppGifAlbumImagePath(Context context) {
+        String title = UUID.randomUUID().toString();
+        String filename = title + IMAGE_EXTENSION;
+
+        String dirPath = Environment.getExternalStorageDirectory() + "/" + context.getString(R.string.app_name);
+        File file = new File(dirPath);
+        if (!file.exists() || !file.isDirectory()) file.mkdirs();
+        String filePath = dirPath + "/" + filename;
+        ContentValues values = new ContentValues(7);
+        values.put(MediaStore.Images.ImageColumns.TITLE, title);
+        values.put(MediaStore.Images.ImageColumns.DISPLAY_NAME, filename);
+        values.put(MediaStore.Images.ImageColumns.DATE_TAKEN, System.currentTimeMillis());
+        values.put(MediaStore.Images.ImageColumns.MIME_TYPE, "image/gif");
+        values.put(MediaStore.Images.ImageColumns.DATA, filePath);
+        mContentValues = values;
+        return filePath;
     }
 }

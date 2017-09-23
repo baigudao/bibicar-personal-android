@@ -33,6 +33,7 @@
     <color name="btn_no_enable_color1">#88bdbdbd</color>
 
     <color name="bottom_text_color">#99363636</color>
+    <color name="half_transparent">#A0000000</color>
 
     <color name="car_color_1">#333333</color>
     <color name="car_color_2">#e80202</color>

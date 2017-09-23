@@ -36,6 +36,7 @@ public class GuaranteeDetailFragment extends BaseFragment {
     @Override
     protected void initView(View view) {
         report_sn = (String) DataManager.getInstance().getData1();
+        DataManager.getInstance().setData1(null);
         view.findViewById(R.id.iv_back).setOnClickListener(this);
         ((TextView) view.findViewById(R.id.tv_title)).setText("维保记录");
     }

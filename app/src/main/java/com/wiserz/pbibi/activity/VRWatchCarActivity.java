@@ -8,6 +8,7 @@ import com.blankj.utilcode.util.BarUtils;
 import com.blankj.utilcode.util.EmptyUtils;
 import com.tencent.smtt.sdk.WebSettings;
 import com.tencent.smtt.sdk.WebView;
+import com.tencent.smtt.sdk.WebViewClient;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.bean.BannerBean;
 import com.wiserz.pbibi.util.DataManager;
@@ -37,7 +38,7 @@ public class VRWatchCarActivity extends BaseActivity {
 
         if (EmptyUtils.isNotEmpty(bannerBean)) {
             if (bannerBean.getType().equals("0")) {
-                String vrUrl = bannerBean.getAppUrl();
+                final String vrUrl = bannerBean.getAppUrl();
                 if (EmptyUtils.isNotEmpty(vrUrl)) {
 
                     WebSettings ws = webView.getSettings();
@@ -59,6 +60,14 @@ public class VRWatchCarActivity extends BaseActivity {
                         }
                     }
                     webView.loadUrl(vrUrl);
+
+                    webView.setWebViewClient(new WebViewClient() {
+                        @Override
+                        public boolean shouldOverrideUrlLoading(WebView webView, String s) {
+                            webView.loadUrl(vrUrl);
+                            return true;
+                        }
+                    });
                 }
             }
         }

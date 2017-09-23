@@ -157,7 +157,6 @@ public class RecommendRecyclerViewAdapter extends RecyclerView.Adapter implement
                 @Override
                 public void onClick(View v) {
                     ((BaseActivity) mContext).gotoPager(CarCheckServiceFragment.class, null);
-                    //                    ((BaseActivity) mContext).gotoPager(TestFragment.class, null);
                     //这样也可以
                     //                    Intent intent = new Intent(mContext, EmptyActivity.class);
                     //                    intent.putExtra(Constant.FRAGMENT_NAME, CarCheckServiceFragment.class.getName());
@@ -482,13 +481,11 @@ public class RecommendRecyclerViewAdapter extends RecyclerView.Adapter implement
     private class LocalImageHolderView implements Holder<BannerBean> {
 
         private ImageView iv_image;
-        private TextView tv_title;
 
         @Override
         public View createView(Context context) {
             View view = View.inflate(context, R.layout.item_banner, null);
             iv_image = (ImageView) view.findViewById(R.id.iv_image);
-            tv_title = (TextView) view.findViewById(R.id.tv_title);
             return view;
         }
 
@@ -498,8 +495,8 @@ public class RecommendRecyclerViewAdapter extends RecyclerView.Adapter implement
                 Glide.with(context)
                         .load(data.getImgUrl())
                         .placeholder(R.drawable.default_bg_ratio_1)
+                        .error(R.drawable.default_bg_ratio_1)
                         .into(iv_image);
-                tv_title.setText(data.getTitle());
             }
         }
     }

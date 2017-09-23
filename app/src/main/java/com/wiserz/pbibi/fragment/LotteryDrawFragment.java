@@ -54,7 +54,7 @@ public class LotteryDrawFragment extends BaseFragment {
     protected void initData() {
         super.initData();
         if (EmptyUtils.isNotEmpty(appUrl)) {
-            String real_app_url = appUrl + "?ident=" + SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER)
+            final String real_app_url = appUrl + "?ident=" + SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER)
                     + "&session=" + SPUtils.getInstance().getString(Constant.SESSION_ID);
             WebSettings webSettings = tencent_web_view.getSettings();
 
@@ -81,7 +81,8 @@ public class LotteryDrawFragment extends BaseFragment {
             tencent_web_view.setWebViewClient(new WebViewClient() {
                 @Override
                 public boolean shouldOverrideUrlLoading(WebView webView, String s) {
-                    return super.shouldOverrideUrlLoading(webView, s);
+                    webView.loadUrl(real_app_url);
+                    return true;
                 }
             });
 

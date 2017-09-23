@@ -132,9 +132,9 @@ public class CarSearchHistoryFragment extends BaseFragment implements BaseRecycl
                 }.getType());
                 if (EmptyUtils.isNotEmpty(carInfoBeanArrayList) && carInfoBeanArrayList.size() != 0) {
                     baseRecyclerViewAdapter.addDatas(carInfoBeanArrayList);
-                } else {
-                    ToastUtils.showShort("没有更多了");
                 }
+            } else {
+                ToastUtils.showShort("没有更多了");
             }
         }
     }

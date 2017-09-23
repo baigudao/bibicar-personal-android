@@ -3,10 +3,10 @@ package com.wiserz.pbibi.fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.EmptyUtils;
-import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.google.gson.Gson;
@@ -15,8 +15,8 @@ import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
 import com.wiserz.pbibi.adapter.BrandAdapter;
 import com.wiserz.pbibi.bean.BrandInfoBean;
+import com.wiserz.pbibi.bean.CarSeriesBean;
 import com.wiserz.pbibi.util.Constant;
-import com.wiserz.pbibi.util.DataManager;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -45,6 +45,11 @@ public class SelectCarBrandFragment extends BaseFragment implements BaseRecycler
     private ArrayList<BrandInfoBean> brandInfoBeanArrayList;
     private String[] strings;
 
+    private RelativeLayout rlSelectSeries;
+    private RecyclerView recyclerViewCarSeries;
+
+    private static final int CAR_SERIES_DATA_TYPE = 40;
+
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_select_car_brand;
@@ -60,6 +65,9 @@ public class SelectCarBrandFragment extends BaseFragment implements BaseRecycler
 
         strings = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
         brandInfoBeanArrayList = new ArrayList<>();
+
+        rlSelectSeries = (RelativeLayout) view.findViewById(R.id.rlSelectSeries);
+        recyclerViewCarSeries = (RecyclerView) view.findViewById(R.id.recyclerViewCarSeries);
     }
 
     @Override
@@ -188,11 +196,76 @@ public class SelectCarBrandFragment extends BaseFragment implements BaseRecycler
         if (data.getClass().getSimpleName().equals("BrandInfoBean")) {
             BrandInfoBean brandInfoBean = (BrandInfoBean) data;
             if (EmptyUtils.isNotEmpty(brandInfoBean)) {
-                LogUtils.e(brandInfoBean.getBrand_name());
-                LogUtils.e(brandInfoBean.getBrand_id());
-                DataManager.getInstance().setData1(brandInfoBean.getBrand_name());
-                DataManager.getInstance().setData2(brandInfoBean.getBrand_id());
-                goBack();
+                //                DataManager.getInstance().setData1(brandInfoBean.getBrand_name());
+                //                DataManager.getInstance().setData2(brandInfoBean.getBrand_id());
+                //                goBack();
+                showSelectSeriesView(brandInfoBean);
+            }
+        } else if (data.getClass().getSimpleName().equals("CarSeriesBean")) {
+            CarSeriesBean carSeriesBean = (CarSeriesBean) data;
+            if (EmptyUtils.isNotEmpty(carSeriesBean)){
+                rlSelectSeries.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    private void showSelectSeriesView(BrandInfoBean brandInfoBean) {
+        if (EmptyUtils.isNotEmpty(brandInfoBean)) {
+            rlSelectSeries.setVisibility(View.VISIBLE);
+            int brand_id = brandInfoBean.getBrand_id();
+            if (EmptyUtils.isNotEmpty(brand_id)) {
+                getSeriesListByBrandId(brand_id);
+            }
+        }
+    }
+
+    private void getSeriesListByBrandId(int brand_id) {
+        OkHttpUtils.post()
+                .url(Constant.getCarBrandSeriesUrl() + brand_id)
+                .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
+                .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+                        JSONObject jsonObject = null;
+                        try {
+                            jsonObject = new JSONObject(response);
+                            int status = jsonObject.optInt("status");
+                            JSONObject jsonObjectData = jsonObject.optJSONObject("data");
+                            if (status == 1) {
+                                handlerCarSeriesData(jsonObjectData);
+                            } else {
+                                String code = jsonObject.optString("code");
+                                String msg = jsonObjectData.optString("msg");
+                                ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+    }
+
+    private void handlerCarSeriesData(JSONObject jsonObjectData) {
+        if (EmptyUtils.isNotEmpty(jsonObjectData)) {
+            JSONArray jsonArray = jsonObjectData.optJSONArray("series_list");
+            if (EmptyUtils.isNotEmpty(jsonArray)) {
+                Gson gson = new Gson();
+                ArrayList<CarSeriesBean> carSeriesBeanArrayList = gson.fromJson(jsonArray.toString(), new TypeToken<ArrayList<CarSeriesBean>>() {
+                }.getType());
+
+                if (EmptyUtils.isNotEmpty(carSeriesBeanArrayList) && carSeriesBeanArrayList.size() != 0) {
+                    BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, carSeriesBeanArrayList, CAR_SERIES_DATA_TYPE);
+                    recyclerViewCarSeries.setAdapter(baseRecyclerViewAdapter);
+                    recyclerViewCarSeries.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
+                    baseRecyclerViewAdapter.setOnItemClickListener(this);
+                }
             }
         }
     }

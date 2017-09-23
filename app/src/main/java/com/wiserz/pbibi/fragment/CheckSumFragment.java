@@ -18,6 +18,7 @@ import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.alipay.PayResult;
 import com.wiserz.pbibi.util.Constant;
+import com.wiserz.pbibi.util.DataManager;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -39,6 +40,7 @@ public class CheckSumFragment extends BaseFragment {
     private String pay_type;
     private IWXAPI api;
     private TextView tv_brand;
+    private int brand_id;
 
     private static final int SDK_PAY_FLAG = 1;
     private Handler mHandler = new Handler() {
@@ -91,6 +93,8 @@ public class CheckSumFragment extends BaseFragment {
 
         regToWx();//注册微信支付
         wechatPay();//默认选择微信支付
+
+        brand_id = 94;
     }
 
     private void wechatPay() {
@@ -119,7 +123,7 @@ public class CheckSumFragment extends BaseFragment {
     }
 
     private String getBrandInfo() {
-        return tv_brand.getText().toString().trim();
+        return String.valueOf(brand_id);
     }
 
     @Override
@@ -238,6 +242,25 @@ public class CheckSumFragment extends BaseFragment {
                 Thread payThread = new Thread(payRunnable);
                 payThread.start();
             }
+        }
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+            // 在最前端显示 相当于调用了onResume();
+            Object object_name = DataManager.getInstance().getData1();
+            Object object_id = DataManager.getInstance().getData2();
+            if (EmptyUtils.isNotEmpty(object_name) && EmptyUtils.isNotEmpty(object_id)) {
+                String name = (String) object_name;
+                brand_id = (int) object_id;
+                tv_brand.setText(name);
+                DataManager.getInstance().setData1(null);
+                DataManager.getInstance().setData2(null);
+            }
+        } else {
+            // 不在最前端显示 相当于调用了onPause();
         }
     }
 }

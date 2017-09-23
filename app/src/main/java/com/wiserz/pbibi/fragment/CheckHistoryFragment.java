@@ -36,9 +36,9 @@ public class CheckHistoryFragment extends BaseFragment {
         RadioGroup mRg_main = (RadioGroup) view.findViewById(R.id.rg_main);
 
         mBaseFragment = new ArrayList<>();
-        mBaseFragment.add(new PeccancyHistoryFragment());
-        mBaseFragment.add(new SumHistoryFragment());
-        mBaseFragment.add(new GuaranteeHistoryFragment());
+        mBaseFragment.add(new PeccancyHistoryFragment());//违章
+        mBaseFragment.add(new SumHistoryFragment());//出险
+        mBaseFragment.add(new GuaranteeHistoryFragment());//维保
 
         mRg_main.setOnCheckedChangeListener(new MyOnCheckedChangeListener());
         //设置默认选中常用框架

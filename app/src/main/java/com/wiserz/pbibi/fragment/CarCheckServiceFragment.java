@@ -35,11 +35,11 @@ public class CarCheckServiceFragment extends BaseFragment {
             case R.id.iv_back:
                 goBack();
                 break;
-            case R.id.ll_check_peccancy:
-                gotoPager(CheckPeccancyFragment.class, null);//查违章
-                break;
             case R.id.ll_check_guarantee:
                 gotoPager(CheckGuaranteeFragment.class, null);//查维保
+                break;
+            case R.id.ll_check_peccancy:
+                gotoPager(CheckPeccancyFragment.class, null);//查违章
                 break;
             case R.id.ll_check_sum:
                 gotoPager(CheckSumFragment.class, null);//查出险

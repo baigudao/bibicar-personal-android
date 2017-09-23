@@ -198,11 +198,13 @@ public class TopicDetailFragment extends BaseFragment implements BaseRecyclerVie
                 ArrayList<ThemeUserBean> themeUserBeanArrayList = gson.fromJson(jsonArrayForThemeUser.toString(), new TypeToken<ArrayList<ThemeUserBean>>() {
                 }.getType());
 
-                RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.recyclerView);
-                BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, themeUserBeanArrayList, THEME_USER_DATA_TYPE);//不能超过5个用户，要不就挤爆了。
-                recyclerView.setAdapter(baseRecyclerViewAdapter);
-                recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
-                baseRecyclerViewAdapter.setOnItemClickListener(this);
+                if (EmptyUtils.isNotEmpty(themeUserBeanArrayList) && themeUserBeanArrayList.size() != 0) {
+                    RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.recyclerView);
+                    BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, themeUserBeanArrayList, THEME_USER_DATA_TYPE);//不能超过5个用户，要不就挤爆了。
+                    recyclerView.setAdapter(baseRecyclerViewAdapter);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
+                    baseRecyclerViewAdapter.setOnItemClickListener(this);
+                }
             }
         }
     }
@@ -246,7 +248,16 @@ public class TopicDetailFragment extends BaseFragment implements BaseRecyclerVie
     public void onItemClick(Object data, int position) {
         if (data.getClass().getSimpleName().equals("ThemeUserBean")) {
             ThemeUserBean themeUserBean = (ThemeUserBean) data;
-            ToastUtils.showShort(themeUserBean.getNickname());
+            if (EmptyUtils.isNotEmpty(themeUserBean)) {
+                int user_id = themeUserBean.getUser_id();
+                if (user_id == SPUtils.getInstance().getInt(Constant.USER_ID)) {
+                    gotoPager(MyHomePageFragment.class, null);
+                } else {
+                    Bundle bundle = new Bundle();
+                    bundle.putInt(Constant.USER_ID, user_id);
+                    gotoPager(OtherHomePageFragment.class, bundle);
+                }
+            }
         }
     }
 
