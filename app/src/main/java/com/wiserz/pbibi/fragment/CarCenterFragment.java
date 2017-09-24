@@ -1,6 +1,7 @@
 package com.wiserz.pbibi.fragment;
 
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -10,6 +11,8 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -20,6 +23,7 @@ import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.blankj.utilcode.util.EmptyUtils;
 import com.blankj.utilcode.util.SPUtils;
+import com.blankj.utilcode.util.SizeUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.google.gson.Gson;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -55,14 +59,29 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
     public BDAbstractLocationListener myListener = new MyLocationListener();
 
     private TextView tvLocation;
+    private LinearLayout ll_select;
     private LinearLayout ll_sort;
+    private LinearLayout ll_price;
 
     private RecyclerView recyclerView;
     private int mPage;
 
+    private String order_id;
+    private String min_price;
+    private String max_price;
+    private String brand_id;
+    private String series_id;
+    private String min_mileage;
+    private String max_mileage;
+    private String min_board_time;
+    private String max_board_time;
+
     private SmartRefreshLayout smartRefreshLayout;
     private BaseRecyclerViewAdapter baseRecyclerViewAdapter;
     private int refresh_or_load;//0或1
+
+    private int flag;
+    private int price_id;
 
     private static final int CAR_LIST_FOR_CAR_CENTER = 100;
 
@@ -93,8 +112,11 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
         mLocationClient.start();//开始定位
 
         view.findViewById(R.id.ivRight).setOnClickListener(this);
+        ll_select = (LinearLayout) view.findViewById(R.id.ll_select);
         ll_sort = (LinearLayout) view.findViewById(R.id.ll_sort);
         ll_sort.setOnClickListener(this);
+        ll_price = (LinearLayout) view.findViewById(R.id.ll_price);
+        ll_price.setOnClickListener(this);
 
         smartRefreshLayout = (SmartRefreshLayout) view.findViewById(R.id.smartRefreshLayout);
         smartRefreshLayout.setOnRefreshListener(this);
@@ -103,6 +125,9 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         mPage = 0;
+
+        order_id = "0";
+        price_id = 0;
     }
 
     @Override
@@ -117,26 +142,51 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                 showPostCarWindow();
                 break;
             case R.id.ll_sort:
-                carSort();
+                flag = 0;
+                resetHeaderView();
+                View car_sort_view = View.inflate(mContext, R.layout.item_car_sort, null);
+                carSelectPopupWindow(car_sort_view);
+                break;
+            case R.id.ll_price:
+                flag = 1;
+                resetHeaderView();
+                View car_price_view = View.inflate(mContext, R.layout.item_car_price, null);
+                carSelectPopupWindow(car_price_view);
                 break;
             default:
                 break;
         }
     }
 
-    private void carSort() {
-        View car_sort_view = View.inflate(mContext, R.layout.item_car_sort, null);
-        final PopupWindow popupWindow = new PopupWindow(car_sort_view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+    private void resetHeaderView() {
+        if (getView() != null) {
+            switch (flag) {
+                case 0:
+                    ((TextView) getView().findViewById(R.id.tv_sort)).setTextColor(getResources().getColor(R.color.main_color));
+                    ((ImageView) getView().findViewById(R.id.iv_arrow_sort)).setImageResource(R.drawable.v2_ewer3x);
+                    break;
+                case 1:
+                    ((TextView) getView().findViewById(R.id.tv_price)).setTextColor(getResources().getColor(R.color.main_color));
+                    ((ImageView) getView().findViewById(R.id.iv_arrow_price)).setImageResource(R.drawable.v2_ewer3x);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    private void carSelectPopupWindow(View view) {
+        final PopupWindow popupWindow = new PopupWindow(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         //外部是否可以点击
         popupWindow.setBackgroundDrawable(new BitmapDrawable());
         popupWindow.setOutsideTouchable(true);
-        popupWindow.showAsDropDown(ll_sort);
+        popupWindow.showAsDropDown(ll_select);
 
         //对返回按键的捕获并处理
         popupWindow.setFocusable(true);
-        car_sort_view.setFocusableInTouchMode(true);
-        car_sort_view.setFocusable(true);
-        car_sort_view.setOnKeyListener(new View.OnKeyListener() {
+        view.setFocusableInTouchMode(true);
+        view.setFocusable(true);
+        view.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View view, int i, KeyEvent keyEvent) {
                 if (i == KeyEvent.KEYCODE_BACK) {
@@ -147,53 +197,254 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
         });
 
         //点击阴影部分退出
-        car_sort_view.setOnClickListener(new View.OnClickListener() {
+        view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 popupWindow.dismiss();
             }
         });
 
-        TextView tv_sort_most_low = (TextView) car_sort_view.findViewById(R.id.tv_sort_most_low);
-        TextView tv_sort_most_top = (TextView) car_sort_view.findViewById(R.id.tv_sort_most_top);
-        TextView tv_sort_most_short = (TextView) car_sort_view.findViewById(R.id.tv_sort_most_short);
-        tv_sort_most_low.setOnClickListener(new View.OnClickListener() {
+        switch (flag) {
+            case 0:
+                final TextView tv_sort_default = (TextView) view.findViewById(R.id.tv_sort_default);
+                final TextView tv_sort_most_low = (TextView) view.findViewById(R.id.tv_sort_most_low);
+                final TextView tv_sort_most_top = (TextView) view.findViewById(R.id.tv_sort_most_top);
+                final TextView tv_sort_most_short = (TextView) view.findViewById(R.id.tv_sort_most_short);
+                resetTextColor(tv_sort_default, tv_sort_most_low, tv_sort_most_top, tv_sort_most_short);
+                tv_sort_default.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mPage = 0;
+                        order_id = "0";
+                        resetTextColor(tv_sort_default, tv_sort_most_low, tv_sort_most_top, tv_sort_most_short);
+                        getCarListDataFromNet();
+                        popupWindow.dismiss();
+                    }
+                });
+                tv_sort_most_low.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mPage = 0;
+                        order_id = "1";
+                        resetTextColor(tv_sort_default, tv_sort_most_low, tv_sort_most_top, tv_sort_most_short);
+                        getCarListDataFromNet();
+                        popupWindow.dismiss();
+                    }
+                });
+                tv_sort_most_top.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mPage = 0;
+                        order_id = "2";
+                        resetTextColor(tv_sort_default, tv_sort_most_low, tv_sort_most_top, tv_sort_most_short);
+                        getCarListDataFromNet();
+                        popupWindow.dismiss();
+                    }
+                });
+                tv_sort_most_short.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mPage = 0;
+                        order_id = "3";
+                        resetTextColor(tv_sort_default, tv_sort_most_low, tv_sort_most_top, tv_sort_most_short);
+                        getCarListDataFromNet();
+                        popupWindow.dismiss();
+                    }
+                });
+                break;
+            case 1:
+                Button btn_sure = (Button) view.findViewById(R.id.btn_sure);
+                final TextView tv0 = (TextView) view.findViewById(R.id.tv0);
+                final TextView tv1 = (TextView) view.findViewById(R.id.tv1);
+                final TextView tv2 = (TextView) view.findViewById(R.id.tv2);
+                final TextView tv3 = (TextView) view.findViewById(R.id.tv3);
+                final TextView tv4 = (TextView) view.findViewById(R.id.tv4);
+                final TextView tv5 = (TextView) view.findViewById(R.id.tv5);
+                final TextView tv6 = (TextView) view.findViewById(R.id.tv6);
+                resetPriceTextView(tv0, tv1, tv2, tv3, tv4, tv5, tv6);
+                tv0.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        price_id = 0;
+                        resetPriceTextView(tv0, tv1, tv2, tv3, tv4, tv5, tv6);
+                        min_price = "0";
+                        max_price = "";
+                    }
+                });
+                tv1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        price_id = 1;
+                        resetPriceTextView(tv0, tv1, tv2, tv3, tv4, tv5, tv6);
+                        min_price = "0";
+                        max_price = "15";
+                    }
+                });
+                tv2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        price_id = 2;
+                        resetPriceTextView(tv0, tv1, tv2, tv3, tv4, tv5, tv6);
+                        min_price = "15";
+                        max_price = "30";
+                    }
+                });
+                tv3.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        price_id = 3;
+                        resetPriceTextView(tv0, tv1, tv2, tv3, tv4, tv5, tv6);
+                        min_price = "30";
+                        max_price = "50";
+                    }
+                });
+                tv4.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        price_id = 4;
+                        resetPriceTextView(tv0, tv1, tv2, tv3, tv4, tv5, tv6);
+                        min_price = "50";
+                        max_price = "100";
+                    }
+                });
+                tv5.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        price_id = 5;
+                        resetPriceTextView(tv0, tv1, tv2, tv3, tv4, tv5, tv6);
+                        min_price = "100";
+                        max_price = "200";
+                    }
+                });
+                tv6.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        price_id = 6;
+                        resetPriceTextView(tv0, tv1, tv2, tv3, tv4, tv5, tv6);
+                        min_price = "200";
+                        max_price = "";
+                    }
+                });
+                btn_sure.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mPage = 0;
+                        getCarListDataFromNet();
+                        popupWindow.dismiss();
+                    }
+                });
+                break;
+            default:
+                break;
+        }
+
+        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
-            public void onClick(View view) {
-                ToastUtils.showShort("最低");
-                popupWindow.dismiss();
+            public void onDismiss() {
+                if (getView() != null) {
+                    switch (flag) {
+                        case 0:
+                            ((TextView) getView().findViewById(R.id.tv_sort)).setTextColor(getResources().getColor(R.color.main_text_color));
+                            ((ImageView) getView().findViewById(R.id.iv_arrow_sort)).setImageResource(R.drawable.v2_expand3x);
+                            break;
+                        case 1:
+                            ((TextView) getView().findViewById(R.id.tv_price)).setTextColor(getResources().getColor(R.color.main_text_color));
+                            ((ImageView) getView().findViewById(R.id.iv_arrow_price)).setImageResource(R.drawable.v2_expand3x);
+                            break;
+                        default:
+                            break;
+                    }
+                }
             }
         });
-        tv_sort_most_top.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ToastUtils.showShort("最高");
-                popupWindow.dismiss();
-            }
-        });
-        tv_sort_most_short.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ToastUtils.showShort("最短");
-                popupWindow.dismiss();
-            }
-        });
+    }
+
+    private void resetPriceTextView(TextView tv0, TextView tv1, TextView tv2, TextView tv3, TextView tv4, TextView tv5, TextView tv6) {
+        int fromColor = getResources().getColor(R.color.third_text_color);
+        GradientDrawable background0 = (GradientDrawable) tv0.getBackground();
+        background0.setStroke(SizeUtils.dp2px(1), fromColor);
+        GradientDrawable background1 = (GradientDrawable) tv1.getBackground();
+        background1.setStroke(SizeUtils.dp2px(1), fromColor);
+        GradientDrawable background2 = (GradientDrawable) tv2.getBackground();
+        background2.setStroke(SizeUtils.dp2px(1), fromColor);
+        GradientDrawable background3 = (GradientDrawable) tv3.getBackground();
+        background3.setStroke(SizeUtils.dp2px(1), fromColor);
+        GradientDrawable background4 = (GradientDrawable) tv4.getBackground();
+        background4.setStroke(SizeUtils.dp2px(1), fromColor);
+        GradientDrawable background5 = (GradientDrawable) tv5.getBackground();
+        background5.setStroke(SizeUtils.dp2px(1), fromColor);
+        GradientDrawable background6 = (GradientDrawable) tv6.getBackground();
+        background6.setStroke(SizeUtils.dp2px(1), fromColor);
+        tv0.setTextColor(getResources().getColor(R.color.main_text_color));
+        tv1.setTextColor(getResources().getColor(R.color.main_text_color));
+        tv2.setTextColor(getResources().getColor(R.color.main_text_color));
+        tv3.setTextColor(getResources().getColor(R.color.main_text_color));
+        tv4.setTextColor(getResources().getColor(R.color.main_text_color));
+        tv5.setTextColor(getResources().getColor(R.color.main_text_color));
+        tv6.setTextColor(getResources().getColor(R.color.main_text_color));
+        int color = getResources().getColor(R.color.main_color);
+        switch (price_id) {
+            case 0:
+                tv0.setTextColor(color);
+                background0.setStroke(SizeUtils.dp2px(1), color);
+                break;
+            case 1:
+                tv1.setTextColor(color);
+                background1.setStroke(SizeUtils.dp2px(1), color);
+                break;
+            case 2:
+                tv2.setTextColor(color);
+                background2.setStroke(SizeUtils.dp2px(1), color);
+                break;
+            case 3:
+                tv3.setTextColor(color);
+                background3.setStroke(SizeUtils.dp2px(1), color);
+                break;
+            case 4:
+                tv4.setTextColor(color);
+                background4.setStroke(SizeUtils.dp2px(1), color);
+                break;
+            case 5:
+                tv5.setTextColor(color);
+                background5.setStroke(SizeUtils.dp2px(1), color);
+                break;
+            case 6:
+                tv6.setTextColor(color);
+                background6.setStroke(SizeUtils.dp2px(1), color);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void resetTextColor(TextView tv_sort_default, TextView tv_sort_most_low, TextView tv_sort_most_top, TextView tv_sort_most_short) {
+        tv_sort_default.setTextColor(getResources().getColor(R.color.main_text_color));
+        tv_sort_most_low.setTextColor(getResources().getColor(R.color.main_text_color));
+        tv_sort_most_top.setTextColor(getResources().getColor(R.color.main_text_color));
+        tv_sort_most_short.setTextColor(getResources().getColor(R.color.main_text_color));
+        if (order_id.equals("0")) {
+            tv_sort_default.setTextColor(getResources().getColor(R.color.main_color));
+        } else if (order_id.equals("1")) {
+            tv_sort_most_low.setTextColor(getResources().getColor(R.color.main_color));
+        } else if (order_id.equals("2")) {
+            tv_sort_most_top.setTextColor(getResources().getColor(R.color.main_color));
+        } else if (order_id.equals("3")) {
+            tv_sort_most_short.setTextColor(getResources().getColor(R.color.main_color));
+        }
     }
 
     @Override
     protected void initData() {
         super.initData();
-        getCarListDataFromNet(null, null, null, null, null, null, null, null, null, null, null, null, null);
+        getCarListDataFromNet();
     }
 
-    private void getCarListDataFromNet(String keyword, String order_id, String brand_id, String series_id,
-                                       String min_price, String max_price, String min_mileage, String max_mileage,
-                                       String min_board_time, String max_board_time, String has_vr, String old, String source) {
+    private void getCarListDataFromNet() {
         OkHttpUtils.post()
                 .url(Constant.getCarListUrl())
                 .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
                 .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
-                .addParams(Constant.KEY_WORD, keyword == null ? "" : keyword)//关键字
+                .addParams(Constant.KEY_WORD, "")//关键字
                 .addParams(Constant.ORDER_ID, order_id == null ? "" : order_id)//排序id
                 .addParams(Constant.BRAND_ID, brand_id == null ? "" : brand_id)//车品牌id
                 .addParams(Constant.SERIES_ID, series_id == null ? "" : series_id)//车系列id
@@ -204,9 +455,9 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                 .addParams(Constant.MAX_MILEAGE, max_mileage == null ? "" : max_mileage)//最高里程
                 .addParams(Constant.MIN_BOARD_TIME, min_board_time == null ? "" : min_board_time)//最短上牌时间
                 .addParams(Constant.MAX_BOARD_TIME, max_board_time == null ? "" : max_board_time)//最长上牌时间
-                .addParams(Constant.HAS_VR, has_vr == null ? "" : has_vr)//是否有VR看车功能  1:是
-                .addParams(Constant.OLD, old == null ? "" : old)//是否新车二手车 1:新车 2 二手车
-                .addParams(Constant.SOURCE, source == null ? "" : source)//车辆来源 1:个人 2 商家
+                .addParams(Constant.HAS_VR, "")//是否有VR看车功能  1:是
+                .addParams(Constant.OLD, "")//是否新车二手车 1:新车 2 二手车
+                .addParams(Constant.SOURCE, "")//车辆来源 1:个人 2 商家
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -333,14 +584,14 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
     public void onLoadmore(RefreshLayout refreshlayout) {
         ++mPage;
         refresh_or_load = 1;
-        getCarListDataFromNet(null, null, null, null, null, null, null, null, null, null, null, null, null);
+        getCarListDataFromNet();
     }
 
     @Override
     public void onRefresh(RefreshLayout refreshlayout) {
         mPage = 0;
         refresh_or_load = 0;
-        getCarListDataFromNet(null, null, null, null, null, null, null, null, null, null, null, null, null);
+        getCarListDataFromNet();
     }
 
     /**

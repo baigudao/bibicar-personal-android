@@ -15,7 +15,7 @@ public class DataManager {
 
     private static final Object mObject = new Object();
 
-    private Object mData1, mData2, mData3, mData4, mData5;
+    private Object mData1, mData2, mData3, mData4, mData5, mData6, mData7, mData8, mData9;
 
     private DataManager() {
     }
@@ -90,5 +90,37 @@ public class DataManager {
 
     public Object getData5() {
         return mData5;
+    }
+
+    public Object getData6() {
+        return mData6;
+    }
+
+    public void setData6(Object mData6) {
+        this.mData6 = mData6;
+    }
+
+    public Object getData7() {
+        return mData7;
+    }
+
+    public void setData7(Object mData7) {
+        this.mData7 = mData7;
+    }
+
+    public Object getData8() {
+        return mData8;
+    }
+
+    public void setData8(Object mData8) {
+        this.mData8 = mData8;
+    }
+
+    public Object getData9() {
+        return mData9;
+    }
+
+    public void setData9(Object mData9) {
+        this.mData9 = mData9;
     }
 }

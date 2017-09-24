@@ -5,6 +5,7 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="main_color">#dda753</color>
+    <color name="main_color_half_transparent">#55dda753</color>
     <color name="pure_white_color">#ffffff</color>
     <color name="background_color">#f9f9f9</color>
     <color name="second_background_color">#efefef</color>

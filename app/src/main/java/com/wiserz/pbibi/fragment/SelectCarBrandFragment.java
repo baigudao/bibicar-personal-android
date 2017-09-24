@@ -1,5 +1,6 @@
 package com.wiserz.pbibi.fragment;
 
+import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -17,6 +18,7 @@ import com.wiserz.pbibi.adapter.BrandAdapter;
 import com.wiserz.pbibi.bean.BrandInfoBean;
 import com.wiserz.pbibi.bean.CarSeriesBean;
 import com.wiserz.pbibi.util.Constant;
+import com.wiserz.pbibi.util.DataManager;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -192,19 +194,41 @@ public class SelectCarBrandFragment extends BaseFragment implements BaseRecycler
     }
 
     @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+            getView().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    goBack();
+                }
+            }, 300);//此时FragmentManager is already executing transactions，所以要延迟
+        }
+    }
+
+    @Override
     public void onItemClick(Object data, int position) {
         if (data.getClass().getSimpleName().equals("BrandInfoBean")) {
             BrandInfoBean brandInfoBean = (BrandInfoBean) data;
             if (EmptyUtils.isNotEmpty(brandInfoBean)) {
-                //                DataManager.getInstance().setData1(brandInfoBean.getBrand_name());
-                //                DataManager.getInstance().setData2(brandInfoBean.getBrand_id());
-                //                goBack();
+                //设置brand信息
+                DataManager.getInstance().setData1(brandInfoBean.getBrand_id());
+                DataManager.getInstance().setData2(brandInfoBean.getBrand_name());
                 showSelectSeriesView(brandInfoBean);
             }
         } else if (data.getClass().getSimpleName().equals("CarSeriesBean")) {
             CarSeriesBean carSeriesBean = (CarSeriesBean) data;
-            if (EmptyUtils.isNotEmpty(carSeriesBean)){
+            if (EmptyUtils.isNotEmpty(carSeriesBean)) {
                 rlSelectSeries.setVisibility(View.GONE);
+                int series_id = carSeriesBean.getSeries_id();
+                //设置series信息
+                DataManager.getInstance().setData3(carSeriesBean.getSeries_id());
+                DataManager.getInstance().setData4(carSeriesBean.getSeries_name());
+                if (EmptyUtils.isNotEmpty(series_id)) {
+                    Bundle bundle = new Bundle();
+                    bundle.putInt(Constant.SERIES_ID, series_id);
+                    gotoPager(SelectCarModelFragment.class, bundle);
+                }
             }
         }
     }

@@ -140,4 +140,11 @@
         <item name="capture.color">@color/zhihu_capture</item>
     </style>
 
+    <style name="HomeTextViewTheme3">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/main_text_color</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:gravity">center</item>
+    </style>
 </resources>

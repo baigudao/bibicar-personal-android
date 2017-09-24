@@ -79,11 +79,14 @@
 
                 <TextView
                     android:id="@+id/tv_car_type"
-                    android:layout_width="wrap_content"
+                    android:layout_width="250dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
+                    android:ellipsize="end"
+                    android:gravity="right"
+                    android:maxLines="1"
                     android:text="奥迪A4L"
                     android:textColor="@color/third_text_color"
                     android:textSize="15sp"/>
@@ -145,13 +148,13 @@
 
                 <EditText
                     android:id="@+id/et_input_table_mileage"
-                    android:layout_width="50dp"
+                    android:layout_width="150dp"
                     android:layout_height="50dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
                     android:background="@null"
-                    android:gravity="center"
+                    android:gravity="right|center"
                     android:hint="3.5"
                     android:inputType="numberDecimal"
                     android:maxLength="9"
@@ -216,13 +219,13 @@
 
                 <EditText
                     android:id="@+id/et_input_price"
-                    android:layout_width="80dp"
+                    android:layout_width="100dp"
                     android:layout_height="50dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="10dp"
                     android:background="@null"
-                    android:gravity="center"
+                    android:gravity="right|center"
                     android:hint="80.00"
                     android:inputType="numberDecimal"
                     android:maxLength="9"
@@ -258,6 +261,12 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
+                    android:background="@drawable/rect_car_detail"
+                    android:clickable="true"
+                    android:paddingBottom="3dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="3dp"
                     android:text="停驶中"
                     android:textColor="@color/third_text_color"
                     android:textSize="15sp"/>
@@ -269,6 +278,12 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
                     android:layout_toLeftOf="@id/tv_car_status_stop"
+                    android:background="@drawable/rect_car_detail"
+                    android:clickable="true"
+                    android:paddingBottom="3dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="3dp"
                     android:text="日常使用中"
                     android:textColor="@color/third_text_color"
                     android:textSize="15sp"/>
@@ -297,8 +312,10 @@
                 android:background="@color/divider_color"/>
 
             <RelativeLayout
+                android:id="@+id/rl_choose_exchange_owner_time"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
+                android:background="@drawable/setting_background_selector"
                 android:clickable="true">
 
                 <TextView
@@ -320,19 +337,15 @@
                     android:text="次"
                     android:textSize="15sp"/>
 
-                <EditText
-                    android:id="@+id/et_input_exchange_owner_time"
-                    android:layout_width="50dp"
+                <TextView
+                    android:id="@+id/tv_exchange_owner_time"
+                    android:layout_width="wrap_content"
                     android:layout_height="50dp"
                     android:layout_centerVertical="true"
+                    android:layout_marginRight="10dp"
                     android:layout_toLeftOf="@id/tv_num"
-                    android:background="@null"
                     android:gravity="center"
-                    android:hint="0"
-                    android:inputType="number"
-                    android:maxLength="2"
-                    android:maxLines="1"
-                    android:textColorHint="@color/third_text_color"
+                    android:text="0"
                     android:textSize="15sp"/>
 
             </RelativeLayout>
@@ -397,6 +410,12 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
+                    android:background="@drawable/rect_car_detail"
+                    android:clickable="true"
+                    android:paddingBottom="3dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="3dp"
                     android:text="无"
                     android:textColor="@color/third_text_color"
                     android:textSize="15sp"/>
@@ -408,6 +427,12 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
                     android:layout_toLeftOf="@id/tv_car_keep_fit_no"
+                    android:background="@drawable/rect_car_detail"
+                    android:clickable="true"
+                    android:paddingBottom="3dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="3dp"
                     android:text="4S店非定期"
                     android:textColor="@color/third_text_color"
                     android:textSize="15sp"/>
@@ -419,6 +444,12 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
                     android:layout_toLeftOf="@id/tv_car_keep_fit_4s_no"
+                    android:background="@drawable/rect_car_detail"
+                    android:clickable="true"
+                    android:paddingBottom="3dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="3dp"
                     android:text="4S店定期"
                     android:textColor="@color/third_text_color"
                     android:textSize="15sp"/>
@@ -468,7 +499,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
                     android:background="@null"
-                    android:gravity="center"
+                    android:gravity="right|center"
                     android:hint="请输入发动机号"
                     android:inputType="text"
                     android:maxLength="20"
@@ -505,7 +536,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
                     android:background="@null"
-                    android:gravity="center"
+                    android:gravity="right|center"
                     android:hint="请输入VIN码"
                     android:inputType="text"
                     android:maxLength="20"
@@ -762,6 +793,7 @@
                     android:textSize="15sp"/>
 
                 <TextView
+                    android:id="@+id/tv_insurance_date_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -795,6 +827,7 @@
                     android:textSize="15sp"/>
 
                 <TextView
+                    android:id="@+id/tv_annual_survey_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"

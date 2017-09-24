@@ -31,8 +31,6 @@ import java.util.ArrayList;
 
 import okhttp3.Call;
 
-import static com.wiserz.pbibi.util.CommonUtil.isListNullOrEmpty;
-
 /**
  * Created by jackie on 2017/8/15 9:42.
  * QQ : 971060378
@@ -151,7 +149,7 @@ public class CheckPeccancyFragment extends BaseFragment {
     @Override
     public void onStart() {
         super.onStart();
-        if (isListNullOrEmpty(mProvinceBeenList)) {
+        if (CommonUtil.isListNullOrEmpty(mProvinceBeenList)) {
             getProvinceList();
         }
     }

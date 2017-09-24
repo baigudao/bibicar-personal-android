@@ -217,6 +217,7 @@ public class Constant {
 
     private static final String carBrandUrl = hostUrl + "car/brand";//车辆品牌列表
     private static final String carBrandSeriesUrl = hostUrl + "car/series/brand_id/";//通过品牌id得到车辆系列列表
+    private static final String carModelUrl = hostUrl + "car/model/series_id/";//通过系列id得到车型列表
 
     private static final String likeCarListUrl = hostUrl + "v3/Favoritecar/list";//喜欢的车辆
 
@@ -585,5 +586,9 @@ public class Constant {
 
     public static String getCarBrandSeriesUrl() {
         return carBrandSeriesUrl;
+    }
+
+    public static String getCarModelUrl() {
+        return carModelUrl;
     }
 }

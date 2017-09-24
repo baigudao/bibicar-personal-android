@@ -128,8 +128,8 @@ public class PostPhotoFragment extends BaseFragment {
 
     private void postPhoto() {
         if (EmptyUtils.isNotEmpty(upload_token) && EmptyUtils.isNotEmpty(uploadCarPhotoInfoArrayList) && uploadCarPhotoInfoArrayList.size() != 0) {
-            DataManager.getInstance().setData1(uploadCarPhotoInfoArrayList);
-            DataManager.getInstance().setData2(upload_token);
+            DataManager.getInstance().setData8(uploadCarPhotoInfoArrayList);
+            DataManager.getInstance().setData9(upload_token);
             goBack();
         }
     }

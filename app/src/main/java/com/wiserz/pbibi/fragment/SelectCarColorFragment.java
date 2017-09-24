@@ -63,7 +63,7 @@ public class SelectCarColorFragment extends BaseFragment implements BaseRecycler
     @Override
     public void onItemClick(Object data, int position) {
         if (data.getClass().getSimpleName().equals("String")) {
-            DataManager.getInstance().setData1(position);
+            DataManager.getInstance().setData7(position);
             goBack();
         }
     }

@@ -35,6 +35,7 @@ import com.wiserz.pbibi.bean.AllSecondCommentBean;
 import com.wiserz.pbibi.bean.ArticleBean;
 import com.wiserz.pbibi.bean.ArticleCommentBean;
 import com.wiserz.pbibi.bean.CarInfoBean;
+import com.wiserz.pbibi.bean.CarModelBean;
 import com.wiserz.pbibi.bean.CarRentInfoBean;
 import com.wiserz.pbibi.bean.CarRentRecommendCarBean;
 import com.wiserz.pbibi.bean.CarSeriesBean;
@@ -145,6 +146,8 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
 
     private static final int CAR_SERIES_DATA_TYPE = 40;
 
+    private static final int CAR_MODEL_DATA_TYPE = 41;
+
     private static final int NEW_CAR_DATA_TYPE = 55;
 
     private static final int CAR_VIDEO_DATA_TYPE = 65;
@@ -187,7 +190,9 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
     @Override
     public BaseRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         ViewHolder viewHolder;
-        if (dataType == CAR_SERIES_DATA_TYPE) {
+        if (dataType == CAR_MODEL_DATA_TYPE) {
+            viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_car_series, null));
+        } else if (dataType == CAR_SERIES_DATA_TYPE) {
             viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_car_series, null));
         } else if (dataType == SALES_CONSULTANT_DATA_TYPE) {
             viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_sales_consultant, null));
@@ -1616,6 +1621,16 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                     holder.tv_item1.setText(carSeriesBean.getSeries_name());
                 }
             }
+        } else if (dataType == CAR_MODEL_DATA_TYPE) {
+            ArrayList<CarModelBean> carModelBeanArrayList = (ArrayList<CarModelBean>) mList;
+
+            if (EmptyUtils.isNotEmpty(carModelBeanArrayList)) {
+                CarModelBean carModelBean = carModelBeanArrayList.get(position);
+
+                if (EmptyUtils.isNotEmpty(carModelBean)) {
+                    holder.tv_item1.setText(carModelBean.getModel_name());
+                }
+            }
         }
     }
 
@@ -2249,6 +2264,18 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                     }
                 });
             } else if (dataType == CAR_SERIES_DATA_TYPE) {
+                tv_item1 = (TextView) itemView.findViewById(R.id.tvSeriesName);
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnItemClickListener != null) {
+                            int position = getLayoutPosition();
+                            mOnItemClickListener.onItemClick(mList.get(position), position);
+                        }
+                    }
+                });
+            } else if (dataType == CAR_MODEL_DATA_TYPE) {
                 tv_item1 = (TextView) itemView.findViewById(R.id.tvSeriesName);
 
                 itemView.setOnClickListener(new View.OnClickListener() {

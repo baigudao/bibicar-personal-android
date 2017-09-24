@@ -1,6 +1,7 @@
 package com.wiserz.pbibi.fragment;
 
 import android.content.res.Resources;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -8,13 +9,18 @@ import android.widget.TextView;
 import com.blankj.utilcode.util.EmptyUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
+import com.google.gson.Gson;
 import com.qiniu.android.http.ResponseInfo;
 import com.qiniu.android.storage.UpCompletionHandler;
 import com.qiniu.android.storage.UploadManager;
 import com.wiserz.pbibi.R;
+import com.wiserz.pbibi.bean.CityBean;
+import com.wiserz.pbibi.bean.ProvinceBean;
 import com.wiserz.pbibi.bean.UploadCarPhotoInfo;
+import com.wiserz.pbibi.util.CommonUtil;
 import com.wiserz.pbibi.util.Constant;
 import com.wiserz.pbibi.util.DataManager;
+import com.wiserz.pbibi.view.WheelViewPopupWindow;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -37,7 +43,27 @@ public class PostNewCarFragment extends BaseFragment {
     private JSONArray mPhotoTypes;
     private JSONArray mPhotoFile;
 
+    private TextView tv_car_type;
     private TextView tvCarColor;
+    private TextView tv_choose_city;
+
+    private int brand_id;
+    private int series_id;
+    private int model_id;
+
+    private int mColor;
+
+    private ArrayList<ProvinceBean> mProvinceBeenList;
+
+    private String cityCode;
+
+    public String getCityCode() {
+        return cityCode;
+    }
+
+    public void setCityCode(String cityCode) {
+        this.cityCode = cityCode;
+    }
 
     @Override
     protected int getLayoutId() {
@@ -55,7 +81,11 @@ public class PostNewCarFragment extends BaseFragment {
         view.findViewById(R.id.rl_choose_city).setOnClickListener(this);
         view.findViewById(R.id.rl_choose_car_type).setOnClickListener(this);
 
+        tv_car_type = (TextView) view.findViewById(R.id.tv_car_type);
         tvCarColor = (TextView) view.findViewById(R.id.tvCarColor);
+        tv_choose_city = (TextView) view.findViewById(R.id.tv_choose_city);
+
+        mProvinceBeenList = new ArrayList<>();
     }
 
     @Override
@@ -74,7 +104,23 @@ public class PostNewCarFragment extends BaseFragment {
                 gotoPager(SelectCarBrandFragment.class, null);
                 break;
             case R.id.rl_choose_city:
-                ToastUtils.showShort("选择城市");
+                if (CommonUtil.isListNullOrEmpty(mProvinceBeenList)) {
+                    getProvinceList();
+                }
+                WheelViewPopupWindow mWheelViewPopupWindow = new WheelViewPopupWindow(getActivity(), new WheelViewPopupWindow.OnSelectItemListener() {
+                    @Override
+                    public void onSelect(int index1, Object value1, int index2, Object value2, int index3, Object value3) {
+                        ProvinceBean mSelectProvince = (ProvinceBean) value1;
+                        CityBean mSelectCity = (CityBean) value2;
+                        if (EmptyUtils.isNotEmpty(mSelectProvince) && EmptyUtils.isNotEmpty(mSelectCity) && getView() != null) {
+                            tv_choose_city.setText(mSelectProvince.getProvince() + " " + mSelectCity.getCity_name());
+                            setCityCode(mSelectCity.getCity_code());
+                        }
+                    }
+                }, WheelViewPopupWindow.WHEEL_VIEW_WINDOW_TYPE.TYPE_PROVINCE_CITY);
+                mWheelViewPopupWindow.setProvinceList(mProvinceBeenList);
+                mWheelViewPopupWindow.initView();
+                mWheelViewPopupWindow.showAtLocation(getView(), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
                 break;
             case R.id.rl_choose_car_color:
                 gotoPager(SelectCarColorFragment.class, null);
@@ -85,21 +131,103 @@ public class PostNewCarFragment extends BaseFragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        if (CommonUtil.isListNullOrEmpty(mProvinceBeenList)) {
+            getProvinceList();
+        }
+    }
+
+    private void getProvinceList() {
+        OkHttpUtils.post()
+                .url(Constant.getProvinceListUrl())
+                .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
+                .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+                        JSONObject jsonObject = null;
+                        try {
+                            jsonObject = new JSONObject(response);
+                            int status = jsonObject.optInt("status");
+                            JSONObject jsonObjectData = jsonObject.optJSONObject("data");
+                            if (status == 1) {
+                                JSONArray jsonArray = jsonObjectData.optJSONArray("province_list");
+                                if (EmptyUtils.isNotEmpty(jsonArray) && jsonArray.length() != 0) {
+                                    Gson gson = new Gson();
+                                    for (int i = 0; i < jsonArray.length(); i++) {
+                                        JSONObject jsonObject1 = jsonArray.optJSONObject(i);
+                                        ProvinceBean provinceBean = gson.fromJson(jsonObject1.toString(), ProvinceBean.class);
+                                        mProvinceBeenList.add(provinceBean);
+                                    }
+                                }
+                            } else {
+                                String code = jsonObject.optString("code");
+                                String msg = jsonObjectData.optString("msg");
+                                ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+    }
+
+    @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if (!isHidden()) {
-            Object data = DataManager.getInstance().getData1();
+            Object data = DataManager.getInstance().getData7();
             if (EmptyUtils.isNotEmpty(data)) {
                 if (data instanceof Integer) {
                     //颜色回调
-                    int mColor = (int) data;
+                    mColor = (int) data;
                     resetColorView(mColor);
-                } else {
+                }
+                DataManager.getInstance().setData7(null);
+            }
 
+            Object data1 = DataManager.getInstance().getData1();
+            Object data2 = DataManager.getInstance().getData2();
+            Object data3 = DataManager.getInstance().getData3();
+            Object data4 = DataManager.getInstance().getData4();
+            Object data5 = DataManager.getInstance().getData5();
+            Object data6 = DataManager.getInstance().getData6();
+            if (EmptyUtils.isNotEmpty(data1)
+                    && EmptyUtils.isNotEmpty(data2)
+                    && EmptyUtils.isNotEmpty(data3)
+                    && EmptyUtils.isNotEmpty(data4)
+                    && EmptyUtils.isNotEmpty(data5)
+                    && EmptyUtils.isNotEmpty(data6)) {
+                if (data1 instanceof Integer && data2 instanceof String
+                        && data3 instanceof Integer && data4 instanceof String
+                        && data5 instanceof Integer && data6 instanceof String) {
+                    brand_id = (int) data1;
+                    String brand_name = (String) data2;
+                    series_id = (int) data3;
+                    String series_name = (String) data4;
+                    model_id = (int) data5;
+                    String model_name = (String) data6;
+                    resetCarModelView(brand_name, series_name, model_name);
                 }
                 DataManager.getInstance().setData1(null);
+                DataManager.getInstance().setData2(null);
+                DataManager.getInstance().setData3(null);
+                DataManager.getInstance().setData4(null);
+                DataManager.getInstance().setData5(null);
+                DataManager.getInstance().setData6(null);
             }
         }
+    }
+
+    private void resetCarModelView(String brand_name, String series_name, String model_name) {
+        tv_car_type.setText(brand_name + " " + series_name + " " + model_name);
     }
 
     private void resetColorView(int color) {
@@ -109,35 +237,96 @@ public class PostNewCarFragment extends BaseFragment {
     }
 
     private String getInputProfile() {
-        return ((EditText) getView().findViewById(R.id.et_input_profile)).getText().toString().trim();
+        if (getView() != null)
+            return ((EditText) getView().findViewById(R.id.et_input_profile)).getText().toString().trim();
+        else
+            return null;
     }
 
     private String getInputPhoneNum() {
-        return ((EditText) getView().findViewById(R.id.et_input_phone_num)).getText().toString().trim();
+        if (getView() != null)
+            return ((EditText) getView().findViewById(R.id.et_input_phone_num)).getText().toString().trim();
+        else
+            return null;
     }
 
     private String getInputPlace() {
-        return ((EditText) getView().findViewById(R.id.et_input_place)).getText().toString().trim();
+        if (getView() != null)
+            return ((EditText) getView().findViewById(R.id.et_input_place)).getText().toString().trim();
+        else
+            return null;
     }
 
     private String getInputName() {
-        return ((EditText) getView().findViewById(R.id.et_input_name)).getText().toString().trim();
+        if (getView() != null)
+            return ((EditText) getView().findViewById(R.id.et_input_name)).getText().toString().trim();
+        else
+            return null;
     }
 
     private String getInputPrice() {
-        return ((EditText) getView().findViewById(R.id.et_input_price)).getText().toString().trim();
+        if (getView() != null)
+            return ((EditText) getView().findViewById(R.id.et_input_price)).getText().toString().trim();
+        else
+            return null;
     }
 
     private void publishNewCar() {
-        ArrayList<UploadCarPhotoInfo> uploadCarPhotoInfoArrayList = (ArrayList<UploadCarPhotoInfo>) DataManager.getInstance().getData1();
-        String upload_token = (String) DataManager.getInstance().getData2();
-        DataManager.getInstance().setData1(null);
-        DataManager.getInstance().setData2(null);
+        String profile = getInputProfile();
+        String phone_num = getInputPhoneNum();
+        String place = getInputPlace();
+        String name = getInputName();
+        String car_price = getInputPrice();
+
+        if (EmptyUtils.isEmpty(model_id) || model_id == 0) {
+            ToastUtils.showShort("请选择车型");
+            return;
+        }
+
+        if (EmptyUtils.isEmpty(getCityCode())) {
+            ToastUtils.showShort("请选择所在城市");
+            return;
+        }
+
+        if (EmptyUtils.isEmpty(mColor) || mColor == 0) {
+            ToastUtils.showShort("请选择车辆颜色");
+            return;
+        }
+
+        if (EmptyUtils.isEmpty(car_price)) {
+            ToastUtils.showShort("请填写车辆价格");
+            return;
+        }
+
+        if (EmptyUtils.isEmpty(name)) {
+            ToastUtils.showShort("请填写联系人");
+            return;
+        }
+
+        if (EmptyUtils.isEmpty(place)) {
+            ToastUtils.showShort("请填写看车地点");
+            return;
+        }
+
+        if (EmptyUtils.isEmpty(phone_num)) {
+            ToastUtils.showShort("请填写你的联系电话");
+            return;
+        }
+
+        if (EmptyUtils.isEmpty(profile)) {
+            ToastUtils.showShort("请填写车主说的内容");
+            return;
+        }
+
+        ArrayList<UploadCarPhotoInfo> uploadCarPhotoInfoArrayList = (ArrayList<UploadCarPhotoInfo>) DataManager.getInstance().getData8();
+        String upload_token = (String) DataManager.getInstance().getData9();
+        DataManager.getInstance().setData8(null);
+        DataManager.getInstance().setData9(null);
 
         if (EmptyUtils.isNotEmpty(upload_token) && EmptyUtils.isNotEmpty(uploadCarPhotoInfoArrayList) && uploadCarPhotoInfoArrayList.size() != 0) {
             uploadImage(uploadCarPhotoInfoArrayList, upload_token);
         } else {
-            ToastUtils.showShort("请填写完整的信息！");
+            ToastUtils.showShort("请添加车辆照片！");
         }
     }
 
@@ -199,67 +388,62 @@ public class PostNewCarFragment extends BaseFragment {
             String name = getInputName();
             String car_price = getInputPrice();
 
-            if (EmptyUtils.isNotEmpty(profile) && EmptyUtils.isNotEmpty(phone_num) && EmptyUtils.isNotEmpty(place) && EmptyUtils.isNotEmpty(name) && EmptyUtils.isNotEmpty(car_price)) {
-                OkHttpUtils.post()
-                        .url(Constant.getPublishNewCarUrl())
-                        .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
-                        .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
-                        .addParams(Constant.FILES_TYPE, mPhotoTypes.toString())
-                        .addParams(Constant.FILES_ID, mPhotoFile.toString())
-                        .addParams(Constant.CAR_COLOR, String.valueOf(2))
-                        .addParams(Constant.CONTACT_NAME, name)
-                        .addParams(Constant.CAR_INTRO, profile)
-                        .addParams(Constant.PRICE, car_price)
-                        .addParams(Constant.CONTACT_PHONE, phone_num)
-                        .addParams(Constant.CONTACT_ADDRESS, place)
-                        .addParams(Constant.CITY_ID, String.valueOf(0))
-                        .addParams(Constant.BRAND_ID, String.valueOf(96))//车品牌id                    ooo(必填)
-                        .addParams(Constant.MODEL_ID, String.valueOf(122458))//车型id                  ooo(必填)
-                        .addParams(Constant.CAR_TYPE, String.valueOf(1))
-                        .addParams(Constant.SERIES_ID, String.valueOf(2149))//车系列id                  ooo(必填)
-                        .addParams(Constant.CAR_NO, "")//车牌号码
-                        .addParams(Constant.ACTION, String.valueOf(1))//上传车类型
-                        .addParams(Constant.IS_TRANSFER, String.valueOf(0))//是否过户
-                        .addParams(Constant.CAR_STATUS, String.valueOf(0))//车辆状态
-                        .addParams(Constant.VIN_NO, "")//vin码
-                        .addParams(Constant.EXCHANGE_TIME, String.valueOf(0))//交易时间
-                        .addParams(Constant.ENGINE_NO, "")//发动机号
-                        .addParams(Constant.VIN_FILE, "")//vin文件
-                        .addParams(Constant.MAINTAIN, String.valueOf(0))
-                        .addParams(Constant.BOARD_TIME, "")
-                        .addParams(Constant.MILEAGE, String.valueOf(0.000000))
-                        .addParams(Constant.CAR_ID, "")
-                        .build()
-                        .execute(new StringCallback() {
-                            @Override
-                            public void onError(Call call, Exception e, int id) {
+            OkHttpUtils.post()
+                    .url(Constant.getPublishNewCarUrl())
+                    .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
+                    .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
+                    .addParams(Constant.FILES_TYPE, mPhotoTypes.toString())
+                    .addParams(Constant.FILES_ID, mPhotoFile.toString())
+                    .addParams(Constant.CAR_COLOR, String.valueOf(mColor))
+                    .addParams(Constant.CAR_INTRO, profile)
+                    .addParams(Constant.PRICE, car_price)
+                    .addParams(Constant.CONTACT_NAME, name)
+                    .addParams(Constant.CONTACT_PHONE, phone_num)
+                    .addParams(Constant.CONTACT_ADDRESS, place)
+                    .addParams(Constant.CITY_ID, getCityCode())
+                    .addParams(Constant.BRAND_ID, String.valueOf(brand_id))//车品牌id                    ooo(必填)
+                    .addParams(Constant.SERIES_ID, String.valueOf(series_id))//车系列id                  ooo(必填)
+                    .addParams(Constant.MODEL_ID, String.valueOf(model_id))//车型id                      ooo(必填)
+                    .addParams(Constant.CAR_TYPE, String.valueOf(1))
+                    .addParams(Constant.CAR_NO, "")//车牌号码
+                    .addParams(Constant.ACTION, String.valueOf(1))//上传车类型
+                    .addParams(Constant.IS_TRANSFER, String.valueOf(0))//是否过户
+                    .addParams(Constant.CAR_STATUS, String.valueOf(0))//车辆状态
+                    .addParams(Constant.VIN_NO, "")//vin码
+                    .addParams(Constant.VIN_FILE, "")//vin文件
+                    .addParams(Constant.EXCHANGE_TIME, String.valueOf(0))//交易时间
+                    .addParams(Constant.ENGINE_NO, "")//发动机号
+                    .addParams(Constant.MAINTAIN, String.valueOf(0))
+                    .addParams(Constant.BOARD_TIME, "")
+                    .addParams(Constant.MILEAGE, String.valueOf(0.000000))
+                    .addParams(Constant.CAR_ID, "")
+                    .build()
+                    .execute(new StringCallback() {
+                        @Override
+                        public void onError(Call call, Exception e, int id) {
 
-                            }
+                        }
 
-                            @Override
-                            public void onResponse(String response, int id) {
-                                JSONObject jsonObject = null;
-                                try {
-                                    jsonObject = new JSONObject(response);
-                                    int status = jsonObject.optInt("status");
-                                    JSONObject jsonObjectData = jsonObject.optJSONObject("data");
-                                    if (status == 1) {
-                                        ToastUtils.showShort("上传新车成功！");
-                                        goBack();
-                                    } else {
-                                        String code = jsonObject.optString("code");
-                                        String msg = jsonObjectData.optString("msg");
-                                        ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
-                                    }
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
+                        @Override
+                        public void onResponse(String response, int id) {
+                            JSONObject jsonObject = null;
+                            try {
+                                jsonObject = new JSONObject(response);
+                                int status = jsonObject.optInt("status");
+                                JSONObject jsonObjectData = jsonObject.optJSONObject("data");
+                                if (status == 1) {
+                                    ToastUtils.showShort("上传新车成功！");
+                                    goBack();
+                                } else {
+                                    String code = jsonObject.optString("code");
+                                    String msg = jsonObjectData.optString("msg");
+                                    ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
                                 }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
-                        });
-
-            } else {
-                ToastUtils.showShort("请填写完整的信息！");
-            }
+                        }
+                    });
         }
     }
 }

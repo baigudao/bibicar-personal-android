@@ -36,12 +36,12 @@
         "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\src\\main\\res\\drawable-xhdpi\\rc_ic_voice_receive_play3.png"
     },
     {
-        "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\release\\drawable-xhdpi-v4\\u1f634.png",
-        "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\src\\main\\res\\drawable-xhdpi\\u1f634.png"
-    },
-    {
         "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\release\\drawable-xhdpi-v4\\rc_pb_file_download_progress_progress.9.png",
         "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\src\\main\\res\\drawable-xhdpi\\rc_pb_file_download_progress_progress.9.png"
+    },
+    {
+        "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\release\\drawable-xhdpi-v4\\u1f634.png",
+        "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\src\\main\\res\\drawable-xhdpi\\u1f634.png"
     },
     {
         "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\release\\drawable-xhdpi-v4\\u1f3b2.png",
