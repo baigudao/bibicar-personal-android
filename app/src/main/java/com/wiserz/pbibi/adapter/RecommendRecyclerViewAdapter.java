@@ -140,7 +140,7 @@ public class RecommendRecyclerViewAdapter extends RecyclerView.Adapter implement
                                 String type = bannerBean.getType();
                                 if (type.equals("0")) {//VR看车
                                     String appUrl = bannerBean.getAppUrl();
-                                    if (appUrl.equals("http://192.168.1.182:4000/views/center/raffle.html")) {
+                                    if (appUrl.equals("http://share.bibicar.cn/views/center/raffle.html")) {
                                         Bundle bundle = new Bundle();
                                         bundle.putString(Constant.APP_URL, appUrl);
                                         ((BaseActivity) mContext).gotoPager(LotteryDrawFragment.class, bundle);//抽奖的页面

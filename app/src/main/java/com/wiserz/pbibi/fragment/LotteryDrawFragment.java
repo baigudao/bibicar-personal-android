@@ -70,6 +70,8 @@ public class LotteryDrawFragment extends BaseFragment {
             webSettings.setLoadWithOverviewMode(true);
             webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
 
+            tencent_web_view.setInitialScale(200);
+
             if (Build.VERSION.SDK_INT < 19) {
                 if (Build.VERSION.SDK_INT > 8) {
                     webSettings.setPluginState(WebSettings.PluginState.ON);
