@@ -118,6 +118,8 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
         ll_price = (LinearLayout) view.findViewById(R.id.ll_price);
         ll_price.setOnClickListener(this);
 
+        view.findViewById(R.id.rl_search).setOnClickListener(this);
+
         smartRefreshLayout = (SmartRefreshLayout) view.findViewById(R.id.smartRefreshLayout);
         smartRefreshLayout.setOnRefreshListener(this);
         smartRefreshLayout.setOnLoadmoreListener(this);
@@ -152,6 +154,9 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                 resetHeaderView();
                 View car_price_view = View.inflate(mContext, R.layout.item_car_price, null);
                 carSelectPopupWindow(car_price_view);
+                break;
+            case R.id.rl_search:
+                ToastUtils.showShort("呵呵");
                 break;
             default:
                 break;

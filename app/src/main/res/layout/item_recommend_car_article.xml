@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/background_color"
-    android:orientation="vertical">
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@color/background_color"
+              android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -21,7 +21,7 @@
                 android:layout_height="wrap_content"
                 android:text="精选内容指南"
                 android:textColor="@color/main_text_color"
-                android:textSize="18sp" />
+                android:textSize="18sp"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -29,7 +29,7 @@
                 android:layout_marginTop="10dp"
                 android:text="精品内容推送  看您想看"
                 android:textColor="@color/second_text_color"
-                android:textSize="12sp" />
+                android:textSize="12sp"/>
 
         </LinearLayout>
 
@@ -43,7 +43,7 @@
             android:clickable="true"
             android:text="查看更多"
             android:textColor="@color/second_text_color"
-            android:textSize="14sp" />
+            android:textSize="14sp"/>
 
     </RelativeLayout>
 
@@ -60,8 +60,8 @@
             android:layout_height="200dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="20dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/default_bg_ratio_1" />
+            android:scaleType="centerCrop"
+            android:src="@drawable/default_bg_ratio_1"/>
 
         <TextView
             android:id="@+id/tv_article_title"
@@ -71,7 +71,7 @@
             android:layout_marginTop="15dp"
             android:text="盘点全球自带滤镜美颜的天空！"
             android:textColor="@color/main_text_color"
-            android:textSize="16sp" />
+            android:textSize="16sp"/>
 
         <TextView
             android:id="@+id/tv_article_info"
@@ -83,7 +83,7 @@
             android:maxLines="1"
             android:text="让你一秒变朋友圈的网红"
             android:textColor="@color/second_text_color"
-            android:textSize="14sp" />
+            android:textSize="14sp"/>
 
     </LinearLayout>
 
@@ -96,18 +96,18 @@
         <View
             android:layout_width="0dp"
             android:layout_height="1dp"
-            android:layout_weight="1" />
+            android:layout_weight="1"/>
 
         <View
             android:layout_width="350dp"
             android:layout_height="1dp"
             android:layout_gravity="center_horizontal"
-            android:background="@color/divider_color" />
+            android:background="@color/divider_color"/>
 
         <View
             android:layout_width="0dp"
             android:layout_height="1dp"
-            android:layout_weight="1" />
+            android:layout_weight="1"/>
 
     </LinearLayout>
 
@@ -124,8 +124,8 @@
             android:layout_width="100dp"
             android:layout_height="80dp"
             android:layout_centerVertical="true"
-            android:scaleType="fitXY"
-            android:src="@drawable/default_bg_ratio_1" />
+            android:scaleType="centerCrop"
+            android:src="@drawable/default_bg_ratio_1"/>
 
         <TextView
             android:id="@+id/tv_title"
@@ -138,7 +138,7 @@
             android:maxLines="2"
             android:text="蝙蝠侠电影里到底有没有撞坏那辆兰博基尼？"
             android:textColor="@color/main_text_color"
-            android:textSize="15sp" />
+            android:textSize="15sp"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -154,7 +154,7 @@
                 android:layout_marginLeft="12dp"
                 android:text="车达人"
                 android:textColor="#7d7a7a"
-                android:textSize="12sp" />
+                android:textSize="12sp"/>
 
             <TextView
                 android:id="@+id/tv_time"
@@ -165,7 +165,7 @@
                 android:text="17-02-14"
                 android:textColor="#7d7a7a"
                 android:textSize="12sp"
-                android:visibility="gone" />
+                android:visibility="gone"/>
 
         </RelativeLayout>
 
@@ -179,18 +179,18 @@
         <View
             android:layout_width="0dp"
             android:layout_height="1dp"
-            android:layout_weight="1" />
+            android:layout_weight="1"/>
 
         <View
             android:layout_width="350dp"
             android:layout_height="1dp"
             android:layout_gravity="center_horizontal"
-            android:background="@color/divider_color" />
+            android:background="@color/divider_color"/>
 
         <View
             android:layout_width="0dp"
             android:layout_height="1dp"
-            android:layout_weight="1" />
+            android:layout_weight="1"/>
 
     </LinearLayout>
 
@@ -207,8 +207,8 @@
             android:layout_width="100dp"
             android:layout_height="80dp"
             android:layout_centerVertical="true"
-            android:scaleType="fitXY"
-            android:src="@drawable/default_bg_ratio_1" />
+            android:scaleType="centerCrop"
+            android:src="@drawable/default_bg_ratio_1"/>
 
         <TextView
             android:id="@+id/tv_title1"
@@ -221,7 +221,7 @@
             android:maxLines="2"
             android:text="蝙蝠侠电影里到底有没有撞坏那辆兰博基尼？"
             android:textColor="@color/main_text_color"
-            android:textSize="15sp" />
+            android:textSize="15sp"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -237,7 +237,7 @@
                 android:layout_marginLeft="12dp"
                 android:text="车达人"
                 android:textColor="#7d7a7a"
-                android:textSize="12sp" />
+                android:textSize="12sp"/>
 
             <TextView
                 android:id="@+id/tv_time1"
@@ -248,7 +248,7 @@
                 android:text="17-02-14"
                 android:textColor="#7d7a7a"
                 android:textSize="12sp"
-                android:visibility="gone" />
+                android:visibility="gone"/>
 
         </RelativeLayout>
 
@@ -262,18 +262,18 @@
         <View
             android:layout_width="0dp"
             android:layout_height="1dp"
-            android:layout_weight="1" />
+            android:layout_weight="1"/>
 
         <View
             android:layout_width="350dp"
             android:layout_height="1dp"
             android:layout_gravity="center_horizontal"
-            android:background="@color/divider_color" />
+            android:background="@color/divider_color"/>
 
         <View
             android:layout_width="0dp"
             android:layout_height="1dp"
-            android:layout_weight="1" />
+            android:layout_weight="1"/>
 
     </LinearLayout>
 

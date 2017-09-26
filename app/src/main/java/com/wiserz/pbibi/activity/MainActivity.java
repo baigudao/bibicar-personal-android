@@ -27,7 +27,7 @@ import java.util.List;
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private List<BaseFragment> mBaseFragment;
-    private int position;
+    public int position;
     private Fragment fromFragment;
 
     private LinearLayout ll_home;
@@ -247,12 +247,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         switch (position) {
             case 0:
                 resetTab();
-                iv_home.setBackgroundResource(R.drawable.tab_home_c3x);
+                iv_home.setImageResource(R.drawable.tab_home_c3x);
                 tv_home.setTextColor(getResources().getColor(R.color.main_text_color));
                 break;
             case 1:
                 resetTab();
-                iv_car_center.setBackgroundResource(R.drawable.tab_market_c3x);
+                iv_car_center.setImageResource(R.drawable.tab_market_c3x);
                 tv_car_center.setTextColor(getResources().getColor(R.color.main_text_color));
                 break;
             case 2:
@@ -263,12 +263,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 break;
             case 3:
                 resetTab();
-                iv_message.setBackgroundResource(R.drawable.tab_news_c3x);
+                iv_message.setImageResource(R.drawable.tab_news_c3x);
                 tv_message.setTextColor(getResources().getColor(R.color.main_text_color));
                 break;
             case 4:
                 resetTab();
-                iv_me.setBackgroundResource(R.drawable.tab_me_c3x);
+                iv_me.setImageResource(R.drawable.tab_me_c3x);
                 tv_me.setTextColor(getResources().getColor(R.color.main_text_color));
                 break;
             default:
@@ -277,16 +277,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void resetTab() {
-        iv_home.setBackgroundResource(R.drawable.tab_home3x);
+        iv_home.setImageResource(R.drawable.tab_home3x);
         tv_home.setTextColor(getResources().getColor(R.color.second_text_color));
-        iv_car_center.setBackgroundResource(R.drawable.tab_market3x);
+        iv_car_center.setImageResource(R.drawable.tab_market3x);
         tv_car_center.setTextColor(getResources().getColor(R.color.second_text_color));
         iv_community.setVisibility(View.VISIBLE);
         tv_community.setVisibility(View.VISIBLE);
         iv_publish_state.setVisibility(View.GONE);
-        iv_message.setBackgroundResource(R.drawable.tab_news3x);
+        iv_message.setImageResource(R.drawable.tab_news3x);
         tv_message.setTextColor(getResources().getColor(R.color.second_text_color));
-        iv_me.setBackgroundResource(R.drawable.tab_me3x);
+        iv_me.setImageResource(R.drawable.tab_me3x);
         tv_me.setTextColor(getResources().getColor(R.color.second_text_color));
     }
 

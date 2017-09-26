@@ -22,7 +22,7 @@
             android:id="@+id/iv_image"
             android:layout_width="45dp"
             android:layout_height="45dp"
-            android:scaleType="fitXY"
+            android:scaleType="centerCrop"
             android:src="@drawable/user_photo"/>
 
         <TextView

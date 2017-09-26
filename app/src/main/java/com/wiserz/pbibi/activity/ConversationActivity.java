@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.TextView;
 
-import com.blankj.utilcode.util.ToastUtils;
 import com.wiserz.pbibi.R;
 
 /**
@@ -37,7 +36,7 @@ public class ConversationActivity extends BaseActivity implements View.OnClickLi
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_back:
-                ToastUtils.showShort("返回");
+                goBack();
                 break;
             default:
                 break;

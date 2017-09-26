@@ -557,7 +557,7 @@
                 android:layout_marginRight="15dp"
                 android:layout_marginTop="20dp"
                 android:clickable="true"
-                android:scaleType="fitXY"
+                android:scaleType="centerCrop"
                 android:src="@drawable/default_bg_ratio_1"/>
 
             <LinearLayout
@@ -592,7 +592,7 @@
                 android:layout_marginRight="15dp"
                 android:layout_marginTop="20dp"
                 android:clickable="true"
-                android:scaleType="fitXY"
+                android:scaleType="centerCrop"
                 android:src="@drawable/default_bg_ratio_1"/>
 
             <LinearLayout
@@ -627,7 +627,7 @@
                 android:layout_marginRight="15dp"
                 android:layout_marginTop="20dp"
                 android:clickable="true"
-                android:scaleType="fitXY"
+                android:scaleType="centerCrop"
                 android:src="@drawable/default_bg_ratio_1"/>
 
             <LinearLayout
@@ -662,7 +662,7 @@
                 android:layout_marginRight="15dp"
                 android:layout_marginTop="20dp"
                 android:clickable="true"
-                android:scaleType="fitXY"
+                android:scaleType="centerCrop"
                 android:src="@drawable/default_bg_ratio_1"/>
 
             <LinearLayout

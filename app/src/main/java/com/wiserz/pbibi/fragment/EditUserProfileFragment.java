@@ -10,10 +10,17 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.EmptyUtils;
+import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
+import com.qiniu.android.http.ResponseInfo;
+import com.qiniu.android.storage.UpCompletionHandler;
+import com.qiniu.android.storage.UploadManager;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.bean.LoginBean;
+import com.wiserz.pbibi.util.CommonUtil;
+import com.wiserz.pbibi.util.Constant;
 import com.wiserz.pbibi.util.DataManager;
 import com.wiserz.pbibi.util.GifSizeFilter;
 import com.wiserz.pbibi.view.CircleImageView;
@@ -22,8 +29,17 @@ import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.engine.impl.GlideEngine;
 import com.zhihu.matisse.filter.Filter;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
 import java.util.List;
+import java.util.UUID;
+
+import okhttp3.Call;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -41,6 +57,8 @@ public class EditUserProfileFragment extends BaseFragment {
     private EditText et_edit_profile;
 
     private int mGender;
+    private String file_string;
+    private String upload_token;
 
     @Override
     protected int getLayoutId() {
@@ -94,7 +112,6 @@ public class EditUserProfileFragment extends BaseFragment {
                 goBack();
                 break;
             case R.id.btn_register:
-                ToastUtils.showShort("完成");
                 commitDataToServer();
                 break;
             case R.id.iv_circle_image:
@@ -108,8 +125,115 @@ public class EditUserProfileFragment extends BaseFragment {
         }
     }
 
-    private void commitDataToServer() {
+    @Override
+    protected void initData() {
+        super.initData();
+        OkHttpUtils.post()
+                .url(Constant.getUploadTokenUrl())
+                .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
+                .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
 
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+                        JSONObject jsonObject = null;
+                        try {
+                            jsonObject = new JSONObject(response);
+                            int status = jsonObject.optInt("status");
+                            JSONObject jsonObjectData = jsonObject.optJSONObject("data");
+                            if (status == 1) {
+                                upload_token = jsonObjectData.optString("upload_token");
+                            } else {
+                                String code = jsonObject.optString("code");
+                                String msg = jsonObjectData.optString("msg");
+                                ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+    }
+
+    private void commitDataToServer() {
+        if (EmptyUtils.isNotEmpty(file_string) && EmptyUtils.isNotEmpty(upload_token)) {
+            UploadManager uploadManager = new UploadManager();
+            File file = new File(file_string);
+
+            uploadManager.put(file, UUID.randomUUID().toString(), upload_token, new UpCompletionHandler() {
+                @Override
+                public void complete(String key, ResponseInfo info, JSONObject response) {
+                    if (info.isOK()) {
+                        LogUtils.e(file_string, "和" + key, "和" + upload_token);
+                        //上传成功
+                        int status = response.optInt("status");
+                        JSONObject jsonObjectData = response.optJSONObject("data");
+                        LogUtils.e(response);
+                        if (status == 1) {
+                            String hash = jsonObjectData.optString("hash");
+                            if (EmptyUtils.isNotEmpty(hash)) {
+                                commitDataToRealServer(hash);
+                            }
+                        } else {
+                            String code = response.optString("code");
+                            String msg = jsonObjectData.optString("msg");
+                            ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                        }
+                    } else {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                ToastUtils.showShort("车辆照片上传失败，请重新上传");
+                            }
+                        });
+                    }
+                }
+            }, null);
+        }
+    }
+
+    private void commitDataToRealServer(String hash) {
+        OkHttpUtils.post()
+                .url(Constant.getUserInfoUpdateUrl())
+                .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
+                .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
+                .addParams(Constant.NICKNAME, getNickName())
+                .addParams(Constant.AVATAR, hash)
+                .addParams("gender", getGender())
+                .addParams("signature", getSignature())
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+                        LogUtils.e(response);
+                        JSONObject jsonObject = null;
+                        try {
+                            jsonObject = new JSONObject(response);
+                            int status = jsonObject.optInt("status");
+                            JSONObject jsonObjectData = jsonObject.optJSONObject("data");
+                            if (status == 1) {
+                                ToastUtils.showShort("更新成功");
+                                goBack();
+                            } else {
+                                String code = jsonObject.optString("code");
+                                String msg = jsonObjectData.optString("msg");
+                                ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
     }
 
     private void editGender() {
@@ -117,7 +241,7 @@ public class EditUserProfileFragment extends BaseFragment {
             @Override
             public void onSelect(int index1, Object value1, int index2, Object value2, int index3, Object value3) {
                 mGender = index1 + 1;
-               tv_edit_gender.setText(mGender == 1 ? getString(R.string.man) : getString(R.string.woman));
+                tv_edit_gender.setText(mGender == 1 ? getString(R.string.man) : getString(R.string.woman));
             }
         }, WheelViewPopupWindow.WHEEL_VIEW_WINDOW_TYPE.TYPE_GENDER);
         wheelViewPopupWindow.initView();
@@ -127,7 +251,7 @@ public class EditUserProfileFragment extends BaseFragment {
     private void editImage() {
         Matisse.from(EditUserProfileFragment.this)
                 .choose(MimeType.of(MimeType.JPEG, MimeType.PNG))//MimeType.ofAll()
-                .countable(true)
+                .countable(false)
                 .maxSelectable(1)
                 .theme(R.style.Matisse_Zhihu)
                 .addFilter(new GifSizeFilter(320, 320, 5 * Filter.K * Filter.K))
@@ -154,6 +278,8 @@ public class EditUserProfileFragment extends BaseFragment {
                         .placeholder(R.drawable.user_photo)
                         .error(R.drawable.user_photo)
                         .into(iv_circle_image);
+
+                file_string = CommonUtil.getRealFilePath(mContext, mSelected.get(0));
             }
         }
     }

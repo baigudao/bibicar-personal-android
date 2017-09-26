@@ -25,7 +25,7 @@
                 android:id="@+id/iv_video_play"
                 android:layout_width="220dp"
                 android:layout_height="150dp"
-                android:scaleType="fitXY"
+                android:scaleType="centerCrop"
                 android:src="@drawable/default_bg_ratio_1"/>
 
             <ImageButton
@@ -47,6 +47,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="10dp"
             android:ellipsize="end"
+            android:gravity="start"
             android:maxLines="2"
             android:text="这是视频的标题，他可以有两行的标题这是视频的标题，他可以有两行的标题"
             android:textColor="#3a3a3a"

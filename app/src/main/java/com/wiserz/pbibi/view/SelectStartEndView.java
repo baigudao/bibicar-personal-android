@@ -46,7 +46,6 @@ public class SelectStartEndView extends RelativeLayout implements View.OnTouchLi
         return mEnd;
     }
 
-
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         int id = v.getId();
@@ -111,7 +110,5 @@ public class SelectStartEndView extends RelativeLayout implements View.OnTouchLi
                 tvPriceEnd.setText(String.valueOf(mEnd));
             }
         }
-
     }
-
 }

@@ -16,6 +16,9 @@ import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
 import com.wiserz.pbibi.bean.CarInfoBean;
@@ -41,7 +44,7 @@ import okhttp3.Call;
  * QQ : 971060378
  * Used as : 我的主页的页面
  */
-public class MyHomePageFragment extends BaseFragment implements BaseRecyclerViewAdapter.OnItemClickListener, BaseRecyclerViewAdapter.OnShareToPlatform {
+public class MyHomePageFragment extends BaseFragment implements BaseRecyclerViewAdapter.OnItemClickListener, BaseRecyclerViewAdapter.OnShareToPlatform, OnRefreshListener {
 
     private static final int MY_CAR_REPERTORY_DATA_TYPE = 24;
 
@@ -62,6 +65,8 @@ public class MyHomePageFragment extends BaseFragment implements BaseRecyclerView
     private String share_url;
     private int user_id_from_net;
 
+    private SmartRefreshLayout smartRefreshLayout;
+
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_my_home_page;
@@ -80,6 +85,10 @@ public class MyHomePageFragment extends BaseFragment implements BaseRecyclerView
         ll_follow_and_message.setVisibility(View.GONE);
         view.findViewById(R.id.rl_follow).setOnClickListener(this);
         view.findViewById(R.id.rl_message).setOnClickListener(this);
+
+        smartRefreshLayout = (SmartRefreshLayout) view.findViewById(R.id.smartRefreshLayout);
+        smartRefreshLayout.setEnableLoadmore(false);
+        smartRefreshLayout.setOnRefreshListener(this);
 
         mPage = 0;
     }
@@ -190,6 +199,7 @@ public class MyHomePageFragment extends BaseFragment implements BaseRecyclerView
                                     ((TextView) getView().findViewById(R.id.tv_state_num)).setText("动态 (" + total + ")");//动态 （0）
                                 }
                                 handlerDataForFeedList(jsonObjectData);
+                                smartRefreshLayout.finishRefresh();
                             } else {
                                 String code = jsonObject.optString("code");
                                 String msg = jsonObjectData.optString("msg");
@@ -356,5 +366,11 @@ public class MyHomePageFragment extends BaseFragment implements BaseRecyclerView
 
         // 启动分享
         oks.show(context);
+    }
+
+    @Override
+    public void onRefresh(RefreshLayout refreshlayout) {
+        mPage = 0;
+        getDataFromNet();
     }
 }

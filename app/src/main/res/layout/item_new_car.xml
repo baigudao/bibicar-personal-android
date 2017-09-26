@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/background_color"
-    android:gravity="center_horizontal"
-    android:orientation="horizontal">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/background_color"
+              android:gravity="center_horizontal"
+              android:orientation="horizontal">
 
     <View
         android:layout_width="15dp"
-        android:layout_height="160dp" />
+        android:layout_height="160dp"/>
 
     <RelativeLayout
         android:layout_width="140dp"
@@ -23,8 +23,8 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="4dp"
             android:background="@drawable/camera_circle_bg"
-            android:scaleType="fitXY"
-            android:src="@drawable/default_bg_ratio_1" />
+            android:scaleType="centerCrop"
+            android:src="@drawable/default_bg_ratio_1"/>
 
         <TextView
             android:id="@+id/tv_most_new_car_name"
@@ -34,12 +34,12 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="5dp"
             android:ellipsize="end"
-            android:gravity="center"
+            android:gravity="left|center"
             android:maxLines="2"
             android:text="丰田 埃尔法（进口）2015
 3.5L 自动尊贵版"
             android:textColor="#3a3a3a"
-            android:textSize="11sp" />
+            android:textSize="11sp"/>
 
         <TextView
             android:id="@+id/tv_most_new_car_price"
@@ -48,9 +48,10 @@
             android:layout_below="@id/tv_most_new_car_name"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="4dp"
+            android:gravity="left"
             android:text="52.00万"
             android:textColor="#dda753"
-            android:textSize="13sp" />
+            android:textSize="13sp"/>
 
     </RelativeLayout>
 

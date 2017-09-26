@@ -11,7 +11,7 @@
         android:layout_height="80dp"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="10dp"
-        android:scaleType="fitXY"
+        android:scaleType="centerCrop"
         android:src="@drawable/default_bg_ratio_1"/>
 
     <TextView

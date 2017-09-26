@@ -5,10 +5,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.EmptyUtils;
+import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.bean.UserInfoBean;
 import com.wiserz.pbibi.util.Constant;
@@ -25,10 +29,13 @@ import okhttp3.Call;
  * QQ : 971060378
  * Used as : 个人中心页面
  */
-public class MyFragment extends BaseFragment {
+public class MyFragment extends BaseFragment implements OnRefreshListener {
 
     private int fans_num;
     private int friend_num;
+    private int user_id;
+
+    private SmartRefreshLayout smartRefreshLayout;
 
     @Override
     protected int getLayoutId() {
@@ -37,6 +44,7 @@ public class MyFragment extends BaseFragment {
 
     @Override
     protected void initView(View view) {
+        user_id = SPUtils.getInstance().getInt(Constant.USER_ID);
         view.findViewById(R.id.iv_back).setVisibility(View.GONE);
         ((TextView) view.findViewById(R.id.tv_title)).setText("我的");
         view.findViewById(R.id.rl_user).setOnClickListener(this);
@@ -47,6 +55,10 @@ public class MyFragment extends BaseFragment {
         view.findViewById(R.id.rl_like).setOnClickListener(this);
         view.findViewById(R.id.rl_my_order).setOnClickListener(this);
         view.findViewById(R.id.rl_car_service).setOnClickListener(this);
+
+        smartRefreshLayout = (SmartRefreshLayout) view.findViewById(R.id.smartRefreshLayout);
+        smartRefreshLayout.setEnableLoadmore(false);
+        smartRefreshLayout.setOnRefreshListener(this);
     }
 
     @Override
@@ -84,7 +96,9 @@ public class MyFragment extends BaseFragment {
     @Override
     protected void initData() {
         super.initData();
-        getDataFromNet();
+        if (EmptyUtils.isNotEmpty(user_id)) {
+            getDataFromNet();
+        }
     }
 
     private void getDataFromNet() {
@@ -92,6 +106,7 @@ public class MyFragment extends BaseFragment {
                 .url(Constant.getMyHomePageUrl())
                 .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
                 .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
+                .addParams(Constant.USER_ID, String.valueOf(user_id))
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -101,12 +116,14 @@ public class MyFragment extends BaseFragment {
 
                     @Override
                     public void onResponse(String response, int id) {
+                        LogUtils.e(SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER) + "和" + SPUtils.getInstance().getString(Constant.SESSION_ID) + "和" + user_id);
                         JSONObject jsonObject = null;
                         try {
                             jsonObject = new JSONObject(response);
                             int status = jsonObject.optInt("status");
                             JSONObject jsonObjectData = jsonObject.optJSONObject("data");
                             if (status == 1) {
+                                smartRefreshLayout.finishRefresh();
                                 fans_num = jsonObjectData.optInt("fans_num");
                                 friend_num = jsonObjectData.optInt("friend_num");
                                 JSONObject jsonObjectUserInfo = jsonObjectData.optJSONObject("user_info");
@@ -142,6 +159,15 @@ public class MyFragment extends BaseFragment {
                     ((TextView) getView().findViewById(R.id.tv_car_num)).setText(String.valueOf(userInfoBean.getTotal_car()));
                 }
             }
+        }
+    }
+
+    @Override
+    public void onRefresh(RefreshLayout refreshlayout) {
+        if (EmptyUtils.isNotEmpty(user_id)) {
+            getDataFromNet();
+        } else {
+            smartRefreshLayout.finishRefresh();
         }
     }
 }

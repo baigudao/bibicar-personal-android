@@ -16,7 +16,7 @@
             android:id="@+id/iv_image"
             android:layout_width="110dp"
             android:layout_height="80dp"
-            android:scaleType="fitXY"
+            android:scaleType="centerCrop"
             android:src="@drawable/default_bg_ratio_1"/>
 
         <TextView

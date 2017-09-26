@@ -1223,9 +1223,21 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
 
                     ArrayList<FeedBean.PostFilesBeanX> postFilesBeanXArrayList = (ArrayList<FeedBean.PostFilesBeanX>) feedBean.getPost_files();
                     if (EmptyUtils.isNotEmpty(postFilesBeanXArrayList) && postFilesBeanXArrayList.size() != 0) {
-                        BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, postFilesBeanXArrayList, MY_STATE_INNER_DATA_TYPE);
-                        holder.recyclerView.setAdapter(baseRecyclerViewAdapter);
-                        holder.recyclerView.setLayoutManager(new GridLayoutManager(mContext, 3, LinearLayoutManager.VERTICAL, false));
+                        int size = postFilesBeanXArrayList.size();
+                        if (size == 1) {
+                            holder.iv_item7.setVisibility(View.VISIBLE);
+                            holder.recyclerView.setVisibility(View.GONE);
+                            Glide.with(mContext)
+                                    .load(postFilesBeanXArrayList.get(0).getFile_url())
+                                    .placeholder(R.drawable.default_bg_ratio_1)
+                                    .error(R.drawable.default_bg_ratio_1)
+                                    .into(holder.iv_item7);
+                        }else {
+                            holder.recyclerView.setVisibility(View.VISIBLE);
+                            BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, postFilesBeanXArrayList, MY_STATE_INNER_DATA_TYPE);
+                            holder.recyclerView.setAdapter(baseRecyclerViewAdapter);
+                            holder.recyclerView.setLayoutManager(new GridLayoutManager(mContext, 3, LinearLayoutManager.VERTICAL, false));
+                        }
                     }
 
                     holder.iv_item2.setOnClickListener(new View.OnClickListener() {
@@ -1750,6 +1762,10 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
         private ImageView iv_item4;
         private ImageView iv_item5;
         private ImageView iv_item6;
+        private ImageView iv_item7;
+        private ImageView iv_item8;
+        private ImageView iv_item9;
+        private ImageView iv_item10;
 
         private TextView tv_item1;
         private TextView tv_item2;
@@ -2138,6 +2154,8 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                 iv_item4 = (ImageView) itemView.findViewById(R.id.iv_state_like);
                 iv_item5 = (ImageView) itemView.findViewById(R.id.iv_state_report);
                 iv_item6 = (ImageView) itemView.findViewById(R.id.iv_follow);
+
+                iv_item7 = (ImageView) itemView.findViewById(R.id.iv_image_1);
 
                 tv_item4 = (TextView) itemView.findViewById(R.id.tv_state_share_num);
                 tv_item5 = (TextView) itemView.findViewById(R.id.tv_state_comment_num);

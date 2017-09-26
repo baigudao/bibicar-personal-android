@@ -1,6 +1,10 @@
 package com.wiserz.pbibi.adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -29,6 +33,7 @@ import com.wiserz.pbibi.bean.CheHangHomeBean;
 import com.wiserz.pbibi.bean.LampBean;
 import com.wiserz.pbibi.bean.TopLineBean;
 import com.wiserz.pbibi.bean.VideoBean;
+import com.wiserz.pbibi.fragment.AllCarFragment;
 import com.wiserz.pbibi.fragment.ArticleDetailFragment;
 import com.wiserz.pbibi.fragment.ArticleListFragment;
 import com.wiserz.pbibi.fragment.CarCheckServiceFragment;
@@ -72,6 +77,7 @@ public class RecommendRecyclerViewAdapter extends RecyclerView.Adapter implement
     private static final int CAR_VIDEO = 4;
     private static final int CAR_ARTICLE = 5;
     private static final int CHE_HANG = 6;
+    private static final int CONTACT_BIBI = 7;
 
     private static final int NEW_CAR_DATA_TYPE = 55;
     private static final int CAR_VIDEO_DATA_TYPE = 65;
@@ -85,7 +91,9 @@ public class RecommendRecyclerViewAdapter extends RecyclerView.Adapter implement
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         RecyclerView.ViewHolder viewHolder;
-        if (viewType == BANNER) {
+        if (viewType == CONTACT_BIBI) {
+            viewHolder = new ContactBibiHolderView(View.inflate(mContext, R.layout.item_contact, null));
+        } else if (viewType == BANNER) {
             viewHolder = new BannerViewHolder(View.inflate(mContext, R.layout.item_recommend_banner, null));
         } else if (viewType == TWO_BIG_BUTTON) {
             viewHolder = new TwoBigButtonViewHolder(View.inflate(mContext, R.layout.item_recommend_two_big_button, null));
@@ -197,7 +205,8 @@ public class RecommendRecyclerViewAdapter extends RecyclerView.Adapter implement
             newCarViewHolder.tv_more_new_car.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //                    ((MainActivity) mContext).setCheck((RadioButton) ((MainActivity) mContext).findViewById(R.id.rb_car_center));
+                    ((BaseActivity) mContext).gotoPager(AllCarFragment.class, null);
+//                    ((MainActivity) mContext).setCheck((RadioButton) ((MainActivity) mContext).findViewById(R.id.rb_car_center));
                 }
             });
 
@@ -304,12 +313,44 @@ public class RecommendRecyclerViewAdapter extends RecyclerView.Adapter implement
                 cheHangViewHolder.car_company_recyclerView.setAdapter(baseRecyclerViewAdapter);
                 baseRecyclerViewAdapter.setOnItemClickListener(this);
             }
+        } else if (currentType == CONTACT_BIBI) {
+            ContactBibiHolderView contactBibiHolderView = (ContactBibiHolderView) holder;
+
+            contactBibiHolderView.textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showCallPhoneDialog("075522233323");
+                }
+            });
         }
+    }
+
+    private void showCallPhoneDialog(final String contact_phone) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setTitle("联系客服");
+        builder.setMessage(contact_phone);
+        builder.setPositiveButton(mContext.getString(R.string.call_phone), new DialogInterface.OnClickListener() { //设置确定按钮
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_CALL);
+                intent.setData(Uri.parse("tel:" + contact_phone));
+                mContext.startActivity(intent);
+            }
+        });
+        builder.setNegativeButton(mContext.getString(R.string.cancel), new DialogInterface.OnClickListener() { //设置取消按钮
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
     }
 
     @Override
     public int getItemCount() {
-        return 7;
+        return 8;
     }
 
     @Override
@@ -335,6 +376,9 @@ public class RecommendRecyclerViewAdapter extends RecyclerView.Adapter implement
                 break;
             case CHE_HANG:
                 currentType = CHE_HANG;
+                break;
+            case CONTACT_BIBI:
+                currentType = CONTACT_BIBI;
                 break;
             default:
                 currentType = BANNER;
@@ -498,6 +542,16 @@ public class RecommendRecyclerViewAdapter extends RecyclerView.Adapter implement
                         .error(R.drawable.default_bg_ratio_1)
                         .into(iv_image);
             }
+        }
+    }
+
+    private class ContactBibiHolderView extends RecyclerView.ViewHolder {
+
+        private TextView textView;
+
+        public ContactBibiHolderView(View itemView) {
+            super(itemView);
+            textView = (TextView) itemView.findViewById(R.id.tv_contact_bibicar);
         }
     }
 

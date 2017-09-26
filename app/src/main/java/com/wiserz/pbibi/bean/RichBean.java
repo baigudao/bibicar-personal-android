@@ -8,18 +8,22 @@ package com.wiserz.pbibi.bean;
 public class RichBean extends BaseBean {
 
     /**
-     * avatar : http://wx.qlogo.cn/mmopen/4LPl8aTWWCLDIDuT8vgwpicPzXlgHOkfUsOWI9Iwdp56HJ0XxSxpClaOa57UbqmKWhWUDESiaFFVjBUvhn2L3c32icuNohibGueI/0
+     * avatar : http://img.bibicar.cn/FlfJAmU33_7unYqrhPI9cecV31XW
      * is_like : 2
-     * nickname : 子锋
-     * sort : 620
-     * total_money : 911.55
+     * like_num : 30
+     * nickname : 建达成二手车名车中心
+     * rank : 9
+     * sort : 30
+     * total_money : 521.8
      * type : 1
-     * user_id : 310
+     * user_id : 4890
      */
 
     private String avatar;
     private int is_like;
+    private int like_num;
     private String nickname;
+    private int rank;
     private int sort;
     private double total_money;
     private int type;
@@ -41,12 +45,28 @@ public class RichBean extends BaseBean {
         this.is_like = is_like;
     }
 
+    public int getLike_num() {
+        return like_num;
+    }
+
+    public void setLike_num(int like_num) {
+        this.like_num = like_num;
+    }
+
     public String getNickname() {
         return nickname;
     }
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    public int getRank() {
+        return rank;
+    }
+
+    public void setRank(int rank) {
+        this.rank = rank;
     }
 
     public int getSort() {

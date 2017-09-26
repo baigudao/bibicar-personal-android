@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.EmptyUtils;
+import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
@@ -228,12 +229,17 @@ public class PublishStateFragment extends BaseFragment {
 
     private void commitDataToServer(JSONArray mPhotoFile) {
         if (EmptyUtils.isNotEmpty(mPhotoFile)) {
+            String string = tv_choose_topic.getText().toString().trim();
+            if (string.equals("#选择话题")) {
+                string = "";
+            }
+            LogUtils.e(string + getInputContent());
             OkHttpUtils.post()
                     .url(Constant.getCreatePostUrl())
                     .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
                     .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
                     .addParams(Constant.FILES_ID, mPhotoFile.toString())
-                    .addParams(Constant.POST_CONTENT, tv_choose_topic.getText() + getInputContent())
+                    .addParams(Constant.POST_CONTENT, string + getInputContent())
                     .build()
                     .execute(new StringCallback() {
                         @Override

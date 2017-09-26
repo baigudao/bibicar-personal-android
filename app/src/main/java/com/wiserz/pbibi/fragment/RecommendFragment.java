@@ -43,6 +43,7 @@ public class RecommendFragment extends BaseFragment implements OnRefreshListener
         smartRefreshLayout = (SmartRefreshLayout) view.findViewById(R.id.smartRefreshLayout);
         smartRefreshLayout.setOnRefreshListener(this);
         smartRefreshLayout.setEnableLoadmore(false);//是否启用上拉加载功能
+
     }
 
     @Override

@@ -14,7 +14,7 @@
         android:layout_width="112dp"
         android:layout_height="112dp"
         android:layout_marginTop="5dp"
-        android:scaleType="fitXY"
+        android:scaleType="centerCrop"
         android:src="@drawable/default_bg_ratio_1"/>
 
     <View

@@ -10,12 +10,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.blankj.utilcode.util.EncryptUtils;
-import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.RegexUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
+import com.google.gson.Gson;
 import com.wiserz.pbibi.R;
+import com.wiserz.pbibi.bean.LoginBean;
 import com.wiserz.pbibi.util.Constant;
+import com.wiserz.pbibi.util.DataManager;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -26,6 +28,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import okhttp3.Call;
+
+import static android.R.attr.password;
 
 /**
  * Created by jackie on 2017/8/26 9:52.
@@ -155,7 +159,31 @@ public class ForgetPasswordFragment extends BaseFragment {
 
                             @Override
                             public void onResponse(String response, int id) {
-                                LogUtils.e(response);
+                                JSONObject jsonObject = null;
+                                try {
+                                    jsonObject = new JSONObject(response);
+                                    int status = jsonObject.optInt("status");
+                                    JSONObject jsonObjectData = jsonObject.optJSONObject("data");
+                                    if (status == 1) {
+                                        Gson gson = new Gson();
+                                        LoginBean loginBean = gson.fromJson(jsonObjectData.toString(), LoginBean.class);
+                                        //存储个人相关信息
+                                        SPUtils.getInstance().put(Constant.SESSION_ID, loginBean.getSession_id());
+                                        SPUtils.getInstance().put(Constant.ACCOUNT, phone);
+                                        SPUtils.getInstance().put(Constant.PASSWORD, password);
+                                        SPUtils.getInstance().put(Constant.CHAT_TOKEN, loginBean.getUser_info().getChat_token());
+                                        SPUtils.getInstance().put(Constant.USER_ID, loginBean.getUser_info().getUser_id());
+                                        DataManager.getInstance().setUserInfo(loginBean.getUser_info());
+                                        goBack();
+                                        ToastUtils.showShort("重置成功");
+                                    } else {
+                                        String code = jsonObject.optString("code");
+                                        String msg = jsonObjectData.optString("msg");
+                                        ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         });
                 break;

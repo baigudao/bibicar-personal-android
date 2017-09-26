@@ -53,7 +53,6 @@ import okhttp3.Call;
  */
 public class VideoDetailFragment extends BaseFragment implements BaseRecyclerViewAdapter.OnItemClickListener {
 
-
     private String share_title;
     private String share_txt;
     private String share_url;
@@ -80,7 +79,6 @@ public class VideoDetailFragment extends BaseFragment implements BaseRecyclerVie
     @Override
     protected void initView(View view) {
         feed_id = (int) DataManager.getInstance().getData1();
-        DataManager.getInstance().setData1(null);
         view.findViewById(R.id.iv_back).setOnClickListener(this);
         ((TextView) view.findViewById(R.id.tv_title)).setText("视频详情");
 

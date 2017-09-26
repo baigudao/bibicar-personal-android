@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -217,7 +218,7 @@ public class CarRentDetailFragment extends BaseFragment implements BaseRecyclerV
 
             CarRentDetailInfoBean.FilesBean filesBean = carRentDetailInfoBean.getFiles();
             if (EmptyUtils.isNotEmpty(filesBean)) {
-                ArrayList<String> strings = new ArrayList<>();
+                final ArrayList<String> strings = new ArrayList<>();
                 ArrayList<CarRentDetailInfoBean.FilesBean.Type1Bean> type1BeanArrayList = (ArrayList<CarRentDetailInfoBean.FilesBean.Type1Bean>) filesBean.getType1();
                 ArrayList<CarRentDetailInfoBean.FilesBean.Type2Bean> type2BeanArrayList = (ArrayList<CarRentDetailInfoBean.FilesBean.Type2Bean>) filesBean.getType2();
                 ArrayList<CarRentDetailInfoBean.FilesBean.Type3Bean> type3BeanArrayList = (ArrayList<CarRentDetailInfoBean.FilesBean.Type3Bean>) filesBean.getType3();
@@ -250,7 +251,8 @@ public class CarRentDetailFragment extends BaseFragment implements BaseRecyclerV
                         .setOnItemClickListener(new OnItemClickListener() {
                             @Override
                             public void onItemClick(int position) {
-                                ToastUtils.showShort(position + "");
+                                DataManager.getInstance().setData1(strings);
+                                gotoPager(ShowAllImageFragment.class, null);
                             }
                         });
                 //设置翻页的效果，不需要翻页效果可用不设
@@ -347,7 +349,12 @@ public class CarRentDetailFragment extends BaseFragment implements BaseRecyclerV
     public void onItemClick(Object data, int position) {
         if (data.getClass().getSimpleName().equals("CarRentRecommendCarBean")) {
             CarRentRecommendCarBean rentRecommendCarBean = (CarRentRecommendCarBean) data;
-            ToastUtils.showShort(rentRecommendCarBean.getCar_name());
+            String car_id = rentRecommendCarBean.getCar_id();
+            if (EmptyUtils.isNotEmpty(car_id)) {
+                Bundle bundle = new Bundle();
+                bundle.putString(Constant.CAR_ID, car_id);
+                gotoPager(CarRentDetailFragment.class, bundle);//汽车租赁详情
+            }
         }
     }
 

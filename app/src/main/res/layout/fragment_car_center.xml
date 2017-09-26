@@ -5,9 +5,86 @@
               android:background="@color/background_color"
               android:orientation="vertical">
 
-    <include
-        android:id="@+id/car_center_top_bar"
-        layout="@layout/car_center_top_bar"/>
+    <!--<include-->
+    <!--android:id="@+id/car_center_top_bar"-->
+    <!--layout="@layout/car_center_top_bar"/>-->
+
+    <RelativeLayout
+        android:id="@+id/topView"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="@color/pure_white_color">
+
+        <ImageView
+            android:id="@+id/iv"
+            android:layout_width="14dp"
+            android:layout_height="18dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/v2_location3x"/>
+
+        <TextView
+            android:id="@+id/tvLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@id/iv"
+            android:ellipsize="end"
+            android:maxLength="3"
+            android:text="深圳"
+            android:textColor="#3a3a3a"
+            android:textSize="15sp"/>
+
+        <ImageView
+            android:id="@+id/ivRight"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:clickable="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/v2_uploadcar3x"/>
+
+        <RelativeLayout
+            android:id="@+id/rl_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/ivRight"
+            android:layout_toRightOf="@id/tvLocation">
+
+            <EditText
+                android:id="@+id/etSearch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:background="@drawable/background_car_center_search"
+                android:cursorVisible="false"
+                android:drawableLeft="@drawable/v1_search3x"
+                android:drawablePadding="10dp"
+                android:hint="搜索车辆、文章、视频、用户"
+                android:paddingBottom="8dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="8dp"
+                android:paddingTop="8dp"
+                android:textColorHint="#bbbbbb"
+                android:textSize="13sp"/>
+
+            <TextView
+                android:id="@+id/tvSearch"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:clickable="true"
+                android:gravity="center"/>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
 
     <View
         android:layout_width="match_parent"

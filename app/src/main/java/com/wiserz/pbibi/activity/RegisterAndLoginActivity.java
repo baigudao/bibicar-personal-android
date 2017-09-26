@@ -11,6 +11,7 @@ import android.widget.EditText;
 
 import com.blankj.utilcode.util.EmptyUtils;
 import com.blankj.utilcode.util.EncryptUtils;
+import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.google.gson.Gson;
@@ -117,6 +118,8 @@ public class RegisterAndLoginActivity extends BaseActivity implements View.OnCli
 
                     @Override
                     public void onResponse(String response, int id) {
+                        LogUtils.e(SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER) + "和" + account + "和" + EncryptUtils.encryptMD5ToString(password));
+                        LogUtils.e(response);
                         JSONObject jsonObject = null;
                         try {
                             jsonObject = new JSONObject(response);

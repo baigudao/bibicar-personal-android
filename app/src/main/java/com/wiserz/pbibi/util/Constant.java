@@ -118,8 +118,8 @@ public class Constant {
     public static final String HOST_IMAGE_URL = "http://img.bibicar.cn/";//http://img.bibicar.cn/Fja6zKmICAz6l6QCd7-Z0pC-bjt8
 
     //URL常量
-    //    private final static String hostUrl = "https://api.bibicar.cn/";//正式环境
-    private static final String hostUrl = "https://testapi.bibicar.cn/";//测试环境
+    private final static String hostUrl = "https://api.bibicar.cn/";//正式环境
+    //    private static final String hostUrl = "https://testapi.bibicar.cn/";//测试环境
 
     private static final String registerApp = hostUrl + "app/register";//App注册
     private static final String verificationCodeUrl = hostUrl + "v3/user/sendcode";//得到验证码
@@ -132,6 +132,8 @@ public class Constant {
     private static final String splashUrl = hostUrl + "app/getimg";//启动页
     private static final String userLoginUrl = hostUrl + "v3/user/login";//用户登录
     private static final String newHomeUrl = hostUrl + "v3/theme/homepage";//首页
+
+    private static final String userInfoUpdateUrl = hostUrl + "v3/User/updateAll";//用户资料更新
 
     private final static String carRentListUrl = hostUrl + "v4/rentalcar/list";//可租车辆列表
     private final static String createCarRentOrderUrl = hostUrl + "v4/rentalcar/createrentalorder";//创建租车订单
@@ -239,6 +241,9 @@ public class Constant {
     private static final String guaranteeListUrl = hostUrl + "v4/pollingcar/PollingCarList";//维保列表
 
     private static final String orderListUrl = hostUrl + "v3/shop/orderlist";//订单列表
+
+    private static final String richLikeUrl = hostUrl + "v4/user/createrichboardlike";//排行点赞
+    private static final String richDeleteLikeUrl = hostUrl + "v4/user/cancelrichboardlike";//排行点赞取消
 
     public static String getRegisterApp() {
         return registerApp;
@@ -590,5 +595,17 @@ public class Constant {
 
     public static String getCarModelUrl() {
         return carModelUrl;
+    }
+
+    public static String getUserInfoUpdateUrl() {
+        return userInfoUpdateUrl;
+    }
+
+    public static String getRichLikeUrl() {
+        return richLikeUrl;
+    }
+
+    public static String getRichDeleteLikeUrl() {
+        return richDeleteLikeUrl;
     }
 }

@@ -1,6 +1,7 @@
 package com.wiserz.pbibi.adapter;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,18 +9,27 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.EmptyUtils;
+import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wiserz.pbibi.R;
+import com.wiserz.pbibi.activity.BaseActivity;
 import com.wiserz.pbibi.bean.RichBean;
+import com.wiserz.pbibi.fragment.OtherHomePageFragment;
+import com.wiserz.pbibi.util.Constant;
 import com.wiserz.pbibi.view.CircleImageView;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+
+import okhttp3.Call;
 
 /**
  * Created by jackie on 2017/9/4 15:00.
@@ -99,7 +109,7 @@ public class RichListRecyclerViewAdapter extends RecyclerView.Adapter implements
                 secondViewHolder.tv_user_name.setText(nickname);
             }
         } else if (currentType == OTHER) {
-            OtherViewHolder otherViewHolder = (OtherViewHolder) holder;
+            final OtherViewHolder otherViewHolder = (OtherViewHolder) holder;
 
             richBeanArrayList = getRichListData(jsonObjectData);
 
@@ -126,18 +136,127 @@ public class RichListRecyclerViewAdapter extends RecyclerView.Adapter implements
                     otherViewHolder.iv_circle_image.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            ToastUtils.showShort("用户" + richBean.getUser_id());
+                            int user_id = richBean.getUser_id();
+                            if (EmptyUtils.isNotEmpty(user_id)) {
+                                Bundle bundle = new Bundle();
+                                bundle.putInt(Constant.USER_ID, richBean.getUser_id());
+                                ((BaseActivity) mContext).gotoPager(OtherHomePageFragment.class, bundle);
+                            }
                         }
                     });
                     otherViewHolder.tv_user_name.setText(richBean.getNickname());
                     otherViewHolder.tv_user_name.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            ToastUtils.showShort("用户" + richBean.getUser_id());
+                            int user_id = richBean.getUser_id();
+                            if (EmptyUtils.isNotEmpty(user_id)) {
+                                Bundle bundle = new Bundle();
+                                bundle.putInt(Constant.USER_ID, richBean.getUser_id());
+                                ((BaseActivity) mContext).gotoPager(OtherHomePageFragment.class, bundle);
+                            }
                         }
                     });
                     otherViewHolder.tv_num.setText(richBean.getTotal_money() + "万");
                     otherViewHolder.tv_like_num.setText(String.valueOf(richBean.getSort()));
+
+                    final int is_like = richBean.getIs_like();
+                    if (EmptyUtils.isNotEmpty(is_like)) {
+                        switch (is_like) {
+                            case 1:
+                                ((OtherViewHolder) holder).iv_like_image.setImageResource(R.drawable.v1_like_selected3x);
+                                break;
+                            case 2:
+                                ((OtherViewHolder) holder).iv_like_image.setImageResource(R.drawable.v1_like3x);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    otherViewHolder.iv_like_image.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            switch (is_like) {
+                                case 1:
+                                    //取消点赞
+                                    OkHttpUtils.post()
+                                            .url(Constant.getRichDeleteLikeUrl())
+                                            .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
+                                            .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
+                                            .addParams(Constant.USER_ID, String.valueOf(richBean.getUser_id()))
+                                            .build()
+                                            .execute(new StringCallback() {
+                                                @Override
+                                                public void onError(Call call, Exception e, int id) {
+                                                    ToastUtils.showShort("取消点赞失败");
+                                                }
+
+                                                @Override
+                                                public void onResponse(String response, int id) {
+                                                    JSONObject jsonObject = null;
+                                                    try {
+                                                        jsonObject = new JSONObject(response);
+                                                        int status = jsonObject.optInt("status");
+                                                        JSONObject jsonObjectData = jsonObject.optJSONObject("data");
+                                                        if (status == 1) {
+                                                            otherViewHolder.iv_like_image.setImageResource(R.drawable.v1_like3x);
+                                                            int like_num = Integer.valueOf(otherViewHolder.tv_like_num.getText().toString());
+                                                            --like_num;
+                                                            otherViewHolder.tv_like_num.setText(String.valueOf(like_num));
+                                                            ToastUtils.showShort("取消点赞成功");
+                                                        } else {
+                                                            String code = jsonObject.optString("code");
+                                                            String msg = jsonObjectData.optString("msg");
+                                                            ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                                        }
+                                                    } catch (JSONException e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                }
+                                            });
+                                    break;
+                                case 2:
+                                    //点赞
+                                    OkHttpUtils.post()
+                                            .url(Constant.getRichLikeUrl())
+                                            .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
+                                            .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
+                                            .addParams(Constant.USER_ID, String.valueOf(richBean.getUser_id()))
+                                            .build()
+                                            .execute(new StringCallback() {
+                                                @Override
+                                                public void onError(Call call, Exception e, int id) {
+                                                    ToastUtils.showShort("点赞失败");
+                                                }
+
+                                                @Override
+                                                public void onResponse(String response, int id) {
+                                                    JSONObject jsonObject = null;
+                                                    try {
+                                                        jsonObject = new JSONObject(response);
+                                                        int status = jsonObject.optInt("status");
+                                                        JSONObject jsonObjectData = jsonObject.optJSONObject("data");
+                                                        if (status == 1) {
+                                                            otherViewHolder.iv_like_image.setImageResource(R.drawable.v1_like_selected3x);
+                                                            int like_num = Integer.valueOf(otherViewHolder.tv_like_num.getText().toString());
+                                                            ++like_num;
+                                                            otherViewHolder.tv_like_num.setText(String.valueOf(like_num));
+                                                            ToastUtils.showShort("点赞成功");
+                                                        } else {
+                                                            String code = jsonObject.optString("code");
+                                                            String msg = jsonObjectData.optString("msg");
+                                                            ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                                        }
+                                                    } catch (JSONException e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                }
+                                            });
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                    });
                 }
             }
         }
