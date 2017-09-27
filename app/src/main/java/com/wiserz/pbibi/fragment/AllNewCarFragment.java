@@ -32,9 +32,9 @@ import okhttp3.Call;
 /**
  * Created by jackie on 2017/9/25 21:38.
  * QQ : 971060378
- * Used as : xxx
+ * Used as : 全部入库新车
  */
-public class AllCarFragment extends BaseFragment implements BaseRecyclerViewAdapter.OnItemClickListener, OnRefreshListener, OnLoadmoreListener {
+public class AllNewCarFragment extends BaseFragment implements BaseRecyclerViewAdapter.OnItemClickListener, OnRefreshListener, OnLoadmoreListener {
 
     private RecyclerView recyclerView;
     private int mPage;
@@ -47,13 +47,13 @@ public class AllCarFragment extends BaseFragment implements BaseRecyclerViewAdap
 
     @Override
     protected int getLayoutId() {
-        return R.layout.fragment_all_car;
+        return R.layout.fragment_all_new_car;
     }
 
     @Override
     protected void initView(View view) {
         view.findViewById(R.id.iv_back).setOnClickListener(this);
-        ((TextView) view.findViewById(R.id.tv_title)).setText("全部车辆");
+        ((TextView) view.findViewById(R.id.tv_title)).setText("全部新车");
 
         smartRefreshLayout = (SmartRefreshLayout) view.findViewById(R.id.smartRefreshLayout);
         refresh_or_load = 0;

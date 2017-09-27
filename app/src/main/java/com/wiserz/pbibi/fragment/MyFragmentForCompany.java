@@ -5,7 +5,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -43,15 +42,12 @@ public class MyFragmentForCompany extends BaseFragment {
     private Fragment fromFragment;
     private List<BaseFragment> mBaseFragment;
 
-    private int mUserId;
+    private int mUserId;//自己的user_id
     private int flag;
 
-    private LinearLayout ll_follow_consult;
     private ImageView ivSettings;
     private int fans_num;
-    private int feed_num;
     private int friend_num;
-    private int is_friend;
     private int user_id;//传过来的user_id
 
     @Override
@@ -62,7 +58,6 @@ public class MyFragmentForCompany extends BaseFragment {
     @Override
     protected void initView(View view) {
         user_id = getArguments().getInt(Constant.USER_ID);
-        ll_follow_consult = (LinearLayout) view.findViewById(R.id.ll_follow_consult);
         ivSettings = (ImageView) view.findViewById(R.id.ivSettings);
         ivSettings.setOnClickListener(this);
         view.findViewById(R.id.ivMore).setOnClickListener(this);
@@ -183,9 +178,8 @@ public class MyFragmentForCompany extends BaseFragment {
      * 不同的用户显示不同的界面
      */
     protected void showPostNowViewByUserId() {
-        if (mUserId != SPUtils.getInstance().getInt(Constant.USER_ID) && getView() != null) {
+        if (mUserId != user_id && getView() != null) {
             //他人
-            ll_follow_consult.setVisibility(View.VISIBLE);
             ivSettings.setBackgroundResource(R.drawable.bibi_back_white);
             ViewGroup.LayoutParams layoutParams = ivSettings.getLayoutParams();
             layoutParams.width = SizeUtils.dp2px(25);
@@ -194,7 +188,6 @@ public class MyFragmentForCompany extends BaseFragment {
             flag = 1;
         } else {
             //自己
-            ll_follow_consult.setVisibility(View.GONE);
             ivSettings.setBackgroundResource(R.drawable.self_set);
             flag = 0;
         }
@@ -227,9 +220,7 @@ public class MyFragmentForCompany extends BaseFragment {
                             JSONObject jsonObjectData = jsonObject.optJSONObject("data");
                             if (status == 1) {
                                 fans_num = jsonObjectData.optInt("fans_num");
-                                feed_num = jsonObjectData.optInt("feed_num");
                                 friend_num = jsonObjectData.optInt("friend_num");
-                                is_friend = jsonObjectData.optInt("is_friend");
                                 JSONObject jsonObjectForUserInfo = jsonObjectData.optJSONObject("user_info");
                                 Gson gson = new Gson();
                                 LoginBean.UserInfoBean userInfoBean = gson.fromJson(jsonObjectForUserInfo.toString(), LoginBean.UserInfoBean.class);
@@ -253,14 +244,24 @@ public class MyFragmentForCompany extends BaseFragment {
             return;
         }
         if (EmptyUtils.isNotEmpty(myInfo)) {
-            //            mMyUserInfo = myInfo;
             ((TextView) getView().findViewById(R.id.tv_nickName)).setText(myInfo.getProfile().getNickname());
+
+            ImageView ivAvater = (ImageView) getView().findViewById(R.id.ivAvater);
 
             Glide.with(mContext)
                     .load(myInfo.getProfile().getAvatar())
                     .error(R.drawable.user_photo)
                     .placeholder(R.drawable.user_photo)
                     .into((ImageView) getView().findViewById(R.id.ivAvater));
+
+            ivAvater.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (user_id == mUserId) {
+                        gotoPager(EditUserProfileFragment.class, null);
+                    }
+                }
+            });
 
             Glide.with(mContext)
                     .load(myInfo.getProfile().getAvatar())
@@ -276,17 +277,17 @@ public class MyFragmentForCompany extends BaseFragment {
             } else {
                 ((TextView) getView().findViewById(R.id.tv_signature)).setText(myInfo.getProfile().getSignature());
             }
-            if (mUserId != SPUtils.getInstance().getInt(Constant.USER_ID)) {
-                resetFollowStateView(is_friend);
-            }
+            //            if (mUserId != SPUtils.getInstance().getInt(Constant.USER_ID)) {
+            //                resetFollowStateView(is_friend);
+            //            }
         }
     }
 
-    protected void resetFollowStateView(int isFriend) {
-        if (isFriend == 1 && getView() != null) {
-            ((ImageView) getView().findViewById(R.id.iv_guan_zhu)).setImageResource(R.drawable.other_followed);
-        } else {
-            ((ImageView) getView().findViewById(R.id.iv_guan_zhu)).setImageResource(R.drawable.other_follow);
-        }
-    }
+    //    protected void resetFollowStateView(int isFriend) {
+    //        if (isFriend == 1 && getView() != null) {
+    //            ((ImageView) getView().findViewById(R.id.iv_guan_zhu)).setImageResource(R.drawable.other_followed);
+    //        } else {
+    //            ((ImageView) getView().findViewById(R.id.iv_guan_zhu)).setImageResource(R.drawable.other_follow);
+    //        }
+    //    }
 }

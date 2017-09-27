@@ -1026,7 +1026,7 @@ public class CarRentDetailInfoBean extends BaseBean {
          */
 
         private double deposit;
-        private int four;
+        private double four;
         private double one;
         private String pick_address;
         private String pick_lat;
@@ -1034,8 +1034,8 @@ public class CarRentDetailInfoBean extends BaseBean {
         private int rental_end_time;
         private int status;
         private double subscription;
-        private int three;
-        private int two;
+        private double three;
+        private double two;
 
         public double getDeposit() {
             return deposit;
@@ -1045,11 +1045,11 @@ public class CarRentDetailInfoBean extends BaseBean {
             this.deposit = deposit;
         }
 
-        public int getFour() {
+        public double getFour() {
             return four;
         }
 
-        public void setFour(int four) {
+        public void setFour(double four) {
             this.four = four;
         }
 
@@ -1109,19 +1109,19 @@ public class CarRentDetailInfoBean extends BaseBean {
             this.subscription = subscription;
         }
 
-        public int getThree() {
+        public double getThree() {
             return three;
         }
 
-        public void setThree(int three) {
+        public void setThree(double three) {
             this.three = three;
         }
 
-        public int getTwo() {
+        public double getTwo() {
             return two;
         }
 
-        public void setTwo(int two) {
+        public void setTwo(double two) {
             this.two = two;
         }
     }

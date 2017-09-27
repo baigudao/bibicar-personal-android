@@ -27,6 +27,10 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
 import com.wiserz.pbibi.bean.ArticleCommentBean;
@@ -57,7 +61,7 @@ import static com.wiserz.pbibi.R.id.rl_share_wechatmoments;
  * QQ : 971060378
  * Used as : 文章详情的页面
  */
-public class ArticleDetailFragment extends BaseFragment implements BaseRecyclerViewAdapter.OnItemClickListener {
+public class ArticleDetailFragment extends BaseFragment implements BaseRecyclerViewAdapter.OnItemClickListener, OnRefreshListener, OnLoadmoreListener {
 
     private int feed_id;
     private String share_img;
@@ -77,6 +81,10 @@ public class ArticleDetailFragment extends BaseFragment implements BaseRecyclerV
 
     private int flag;
     private int comment_id;
+
+    private SmartRefreshLayout smartRefreshLayout;
+    private BaseRecyclerViewAdapter baseRecyclerViewAdapter;
+    private int refresh_or_load;//0或1
 
     @Override
     protected int getLayoutId() {
@@ -103,6 +111,11 @@ public class ArticleDetailFragment extends BaseFragment implements BaseRecyclerV
         ll_share_comment = (LinearLayout) view.findViewById(R.id.ll_share_comment);
         et_input_comment = (EditText) view.findViewById(R.id.et_input_comment);
         et_input_comment.addTextChangedListener(new TextChangedListener());
+
+        smartRefreshLayout = (SmartRefreshLayout) view.findViewById(R.id.smartRefreshLayout);
+        smartRefreshLayout.setOnRefreshListener(this);
+        smartRefreshLayout.setOnLoadmoreListener(this);
+        refresh_or_load = 0;
 
         mPage = 0;
     }
@@ -145,6 +158,10 @@ public class ArticleDetailFragment extends BaseFragment implements BaseRecyclerV
     @Override
     protected void initData() {
         super.initData();
+        getDataFromNet();
+    }
+
+    private void getDataFromNet() {
         if (EmptyUtils.isNotEmpty(feed_id)) {
             OkHttpUtils.post()
                     .url(Constant.getArticleIndexUrl())
@@ -166,12 +183,22 @@ public class ArticleDetailFragment extends BaseFragment implements BaseRecyclerV
                                 int status = jsonObject.optInt("status");
                                 JSONObject jsonObjectData = jsonObject.optJSONObject("data");
                                 if (status == 1) {
-                                    share_img = jsonObjectData.optString("share_img");
-                                    share_title = jsonObjectData.optString("share_title");
-                                    share_txt = jsonObjectData.optString("share_txt");
-                                    share_url = jsonObjectData.optString("share_url");
-                                    handlerArticleDetailData(jsonObjectData);
-                                    getCommentListData();//得到评论列表的数据
+                                    switch (refresh_or_load) {
+                                        case 0:
+                                            smartRefreshLayout.finishRefresh();
+                                            share_img = jsonObjectData.optString("share_img");
+                                            share_title = jsonObjectData.optString("share_title");
+                                            share_txt = jsonObjectData.optString("share_txt");
+                                            share_url = jsonObjectData.optString("share_url");
+                                            handlerArticleDetailData(jsonObjectData);
+                                            getCommentListData();//得到评论列表的数据
+                                            break;
+                                        case 1:
+                                            smartRefreshLayout.finishLoadmore();
+                                            break;
+                                        default:
+                                            break;
+                                    }
                                 } else {
                                     String code = jsonObject.optString("code");
                                     String msg = jsonObjectData.optString("msg");
@@ -190,8 +217,8 @@ public class ArticleDetailFragment extends BaseFragment implements BaseRecyclerV
                 .url(Constant.getArticleCommentListUrl())
                 .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
                 .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
-                .addParams(Constant.PAGE, String.valueOf(mPage))
                 .addParams(Constant.FEED_ID, String.valueOf(feed_id))
+                .addParams(Constant.PAGE, String.valueOf(mPage))
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -471,6 +498,20 @@ public class ArticleDetailFragment extends BaseFragment implements BaseRecyclerV
         ll_share_comment.setVisibility(View.VISIBLE);
     }
 
+    @Override
+    public void onRefresh(RefreshLayout refreshlayout) {
+        mPage = 0;
+        refresh_or_load = 0;
+        getDataFromNet();
+    }
+
+    @Override
+    public void onLoadmore(RefreshLayout refreshlayout) {
+        ++mPage;
+        refresh_or_load = 1;
+        getDataFromNet();
+    }
+
     /**
      * 演示调用ShareSDK执行分享
      *
@@ -556,5 +597,4 @@ public class ArticleDetailFragment extends BaseFragment implements BaseRecyclerV
 
         }
     }
-
 }

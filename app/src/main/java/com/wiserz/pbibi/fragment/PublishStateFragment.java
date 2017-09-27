@@ -14,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.EmptyUtils;
-import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
@@ -185,6 +184,7 @@ public class PublishStateFragment extends BaseFragment {
             return;
         }
         if (EmptyUtils.isNotEmpty(upload_token) && EmptyUtils.isNotEmpty(uploadCarPhotoInfoArrayList) && uploadCarPhotoInfoArrayList.size() != 0) {
+            showLoadingDialog("", null, false);
             UploadManager uploadManager = new UploadManager();
             final JSONArray mPhotoFile = new JSONArray();
 
@@ -233,7 +233,6 @@ public class PublishStateFragment extends BaseFragment {
             if (string.equals("#选择话题")) {
                 string = "";
             }
-            LogUtils.e(string + getInputContent());
             OkHttpUtils.post()
                     .url(Constant.getCreatePostUrl())
                     .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
@@ -256,6 +255,7 @@ public class PublishStateFragment extends BaseFragment {
                                 JSONObject jsonObjectData = jsonObject.optJSONObject("data");
                                 if (status == 1) {
                                     ToastUtils.showShort("发布动态成功！");
+                                    hideLoadingDialog();
                                     goBack();
                                 } else {
                                     String code = jsonObject.optString("code");

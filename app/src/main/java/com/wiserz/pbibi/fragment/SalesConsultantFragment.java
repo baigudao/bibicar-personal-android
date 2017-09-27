@@ -4,7 +4,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.Toast;
 
 import com.blankj.utilcode.util.EmptyUtils;
 import com.blankj.utilcode.util.LogUtils;
@@ -79,7 +78,6 @@ public class SalesConsultantFragment extends BaseFragment implements BaseRecycle
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e, int id) {
-                        Toast.makeText(getActivity(), "请求数据失败", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -111,9 +109,9 @@ public class SalesConsultantFragment extends BaseFragment implements BaseRecycle
             ArrayList<UserInfoForSalesConsultant> userInfoForSalesConsultantArrayList = gson.fromJson(jsonArray.toString(), new TypeToken<ArrayList<UserInfoForSalesConsultant>>() {
             }.getType());
             if (EmptyUtils.isNotEmpty(userInfoForSalesConsultantArrayList) && userInfoForSalesConsultantArrayList.size() != 0) {
-                BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext,userInfoForSalesConsultantArrayList,SALES_CONSULTANT_DATA_TYPE);
+                BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, userInfoForSalesConsultantArrayList, SALES_CONSULTANT_DATA_TYPE);
                 recycler_view_sales_consultant.setAdapter(baseRecyclerViewAdapter);
-                recycler_view_sales_consultant.setLayoutManager(new GridLayoutManager(mContext,2, LinearLayoutManager.VERTICAL,false));
+                recycler_view_sales_consultant.setLayoutManager(new GridLayoutManager(mContext, 2, LinearLayoutManager.VERTICAL, false));
                 baseRecyclerViewAdapter.setOnItemClickListener(this);
             }
         }
@@ -121,7 +119,7 @@ public class SalesConsultantFragment extends BaseFragment implements BaseRecycle
 
     @Override
     public void onItemClick(Object data, int position) {
-        if (data.getClass().getSimpleName().equals("UserInfoForSalesConsultant")){
+        if (data.getClass().getSimpleName().equals("UserInfoForSalesConsultant")) {
             LogUtils.e("点击事件");
         }
     }

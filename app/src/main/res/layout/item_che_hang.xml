@@ -27,12 +27,15 @@
 
     <TextView
         android:id="@+id/tv_info"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_title"
         android:layout_marginLeft="20dp"
+        android:layout_marginRight="30dp"
         android:layout_marginTop="12dp"
         android:layout_toRightOf="@id/iv_image"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:text="长利天下，车行玩家、以新争天下"
         android:textColor="@color/main_text_color"
         android:textSize="12sp"/>

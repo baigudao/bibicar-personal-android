@@ -13,4 +13,13 @@
         android:scaleType="centerCrop"
         android:src="@drawable/default_bg_ratio_1"/>
 
+    <ImageView
+        android:id="@+id/iv_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@id/iv_image_all"
+        android:layout_margin="6dp"
+        android:clickable="true"
+        android:src="@drawable/v3_close3x"/>
+
 </RelativeLayout>

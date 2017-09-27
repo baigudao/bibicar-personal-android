@@ -15,7 +15,7 @@
             android:id="@+id/ivCarIcon"
             android:layout_width="120dp"
             android:layout_height="80dp"
-            android:scaleType="fitXY"
+            android:scaleType="centerCrop"
             android:src="@drawable/default_bg_ratio_1"/>
 
         <RelativeLayout
@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:text="500.6万"
-                android:textColor="@color/main_text_color"
+                android:textColor="@color/main_color"
                 android:textSize="18sp"/>
 
             <TextView
@@ -64,7 +64,7 @@
                 android:drawablePadding="5dp"
                 android:text="编辑"
                 android:textColor="@color/main_color"
-                android:visibility="invisible"/>
+                android:visibility="gone"/>
 
             <ImageView
                 android:id="@+id/iv_like"
@@ -80,6 +80,5 @@
         </RelativeLayout>
 
     </LinearLayout>
-
 
 </RelativeLayout>

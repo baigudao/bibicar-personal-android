@@ -59,13 +59,16 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="10dp"
+        android:visibility="gone"/>
 
     <LinearLayout
+        android:id="@+id/ll_image_1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <View
             android:layout_width="0dp"
@@ -78,13 +81,105 @@
             android:layout_height="220dp"
             android:layout_gravity="center_horizontal"
             android:scaleType="centerCrop"
-            android:src="@drawable/default_bg_ratio_1"
-            android:visibility="gone"/>
+            android:src="@drawable/default_bg_ratio_1"/>
 
         <View
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:layout_weight="1"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_image_2"
+        android:layout_width="match_parent"
+        android:layout_height="170dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/iv_image_two_1"
+            android:layout_width="0dp"
+            android:layout_height="170dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:scaleType="centerCrop"
+            android:src="@drawable/default_bg_ratio_1"/>
+
+        <ImageView
+            android:id="@+id/iv_image_two_2"
+            android:layout_width="0dp"
+            android:layout_height="170dp"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:scaleType="centerCrop"
+            android:src="@drawable/default_bg_ratio_1"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_image_4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="170dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/iv_image_four_1"
+                android:layout_width="0dp"
+                android:layout_height="170dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:scaleType="centerCrop"
+                android:src="@drawable/default_bg_ratio_1"/>
+
+            <ImageView
+                android:id="@+id/iv_image_four_2"
+                android:layout_width="0dp"
+                android:layout_height="170dp"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:scaleType="centerCrop"
+                android:src="@drawable/default_bg_ratio_1"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="170dp"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/iv_image_four_3"
+                android:layout_width="0dp"
+                android:layout_height="170dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:scaleType="centerCrop"
+                android:src="@drawable/default_bg_ratio_1"/>
+
+            <ImageView
+                android:id="@+id/iv_image_four_4"
+                android:layout_width="0dp"
+                android:layout_height="170dp"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:scaleType="centerCrop"
+                android:src="@drawable/default_bg_ratio_1"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 
@@ -104,13 +199,13 @@
             android:textColor="@color/main_color"
             android:textSize="15sp"/>
 
-        <TextView
-            android:id="@+id/tv_state_content2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="又是一个好晴天~"
-            android:textColor="@color/main_text_color"
-            android:textSize="15sp"/>
+        <!--<TextView-->
+        <!--android:id="@+id/tv_state_content2"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="又是一个好晴天~"-->
+        <!--android:textColor="@color/main_text_color"-->
+        <!--android:textSize="15sp"/>-->
 
     </LinearLayout>
 

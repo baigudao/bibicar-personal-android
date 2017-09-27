@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.EmptyUtils;
+import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
@@ -281,13 +282,39 @@ public class PostPhotoFragment extends BaseFragment {
         }
 
         @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
+        public void onBindViewHolder(ViewHolder holder, final int position) {
             Glide.with(mContext)
                     .load(mSelectedData.get(position))
                     .placeholder(R.drawable.default_bg_ratio_1)
                     .error(R.drawable.default_bg_ratio_1)
                     .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
                     .into(holder.iv_image_all);
+            holder.iv_close.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mSelected.remove(position);
+                    notifyDataSetChanged();
+                    if (mSelected.size() == 0) {
+                        LogUtils.e("删除为零了");
+                        switch (flag) {
+                            //                            case 0:
+                            //                                iv_add_photo_surface.setVisibility(View.VISIBLE);
+                            //                                break;
+                            //                            case 1:
+                            //                                iv_add_photo_inner.setVisibility(View.VISIBLE);
+                            //                                break;
+                            //                            case 2:
+                            //                                iv_add_photo_structure.setVisibility(View.VISIBLE);
+                            //                                break;
+                            //                            case 3:
+                            //                                iv_add_photo_more.setVisibility(View.VISIBLE);
+                            //                                break;
+                            //                            default:
+                            //                                break;
+                        }
+                    }
+                }
+            });
         }
 
         @Override
@@ -298,10 +325,12 @@ public class PostPhotoFragment extends BaseFragment {
         class ViewHolder extends RecyclerView.ViewHolder {
 
             private ImageView iv_image_all;
+            private ImageView iv_close;
 
             ViewHolder(View itemView) {
                 super(itemView);
                 iv_image_all = (ImageView) itemView.findViewById(R.id.iv_image_all);
+                iv_close = (ImageView) itemView.findViewById(R.id.iv_close);
             }
         }
     }

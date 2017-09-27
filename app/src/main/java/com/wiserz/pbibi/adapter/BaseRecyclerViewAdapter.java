@@ -3,15 +3,20 @@ package com.wiserz.pbibi.adapter;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -48,12 +53,15 @@ import com.wiserz.pbibi.bean.MyCarRentOrderBean;
 import com.wiserz.pbibi.bean.PeccancyHistoryBean;
 import com.wiserz.pbibi.bean.PeccancyRecordBean;
 import com.wiserz.pbibi.bean.RecommendUserInfoBean;
+import com.wiserz.pbibi.bean.SellingAndSoldCarListBean;
 import com.wiserz.pbibi.bean.ThemeUserBean;
 import com.wiserz.pbibi.bean.TopicInfoBean;
 import com.wiserz.pbibi.bean.UserBean;
 import com.wiserz.pbibi.bean.UserInfoForSalesConsultant;
 import com.wiserz.pbibi.bean.VideoBean;
+import com.wiserz.pbibi.fragment.CarDetailFragment;
 import com.wiserz.pbibi.fragment.CommentDetailFragment;
+import com.wiserz.pbibi.fragment.MyFragmentForCompany;
 import com.wiserz.pbibi.fragment.OtherHomePageFragment;
 import com.wiserz.pbibi.fragment.ShowAllImageFragment;
 import com.wiserz.pbibi.fragment.StateDetailFragment;
@@ -480,50 +488,74 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
             if (EmptyUtils.isNotEmpty(cheHangUserListBeanArrayList)) {
                 final CheHangUserListBean cheHangUserListBean = cheHangUserListBeanArrayList.get(position);
 
-                Glide.with(mContext)
-                        .load(cheHangUserListBean.getAvatar())
-                        .placeholder(R.drawable.user_photo)
-                        .bitmapTransform(new RoundedCornersTransformation(mContext, SizeUtils.dp2px(8), 0, RoundedCornersTransformation.CornerType.ALL))
-                        .into(holder.iv_item1);
-                holder.tv_item1.setText(cheHangUserListBean.getNickname());
-                holder.tv_item2.setText("在售" + cheHangUserListBean.getSaling_num() + "辆");
-                holder.tv_item3.setText("已售" + cheHangUserListBean.getSold_num() + "辆");
+                if (EmptyUtils.isNotEmpty(cheHangUserListBean)) {
+                    Glide.with(mContext)
+                            .load(cheHangUserListBean.getAvatar())
+                            .placeholder(R.drawable.user_photo)
+                            .error(R.drawable.user_photo)
+                            .bitmapTransform(new RoundedCornersTransformation(mContext, SizeUtils.dp2px(8), 0, RoundedCornersTransformation.CornerType.ALL))
+                            .into(holder.iv_item1);
+                    holder.tv_item1.setText(cheHangUserListBean.getNickname());
+                    holder.tv_item2.setText("在售" + cheHangUserListBean.getSaling_num() + "辆");
+                    holder.tv_item3.setText("已售" + cheHangUserListBean.getSold_num() + "辆");
 
-                holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ToastUtils.showShort(cheHangUserListBean.getNickname());
-                    }
-                });
-
-                ArrayList<CheHangUserListBean.CarListBeanX.CarListBean> carListBeanArrayList = (ArrayList<CheHangUserListBean.CarListBeanX.CarListBean>) cheHangUserListBean.getCar_list().getCar_list();
-                if (EmptyUtils.isNotEmpty(carListBeanArrayList)) {
-                    BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, carListBeanArrayList, CHE_HANG_LIST_ITEM_DATA_TYPE);
-                    holder.recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
-                    holder.recyclerView.setAdapter(baseRecyclerViewAdapter);
-                    baseRecyclerViewAdapter.setOnItemClickListener(new OnItemClickListener() {
+                    holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public void onItemClick(Object data, int position) {
-                            if (data.getClass().getSimpleName().equals("CarListBean")) {
-                                CheHangUserListBean.CarListBeanX.CarListBean carListBean = (CheHangUserListBean.CarListBeanX.CarListBean) data;
-                                ToastUtils.showShort(carListBean.getCar_info().getCar_name());
+                        public void onClick(View v) {
+                            Bundle bundle = new Bundle();
+                            bundle.putInt(Constant.USER_ID, cheHangUserListBean.getUser_id());
+                            ((BaseActivity) mContext).gotoPager(MyFragmentForCompany.class, bundle);
+                        }
+                    });
+
+                    ArrayList<CheHangUserListBean.CarListBeanX.CarListBean> carListBeanArrayList = (ArrayList<CheHangUserListBean.CarListBeanX.CarListBean>) cheHangUserListBean.getCar_list().getCar_list();
+                    if (EmptyUtils.isNotEmpty(carListBeanArrayList) && carListBeanArrayList.size() != 0) {
+                        BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, carListBeanArrayList, CHE_HANG_LIST_ITEM_DATA_TYPE);
+                        holder.recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
+                        holder.recyclerView.setAdapter(baseRecyclerViewAdapter);
+                        baseRecyclerViewAdapter.setOnItemClickListener(new OnItemClickListener() {
+                            @Override
+                            public void onItemClick(Object data, int position) {
+                                if (data.getClass().getSimpleName().equals("CarListBean")) {
+                                    CheHangUserListBean.CarListBeanX.CarListBean carListBean = (CheHangUserListBean.CarListBeanX.CarListBean) data;
+                                    if (EmptyUtils.isNotEmpty(carListBean)) {
+                                        String car_id = carListBean.getCar_info().getCar_id();
+                                        if (EmptyUtils.isNotEmpty(car_id)) {
+                                            Bundle bundle = new Bundle();
+                                            bundle.putString(Constant.CAR_ID, car_id);
+                                            ((BaseActivity) mContext).gotoPager(CarDetailFragment.class, bundle);
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    } else {
+                        holder.recyclerView.setVisibility(View.GONE);
+                    }
+
+                    holder.linearLayout1.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            String phone = cheHangUserListBean.getPhone();
+                            if (EmptyUtils.isNotEmpty(phone)) {
+                                showCallPhoneDialog(phone);
+                            } else {
+                                ToastUtils.showShort("该车行暂时没有联系电话");
+                            }
+                        }
+                    });
+                    holder.linearLayout2.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            String address = cheHangUserListBean.getAddress();
+                            if (EmptyUtils.isNotEmpty(address)) {
+                                ToastUtils.showShort(address);
+                            } else {
+                                ToastUtils.showShort("该车行暂时没有联系位置");
                             }
                         }
                     });
                 }
-
-                holder.linearLayout1.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ToastUtils.showShort("拨打电话");
-                    }
-                });
-                holder.linearLayout2.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ToastUtils.showShort("查看位置");
-                    }
-                });
             }
         } else if (dataType == CHE_HANG_LIST_ITEM_DATA_TYPE) {
             ArrayList<CheHangUserListBean.CarListBeanX.CarListBean> carListBeanArrayList = (ArrayList<CheHangUserListBean.CarListBeanX.CarListBean>) mList;
@@ -531,14 +563,17 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
             if (EmptyUtils.isNotEmpty(carListBeanArrayList)) {
                 CheHangUserListBean.CarListBeanX.CarListBean carListBean = carListBeanArrayList.get(position);
 
-                if (EmptyUtils.isNotEmpty(carListBean.getCar_info().getFiles())) {
-                    Glide.with(mContext)
-                            .load(carListBean.getCar_info().getFiles().get(0).getFile_url())
-                            .placeholder(R.drawable.default_bg_ratio_1)
-                            .bitmapTransform(new RoundedCornersTransformation(mContext, SizeUtils.dp2px(8), 0, RoundedCornersTransformation.CornerType.ALL))
-                            .into(holder.iv_item1);
+                if (EmptyUtils.isNotEmpty(carListBean)) {
+                    if (EmptyUtils.isNotEmpty(carListBean.getCar_info().getFile_img())) {
+                        Glide.with(mContext)
+                                .load(carListBean.getCar_info().getFile_img())
+                                .placeholder(R.drawable.default_bg_ratio_1)
+                                .error(R.drawable.default_bg_ratio_1)
+                                .bitmapTransform(new RoundedCornersTransformation(mContext, SizeUtils.dp2px(8), 0, RoundedCornersTransformation.CornerType.ALL))
+                                .into(holder.iv_item1);
+                    }
+                    holder.tv_item1.setText(String.valueOf("成交价：" + carListBean.getCar_info().getPrice() + "万"));
                 }
-                holder.tv_item1.setText(String.valueOf("成交价：" + carListBean.getCar_info().getPrice() + "万"));
             }
         } else if (dataType == CAR_LIST_FOR_CAR_CENTER) {
             ArrayList<CarInfoBean> carInfoBeanArrayList = (ArrayList<CarInfoBean>) mList;
@@ -551,15 +586,11 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                             .load(carInfoBean.getFiles_img())
                             .placeholder(R.drawable.default_bg_ratio_1)
                             .error(R.drawable.default_bg_ratio_1)
-                            .bitmapTransform(new RoundedCornersTransformation(mContext, SizeUtils.dp2px(8), 0, RoundedCornersTransformation.CornerType.ALL))
+                            .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
                             .into(holder.iv_item1);
-                    holder.tv_item1.setText(carInfoBean.getCar_name());
-                    //                    if (carInfoBean.getCar_type() == 0) {
-                    holder.tv_item2.setText(mContext.getResources().getString(R.string.car_sales_volume, String.valueOf(carInfoBean.getSales_volume())));
-                    //                    } else {
-                    //                        holder.tv_item2.setText(mContext.getResources().getString(R.string.time_wan_kilo, carInfoBean.getBoard_time(), String.valueOf(carInfoBean.getMileage())));
-                    //                    }
-                    holder.tv_item3.setText(mContext.getResources().getString(R.string._wan, String.valueOf(carInfoBean.getPrice())));
+                    holder.tv_item1.setText(carInfoBean.getBrand_info().getBrand_name() + " " + carInfoBean.getSeries_info().getSeries_name() + " " + carInfoBean.getModel_info().getModel_name());
+                    holder.tv_item2.setText(carInfoBean.getModel_info().getModel_year() + "年/排量" + carInfoBean.getModel_detail().getEngine_ExhaustForFloat());
+                    holder.tv_item3.setText(mContext.getString(R.string._wan, String.format(Locale.CHINA, "%.2f", carInfoBean.getPrice())));
                 }
             }
         } else if (dataType == USER_SEARCH_DATA_TYPE) {
@@ -983,20 +1014,24 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                 }
             }
         } else if (dataType == SELLING_CAR_DATA_TYPE) {
-            ArrayList<CarInfoBean> carInfoBeanArrayList = (ArrayList<CarInfoBean>) mList;
+            ArrayList<SellingAndSoldCarListBean> sellingAndSoldCarListBeanArrayList = (ArrayList<SellingAndSoldCarListBean>) mList;
 
-            if (EmptyUtils.isNotEmpty(carInfoBeanArrayList)) {
-                CarInfoBean carInfoBean = carInfoBeanArrayList.get(position);
+            if (EmptyUtils.isNotEmpty(sellingAndSoldCarListBeanArrayList)) {
+                SellingAndSoldCarListBean sellingAndSoldCarListBean = sellingAndSoldCarListBeanArrayList.get(position);
 
-                if (EmptyUtils.isNotEmpty(carInfoBean)) {
-                    Glide.with(mContext)
-                            .load(carInfoBean.getFiles_img())
-                            .placeholder(R.drawable.default_bg_ratio_1)
-                            .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
-                            .into(holder.iv_item1);
-                    holder.tv_item1.setText(carInfoBean.getBrand_info().getBrand_name() + " " + carInfoBean.getSeries_info().getSeries_name() + " " + carInfoBean.getModel_info().getModel_name());
-                    holder.tv_item3.setText(carInfoBean.getModel_info().getModel_year() + "年/排量" + carInfoBean.getModel_detail().getEngine_ExhaustForFloat());
-                    holder.tv_item2.setText(mContext.getString(R.string._wan, String.format(Locale.CHINA, "%.2f", carInfoBean.getPrice())));
+                if (EmptyUtils.isNotEmpty(sellingAndSoldCarListBean)) {
+                    SellingAndSoldCarListBean.CarInfoBean carInfoBean = sellingAndSoldCarListBean.getCar_info();
+                    if (EmptyUtils.isNotEmpty(carInfoBean)) {
+                        Glide.with(mContext)
+                                .load(carInfoBean.getFiles().get(0).getFile_url())
+                                .placeholder(R.drawable.default_bg_ratio_1)
+                                .error(R.drawable.default_bg_ratio_1)
+                                .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
+                                .into(holder.iv_item1);
+                        holder.tv_item1.setText(carInfoBean.getCar_name());
+                        holder.tv_item2.setText(mContext.getResources().getString(R.string._wan, String.valueOf(carInfoBean.getPrice())));
+                        holder.tv_item3.setText(carInfoBean.getModel_info().getModel_year() + "/" + carInfoBean.getMileage() + "万公里");
+                    }
                 }
             }
         } else if (dataType == THEME_USER_DATA_TYPE) {
@@ -1009,6 +1044,7 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                     Glide.with(mContext)
                             .load(themeUserBean.getAvatar())
                             .placeholder(R.drawable.user_photo)
+                            .error(R.drawable.user_photo)
                             .into(holder.iv_item1);
                 }
             }
@@ -1221,18 +1257,130 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                         holder.iv_item6.setVisibility(View.GONE);
                     }
 
-                    ArrayList<FeedBean.PostFilesBeanX> postFilesBeanXArrayList = (ArrayList<FeedBean.PostFilesBeanX>) feedBean.getPost_files();
+                    final ArrayList<FeedBean.PostFilesBeanX> postFilesBeanXArrayList = (ArrayList<FeedBean.PostFilesBeanX>) feedBean.getPost_files();
                     if (EmptyUtils.isNotEmpty(postFilesBeanXArrayList) && postFilesBeanXArrayList.size() != 0) {
                         int size = postFilesBeanXArrayList.size();
                         if (size == 1) {
-                            holder.iv_item7.setVisibility(View.VISIBLE);
+                            holder.linearLayout1.setVisibility(View.VISIBLE);
+                            holder.linearLayout2.setVisibility(View.GONE);
+                            holder.linearLayout3.setVisibility(View.GONE);
                             holder.recyclerView.setVisibility(View.GONE);
                             Glide.with(mContext)
                                     .load(postFilesBeanXArrayList.get(0).getFile_url())
                                     .placeholder(R.drawable.default_bg_ratio_1)
                                     .error(R.drawable.default_bg_ratio_1)
+                                    .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
                                     .into(holder.iv_item7);
-                        }else {
+                            holder.iv_item7.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    ArrayList<String> stringImageUrl = new ArrayList<>();
+                                    stringImageUrl.add(postFilesBeanXArrayList.get(0).getFile_url());
+                                    DataManager.getInstance().setData1(stringImageUrl);
+                                    ((BaseActivity) mContext).gotoPager(ShowAllImageFragment.class, null);
+                                }
+                            });
+                        } else if (size == 2) {
+                            holder.linearLayout1.setVisibility(View.GONE);
+                            holder.linearLayout2.setVisibility(View.VISIBLE);
+                            holder.linearLayout3.setVisibility(View.GONE);
+                            holder.recyclerView.setVisibility(View.GONE);
+
+                            Glide.with(mContext)
+                                    .load(postFilesBeanXArrayList.get(0).getFile_url())
+                                    .placeholder(R.drawable.default_bg_ratio_1)
+                                    .error(R.drawable.default_bg_ratio_1)
+                                    .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
+                                    .into(holder.iv_item8);
+                            Glide.with(mContext)
+                                    .load(postFilesBeanXArrayList.get(1).getFile_url())
+                                    .placeholder(R.drawable.default_bg_ratio_1)
+                                    .error(R.drawable.default_bg_ratio_1)
+                                    .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
+                                    .into(holder.iv_item9);
+                            final ArrayList<String> stringImageUrl = new ArrayList<>();
+                            stringImageUrl.add(postFilesBeanXArrayList.get(0).getFile_url());
+                            stringImageUrl.add(postFilesBeanXArrayList.get(1).getFile_url());
+                            holder.iv_item8.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    DataManager.getInstance().setData1(stringImageUrl);
+                                    ((BaseActivity) mContext).gotoPager(ShowAllImageFragment.class, null);
+                                }
+                            });
+                            holder.iv_item9.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    DataManager.getInstance().setData1(stringImageUrl);
+                                    ((BaseActivity) mContext).gotoPager(ShowAllImageFragment.class, null);
+                                }
+                            });
+                        } else if (size == 4) {
+                            holder.linearLayout1.setVisibility(View.GONE);
+                            holder.linearLayout2.setVisibility(View.GONE);
+                            holder.linearLayout3.setVisibility(View.VISIBLE);
+                            holder.recyclerView.setVisibility(View.GONE);
+                            Glide.with(mContext)
+                                    .load(postFilesBeanXArrayList.get(0).getFile_url())
+                                    .placeholder(R.drawable.default_bg_ratio_1)
+                                    .error(R.drawable.default_bg_ratio_1)
+                                    .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
+                                    .into(holder.iv_item10);
+                            Glide.with(mContext)
+                                    .load(postFilesBeanXArrayList.get(1).getFile_url())
+                                    .placeholder(R.drawable.default_bg_ratio_1)
+                                    .error(R.drawable.default_bg_ratio_1)
+                                    .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
+                                    .into(holder.iv_item11);
+                            Glide.with(mContext)
+                                    .load(postFilesBeanXArrayList.get(2).getFile_url())
+                                    .placeholder(R.drawable.default_bg_ratio_1)
+                                    .error(R.drawable.default_bg_ratio_1)
+                                    .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
+                                    .into(holder.iv_item12);
+                            Glide.with(mContext)
+                                    .load(postFilesBeanXArrayList.get(3).getFile_url())
+                                    .placeholder(R.drawable.default_bg_ratio_1)
+                                    .error(R.drawable.default_bg_ratio_1)
+                                    .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
+                                    .into(holder.iv_item13);
+                            final ArrayList<String> stringImageUrl = new ArrayList<>();
+                            stringImageUrl.add(postFilesBeanXArrayList.get(0).getFile_url());
+                            stringImageUrl.add(postFilesBeanXArrayList.get(1).getFile_url());
+                            stringImageUrl.add(postFilesBeanXArrayList.get(2).getFile_url());
+                            stringImageUrl.add(postFilesBeanXArrayList.get(3).getFile_url());
+                            holder.iv_item10.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    DataManager.getInstance().setData1(stringImageUrl);
+                                    ((BaseActivity) mContext).gotoPager(ShowAllImageFragment.class, null);
+                                }
+                            });
+                            holder.iv_item11.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    DataManager.getInstance().setData1(stringImageUrl);
+                                    ((BaseActivity) mContext).gotoPager(ShowAllImageFragment.class, null);
+                                }
+                            });
+                            holder.iv_item12.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    DataManager.getInstance().setData1(stringImageUrl);
+                                    ((BaseActivity) mContext).gotoPager(ShowAllImageFragment.class, null);
+                                }
+                            });
+                            holder.iv_item13.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    DataManager.getInstance().setData1(stringImageUrl);
+                                    ((BaseActivity) mContext).gotoPager(ShowAllImageFragment.class, null);
+                                }
+                            });
+                        } else {
+                            holder.linearLayout1.setVisibility(View.GONE);
+                            holder.linearLayout2.setVisibility(View.GONE);
+                            holder.linearLayout3.setVisibility(View.GONE);
                             holder.recyclerView.setVisibility(View.VISIBLE);
                             BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, postFilesBeanXArrayList, MY_STATE_INNER_DATA_TYPE);
                             holder.recyclerView.setAdapter(baseRecyclerViewAdapter);
@@ -1372,19 +1520,21 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                     holder.tv_item6.setText(String.valueOf(feedBean.getLike_num()));
 
                     String post_content = feedBean.getPost_content();
+                    SpannableString spannableString = new SpannableString(post_content);
                     if (EmptyUtils.isNotEmpty(post_content)) {
+                        int last_index = post_content.lastIndexOf("#");
+                        spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#3a3a3a")), (last_index + 1), spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        holder.tv_item7.setText(spannableString);
                         if (post_content.contains("#")) {
-                            int start_index = post_content.indexOf("#");
-                            int last_index = post_content.lastIndexOf("#");
-
-                            holder.tv_item7.setText(post_content.substring(start_index, (last_index + 1)));
-                            holder.tv_item8.setText(post_content.substring((last_index + 1)));
+                            //                            int start_index = post_content.indexOf("#");
+                            //                            holder.tv_item7.setText(post_content.substring(start_index, (last_index + 1)));
+                            //                            holder.tv_item8.setText(post_content.substring((last_index + 1)));
                         } else {
-                            holder.tv_item8.setText(post_content);
+                            //                            holder.tv_item8.setText(post_content);
                         }
                     } else {
                         holder.tv_item7.setVisibility(View.GONE);
-                        holder.tv_item8.setVisibility(View.GONE);
+                        //                        holder.tv_item8.setVisibility(View.GONE);
                     }
                 }
             }
@@ -1646,6 +1796,29 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
         }
     }
 
+    private void showCallPhoneDialog(final String contact_phone) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setTitle("联系车行");
+        builder.setMessage(contact_phone);
+        builder.setPositiveButton(mContext.getString(R.string.call_phone), new DialogInterface.OnClickListener() { //设置确定按钮
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_CALL);
+                intent.setData(Uri.parse("tel:" + contact_phone));
+                mContext.startActivity(intent);
+            }
+        });
+        builder.setNegativeButton(mContext.getString(R.string.cancel), new DialogInterface.OnClickListener() { //设置取消按钮
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
+    }
+
     private void resetFollowView(ViewHolder holder, int is_friend) {
         switch (is_friend) {
             case 1:
@@ -1766,6 +1939,10 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
         private ImageView iv_item8;
         private ImageView iv_item9;
         private ImageView iv_item10;
+        private ImageView iv_item11;
+        private ImageView iv_item12;
+        private ImageView iv_item13;
+        private ImageView iv_item14;
 
         private TextView tv_item1;
         private TextView tv_item2;
@@ -1780,6 +1957,7 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
 
         private LinearLayout linearLayout1;
         private LinearLayout linearLayout2;
+        private LinearLayout linearLayout3;
 
         private RelativeLayout relativeLayout;
 
@@ -2157,12 +2335,24 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
 
                 iv_item7 = (ImageView) itemView.findViewById(R.id.iv_image_1);
 
+                iv_item8 = (ImageView) itemView.findViewById(R.id.iv_image_two_1);
+                iv_item9 = (ImageView) itemView.findViewById(R.id.iv_image_two_2);
+
+                iv_item10 = (ImageView) itemView.findViewById(R.id.iv_image_four_1);
+                iv_item11 = (ImageView) itemView.findViewById(R.id.iv_image_four_2);
+                iv_item12 = (ImageView) itemView.findViewById(R.id.iv_image_four_3);
+                iv_item13 = (ImageView) itemView.findViewById(R.id.iv_image_four_4);
+
                 tv_item4 = (TextView) itemView.findViewById(R.id.tv_state_share_num);
                 tv_item5 = (TextView) itemView.findViewById(R.id.tv_state_comment_num);
                 tv_item6 = (TextView) itemView.findViewById(R.id.tv_state_like_num);
 
                 tv_item7 = (TextView) itemView.findViewById(R.id.tv_state_content1);
-                tv_item8 = (TextView) itemView.findViewById(R.id.tv_state_content2);
+                //                tv_item8 = (TextView) itemView.findViewById(R.id.tv_state_content2);
+
+                linearLayout1 = (LinearLayout) itemView.findViewById(R.id.ll_image_1);
+                linearLayout2 = (LinearLayout) itemView.findViewById(R.id.ll_image_2);
+                linearLayout3 = (LinearLayout) itemView.findViewById(R.id.ll_image_4);
 
                 recyclerView = (RecyclerView) itemView.findViewById(R.id.recyclerView);
 

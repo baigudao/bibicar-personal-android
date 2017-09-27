@@ -118,8 +118,8 @@ public class Constant {
     public static final String HOST_IMAGE_URL = "http://img.bibicar.cn/";//http://img.bibicar.cn/Fja6zKmICAz6l6QCd7-Z0pC-bjt8
 
     //URL常量
-    private final static String hostUrl = "https://api.bibicar.cn/";//正式环境
-    //    private static final String hostUrl = "https://testapi.bibicar.cn/";//测试环境
+    //    private final static String hostUrl = "https://api.bibicar.cn/";//正式环境
+    private static final String hostUrl = "https://testapi.bibicar.cn/";//测试环境
 
     private static final String registerApp = hostUrl + "app/register";//App注册
     private static final String verificationCodeUrl = hostUrl + "v3/user/sendcode";//得到验证码
@@ -171,8 +171,6 @@ public class Constant {
 
     private final static String userSearchUrl = hostUrl + "v3/user/search";//用户搜索
 
-    private final static String topicSearchUrl = hostUrl + "v3/theme/searchtheme";//话题搜索
-
     private static final String cheHangListUrl = hostUrl + "v4/publishcar/getcompanylist";//车行列表
 
     private static final String createTopicUrl = hostUrl + "v3/theme/createtheme";//创建话题
@@ -183,6 +181,7 @@ public class Constant {
     private static final String joinTopicUrl = hostUrl + "v3/theme/followtheme";//加入话题
     private static final String topicMemberUrl = hostUrl + "v3/theme/themeofuser";//话题成员
     private static final String allTopicUrl = hostUrl + "v3/theme/alltheme";//全部话题
+    private final static String topicSearchUrl = hostUrl + "v3/theme/searchtheme";//话题搜索
 
     private static final String balanceUrl = hostUrl + "v3/UserCarPact/getusermoney";//获取余额
     private static final String takeCashUrl = hostUrl + "v3/UserCarPact/sellerrefund";//卖家提现

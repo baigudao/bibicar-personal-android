@@ -7,14 +7,21 @@
 
     <include layout="@layout/title_bar"/>
 
-    <com.wiserz.pbibi.view.MyScrollView
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/smartRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <include layout="@layout/video_detail_inner"/>
+        <com.wiserz.pbibi.view.MyScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    </com.wiserz.pbibi.view.MyScrollView>
+            <include layout="@layout/video_detail_inner"/>
+
+        </com.wiserz.pbibi.view.MyScrollView>
+
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
     <include layout="@layout/layout_bottom_input"/>
 

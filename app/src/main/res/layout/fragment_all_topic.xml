@@ -27,23 +27,34 @@
                 android:scaleType="fitXY"
                 android:src="@drawable/v1_search3x"/>
 
-            <TextView
-                android:layout_width="wrap_content"
+            <EditText
+                android:id="@+id/et_input_keyword"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
                 android:layout_marginLeft="8dp"
-                android:text="搜索话题"
-                android:textColor="@color/third_text_color"
+                android:background="@null"
+                android:hint="搜索话题"
+                android:imeOptions="actionSearch"
+                android:maxLength="8"
+                android:singleLine="true"
+                android:textColorHint="@color/third_text_color"
                 android:textSize="14sp"/>
 
         </LinearLayout>
 
     </RelativeLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/smartRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="15dp"/>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
 </LinearLayout>

@@ -1,15 +1,22 @@
 package com.wiserz.pbibi.fragment;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.wiserz.pbibi.BaseApplication;
 import com.wiserz.pbibi.activity.BaseActivity;
+
+import acplibrary.ACProgressBaseDialog;
+import acplibrary.ACProgressConstant;
+import acplibrary.ACProgressFlower;
 
 /**
  * Created by jackie on 2017/8/9 17:22.
@@ -18,6 +25,7 @@ import com.wiserz.pbibi.activity.BaseActivity;
  */
 public abstract class BaseFragment extends Fragment implements View.OnClickListener {
 
+    private ACProgressBaseDialog mDlgLoading;
     /**
      * 上下文
      */
@@ -118,5 +126,56 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
             BaseApplication.setCurFragment(this);
         }
         super.onResume();
+    }
+
+    /**
+     * 显示Loading 页面， listener可为null
+     *
+     * @param strTitle
+     * @param listener
+     * @param isCancelByUser:用户是否可点击屏幕，或者Back键关掉对话框
+     */
+    public void showLoadingDialog(String strTitle, final DialogInterface.OnCancelListener listener, boolean isCancelByUser) {
+        if (mDlgLoading == null) {
+            mDlgLoading = new ACProgressFlower.Builder(getActivity())
+                    .direction(ACProgressConstant.DIRECT_CLOCKWISE)
+                    .themeColor(Color.WHITE)  // loading花瓣颜色
+                    .text(strTitle)
+                    .fadeColor(Color.DKGRAY).build(); // loading花瓣颜色
+        }
+        if (listener != null) {
+            mDlgLoading.setOnCancelListener(listener);
+        }
+        if (isCancelByUser) {
+            mDlgLoading.setCanceledOnTouchOutside(true);
+            mDlgLoading.setOnKeyListener(new DialogInterface.OnKeyListener() {
+                @Override
+                public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                    return false;
+                }
+            });
+        } else {
+            mDlgLoading.setCanceledOnTouchOutside(false);
+            //防止用户点击Back键，关掉此对话框
+            mDlgLoading.setOnKeyListener(new DialogInterface.OnKeyListener() {
+                @Override
+                public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                    if (keyCode == KeyEvent.KEYCODE_BACK)
+                        return true;
+                    return false;
+                }
+            });
+        }
+        mDlgLoading.setMessage(strTitle);
+        mDlgLoading.show();
+    }
+
+    /**
+     * 关闭loading的页面
+     */
+    public void hideLoadingDialog() {
+        if (mDlgLoading != null) {
+            mDlgLoading.dismiss();
+        }
     }
 }

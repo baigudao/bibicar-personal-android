@@ -1,6 +1,8 @@
 package com.wiserz.pbibi.fragment;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.Message;
 import android.view.Gravity;
@@ -19,6 +21,7 @@ import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.wiserz.pbibi.R;
+import com.wiserz.pbibi.bean.FeedBean;
 import com.wiserz.pbibi.bean.FeedInfoDetailBean;
 import com.wiserz.pbibi.util.Constant;
 import com.wiserz.pbibi.view.SharePlatformPopupWindow;
@@ -56,6 +59,7 @@ public class StateDetailFragment extends BaseFragment {
 
     private ImageView iv3;
     private TextView tv_like_num;
+    private int user_id;
 
     @Override
     protected int getLayoutId() {
@@ -68,7 +72,7 @@ public class StateDetailFragment extends BaseFragment {
         view.findViewById(R.id.iv_back).setOnClickListener(this);
         ((TextView) view.findViewById(R.id.tv_title)).setText("动态详情");
         ImageView iv_image = (ImageView) view.findViewById(R.id.iv_image);
-        iv_image.setVisibility(View.VISIBLE);
+        iv_image.setVisibility(View.GONE);//去掉删除入口
         iv_image.setScaleType(ImageView.ScaleType.CENTER);
         ViewGroup.LayoutParams layoutParams = iv_image.getLayoutParams();
         layoutParams.width = 60;
@@ -92,7 +96,9 @@ public class StateDetailFragment extends BaseFragment {
                 goBack();
                 break;
             case R.id.iv_image:
-                ToastUtils.showShort("举报or删除");
+                if (EmptyUtils.isNotEmpty(feed_id) && EmptyUtils.isNotEmpty(user_id)) {
+                    showDialog(v, user_id, null);
+                }
                 break;
             case R.id.rl_share:
                 showSharePlatformPopWindow();
@@ -107,6 +113,95 @@ public class StateDetailFragment extends BaseFragment {
                 break;
             default:
                 break;
+        }
+    }
+
+    private void showDialog(View v, int user_id, final ArrayList<FeedBean> feedBeanArrayList) {
+        //        先判断该动态是否是自己的
+        String[] items1 = {"删除"};
+        String[] items2 = {"举报"};
+        if (SPUtils.getInstance().getInt(Constant.USER_ID) == user_id) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);  //先得到构造器
+            builder.setTitle("提示"); //设置标题
+            //builder.setMessage("是否确认退出?"); //设置内容
+            builder.setIcon(R.mipmap.ic_launcher);//设置图标，图片id即可
+            //设置列表显示，注意设置了列表显示就不要设置builder.setMessage()了，否则列表不起作用。
+            builder.setItems(items1, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    final AlertDialog.Builder mDialog = new AlertDialog.Builder(mContext);
+                    mDialog.setTitle("警告");
+                    mDialog.setMessage("是否要删除此动态?");
+                    mDialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            //                            feedBeanArrayList.remove(feedBean);
+                            //                            notifyDataSetChanged();
+                            OkHttpUtils.post()
+                                    .url(Constant.getDeleteCommentUrl())
+                                    .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
+                                    .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
+                                    .addParams(Constant.FEED_ID, String.valueOf(feed_id))
+                                    .addParams(Constant.COMMENT_ID, "")
+                                    .build()
+                                    .execute(new StringCallback() {
+                                        @Override
+                                        public void onError(Call call, Exception e, int id) {
+
+                                        }
+
+                                        @Override
+                                        public void onResponse(String response, int id) {
+                                            JSONObject jsonObject = null;
+                                            try {
+                                                jsonObject = new JSONObject(response);
+                                                int status = jsonObject.optInt("status");
+                                                JSONObject jsonObjectData = jsonObject.optJSONObject("data");
+                                                if (status == 1) {
+                                                    ToastUtils.showShort("删除成功!");
+                                                    goBack();
+                                                } else {
+                                                    String code = jsonObject.optString("code");
+                                                    String msg = jsonObjectData.optString("msg");
+                                                    ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                                }
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    });
+                        }
+                    });
+                    mDialog.setNegativeButton("取消", null);
+                    mDialog.create().show();
+                }
+            });
+            builder.create().show();
+        } else {
+            //别人发的
+            //dialog参数设置
+            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);  //先得到构造器
+            builder.setTitle("提示"); //设置标题
+            //builder.setMessage("是否确认退出?"); //设置内容
+            builder.setIcon(R.mipmap.ic_launcher);//设置图标，图片id即可
+            //设置列表显示，注意设置了列表显示就不要设置builder.setMessage()了，否则列表不起作用。
+            builder.setItems(items2, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    //--------------------------延迟一秒---------------------------------
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    //-----------------------------------------------------------
+                    ToastUtils.showLong("^_^ 我们已收到您的举报，会尽快处理！\n" +
+                            "                    感谢您的支持！");
+                }
+            });
+            builder.create().show();
         }
     }
 
@@ -265,7 +360,7 @@ public class StateDetailFragment extends BaseFragment {
                 ((TextView) getView().findViewById(R.id.tv_user_name)).setText(feedInfoDetailBean.getPost_user_info().getProfile().getNickname());
                 ((TextView) getView().findViewById(R.id.tv_user_time)).setText(TimeUtils.date2String(new Date(Long.valueOf(feedInfoDetailBean.getCreated()) * 1000), new SimpleDateFormat("yy-MM-dd HH:mm")));
 
-                int user_id = feedInfoDetailBean.getPost_user_info().getUser_id();
+                user_id = feedInfoDetailBean.getPost_user_info().getUser_id();
                 if (EmptyUtils.isNotEmpty(user_id) && user_id == SPUtils.getInstance().getInt(Constant.USER_ID)) {
                     getView().findViewById(R.id.tv_follow).setVisibility(View.GONE);
                 }

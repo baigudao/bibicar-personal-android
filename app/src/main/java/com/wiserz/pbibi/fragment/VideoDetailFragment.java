@@ -2,6 +2,7 @@ package com.wiserz.pbibi.fragment;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -22,6 +23,10 @@ import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
 import com.wiserz.pbibi.bean.ArticleCommentBean;
@@ -51,7 +56,7 @@ import okhttp3.Call;
  * QQ : 971060378
  * Used as : 视频详情的页面
  */
-public class VideoDetailFragment extends BaseFragment implements BaseRecyclerViewAdapter.OnItemClickListener {
+public class VideoDetailFragment extends BaseFragment implements BaseRecyclerViewAdapter.OnItemClickListener, OnRefreshListener, OnLoadmoreListener {
 
     private String share_title;
     private String share_txt;
@@ -70,6 +75,10 @@ public class VideoDetailFragment extends BaseFragment implements BaseRecyclerVie
     private int flag;
     private int comment_id;
     private int is_collect;
+
+    private SmartRefreshLayout smartRefreshLayout;
+    private BaseRecyclerViewAdapter baseRecyclerViewAdapter;
+    private int refresh_or_load;//0或1
 
     @Override
     protected int getLayoutId() {
@@ -92,6 +101,11 @@ public class VideoDetailFragment extends BaseFragment implements BaseRecyclerVie
         iv_share.setOnClickListener(this);
         iv_like = (ImageView) view.findViewById(R.id.iv_like);
         iv_like.setOnClickListener(this);
+
+        smartRefreshLayout = (SmartRefreshLayout) view.findViewById(R.id.smartRefreshLayout);
+        smartRefreshLayout.setOnRefreshListener(this);
+        smartRefreshLayout.setOnLoadmoreListener(this);
+        refresh_or_load = 0;
 
         mPage = 0;
     }
@@ -125,10 +139,7 @@ public class VideoDetailFragment extends BaseFragment implements BaseRecyclerVie
     @Override
     protected void initData() {
         super.initData();
-        if (EmptyUtils.isNotEmpty(feed_id)) {
-            getDataFromNet();
-            getCommentListDataFromNet();
-        }
+        getDataFromNet();
     }
 
     private void sendComment() {
@@ -217,41 +228,54 @@ public class VideoDetailFragment extends BaseFragment implements BaseRecyclerVie
     }
 
     private void getDataFromNet() {
-        OkHttpUtils.post()
-                .url(Constant.getVideoDetailUrl())
-                .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
-                .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
-                .addParams(Constant.FEED_ID, String.valueOf(feed_id))
-                .build()
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
+        if (EmptyUtils.isNotEmpty(feed_id)) {
+            OkHttpUtils.post()
+                    .url(Constant.getVideoDetailUrl())
+                    .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
+                    .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
+                    .addParams(Constant.FEED_ID, String.valueOf(feed_id))
+                    .build()
+                    .execute(new StringCallback() {
+                        @Override
+                        public void onError(Call call, Exception e, int id) {
 
-                    }
-
-                    @Override
-                    public void onResponse(String response, int id) {
-                        JSONObject jsonObject = null;
-                        try {
-                            jsonObject = new JSONObject(response);
-                            int status = jsonObject.optInt("status");
-                            JSONObject jsonObjectData = jsonObject.optJSONObject("data");
-                            if (status == 1) {
-                                share_title = jsonObjectData.optString("share_title");
-                                share_txt = jsonObjectData.optString("share_txt");
-                                share_url = jsonObjectData.optString("share_url");
-                                share_img = jsonObjectData.optString("share_img");
-                                handlerVideoDetailData(jsonObjectData);
-                            } else {
-                                String code = jsonObject.optString("code");
-                                String msg = jsonObjectData.optString("msg");
-                                ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
                         }
-                    }
-                });
+
+                        @Override
+                        public void onResponse(String response, int id) {
+                            JSONObject jsonObject = null;
+                            try {
+                                jsonObject = new JSONObject(response);
+                                int status = jsonObject.optInt("status");
+                                JSONObject jsonObjectData = jsonObject.optJSONObject("data");
+                                if (status == 1) {
+                                    switch (refresh_or_load) {
+                                        case 0:
+                                            smartRefreshLayout.finishRefresh();
+                                            share_title = jsonObjectData.optString("share_title");
+                                            share_txt = jsonObjectData.optString("share_txt");
+                                            share_url = jsonObjectData.optString("share_url");
+                                            share_img = jsonObjectData.optString("share_img");
+                                            handlerVideoDetailData(jsonObjectData);
+                                            getCommentListDataFromNet();
+                                            break;
+                                        case 1:
+                                            smartRefreshLayout.finishLoadmore();
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                } else {
+                                    String code = jsonObject.optString("code");
+                                    String msg = jsonObjectData.optString("msg");
+                                    ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+        }
     }
 
     private void handlerVideoDetailDataForComment(JSONObject jsonObjectData) {
@@ -301,14 +325,30 @@ public class VideoDetailFragment extends BaseFragment implements BaseRecyclerVie
                         getView().findViewById(R.id.iv_circle_image_post).setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                ToastUtils.showShort(String.valueOf(feedInfoBean.getPost_user_info().getProfile()));
+                                int user_id = feedInfoBean.getPost_user_info().getUser_id();
+                                if (EmptyUtils.isNotEmpty(user_id)) {
+                                    Bundle bundle = new Bundle();
+                                    bundle.putInt(Constant.USER_ID, user_id);
+                                    gotoPager(OtherHomePageFragment.class, bundle);
+                                }
                             }
                         });
                         ((TextView) getView().findViewById(R.id.tv_user_name_post)).setText(feedInfoBean.getPost_user_info().getProfile().getNickname());
                         getView().findViewById(R.id.tv_user_name_post).setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                ToastUtils.showShort(String.valueOf(feedInfoBean.getPost_user_info().getProfile()));
+                                int user_id = feedInfoBean.getPost_user_info().getUser_id();
+                                if (EmptyUtils.isNotEmpty(user_id)) {
+                                    Bundle bundle = new Bundle();
+                                    bundle.putInt(Constant.USER_ID, user_id);
+                                    gotoPager(OtherHomePageFragment.class, bundle);
+                                }
+                            }
+                        });
+                        getView().findViewById(R.id.tv_focus).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                ToastUtils.showShort("关注");
                             }
                         });
                     }
@@ -424,6 +464,28 @@ public class VideoDetailFragment extends BaseFragment implements BaseRecyclerVie
                 KeyboardUtils.showSoftInput(getActivity());
                 KeyboardUtils.clickBlankArea2HideSoftInput();
             }
+        }
+    }
+
+    @Override
+    public void onRefresh(RefreshLayout refreshlayout) {
+        if (EmptyUtils.isNotEmpty(feed_id)) {
+            mPage = 0;
+            refresh_or_load = 0;
+            getDataFromNet();
+        } else {
+            smartRefreshLayout.finishRefresh();
+        }
+    }
+
+    @Override
+    public void onLoadmore(RefreshLayout refreshlayout) {
+        if (EmptyUtils.isNotEmpty(feed_id)) {
+            ++mPage;
+            refresh_or_load = 1;
+            getDataFromNet();
+        } else {
+            smartRefreshLayout.finishLoadmore();
         }
     }
 

@@ -33,7 +33,7 @@ import com.wiserz.pbibi.bean.CheHangHomeBean;
 import com.wiserz.pbibi.bean.LampBean;
 import com.wiserz.pbibi.bean.TopLineBean;
 import com.wiserz.pbibi.bean.VideoBean;
-import com.wiserz.pbibi.fragment.AllCarFragment;
+import com.wiserz.pbibi.fragment.AllNewCarFragment;
 import com.wiserz.pbibi.fragment.ArticleDetailFragment;
 import com.wiserz.pbibi.fragment.ArticleListFragment;
 import com.wiserz.pbibi.fragment.CarCheckServiceFragment;
@@ -205,8 +205,8 @@ public class RecommendRecyclerViewAdapter extends RecyclerView.Adapter implement
             newCarViewHolder.tv_more_new_car.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ((BaseActivity) mContext).gotoPager(AllCarFragment.class, null);
-//                    ((MainActivity) mContext).setCheck((RadioButton) ((MainActivity) mContext).findViewById(R.id.rb_car_center));
+                    ((BaseActivity) mContext).gotoPager(AllNewCarFragment.class, null);
+                    //                    ((MainActivity) mContext).setCheck((RadioButton) ((MainActivity) mContext).findViewById(R.id.rb_car_center));
                 }
             });
 
@@ -328,7 +328,7 @@ public class RecommendRecyclerViewAdapter extends RecyclerView.Adapter implement
     private void showCallPhoneDialog(final String contact_phone) {
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setTitle("联系客服");
-        builder.setMessage(contact_phone);
+        builder.setMessage("0755-22233323");
         builder.setPositiveButton(mContext.getString(R.string.call_phone), new DialogInterface.OnClickListener() { //设置确定按钮
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -407,9 +407,11 @@ public class RecommendRecyclerViewAdapter extends RecyclerView.Adapter implement
             CheHangHomeBean cheHangHomeBean = (CheHangHomeBean) data;
             if (EmptyUtils.isNotEmpty(cheHangHomeBean)) {
                 int user_id = cheHangHomeBean.getUser_id();
-                Bundle bundle = new Bundle();
-                bundle.putInt(Constant.USER_ID, user_id);
-                ((BaseActivity) mContext).gotoPager(MyFragmentForCompany.class, bundle);
+                if (EmptyUtils.isNotEmpty(user_id)) {
+                    Bundle bundle = new Bundle();
+                    bundle.putInt(Constant.USER_ID, user_id);
+                    ((BaseActivity) mContext).gotoPager(MyFragmentForCompany.class, bundle);
+                }
             }
         }
     }

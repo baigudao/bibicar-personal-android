@@ -9,6 +9,7 @@ import com.blankj.utilcode.util.EmptyUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
@@ -33,7 +34,7 @@ import okhttp3.Call;
  * QQ : 971060378
  * Used as : 车行列表的页面
  */
-public class CheHangListFragment extends BaseFragment implements BaseRecyclerViewAdapter.OnItemClickListener, OnRefreshListener, OnLoadmoreListener {
+public class CheHangListFragment extends BaseFragment implements OnRefreshListener, OnLoadmoreListener {
 
     private RecyclerView recyclerView;
     private static final int CHE_HANG_LIST_DATA_TYPE = 14;
@@ -127,14 +128,10 @@ public class CheHangListFragment extends BaseFragment implements BaseRecyclerVie
     private void handlerCheHangListMoreData(JSONObject jsonObjectData) {
         if (EmptyUtils.isNotEmpty(jsonObjectData)) {
             JSONArray jsonArray = jsonObjectData.optJSONObject("list").optJSONArray("user_list");
-            ArrayList<CheHangUserListBean> cheHangUserListBeanArrayList = new ArrayList<>();
             Gson gson = new Gson();
             if (EmptyUtils.isNotEmpty(jsonArray)) {
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject jsonObjectForUserList = jsonArray.optJSONObject(i);
-                    CheHangUserListBean cheHangUserListBean = gson.fromJson(jsonObjectForUserList.toString(), CheHangUserListBean.class);
-                    cheHangUserListBeanArrayList.add(cheHangUserListBean);
-                }
+                ArrayList<CheHangUserListBean> cheHangUserListBeanArrayList = gson.fromJson(jsonArray.toString(), new TypeToken<ArrayList<CheHangUserListBean>>() {
+                }.getType());
                 if (EmptyUtils.isNotEmpty(cheHangUserListBeanArrayList) && cheHangUserListBeanArrayList.size() != 0) {
                     baseRecyclerViewAdapter.addDatas(cheHangUserListBeanArrayList);
                 }
@@ -149,29 +146,16 @@ public class CheHangListFragment extends BaseFragment implements BaseRecyclerVie
     private void handlerCheHangListData(JSONObject jsonObject) {
         if (EmptyUtils.isNotEmpty(jsonObject)) {
             JSONArray jsonArray = jsonObject.optJSONObject("list").optJSONArray("user_list");
-            ArrayList<CheHangUserListBean> cheHangUserListBeanArrayList = new ArrayList<>();
             Gson gson = new Gson();
             if (EmptyUtils.isNotEmpty(jsonArray)) {
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject jsonObjectForUserList = jsonArray.optJSONObject(i);
-                    CheHangUserListBean cheHangUserListBean = gson.fromJson(jsonObjectForUserList.toString(), CheHangUserListBean.class);
-                    cheHangUserListBeanArrayList.add(cheHangUserListBean);
-                }
+                ArrayList<CheHangUserListBean> cheHangUserListBeanArrayList = gson.fromJson(jsonArray.toString(), new TypeToken<ArrayList<CheHangUserListBean>>() {
+                }.getType());
                 if (EmptyUtils.isNotEmpty(cheHangUserListBeanArrayList) && cheHangUserListBeanArrayList.size() != 0) {
                     baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, cheHangUserListBeanArrayList, CHE_HANG_LIST_DATA_TYPE);
                     recyclerView.setAdapter(baseRecyclerViewAdapter);
                     recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
-                    baseRecyclerViewAdapter.setOnItemClickListener(this);
                 }
             }
-        }
-    }
-
-    @Override
-    public void onItemClick(Object data, int position) {
-        if (data.getClass().getSimpleName().equals("CheHangUserListBean")) {
-            CheHangUserListBean cheHangUserListBean = (CheHangUserListBean) data;
-            ToastUtils.showShort(cheHangUserListBean.getNickname());
         }
     }
 

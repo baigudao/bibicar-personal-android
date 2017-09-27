@@ -45,8 +45,6 @@ public class CommunityFragment extends BaseFragment {
         switch (view.getId()) {
             case R.id.tv_create_topic:
                 gotoPager(CreateTopicFragment.class, null);
-
-                //                gotoPager(StateDetailFragment.class, null);//动态详情
                 break;
             default:
                 break;
@@ -102,7 +100,6 @@ public class CommunityFragment extends BaseFragment {
     }
 
     private BaseFragment getFragment() {
-        BaseFragment fragment = mBaseFragment.get(position);
-        return fragment;
+        return mBaseFragment.get(position);
     }
 }
