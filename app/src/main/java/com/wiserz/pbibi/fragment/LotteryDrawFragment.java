@@ -59,15 +59,13 @@ public class LotteryDrawFragment extends BaseFragment {
             WebSettings webSettings = tencent_web_view.getSettings();
 
             webSettings.setJavaScriptEnabled(true);
-//            webSettings.setSupportZoom(true);
+            //            webSettings.setSupportZoom(true);
 
             // 设置不可缩放
             webSettings.setSupportZoom(false);
-
             webSettings.setUseWideViewPort(true);
             webSettings.setLoadWithOverviewMode(true);
             webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
-
 
             webSettings.setDomStorageEnabled(true);
             webSettings.setAppCacheMaxSize(1024 * 1024 * 8);
