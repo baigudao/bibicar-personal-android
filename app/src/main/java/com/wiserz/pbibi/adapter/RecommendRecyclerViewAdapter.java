@@ -138,12 +138,16 @@ public class RecommendRecyclerViewAdapter extends RecyclerView.Adapter implement
                             BannerBean bannerBean = bannerBeanArrayList.get(position);
                             if (EmptyUtils.isNotEmpty(bannerBean)) {
                                 String type = bannerBean.getType();
-                                if (type.equals("0")) {//VR看车
+                                if (type.equals("0")) { //VR看车
                                     String appUrl = bannerBean.getAppUrl();
                                     if (appUrl.equals("http://share.bibicar.cn/views/center/raffle.html")) {
                                         Bundle bundle = new Bundle();
                                         bundle.putString(Constant.APP_URL, appUrl);
                                         ((BaseActivity) mContext).gotoPager(LotteryDrawFragment.class, bundle);//抽奖的页面
+                                    } else if (appUrl.equals("http://192.168.1.182:4000/views/center/raffle.html")) {
+                                        Bundle bundle = new Bundle();
+                                        bundle.putString(Constant.APP_URL, appUrl);
+                                        ((BaseActivity) mContext).gotoPager(LotteryDrawFragment.class, bundle);//抽奖的页面，测试环境下
                                     } else {
                                         DataManager.getInstance().setData1(bannerBean);
                                         ((BaseActivity) mContext).gotoPager(VRWatchCarFragment.class, null);

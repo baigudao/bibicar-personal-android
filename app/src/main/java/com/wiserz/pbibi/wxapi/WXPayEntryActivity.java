@@ -70,22 +70,26 @@ public class WXPayEntryActivity extends BaseActivity implements IWXAPIEventHandl
     @Override
     public void onResp(BaseResp resp) {
         int result = 0;
-        Toast.makeText(this, "baseresp.getType = " + resp.getType(), Toast.LENGTH_SHORT).show();
         switch (resp.errCode) {
             case BaseResp.ErrCode.ERR_OK:
                 result = R.string.errcode_success;
+                goBack();
                 break;
             case BaseResp.ErrCode.ERR_USER_CANCEL:
                 result = R.string.errcode_cancel;
+                goBack();
                 break;
             case BaseResp.ErrCode.ERR_AUTH_DENIED:
                 result = R.string.errcode_deny;
+                goBack();
                 break;
             case BaseResp.ErrCode.ERR_UNSUPPORT:
                 result = R.string.errcode_unsupported;
+                goBack();
                 break;
             default:
                 result = R.string.errcode_unknown;
+                goBack();
                 break;
         }
         Toast.makeText(this, result, Toast.LENGTH_LONG).show();

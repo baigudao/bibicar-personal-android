@@ -26,9 +26,6 @@ import acplibrary.ACProgressFlower;
 public abstract class BaseFragment extends Fragment implements View.OnClickListener {
 
     private ACProgressBaseDialog mDlgLoading;
-    /**
-     * 上下文
-     */
     protected Context mContext;
 
     /**

@@ -1,11 +1,14 @@
 package com.wiserz.pbibi.fragment;
 
+import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.EmptyUtils;
@@ -27,6 +30,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.rong.imkit.RongIM;
+import io.rong.imlib.model.Conversation;
+import io.rong.imlib.model.UserInfo;
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import okhttp3.Call;
 
@@ -50,6 +56,21 @@ public class MyFragmentForCompany extends BaseFragment {
     private int friend_num;
     private int user_id;//传过来的user_id
 
+    private View view_bottom_line;
+    private LinearLayout ll_follow_and_message;
+    private RelativeLayout rl_follow;
+    private RelativeLayout rl_message;
+    private int is_friend;
+    private LoginBean.UserInfoBean myInfos;
+
+    public int getIs_friend() {
+        return is_friend;
+    }
+
+    public void setIs_friend(int is_friend) {
+        this.is_friend = is_friend;
+    }
+
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_my_company;
@@ -61,6 +82,11 @@ public class MyFragmentForCompany extends BaseFragment {
         ivSettings = (ImageView) view.findViewById(R.id.ivSettings);
         ivSettings.setOnClickListener(this);
         view.findViewById(R.id.ivMore).setOnClickListener(this);
+
+        view_bottom_line = view.findViewById(R.id.view_bottom_line);
+        ll_follow_and_message = (LinearLayout) view.findViewById(R.id.ll_follow_and_message);
+        rl_follow = (RelativeLayout) view.findViewById(R.id.rl_follow);
+        rl_message = (RelativeLayout) view.findViewById(R.id.rl_message);
 
         RadioGroup rg_main = (RadioGroup) view.findViewById(R.id.rg_main);
 
@@ -90,8 +116,68 @@ public class MyFragmentForCompany extends BaseFragment {
             case R.id.ivMore:
                 ToastUtils.showShort("分享");
                 break;
+            case R.id.rl_message:
+                if (myInfos == null) {
+                    return;
+                }
+                RongIM.getInstance().startConversation(getActivity(), Conversation.ConversationType.PRIVATE,
+                        String.valueOf(myInfos.getUser_id()), myInfos.getProfile().getNickname());
+                RongIM.setUserInfoProvider(new RongIM.UserInfoProvider() {
+                    @Override
+                    public UserInfo getUserInfo(String userId) {
+                        return new UserInfo(String.valueOf(myInfos.getUser_id()), myInfos.getProfile().getNickname(),
+                                Uri.parse(myInfos.getProfile().getAvatar())); //根据 userId 去你的用户系统里查询对应的用户信息返回给融云 SDK。
+                    }
+
+                }, true);
+                break;
+            case R.id.rl_follow:
+                if (EmptyUtils.isNotEmpty(getIs_friend())) {
+                    followCode(getIs_friend());
+                }
+                break;
             default:
                 break;
+        }
+    }
+
+    private void followCode(final int is_friend) {
+        if (is_friend == 2) {
+            //没关注，去关注
+            OkHttpUtils.post()
+                    .url(Constant.getCreateFollowUrl())
+                    .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
+                    .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
+                    .addParams(Constant.USER_ID, String.valueOf(user_id))
+                    .build()
+                    .execute(new StringCallback() {
+                        @Override
+                        public void onError(Call call, Exception e, int id) {
+
+                        }
+
+                        @Override
+                        public void onResponse(String response, int id) {
+                            JSONObject jsonObject = null;
+                            try {
+                                jsonObject = new JSONObject(response);
+                                int status = jsonObject.optInt("status");
+                                JSONObject jsonObjectData = jsonObject.optJSONObject("data");
+                                if (status == 1) {
+                                    setIs_friend(1);
+                                    ToastUtils.showShort("关注成功");
+                                } else {
+                                    String code = jsonObject.optString("code");
+                                    String msg = jsonObjectData.optString("msg");
+                                    ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+        } else {
+            ToastUtils.showShort("你已经关注过了");
         }
     }
 
@@ -178,18 +264,26 @@ public class MyFragmentForCompany extends BaseFragment {
      * 不同的用户显示不同的界面
      */
     protected void showPostNowViewByUserId() {
-        if (mUserId != user_id && getView() != null) {
-            //他人
-            ivSettings.setBackgroundResource(R.drawable.bibi_back_white);
-            ViewGroup.LayoutParams layoutParams = ivSettings.getLayoutParams();
-            layoutParams.width = SizeUtils.dp2px(25);
-            layoutParams.height = SizeUtils.dp2px(20);
-            ivSettings.setLayoutParams(layoutParams);
-            flag = 1;
-        } else {
-            //自己
-            ivSettings.setBackgroundResource(R.drawable.self_set);
-            flag = 0;
+        if (getView() != null) {
+            if (mUserId != user_id) {
+                //他人
+                ivSettings.setBackgroundResource(R.drawable.bibi_back_white);
+                ViewGroup.LayoutParams layoutParams = ivSettings.getLayoutParams();
+                layoutParams.width = SizeUtils.dp2px(25);
+                layoutParams.height = SizeUtils.dp2px(20);
+                ivSettings.setLayoutParams(layoutParams);
+                view_bottom_line.setVisibility(View.VISIBLE);
+                ll_follow_and_message.setVisibility(View.VISIBLE);
+                rl_follow.setOnClickListener(this);
+                rl_message.setOnClickListener(this);
+                flag = 1;
+            } else {
+                //自己
+                ivSettings.setBackgroundResource(R.drawable.self_set);
+                view_bottom_line.setVisibility(View.GONE);
+                ll_follow_and_message.setVisibility(View.GONE);
+                flag = 0;
+            }
         }
     }
 
@@ -221,6 +315,8 @@ public class MyFragmentForCompany extends BaseFragment {
                             if (status == 1) {
                                 fans_num = jsonObjectData.optInt("fans_num");
                                 friend_num = jsonObjectData.optInt("friend_num");
+                                int is_friends = jsonObjectData.optInt("is_friend");
+                                setIs_friend(is_friends);
                                 JSONObject jsonObjectForUserInfo = jsonObjectData.optJSONObject("user_info");
                                 Gson gson = new Gson();
                                 LoginBean.UserInfoBean userInfoBean = gson.fromJson(jsonObjectForUserInfo.toString(), LoginBean.UserInfoBean.class);
@@ -243,6 +339,7 @@ public class MyFragmentForCompany extends BaseFragment {
         if (getView() == null) {
             return;
         }
+        myInfos = myInfo;
         if (EmptyUtils.isNotEmpty(myInfo)) {
             ((TextView) getView().findViewById(R.id.tv_nickName)).setText(myInfo.getProfile().getNickname());
 

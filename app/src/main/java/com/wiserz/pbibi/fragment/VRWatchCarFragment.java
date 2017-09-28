@@ -5,13 +5,14 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.EmptyUtils;
-import com.blankj.utilcode.util.LogUtils;
+import com.tencent.smtt.sdk.WebChromeClient;
 import com.tencent.smtt.sdk.WebSettings;
 import com.tencent.smtt.sdk.WebView;
 import com.tencent.smtt.sdk.WebViewClient;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.bean.BannerBean;
 import com.wiserz.pbibi.util.DataManager;
+import com.wiserz.pbibi.view.NumberProgressBar;
 
 /**
  * Created by jackie on 2017/9/21 16:37.
@@ -19,6 +20,8 @@ import com.wiserz.pbibi.util.DataManager;
  * Used as : 备用
  */
 public class VRWatchCarFragment extends BaseFragment {
+
+    private NumberProgressBar numberProgressBar;
 
     private WebView webView;
 
@@ -32,6 +35,8 @@ public class VRWatchCarFragment extends BaseFragment {
         webView = (WebView) view.findViewById(R.id.tencent_web_view);
         view.findViewById(R.id.iv_back).setOnClickListener(this);
         ((TextView) view.findViewById(R.id.tv_title)).setText("VR看车");
+
+        numberProgressBar = (NumberProgressBar) view.findViewById(R.id.numberProgressBar);
     }
 
     @Override
@@ -74,7 +79,6 @@ public class VRWatchCarFragment extends BaseFragment {
                             webView.getSettings().setPluginState(WebSettings.PluginState.ON);
                         }
                     }
-                    webView.loadUrl(vrUrl);
 
                     webView.setWebViewClient(new WebViewClient() {
                         @Override
@@ -83,20 +87,22 @@ public class VRWatchCarFragment extends BaseFragment {
                             return true;
                         }
                     });
+
+                    webView.loadUrl(vrUrl);
+
+                    webView.setWebChromeClient(new WebChromeClient() {
+                        @Override
+                        public void onProgressChanged(WebView webView, int i) {
+                            super.onProgressChanged(webView, i);
+                            if (i == 100) {
+                                numberProgressBar.setVisibility(View.GONE);
+                                return;
+                            }
+                            numberProgressBar.incrementProgressBy(i);
+                        }
+                    });
                 }
             }
         }
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        LogUtils.e("onStop");
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        LogUtils.e("onDestroy");
     }
 }

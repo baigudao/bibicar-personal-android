@@ -14,6 +14,7 @@ import android.widget.ImageView;
 
 import com.blankj.utilcode.util.BarUtils;
 import com.blankj.utilcode.util.EmptyUtils;
+import com.blankj.utilcode.util.NetworkUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ScreenUtils;
 import com.blankj.utilcode.util.ToastUtils;
@@ -60,6 +61,9 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void initView() {
+        if (!NetworkUtils.isConnected()) {
+            ToastUtils.showShort("当前无网络");
+        }
         BarUtils.hideStatusBar(SplashActivity.this);
         setContentView(R.layout.activity_splash);
         ImageView iv_advertisement = (ImageView) findViewById(R.id.iv_advertisement);

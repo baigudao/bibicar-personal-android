@@ -23,7 +23,6 @@ import com.wiserz.pbibi.fragment.RecommendFragment;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private List<BaseFragment> mBaseFragment;

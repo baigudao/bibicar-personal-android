@@ -198,64 +198,71 @@ public class PostPhotoFragment extends BaseFragment {
         if (requestCode == REQUEST_CODE_CHOOSE && resultCode == RESULT_OK) {//车辆照片类型 (1:外观 2:中控内饰 3:发动机及结构 4:更多细节)
             mSelected = Matisse.obtainResult(data);
 
-            if (EmptyUtils.isNotEmpty(mSelected) && mSelected.size() != 0) {
+            if (EmptyUtils.isNotEmpty(mSelected) && mSelected.size() != 0) {//点击按钮分为0,1,2,3flag。而每个存入array中的图片都包括类型1,2,3,4和file
                 int mSize = mSelected.size();
-                MyRecyclerViewAdapter myRecyclerViewAdapter = new MyRecyclerViewAdapter(mSelected);
                 switch (flag) {
                     case 0:
-                        recyclerView_surface.setVisibility(View.VISIBLE);
-                        iv_add_photo_surface.setVisibility(View.GONE);
-
-                        recyclerView_surface.setAdapter(myRecyclerViewAdapter);
-                        recyclerView_surface.setLayoutManager(new GridLayoutManager(mContext, 3, LinearLayoutManager.VERTICAL, false));
-
                         for (int i = 0; i < mSize; i++) {
                             UploadCarPhotoInfo uploadCarPhotoInfo = new UploadCarPhotoInfo();
                             uploadCarPhotoInfo.setFile_type(1);
                             uploadCarPhotoInfo.setFile(new File(CommonUtil.getRealFilePath(mContext, mSelected.get(i))));
                             uploadCarPhotoInfoArrayList.add(uploadCarPhotoInfo);
                         }
+                        if (EmptyUtils.isNotEmpty(uploadCarPhotoInfoArrayList)) {
+                            recyclerView_surface.setVisibility(View.VISIBLE);
+                            iv_add_photo_surface.setVisibility(View.GONE);
+
+                            MyRecyclerViewAdapter myRecyclerViewAdapter0 = new MyRecyclerViewAdapter(mSelected);
+                            recyclerView_surface.setAdapter(myRecyclerViewAdapter0);
+                            recyclerView_surface.setLayoutManager(new GridLayoutManager(mContext, 3, LinearLayoutManager.VERTICAL, false));
+                        }
                         break;
                     case 1:
-                        recyclerView_inner.setVisibility(View.VISIBLE);
-                        iv_add_photo_inner.setVisibility(View.GONE);
-
-                        recyclerView_inner.setAdapter(myRecyclerViewAdapter);
-                        recyclerView_inner.setLayoutManager(new GridLayoutManager(mContext, 3, LinearLayoutManager.VERTICAL, false));
-
                         for (int i = 0; i < mSize; i++) {
                             UploadCarPhotoInfo uploadCarPhotoInfo = new UploadCarPhotoInfo();
                             uploadCarPhotoInfo.setFile_type(2);
                             uploadCarPhotoInfo.setFile(new File(CommonUtil.getRealFilePath(mContext, mSelected.get(i))));
                             uploadCarPhotoInfoArrayList.add(uploadCarPhotoInfo);
                         }
+                        if (EmptyUtils.isNotEmpty(uploadCarPhotoInfoArrayList)) {
+                            recyclerView_inner.setVisibility(View.VISIBLE);
+                            iv_add_photo_inner.setVisibility(View.GONE);
+
+                            MyRecyclerViewAdapter myRecyclerViewAdapter1 = new MyRecyclerViewAdapter(mSelected);
+                            recyclerView_inner.setAdapter(myRecyclerViewAdapter1);
+                            recyclerView_inner.setLayoutManager(new GridLayoutManager(mContext, 3, LinearLayoutManager.VERTICAL, false));
+                        }
                         break;
                     case 2:
-                        recyclerView_structure.setVisibility(View.VISIBLE);
-                        iv_add_photo_structure.setVisibility(View.GONE);
-
-                        recyclerView_structure.setAdapter(myRecyclerViewAdapter);
-                        recyclerView_structure.setLayoutManager(new GridLayoutManager(mContext, 3, LinearLayoutManager.VERTICAL, false));
-
                         for (int i = 0; i < mSize; i++) {
                             UploadCarPhotoInfo uploadCarPhotoInfo = new UploadCarPhotoInfo();
                             uploadCarPhotoInfo.setFile_type(3);
                             uploadCarPhotoInfo.setFile(new File(CommonUtil.getRealFilePath(mContext, mSelected.get(i))));
                             uploadCarPhotoInfoArrayList.add(uploadCarPhotoInfo);
                         }
+                        if (EmptyUtils.isNotEmpty(uploadCarPhotoInfoArrayList)) {
+                            recyclerView_structure.setVisibility(View.VISIBLE);
+                            iv_add_photo_structure.setVisibility(View.GONE);
+
+                            MyRecyclerViewAdapter myRecyclerViewAdapter2 = new MyRecyclerViewAdapter(mSelected);
+                            recyclerView_structure.setAdapter(myRecyclerViewAdapter2);
+                            recyclerView_structure.setLayoutManager(new GridLayoutManager(mContext, 3, LinearLayoutManager.VERTICAL, false));
+                        }
                         break;
                     case 3:
-                        recyclerView_more.setVisibility(View.VISIBLE);
-                        iv_add_photo_more.setVisibility(View.GONE);
-
-                        recyclerView_more.setAdapter(myRecyclerViewAdapter);
-                        recyclerView_more.setLayoutManager(new GridLayoutManager(mContext, 3, LinearLayoutManager.VERTICAL, false));
-
                         for (int i = 0; i < mSize; i++) {
                             UploadCarPhotoInfo uploadCarPhotoInfo = new UploadCarPhotoInfo();
                             uploadCarPhotoInfo.setFile_type(4);
                             uploadCarPhotoInfo.setFile(new File(CommonUtil.getRealFilePath(mContext, mSelected.get(i))));
                             uploadCarPhotoInfoArrayList.add(uploadCarPhotoInfo);
+                        }
+                        if (EmptyUtils.isNotEmpty(uploadCarPhotoInfoArrayList)) {
+                            recyclerView_more.setVisibility(View.VISIBLE);
+                            iv_add_photo_more.setVisibility(View.GONE);
+
+                            MyRecyclerViewAdapter myRecyclerViewAdapter3 = new MyRecyclerViewAdapter(mSelected);
+                            recyclerView_more.setAdapter(myRecyclerViewAdapter3);
+                            recyclerView_more.setLayoutManager(new GridLayoutManager(mContext, 3, LinearLayoutManager.VERTICAL, false));
                         }
                         break;
                     default:
@@ -271,8 +278,8 @@ public class PostPhotoFragment extends BaseFragment {
 
         private List<Uri> mSelectedData;
 
-        MyRecyclerViewAdapter(List<Uri> mSelected) {
-            this.mSelectedData = mSelected;
+        MyRecyclerViewAdapter(List<Uri> mSelectedData) {
+            this.mSelectedData = mSelectedData;
         }
 
         @Override
@@ -319,7 +326,7 @@ public class PostPhotoFragment extends BaseFragment {
 
         @Override
         public int getItemCount() {
-            return mSelectedData.size();
+            return mSelected.size();
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {

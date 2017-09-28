@@ -11,7 +11,6 @@ import android.widget.EditText;
 
 import com.blankj.utilcode.util.EmptyUtils;
 import com.blankj.utilcode.util.EncryptUtils;
-import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.google.gson.Gson;
@@ -30,8 +29,6 @@ import com.zhy.http.okhttp.callback.StringCallback;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.HashMap;
 
 import cn.sharesdk.framework.Platform;
@@ -118,8 +115,6 @@ public class RegisterAndLoginActivity extends BaseActivity implements View.OnCli
 
                     @Override
                     public void onResponse(String response, int id) {
-                        LogUtils.e(SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER) + "和" + account + "和" + EncryptUtils.encryptMD5ToString(password));
-                        LogUtils.e(response);
                         JSONObject jsonObject = null;
                         try {
                             jsonObject = new JSONObject(response);
@@ -254,49 +249,71 @@ public class RegisterAndLoginActivity extends BaseActivity implements View.OnCli
         } else {
             wxId = userInfo.getUserId();
         }
-        try {
-            OkHttpUtils.post()
-                    .url(Constant.getOauthLoginUrl())
-                    .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
-                    .addParams(Constant.AVATAR, URLEncoder.encode(userInfo.getUserIcon(), "utf-8"))
-                    .addParams(Constant.NICKNAME, URLEncoder.encode(userInfo.getUserName(), "utf-8"))
-                    .addParams("weibo_open_id", weiboId)
-                    .addParams("wx_open_id", wxId)
-                    .build()
-                    .execute(new StringCallback() {
-                        @Override
-                        public void onError(Call call, Exception e, int id) {
+        OkHttpUtils.post()
+                .url(Constant.getOauthLoginUrl())
+                .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
+                .addParams(Constant.AVATAR, userInfo.getUserIcon())
+                .addParams(Constant.NICKNAME, userInfo.getUserName())
+                .addParams("weibo_open_id", weiboId)
+                .addParams("wx_open_id", wxId)
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
 
-                        }
+                    }
 
-                        @Override
-                        public void onResponse(String response, int id) {
-                            JSONObject jsonObject = null;
-                            try {
-                                jsonObject = new JSONObject(response);
-                                int status = jsonObject.optInt("status");
-                                JSONObject jsonObjectData = jsonObject.optJSONObject("data");
-                                if (status == 1) {
-                                    ToastUtils.showShort("hehe,三方登录success");
-                                } else {
-                                    int code = jsonObject.optInt("code");
-                                    if (code == 51008) {
-                                        DataManager.getInstance().setData1(userInfo);
-                                        gotoPager(OauthRegisterFragment.class, null);
-                                        return;
-                                    }
-                                    String msg = jsonObjectData.optString("msg");
-                                    ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                    @Override
+                    public void onResponse(String response, int id) {
+                        //                            "code": 0,
+                        //                                    "data": {
+                        //                                "session_id": "session59cca13c91442",
+                        //                                        "user_info": {
+                        //                                    "chat_token": "aBNKBHUKHjAY0PCBffXUKm33mxX1mn0cwGZGNjjYMXhZ7+cAtBn9JRtzeCvmdcxXpkxv991sVKlnSbDwflLLlg==",
+                        //                                            "created": 0,
+                        //                                            "mobile": "",
+                        //                                            "profile": {
+                        //                                        "age": 0,
+                        //                                                "avatar": "http%3A%2F%2Fwx.qlogo.cn%2Fmmopen%2Fvi_32%2FBru7fC8QLsOgFdgEcjwyuaoSxV2ZIzoZBGNlCTzPAz8ldMe9fwmTnCQZicaPwQ9sTPKytC8sV2djia03n2RcsJhQ%2F0",
+                        //                                                "balance": 0,
+                        //                                                "bibi_no": 14947,
+                        //                                                "company": 0,
+                        //                                                "constellation": "",
+                        //                                                "gender": 2,
+                        //                                                "nickname": "Jackie+Lee",
+                        //                                                "signature": "",
+                        //                                                "sort": 0,
+                        //                                                "type": 1
+                        //                                    },
+                        //                                    "user_id": 4947,
+                        //                                            "username": "bibi_t50s42"
+                        //                                }
+                        //                            },
+                        //                            "status": 1
+                        //                        }
+                        JSONObject jsonObject = null;
+                        try {
+                            jsonObject = new JSONObject(response);
+                            int status = jsonObject.optInt("status");
+                            JSONObject jsonObjectData = jsonObject.optJSONObject("data");
+                            if (status == 1) {
+
+                                ToastUtils.showShort("三方登录success");
+                            } else {
+                                int code = jsonObject.optInt("code");
+                                if (code == 51008) {
+                                    DataManager.getInstance().setData1(userInfo);
+                                    gotoPager(OauthRegisterFragment.class, null);
+                                    return;
                                 }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                                String msg = jsonObjectData.optString("msg");
+                                ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
                             }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                    });
-
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+                    }
+                });
     }
 
     public String getAccount() {
