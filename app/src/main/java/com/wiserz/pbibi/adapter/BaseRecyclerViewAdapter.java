@@ -93,8 +93,8 @@ import static com.wiserz.pbibi.R.id.tvCarColor;
 public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecyclerViewAdapter.ViewHolder> {
 
     private Context mContext;
-    private List<T> mList;
     private int dataType;
+    private List<T> mList;
 
     private static final int USER_SEARCH_DATA_TYPE = 12;
 
@@ -2215,6 +2215,16 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                 recyclerView = (RecyclerView) itemView.findViewById(R.id.recyclerView);
 
                 tv_item6 = (TextView) itemView.findViewById(R.id.tv_check_all_comment_reply);
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnItemClickListener != null) {
+                            int position = getLayoutPosition();
+                            mOnItemClickListener.onItemClick(mList.get(position), position);
+                        }
+                    }
+                });
             } else if (dataType == ARTICLE_COMMENT_REPLY_DATA_TYPE) {
                 tv_item1 = (TextView) itemView.findViewById(R.id.tv_comment_reply_name);
                 tv_item2 = (TextView) itemView.findViewById(R.id.tv_comment_reply_content);

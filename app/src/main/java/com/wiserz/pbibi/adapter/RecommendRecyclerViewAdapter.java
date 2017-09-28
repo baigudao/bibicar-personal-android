@@ -91,9 +91,7 @@ public class RecommendRecyclerViewAdapter extends RecyclerView.Adapter implement
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         RecyclerView.ViewHolder viewHolder;
-        if (viewType == CONTACT_BIBI) {
-            viewHolder = new ContactBibiHolderView(View.inflate(mContext, R.layout.item_contact, null));
-        } else if (viewType == BANNER) {
+        if (viewType == BANNER) {
             viewHolder = new BannerViewHolder(View.inflate(mContext, R.layout.item_recommend_banner, null));
         } else if (viewType == TWO_BIG_BUTTON) {
             viewHolder = new TwoBigButtonViewHolder(View.inflate(mContext, R.layout.item_recommend_two_big_button, null));
@@ -107,6 +105,8 @@ public class RecommendRecyclerViewAdapter extends RecyclerView.Adapter implement
             viewHolder = new CarArticleViewHolder(View.inflate(mContext, R.layout.item_recommend_car_article, null));
         } else if (viewType == CHE_HANG) {
             viewHolder = new CheHangViewHolder(View.inflate(mContext, R.layout.item_recommend_che_hang, null));
+        } else if (viewType == CONTACT_BIBI) {
+            viewHolder = new ContactBibiHolderView(View.inflate(mContext, R.layout.item_contact, null));
         } else {
             viewHolder = null;
         }
@@ -528,6 +528,16 @@ public class RecommendRecyclerViewAdapter extends RecyclerView.Adapter implement
         }
     }
 
+    private class ContactBibiHolderView extends RecyclerView.ViewHolder {
+
+        private TextView textView;
+
+        public ContactBibiHolderView(View itemView) {
+            super(itemView);
+            textView = (TextView) itemView.findViewById(R.id.tv_contact_bibicar);
+        }
+    }
+
     private class LocalImageHolderView implements Holder<BannerBean> {
 
         private ImageView iv_image;
@@ -548,16 +558,6 @@ public class RecommendRecyclerViewAdapter extends RecyclerView.Adapter implement
                         .error(R.drawable.default_bg_ratio_1)
                         .into(iv_image);
             }
-        }
-    }
-
-    private class ContactBibiHolderView extends RecyclerView.ViewHolder {
-
-        private TextView textView;
-
-        public ContactBibiHolderView(View itemView) {
-            super(itemView);
-            textView = (TextView) itemView.findViewById(R.id.tv_contact_bibicar);
         }
     }
 

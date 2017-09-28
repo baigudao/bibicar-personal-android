@@ -71,7 +71,8 @@
             android:clickable="true"
             android:text="用户协议"
             android:textColor="@drawable/btn_text_user_protocol_selector"
-            android:textSize="14sp"/>
+            android:textSize="14sp"
+            android:textStyle="bold"/>
 
     </LinearLayout>
 

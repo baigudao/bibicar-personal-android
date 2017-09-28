@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:background="@color/background_color">
 
     <TextView
         android:id="@+id/tvStart"
@@ -28,8 +29,8 @@
             android:layout_width="match_parent"
             android:layout_height="5dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
             android:background="@color/background_color"/>
 
         <View
@@ -37,24 +38,24 @@
             android:layout_width="match_parent"
             android:layout_height="5dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
             android:background="@color/main_color"/>
 
         <View
             android:id="@+id/startView"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_centerVertical="true"
-            android:background="@drawable/move_round_btn"/>
+            android:background="@drawable/v2_lg3x"/>
 
         <View
             android:id="@+id/endView"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:background="@drawable/move_round_btn"/>
+            android:background="@drawable/v2_lg3x"/>
 
     </RelativeLayout>
 

@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.blankj.utilcode.util.EmptyUtils;
 import com.blankj.utilcode.util.KeyboardUtils;
+import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.TimeUtils;
 import com.blankj.utilcode.util.ToastUtils;
@@ -257,6 +258,7 @@ public class ArticleDetailFragment extends BaseFragment implements BaseRecyclerV
             if (EmptyUtils.isNotEmpty(articleCommentBeanArrayList) && articleCommentBeanArrayList.size() != 0) {
                 getView().findViewById(R.id.tv_comment_area).setVisibility(View.VISIBLE);
                 getView().findViewById(R.id.recyclerView).setVisibility(View.VISIBLE);
+
                 RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.recyclerView);
                 BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, articleCommentBeanArrayList, ARTICLE_COMMENT_LIST_DATA_TYPE);
                 recyclerView.setAdapter(baseRecyclerViewAdapter);
@@ -273,6 +275,7 @@ public class ArticleDetailFragment extends BaseFragment implements BaseRecyclerV
     public void onItemClick(Object data, int position) {
         if (data.getClass().getSimpleName().equals("ArticleCommentBean")) {
             ArticleCommentBean articleCommentBean = (ArticleCommentBean) data;
+            LogUtils.e("item的点击事件");
 
             if (EmptyUtils.isNotEmpty(articleCommentBean)) {
                 flag = 1;

@@ -24,6 +24,7 @@ import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.activity.EmptyActivity;
 import com.wiserz.pbibi.activity.MainActivity;
 import com.wiserz.pbibi.util.Constant;
+import com.wiserz.pbibi.view.NumberProgressBar;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,6 +44,9 @@ import static android.app.Activity.RESULT_OK;
  */
 public class CompanyRegisterFragment extends BaseFragment {
 
+    private static final String base_url = "http://wap.bibicar.cn/regist";
+    private NumberProgressBar numberProgressBar;
+
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_company_register;
@@ -52,9 +56,10 @@ public class CompanyRegisterFragment extends BaseFragment {
     protected void initView(View view) {
         view.findViewById(R.id.iv_back).setOnClickListener(this);
         ((TextView) view.findViewById(R.id.tv_title)).setText("企业注册");
+        numberProgressBar = (NumberProgressBar) view.findViewById(R.id.numberProgressBar);
 
         WebView wb = (WebView) view.findViewById(R.id.webview_company_register);
-        String webview_company_register = "http://wap.bibicar.cn/regist?ident=" + EncryptUtils.encryptMD5ToString(SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER));
+        String webview_company_register = base_url + "?ident=" + EncryptUtils.encryptMD5ToString(SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER));
 
         if (!TextUtils.isEmpty(webview_company_register)) {
 
@@ -136,6 +141,17 @@ public class CompanyRegisterFragment extends BaseFragment {
     }
 
     private WebChromeClient mWebChromeClient = new WebChromeClient() {
+
+        @Override
+        public void onProgressChanged(WebView view, int newProgress) {
+            super.onProgressChanged(view, newProgress);
+            if (newProgress == 100) {
+                numberProgressBar.setVisibility(View.GONE);
+                return;
+            }
+            numberProgressBar.incrementProgressBy(newProgress);
+        }
+
         // android 5.0 这里需要使用android5.0 sdk
         public boolean onShowFileChooser(
                 WebView webView, ValueCallback<Uri[]> filePathCallback,

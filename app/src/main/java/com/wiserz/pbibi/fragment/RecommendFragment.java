@@ -85,10 +85,10 @@ public class RecommendFragment extends BaseFragment implements OnRefreshListener
                             int status = jsonObject.optInt("status");
                             JSONObject jsonObjectData = jsonObject.optJSONObject("data");
                             if (status == 1) {
-                                smartRefreshLayout.finishRefresh();
                                 RecommendRecyclerViewAdapter recommendRecyclerViewAdapter = new RecommendRecyclerViewAdapter(mContext, jsonObjectData);
                                 recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
                                 recyclerView.setAdapter(recommendRecyclerViewAdapter);
+                                smartRefreshLayout.finishRefresh();
                             } else {
                                 String code = jsonObject.optString("code");
                                 String msg = jsonObjectData.optString("msg");
