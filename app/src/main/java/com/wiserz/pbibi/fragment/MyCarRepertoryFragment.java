@@ -7,6 +7,8 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.wiserz.pbibi.R;
+import com.wiserz.pbibi.util.Constant;
+import com.wiserz.pbibi.util.DataManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +25,8 @@ public class MyCarRepertoryFragment extends BaseFragment {
     private int position;
     private Fragment fromFragment;
 
+    private int user_id;
+
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_my_car_repertory;
@@ -30,6 +34,7 @@ public class MyCarRepertoryFragment extends BaseFragment {
 
     @Override
     protected void initView(View view) {
+        user_id = getArguments().getInt(Constant.USER_ID);
         view.findViewById(R.id.iv_back).setOnClickListener(this);
         ((TextView) view.findViewById(R.id.tv_title)).setText("我的车库");
 
@@ -72,12 +77,15 @@ public class MyCarRepertoryFragment extends BaseFragment {
             switch (checkedId) {
                 case R.id.rb_love_car://爱车
                     position = 0;
+                    DataManager.getInstance().setData1(user_id);
                     break;
                 case R.id.rb_selling_car://售车
                     position = 1;
+                    DataManager.getInstance().setData1(user_id);
                     break;
                 case R.id.rb_dream_car://梦想车
                     position = 2;
+                    DataManager.getInstance().setData1(user_id);
                     break;
                 default:
                     break;

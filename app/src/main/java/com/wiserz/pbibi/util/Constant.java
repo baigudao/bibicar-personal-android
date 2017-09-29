@@ -244,6 +244,8 @@ public class Constant {
     private static final String richLikeUrl = hostUrl + "v4/user/createrichboardlike";//排行点赞
     private static final String richDeleteLikeUrl = hostUrl + "v4/user/cancelrichboardlike";//排行点赞取消
 
+    private static final String mySellingCarUrl = hostUrl + "v4/Publishcar/list";//我的售车
+
     public static String getRegisterApp() {
         return registerApp;
     }
@@ -606,5 +608,9 @@ public class Constant {
 
     public static String getRichDeleteLikeUrl() {
         return richDeleteLikeUrl;
+    }
+
+    public static String getMySellingCarUrl() {
+        return mySellingCarUrl;
     }
 }

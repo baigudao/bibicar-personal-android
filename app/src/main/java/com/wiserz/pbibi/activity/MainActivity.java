@@ -26,8 +26,8 @@ import java.util.List;
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private List<BaseFragment> mBaseFragment;
-    public int position;
     private Fragment fromFragment;
+    public int position;
 
     private LinearLayout ll_home;
     private LinearLayout ll_car_center;
@@ -192,11 +192,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
-    /**
-     * 根据位置得到对应的Fragment
-     *
-     * @return
-     */
     private BaseFragment getFragment() {
         return mBaseFragment.get(position);
     }

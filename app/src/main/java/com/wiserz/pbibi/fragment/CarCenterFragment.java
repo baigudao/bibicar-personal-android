@@ -118,7 +118,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
         ll_price = (LinearLayout) view.findViewById(R.id.ll_price);
         ll_price.setOnClickListener(this);
 
-        view.findViewById(R.id.rl_search).setOnClickListener(this);
+        view.findViewById(R.id.tvSearch).setOnClickListener(this);
 
         smartRefreshLayout = (SmartRefreshLayout) view.findViewById(R.id.smartRefreshLayout);
         smartRefreshLayout.setOnRefreshListener(this);
@@ -139,8 +139,6 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                 //                gotoPager(LoanPlanFragment.class,null);//贷款方案
 
                 //                gotoPager(ConcreteParameterFragment.class, null);//具体参数
-
-                //                gotoPager(TestFragment.class, null);//价格筛选车辆
                 showPostCarWindow();
                 break;
             case R.id.ll_sort:
@@ -155,8 +153,8 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                 View car_price_view = View.inflate(mContext, R.layout.item_car_price, null);
                 carSelectPopupWindow(car_price_view);
                 break;
-            case R.id.rl_search:
-                ToastUtils.showShort("呵呵");
+            case R.id.tvSearch:
+                gotoPager(SearchFragment.class, null);
                 break;
             default:
                 break;

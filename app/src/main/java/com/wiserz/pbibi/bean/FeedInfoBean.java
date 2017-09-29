@@ -5,7 +5,7 @@ package com.wiserz.pbibi.bean;
  * QQ : 971060378
  * Used as : 视频详情中的feed_info
  */
-public class FeedInfoBean extends BaseBean{
+public class FeedInfoBean extends BaseBean {
 
     /**
      * collect_num : 0
@@ -159,6 +159,15 @@ public class FeedInfoBean extends BaseBean{
 
         private ProfileBean profile;
         private int user_id;
+        private int is_friend;
+
+        public int getIs_friend() {
+            return is_friend;
+        }
+
+        public void setIs_friend(int is_friend) {
+            this.is_friend = is_friend;
+        }
 
         public ProfileBean getProfile() {
             return profile;

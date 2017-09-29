@@ -40,19 +40,30 @@
             android:textColor="@color/second_text_color"
             android:textSize="12sp"/>
 
-        <TextView
-            android:id="@+id/tv_follow"
+        <!--<TextView-->
+        <!--android:id="@+id/tv_follow"-->
+        <!--android:layout_width="60dp"-->
+        <!--android:layout_height="25dp"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:layout_marginRight="15dp"-->
+        <!--android:background="@drawable/border_city_name_short"-->
+        <!--android:clickable="true"-->
+        <!--android:gravity="center"-->
+        <!--android:text="关注"-->
+        <!--android:textColor="@color/main_color"-->
+        <!--android:textSize="12sp"/>-->
+
+        <ImageView
+            android:id="@+id/iv_follow"
             android:layout_width="60dp"
             android:layout_height="25dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
-            android:background="@drawable/border_city_name_short"
             android:clickable="true"
-            android:gravity="center"
-            android:text="关注"
-            android:textColor="@color/main_color"
-            android:textSize="12sp"/>
+            android:scaleType="fitXY"
+            android:src="@drawable/other_follow"/>
 
     </RelativeLayout>
 
@@ -139,6 +150,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/ll_comment_area"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"

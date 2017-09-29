@@ -34,7 +34,6 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 import okhttp3.Call;
@@ -65,6 +64,11 @@ public class PostPhotoFragment extends BaseFragment {
     private int flag;
     private String upload_token;
     private ArrayList<UploadCarPhotoInfo> uploadCarPhotoInfoArrayList;
+
+    private MyRecyclerViewAdapter0 myRecyclerViewAdapter0;
+    private MyRecyclerViewAdapter1 myRecyclerViewAdapter1;
+    private MyRecyclerViewAdapter2 myRecyclerViewAdapter2;
+    private MyRecyclerViewAdapter3 myRecyclerViewAdapter3;
 
     @Override
     protected int getLayoutId() {
@@ -128,10 +132,57 @@ public class PostPhotoFragment extends BaseFragment {
     }
 
     private void postPhoto() {
+        //        LogUtils.e(myRecyclerViewAdapter0.getmSelectedData0().size() + "个0");
+        //        LogUtils.e(myRecyclerViewAdapter1.getmSelectedData1().size() + "个1");
+        //        LogUtils.e(myRecyclerViewAdapter2.getmSelectedData2().size() + "个2");
+        //        LogUtils.e(myRecyclerViewAdapter3.getmSelectedData3().size() + "个3");
+        ArrayList<Uri> uris0 = myRecyclerViewAdapter0.getmSelectedData0();
+        int size0 = uris0.size();
+        if (EmptyUtils.isNotEmpty(uris0) && size0 != 0) {
+            for (int i = 0; i < size0; i++) {
+                UploadCarPhotoInfo uploadCarPhotoInfo = new UploadCarPhotoInfo();
+                uploadCarPhotoInfo.setFile_type(1);
+                uploadCarPhotoInfo.setFile(new File(CommonUtil.getRealFilePath(mContext, uris0.get(i))));
+                uploadCarPhotoInfoArrayList.add(uploadCarPhotoInfo);
+            }
+        }
+        ArrayList<Uri> uris1 = myRecyclerViewAdapter1.getmSelectedData1();
+        int size1 = uris1.size();
+        if (EmptyUtils.isNotEmpty(uris1) && size1 != 0) {
+            for (int i = 0; i < size1; i++) {
+                UploadCarPhotoInfo uploadCarPhotoInfo = new UploadCarPhotoInfo();
+                uploadCarPhotoInfo.setFile_type(2);
+                uploadCarPhotoInfo.setFile(new File(CommonUtil.getRealFilePath(mContext, uris1.get(i))));
+                uploadCarPhotoInfoArrayList.add(uploadCarPhotoInfo);
+            }
+        }
+        ArrayList<Uri> uris2 = myRecyclerViewAdapter2.getmSelectedData2();
+        int size2 = uris2.size();
+        if (EmptyUtils.isNotEmpty(uris2) && size2 != 0) {
+            for (int i = 0; i < size2; i++) {
+                UploadCarPhotoInfo uploadCarPhotoInfo = new UploadCarPhotoInfo();
+                uploadCarPhotoInfo.setFile_type(3);
+                uploadCarPhotoInfo.setFile(new File(CommonUtil.getRealFilePath(mContext, uris2.get(i))));
+                uploadCarPhotoInfoArrayList.add(uploadCarPhotoInfo);
+            }
+        }
+        ArrayList<Uri> uris3 = myRecyclerViewAdapter3.getmSelectedData3();
+        int size3 = uris3.size();
+        if (EmptyUtils.isNotEmpty(uris3) && size3 != 0) {
+            for (int i = 0; i < size3; i++) {
+                UploadCarPhotoInfo uploadCarPhotoInfo = new UploadCarPhotoInfo();
+                uploadCarPhotoInfo.setFile_type(4);
+                uploadCarPhotoInfo.setFile(new File(CommonUtil.getRealFilePath(mContext, uris3.get(i))));
+                uploadCarPhotoInfoArrayList.add(uploadCarPhotoInfo);
+            }
+        }
+
         if (EmptyUtils.isNotEmpty(upload_token) && EmptyUtils.isNotEmpty(uploadCarPhotoInfoArrayList) && uploadCarPhotoInfoArrayList.size() != 0) {
             DataManager.getInstance().setData8(uploadCarPhotoInfoArrayList);
             DataManager.getInstance().setData9(upload_token);
             goBack();
+        } else {
+            ToastUtils.showShort("请添加车辆照片");
         }
     }
 
@@ -190,77 +241,53 @@ public class PostPhotoFragment extends BaseFragment {
                 .forResult(REQUEST_CODE_CHOOSE);
     }
 
-    List<Uri> mSelected;
+    ArrayList<Uri> mSelected;
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_CHOOSE && resultCode == RESULT_OK) {//车辆照片类型 (1:外观 2:中控内饰 3:发动机及结构 4:更多细节)
-            mSelected = Matisse.obtainResult(data);
+            mSelected = (ArrayList<Uri>) Matisse.obtainResult(data);
 
-            if (EmptyUtils.isNotEmpty(mSelected) && mSelected.size() != 0) {//点击按钮分为0,1,2,3flag。而每个存入array中的图片都包括类型1,2,3,4和file
+            if (EmptyUtils.isNotEmpty(mSelected) && mSelected.size() != 0) {
                 int mSize = mSelected.size();
                 switch (flag) {
                     case 0:
-                        for (int i = 0; i < mSize; i++) {
-                            UploadCarPhotoInfo uploadCarPhotoInfo = new UploadCarPhotoInfo();
-                            uploadCarPhotoInfo.setFile_type(1);
-                            uploadCarPhotoInfo.setFile(new File(CommonUtil.getRealFilePath(mContext, mSelected.get(i))));
-                            uploadCarPhotoInfoArrayList.add(uploadCarPhotoInfo);
-                        }
-                        if (EmptyUtils.isNotEmpty(uploadCarPhotoInfoArrayList)) {
+                        if (EmptyUtils.isNotEmpty(mSelected) && mSize != 0) {
                             recyclerView_surface.setVisibility(View.VISIBLE);
                             iv_add_photo_surface.setVisibility(View.GONE);
 
-                            MyRecyclerViewAdapter myRecyclerViewAdapter0 = new MyRecyclerViewAdapter(mSelected);
+                            myRecyclerViewAdapter0 = new MyRecyclerViewAdapter0(mSelected);
                             recyclerView_surface.setAdapter(myRecyclerViewAdapter0);
                             recyclerView_surface.setLayoutManager(new GridLayoutManager(mContext, 3, LinearLayoutManager.VERTICAL, false));
                         }
                         break;
                     case 1:
-                        for (int i = 0; i < mSize; i++) {
-                            UploadCarPhotoInfo uploadCarPhotoInfo = new UploadCarPhotoInfo();
-                            uploadCarPhotoInfo.setFile_type(2);
-                            uploadCarPhotoInfo.setFile(new File(CommonUtil.getRealFilePath(mContext, mSelected.get(i))));
-                            uploadCarPhotoInfoArrayList.add(uploadCarPhotoInfo);
-                        }
-                        if (EmptyUtils.isNotEmpty(uploadCarPhotoInfoArrayList)) {
+                        if (EmptyUtils.isNotEmpty(mSelected) && mSize != 0) {
                             recyclerView_inner.setVisibility(View.VISIBLE);
                             iv_add_photo_inner.setVisibility(View.GONE);
 
-                            MyRecyclerViewAdapter myRecyclerViewAdapter1 = new MyRecyclerViewAdapter(mSelected);
+                            myRecyclerViewAdapter1 = new MyRecyclerViewAdapter1(mSelected);
                             recyclerView_inner.setAdapter(myRecyclerViewAdapter1);
                             recyclerView_inner.setLayoutManager(new GridLayoutManager(mContext, 3, LinearLayoutManager.VERTICAL, false));
                         }
                         break;
                     case 2:
-                        for (int i = 0; i < mSize; i++) {
-                            UploadCarPhotoInfo uploadCarPhotoInfo = new UploadCarPhotoInfo();
-                            uploadCarPhotoInfo.setFile_type(3);
-                            uploadCarPhotoInfo.setFile(new File(CommonUtil.getRealFilePath(mContext, mSelected.get(i))));
-                            uploadCarPhotoInfoArrayList.add(uploadCarPhotoInfo);
-                        }
-                        if (EmptyUtils.isNotEmpty(uploadCarPhotoInfoArrayList)) {
+                        if (EmptyUtils.isNotEmpty(mSelected) && mSize != 0) {
                             recyclerView_structure.setVisibility(View.VISIBLE);
                             iv_add_photo_structure.setVisibility(View.GONE);
 
-                            MyRecyclerViewAdapter myRecyclerViewAdapter2 = new MyRecyclerViewAdapter(mSelected);
+                            myRecyclerViewAdapter2 = new MyRecyclerViewAdapter2(mSelected);
                             recyclerView_structure.setAdapter(myRecyclerViewAdapter2);
                             recyclerView_structure.setLayoutManager(new GridLayoutManager(mContext, 3, LinearLayoutManager.VERTICAL, false));
                         }
                         break;
                     case 3:
-                        for (int i = 0; i < mSize; i++) {
-                            UploadCarPhotoInfo uploadCarPhotoInfo = new UploadCarPhotoInfo();
-                            uploadCarPhotoInfo.setFile_type(4);
-                            uploadCarPhotoInfo.setFile(new File(CommonUtil.getRealFilePath(mContext, mSelected.get(i))));
-                            uploadCarPhotoInfoArrayList.add(uploadCarPhotoInfo);
-                        }
-                        if (EmptyUtils.isNotEmpty(uploadCarPhotoInfoArrayList)) {
+                        if (EmptyUtils.isNotEmpty(mSelected) && mSize != 0) {
                             recyclerView_more.setVisibility(View.VISIBLE);
                             iv_add_photo_more.setVisibility(View.GONE);
 
-                            MyRecyclerViewAdapter myRecyclerViewAdapter3 = new MyRecyclerViewAdapter(mSelected);
+                            myRecyclerViewAdapter3 = new MyRecyclerViewAdapter3(mSelected);
                             recyclerView_more.setAdapter(myRecyclerViewAdapter3);
                             recyclerView_more.setLayoutManager(new GridLayoutManager(mContext, 3, LinearLayoutManager.VERTICAL, false));
                         }
@@ -274,12 +301,16 @@ public class PostPhotoFragment extends BaseFragment {
         }
     }
 
-    private class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.ViewHolder> {
+    private class MyRecyclerViewAdapter0 extends RecyclerView.Adapter<MyRecyclerViewAdapter0.ViewHolder> {
 
-        private List<Uri> mSelectedData;
+        private ArrayList<Uri> mSelectedData0;
 
-        MyRecyclerViewAdapter(List<Uri> mSelectedData) {
-            this.mSelectedData = mSelectedData;
+        public ArrayList<Uri> getmSelectedData0() {
+            return mSelectedData0;
+        }
+
+        MyRecyclerViewAdapter0(ArrayList<Uri> mSelectedData) {
+            this.mSelectedData0 = mSelectedData;
         }
 
         @Override
@@ -291,34 +322,20 @@ public class PostPhotoFragment extends BaseFragment {
         @Override
         public void onBindViewHolder(ViewHolder holder, final int position) {
             Glide.with(mContext)
-                    .load(mSelectedData.get(position))
+                    .load(mSelectedData0.get(position))
                     .placeholder(R.drawable.default_bg_ratio_1)
                     .error(R.drawable.default_bg_ratio_1)
                     .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
                     .into(holder.iv_image_all);
+
             holder.iv_close.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mSelected.remove(position);
+                    mSelectedData0.remove(position);
                     notifyDataSetChanged();
-                    if (mSelected.size() == 0) {
-                        LogUtils.e("删除为零了");
-                        switch (flag) {
-                            //                            case 0:
-                            //                                iv_add_photo_surface.setVisibility(View.VISIBLE);
-                            //                                break;
-                            //                            case 1:
-                            //                                iv_add_photo_inner.setVisibility(View.VISIBLE);
-                            //                                break;
-                            //                            case 2:
-                            //                                iv_add_photo_structure.setVisibility(View.VISIBLE);
-                            //                                break;
-                            //                            case 3:
-                            //                                iv_add_photo_more.setVisibility(View.VISIBLE);
-                            //                                break;
-                            //                            default:
-                            //                                break;
-                        }
+                    if (mSelectedData0.size() == 0) {
+                        iv_add_photo_surface.setVisibility(View.VISIBLE);
+                        LogUtils.e("删除为零了==0");
                     }
                 }
             });
@@ -326,7 +343,181 @@ public class PostPhotoFragment extends BaseFragment {
 
         @Override
         public int getItemCount() {
-            return mSelected.size();
+            return mSelectedData0.size();
+        }
+
+        class ViewHolder extends RecyclerView.ViewHolder {
+
+            private ImageView iv_image_all;
+            private ImageView iv_close;
+
+            ViewHolder(View itemView) {
+                super(itemView);
+                iv_image_all = (ImageView) itemView.findViewById(R.id.iv_image_all);
+                iv_close = (ImageView) itemView.findViewById(R.id.iv_close);
+            }
+        }
+    }
+
+    private class MyRecyclerViewAdapter1 extends RecyclerView.Adapter<MyRecyclerViewAdapter1.ViewHolder> {
+
+        private ArrayList<Uri> mSelectedData1;
+
+        public ArrayList<Uri> getmSelectedData1() {
+            return mSelectedData1;
+        }
+
+        MyRecyclerViewAdapter1(ArrayList<Uri> mSelectedData1) {
+            this.mSelectedData1 = mSelectedData1;
+        }
+
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View itemView = View.inflate(mContext, R.layout.item_all_image, null);
+            return new ViewHolder(itemView);
+        }
+
+        @Override
+        public void onBindViewHolder(ViewHolder holder, final int position) {
+            Glide.with(mContext)
+                    .load(mSelectedData1.get(position))
+                    .placeholder(R.drawable.default_bg_ratio_1)
+                    .error(R.drawable.default_bg_ratio_1)
+                    .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
+                    .into(holder.iv_image_all);
+
+            holder.iv_close.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mSelectedData1.remove(position);
+                    notifyDataSetChanged();
+                    if (mSelectedData1.size() == 0) {
+                        iv_add_photo_inner.setVisibility(View.VISIBLE);
+                        LogUtils.e("删除为零了===1");
+                    }
+                }
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            return mSelectedData1.size();
+        }
+
+        class ViewHolder extends RecyclerView.ViewHolder {
+
+            private ImageView iv_image_all;
+            private ImageView iv_close;
+
+            ViewHolder(View itemView) {
+                super(itemView);
+                iv_image_all = (ImageView) itemView.findViewById(R.id.iv_image_all);
+                iv_close = (ImageView) itemView.findViewById(R.id.iv_close);
+            }
+        }
+    }
+
+    private class MyRecyclerViewAdapter2 extends RecyclerView.Adapter<MyRecyclerViewAdapter2.ViewHolder> {
+
+        private ArrayList<Uri> mSelectedData2;
+
+        public ArrayList<Uri> getmSelectedData2() {
+            return mSelectedData2;
+        }
+
+        MyRecyclerViewAdapter2(ArrayList<Uri> mSelectedData2) {
+            this.mSelectedData2 = mSelectedData2;
+        }
+
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View itemView = View.inflate(mContext, R.layout.item_all_image, null);
+            return new ViewHolder(itemView);
+        }
+
+        @Override
+        public void onBindViewHolder(ViewHolder holder, final int position) {
+            Glide.with(mContext)
+                    .load(mSelectedData2.get(position))
+                    .placeholder(R.drawable.default_bg_ratio_1)
+                    .error(R.drawable.default_bg_ratio_1)
+                    .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
+                    .into(holder.iv_image_all);
+
+            holder.iv_close.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mSelectedData2.remove(position);
+                    notifyDataSetChanged();
+                    if (mSelectedData2.size() == 0) {
+                        iv_add_photo_structure.setVisibility(View.VISIBLE);
+                        LogUtils.e("删除为零了==2");
+                    }
+                }
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            return mSelectedData2.size();
+        }
+
+        class ViewHolder extends RecyclerView.ViewHolder {
+
+            private ImageView iv_image_all;
+            private ImageView iv_close;
+
+            ViewHolder(View itemView) {
+                super(itemView);
+                iv_image_all = (ImageView) itemView.findViewById(R.id.iv_image_all);
+                iv_close = (ImageView) itemView.findViewById(R.id.iv_close);
+            }
+        }
+    }
+
+    private class MyRecyclerViewAdapter3 extends RecyclerView.Adapter<MyRecyclerViewAdapter3.ViewHolder> {
+
+        private ArrayList<Uri> mSelectedData3;
+
+        public ArrayList<Uri> getmSelectedData3() {
+            return mSelectedData3;
+        }
+
+        MyRecyclerViewAdapter3(ArrayList<Uri> mSelectedData3) {
+            this.mSelectedData3 = mSelectedData3;
+        }
+
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View itemView = View.inflate(mContext, R.layout.item_all_image, null);
+            return new ViewHolder(itemView);
+        }
+
+        @Override
+        public void onBindViewHolder(ViewHolder holder, final int position) {
+            Glide.with(mContext)
+                    .load(mSelectedData3.get(position))
+                    .placeholder(R.drawable.default_bg_ratio_1)
+                    .error(R.drawable.default_bg_ratio_1)
+                    .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
+                    .into(holder.iv_image_all);
+
+            holder.iv_close.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mSelectedData3.remove(position);
+                    notifyDataSetChanged();
+                    if (mSelectedData3.size() == 0) {
+                        iv_add_photo_more.setVisibility(View.VISIBLE);
+                        LogUtils.e("删除为零了===3");
+                    }
+                }
+            });
+        }
+
+        @Override
+        public int getItemCount() {
+            return mSelectedData3.size();
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {

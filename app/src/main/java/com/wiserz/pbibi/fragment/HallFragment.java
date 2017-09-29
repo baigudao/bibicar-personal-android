@@ -85,10 +85,10 @@ public class HallFragment extends BaseFragment implements OnRefreshListener, OnL
                             if (status == 1) {
                                 switch (refresh_or_load) {
                                     case 0:
-                                        smartRefreshLayout.finishRefresh();
                                         HallRecyclerViewAdapter hallRecyclerViewAdapter = new HallRecyclerViewAdapter(mContext, jsonObjectData);
                                         recyclerView.setAdapter(hallRecyclerViewAdapter);
                                         recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
+                                        smartRefreshLayout.finishRefresh();
                                         break;
                                     case 1:
                                         smartRefreshLayout.finishLoadmore();

@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,16 +16,21 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.EmptyUtils;
-import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.TimeUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.wiserz.pbibi.R;
+import com.wiserz.pbibi.activity.BaseActivity;
+import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
+import com.wiserz.pbibi.bean.ArticleCommentBean;
 import com.wiserz.pbibi.bean.FeedBean;
 import com.wiserz.pbibi.bean.FeedInfoDetailBean;
+import com.wiserz.pbibi.bean.LikeListBean;
 import com.wiserz.pbibi.util.Constant;
+import com.wiserz.pbibi.util.DataManager;
 import com.wiserz.pbibi.view.SharePlatformPopupWindow;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -42,13 +49,15 @@ import cn.sharesdk.onekeyshare.OnekeyShareTheme;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 import okhttp3.Call;
 
+import static com.wiserz.pbibi.R.id.comment_recyclerView;
+
 
 /**
  * Created by jackie on 2017/9/13 11:47.
  * QQ : 971060378
  * Used as : 动态详情的页面
  */
-public class StateDetailFragment extends BaseFragment {
+public class StateDetailFragment extends BaseFragment implements BaseRecyclerViewAdapter.OnItemClickListener {
 
     private int feed_id;
 
@@ -60,6 +69,10 @@ public class StateDetailFragment extends BaseFragment {
     private ImageView iv3;
     private TextView tv_like_num;
     private int user_id;
+    private int mPage;
+
+    private static final int ARTICLE_COMMENT_LIST_DATA_TYPE = 18;
+    private static final int LIKE_LIST_DATA_TYPE = 42;
 
     @Override
     protected int getLayoutId() {
@@ -87,6 +100,8 @@ public class StateDetailFragment extends BaseFragment {
         view.findViewById(R.id.rl_share).setOnClickListener(this);
         view.findViewById(R.id.rl_comment).setOnClickListener(this);
         view.findViewById(R.id.rl_like).setOnClickListener(this);
+
+        mPage = 0;
     }
 
     @Override
@@ -104,7 +119,7 @@ public class StateDetailFragment extends BaseFragment {
                 showSharePlatformPopWindow();
                 break;
             case R.id.rl_comment:
-                ToastUtils.showShort("评论");
+                //                ToastUtils.showShort("评论");
                 break;
             case R.id.rl_like:
                 if (EmptyUtils.isNotEmpty(feed_id)) {
@@ -315,7 +330,6 @@ public class StateDetailFragment extends BaseFragment {
 
                     @Override
                     public void onResponse(String response, int id) {
-                        LogUtils.e(response);
                         JSONObject jsonObject = null;
                         try {
                             jsonObject = new JSONObject(response);
@@ -328,6 +342,7 @@ public class StateDetailFragment extends BaseFragment {
                                 share_url = jsonObjectData.optString("share_url");
                                 handlerDataForFeedInfo(jsonObjectData.optJSONObject("feed_info"));
                                 handlerDataForLikeList(jsonObjectData.optJSONArray("like_list"));
+                                getCommentListData();//得到评论列表的数据
                             } else {
                                 String code = jsonObject.optString("code");
                                 String msg = jsonObjectData.optString("msg");
@@ -340,10 +355,94 @@ public class StateDetailFragment extends BaseFragment {
                 });
     }
 
+    private void getCommentListData() {
+        OkHttpUtils.post()
+                .url(Constant.getArticleCommentListUrl())
+                .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
+                .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
+                .addParams(Constant.FEED_ID, String.valueOf(feed_id))
+                .addParams(Constant.PAGE, String.valueOf(mPage))
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+                        JSONObject jsonObject = null;
+                        try {
+                            jsonObject = new JSONObject(response);
+                            int status = jsonObject.optInt("status");
+                            JSONObject jsonObjectData = jsonObject.optJSONObject("data");
+                            if (status == 1) {
+                                handlerCommentData(jsonObjectData);
+                            } else {
+                                String code = jsonObject.optString("code");
+                                String msg = jsonObjectData.optString("msg");
+                                ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+    }
+
+    private void handlerCommentData(JSONObject jsonObjectData) {
+        JSONArray jsonArrayForComment = jsonObjectData.optJSONArray("comment_list");
+        if (EmptyUtils.isNotEmpty(jsonArrayForComment) && getView() != null) {
+            Gson gson = new Gson();
+            ArrayList<ArticleCommentBean> articleCommentBeanArrayList = gson.fromJson(jsonArrayForComment.toString(), new TypeToken<ArrayList<ArticleCommentBean>>() {
+            }.getType());
+
+            if (EmptyUtils.isNotEmpty(articleCommentBeanArrayList) && articleCommentBeanArrayList.size() != 0) {
+                getView().findViewById(R.id.ll_comment_area).setVisibility(View.VISIBLE);
+                getView().findViewById(comment_recyclerView).setVisibility(View.VISIBLE);
+
+                RecyclerView comment_recyclerView = (RecyclerView) getView().findViewById(R.id.comment_recyclerView);
+                BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, articleCommentBeanArrayList, ARTICLE_COMMENT_LIST_DATA_TYPE);
+                comment_recyclerView.setAdapter(baseRecyclerViewAdapter);
+                comment_recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
+                baseRecyclerViewAdapter.setOnItemClickListener(this);
+            } else {
+                getView().findViewById(R.id.ll_comment_area).setVisibility(View.GONE);
+                getView().findViewById(comment_recyclerView).setVisibility(View.GONE);
+            }
+        }
+    }
+
+    @Override
+    public void onItemClick(Object data, int position) {
+        ArticleCommentBean articleCommentBean = (ArticleCommentBean) data;
+        if (EmptyUtils.isNotEmpty(articleCommentBean)) {
+            //查看更多回复
+            int comment_id = articleCommentBean.getComment_id();
+            int feed_id = articleCommentBean.getFeed_id();
+            if (EmptyUtils.isNotEmpty(comment_id) && EmptyUtils.isNotEmpty(feed_id)) {
+                DataManager.getInstance().setData1(feed_id);
+                DataManager.getInstance().setData2(comment_id);
+                DataManager.getInstance().setData3(articleCommentBean);
+                ((BaseActivity) mContext).gotoPager(CommentDetailFragment.class, null);
+            }
+        }
+    }
+
     private void handlerDataForLikeList(JSONArray like_list) {
         if (EmptyUtils.isNotEmpty(like_list)) {
-            int size = like_list.length();
+            Gson gson = new Gson();
+            ArrayList<LikeListBean> likeListBeanArrayList = gson.fromJson(like_list.toString(), new TypeToken<ArrayList<LikeListBean>>() {
+            }.getType());
 
+            if (EmptyUtils.isNotEmpty(likeListBeanArrayList) && likeListBeanArrayList.size() != 0) {
+                ((TextView) getView().findViewById(R.id.tv_zan_num)).setText(likeListBeanArrayList.size() + "人赞过");
+
+                RecyclerView zan_recyclerView = (RecyclerView) getView().findViewById(R.id.zan_recyclerView);
+                BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, likeListBeanArrayList, LIKE_LIST_DATA_TYPE);
+                zan_recyclerView.setAdapter(baseRecyclerViewAdapter);
+                zan_recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
+            }
         }
     }
 
@@ -361,15 +460,95 @@ public class StateDetailFragment extends BaseFragment {
                 ((TextView) getView().findViewById(R.id.tv_user_time)).setText(TimeUtils.date2String(new Date(Long.valueOf(feedInfoDetailBean.getCreated()) * 1000), new SimpleDateFormat("yy-MM-dd HH:mm")));
 
                 user_id = feedInfoDetailBean.getPost_user_info().getUser_id();
-                if (EmptyUtils.isNotEmpty(user_id) && user_id == SPUtils.getInstance().getInt(Constant.USER_ID)) {
-                    getView().findViewById(R.id.tv_follow).setVisibility(View.GONE);
+
+                final ImageView iv_follow = (ImageView) getView().findViewById(R.id.iv_follow);
+                if (SPUtils.getInstance().getInt(Constant.USER_ID) != user_id) {
+                    final int is_friend = feedInfoDetailBean.getPost_user_info().getIs_friend();
+                    resetFollowView(iv_follow, is_friend);
+
+                    iv_follow.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            int is_friend = feedInfoDetailBean.getPost_user_info().getIs_friend();
+                            switch (is_friend) {
+                                case 1:
+                                    //已经关注，取消关注
+                                    OkHttpUtils.post()
+                                            .url(Constant.getDeleteFollowUrl())
+                                            .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
+                                            .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
+                                            .addParams(Constant.USER_ID, String.valueOf(user_id))
+                                            .build()
+                                            .execute(new StringCallback() {
+                                                @Override
+                                                public void onError(Call call, Exception e, int id) {
+
+                                                }
+
+                                                @Override
+                                                public void onResponse(String response, int id) {
+                                                    JSONObject jsonObject = null;
+                                                    try {
+                                                        jsonObject = new JSONObject(response);
+                                                        int status = jsonObject.optInt("status");
+                                                        JSONObject jsonObjectData = jsonObject.optJSONObject("data");
+                                                        if (status == 1) {
+                                                            feedInfoDetailBean.getPost_user_info().setIs_friend(2);
+                                                            resetFollowView(iv_follow, 2);
+                                                        } else {
+                                                            String code = jsonObject.optString("code");
+                                                            String msg = jsonObjectData.optString("msg");
+                                                            ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                                        }
+                                                    } catch (JSONException e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                }
+                                            });
+                                    break;
+                                case 2:
+                                    //已经取消关注，再关注
+                                    OkHttpUtils.post()
+                                            .url(Constant.getCreateFollowUrl())
+                                            .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
+                                            .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
+                                            .addParams(Constant.USER_ID, String.valueOf(user_id))
+                                            .build()
+                                            .execute(new StringCallback() {
+                                                @Override
+                                                public void onError(Call call, Exception e, int id) {
+
+                                                }
+
+                                                @Override
+                                                public void onResponse(String response, int id) {
+                                                    JSONObject jsonObject = null;
+                                                    try {
+                                                        jsonObject = new JSONObject(response);
+                                                        int status = jsonObject.optInt("status");
+                                                        JSONObject jsonObjectData = jsonObject.optJSONObject("data");
+                                                        if (status == 1) {
+                                                            feedInfoDetailBean.getPost_user_info().setIs_friend(1);
+                                                            resetFollowView(iv_follow, 1);
+                                                        } else {
+                                                            String code = jsonObject.optString("code");
+                                                            String msg = jsonObjectData.optString("msg");
+                                                            ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                                        }
+                                                    } catch (JSONException e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                }
+                                            });
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                    });
+                } else {
+                    iv_follow.setVisibility(View.GONE);
                 }
-                getView().findViewById(R.id.tv_follow).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ToastUtils.showShort("关注");
-                    }
-                });
 
                 ((TextView) getView().findViewById(R.id.tv_post_content)).setText(feedInfoDetailBean.getPost_content());
 
@@ -394,6 +573,19 @@ public class StateDetailFragment extends BaseFragment {
                 //添加图片内容
                 addImageContent(feedInfoDetailBean.getPost_files());
             }
+        }
+    }
+
+    private void resetFollowView(ImageView iv_follow, int is_friend) {
+        switch (is_friend) {
+            case 1:
+                iv_follow.setImageResource(R.drawable.other_followed);
+                break;
+            case 2:
+                iv_follow.setImageResource(R.drawable.other_follow);
+                break;
+            default:
+                break;
         }
     }
 

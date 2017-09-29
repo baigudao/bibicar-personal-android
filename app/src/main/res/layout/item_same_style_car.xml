@@ -19,7 +19,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="4dp"
             android:background="@drawable/camera_circle_bg"
-            android:scaleType="fitXY"
+            android:scaleType="centerCrop"
             android:src="@drawable/default_bg_ratio_1"/>
 
         <TextView

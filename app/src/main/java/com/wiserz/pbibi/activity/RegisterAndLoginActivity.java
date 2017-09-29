@@ -189,59 +189,6 @@ public class RegisterAndLoginActivity extends BaseActivity implements View.OnCli
     }
 
     private void oauthLogin(final UserInfo userInfo) {
-
-        //        GBExecutionPool.getExecutor().execute(new Runnable() {
-        //            @Override
-        //            public void run() {
-        //                String data = "";
-        //                try {
-        //                    String weiboId = "";
-        //                    String wxId = "";
-        //                    if (userInfo.getPlatform().getName().equalsIgnoreCase("SinaWeibo")) {
-        //                        weiboId = userInfo.getUserId();
-        //                    } else {
-        //                        wxId = userInfo.getUserId();
-        //                    }
-        //                    data = Constant.getOauthLogin(URLEncoder.encode(userInfo.getUserIcon(), "utf-8"), Constants.getDeviceIdentifier(BaseApplication.getAppContext()),
-        //                            URLEncoder.encode(userInfo.getUserName(), "utf-8"), weiboId, wxId);
-        //                } catch (UnsupportedEncodingException e) {
-        //                    e.printStackTrace();
-        //                    return;
-        //                }
-        //                final ServerResultBean<ResponseObject> result = DataManger.getInstance().oauthLogin(data);
-        //                if (getView() != null) {
-        //                    getActivity().runOnUiThread(new Runnable() {
-        //                        @Override
-        //                        public void run() {
-        //                            hideLoadingDialog();
-        //                            if (getView() != null) {
-        //                                if (result.isSuccess() && result.getData() != null) {
-        //                                    PreferencesWrapper.getInstanse(BaseApplication.getAppContext()).setPreferenceStringValue(Constants.SESSION_ID, result.getData().getSession_id());
-        //                                    PreferencesWrapper.getInstanse(BaseApplication.getAppContext()).setPreferenceStringValue(Constants.CHAT_TOKEN, result.getData().getUser_info().getChat_token());
-        //                                    PreferencesWrapper.getInstanse(BaseApplication.getAppContext()).setPreferenceIntValue(Constants.USER_ID, result.getData().getUser_info().getUser_id());
-        //                                    MyUserInfoBean myInfo = new MyUserInfoBean();
-        //                                    myInfo.setUser_info(result.getData().getUser_info());
-        //                                    DataManger.getInstance().setMyUserInfo(myInfo);
-        //                                    Intent intent = new Intent(getActivity(), HomeActivity.class);
-        //                                    startActivity(intent);
-        //                                    getActivity().finish();
-        //                                    connect(Constants.getChatToken(BaseApplication.getAppContext()));
-        //                                    Toast.makeText(getActivity(), getString(R.string.login_successful), Toast.LENGTH_SHORT).show();
-        //                                } else {
-        //                                    if (result.getErrorCode() == 51008) {
-        //                                        DataManger.getInstance().setData(userInfo);
-        //                                        gotoPager(OauthRegisterFragment.class, null);
-        //                                    } else {
-        //                                        Toast.makeText(getActivity(), result.getMsg(), Toast.LENGTH_SHORT).show();
-        //                                    }
-        //                                }
-        //                            }
-        //                        }
-        //                    });
-        //                }
-        //            }
-        //        });
-
         String weiboId = "";
         String wxId = "";
         if (userInfo.getPlatform().getName().equalsIgnoreCase("SinaWeibo")) {
@@ -265,40 +212,29 @@ public class RegisterAndLoginActivity extends BaseActivity implements View.OnCli
 
                     @Override
                     public void onResponse(String response, int id) {
-                        //                            "code": 0,
-                        //                                    "data": {
-                        //                                "session_id": "session59cca13c91442",
-                        //                                        "user_info": {
-                        //                                    "chat_token": "aBNKBHUKHjAY0PCBffXUKm33mxX1mn0cwGZGNjjYMXhZ7+cAtBn9JRtzeCvmdcxXpkxv991sVKlnSbDwflLLlg==",
-                        //                                            "created": 0,
-                        //                                            "mobile": "",
-                        //                                            "profile": {
-                        //                                        "age": 0,
-                        //                                                "avatar": "http%3A%2F%2Fwx.qlogo.cn%2Fmmopen%2Fvi_32%2FBru7fC8QLsOgFdgEcjwyuaoSxV2ZIzoZBGNlCTzPAz8ldMe9fwmTnCQZicaPwQ9sTPKytC8sV2djia03n2RcsJhQ%2F0",
-                        //                                                "balance": 0,
-                        //                                                "bibi_no": 14947,
-                        //                                                "company": 0,
-                        //                                                "constellation": "",
-                        //                                                "gender": 2,
-                        //                                                "nickname": "Jackie+Lee",
-                        //                                                "signature": "",
-                        //                                                "sort": 0,
-                        //                                                "type": 1
-                        //                                    },
-                        //                                    "user_id": 4947,
-                        //                                            "username": "bibi_t50s42"
-                        //                                }
-                        //                            },
-                        //                            "status": 1
-                        //                        }
                         JSONObject jsonObject = null;
                         try {
                             jsonObject = new JSONObject(response);
                             int status = jsonObject.optInt("status");
                             JSONObject jsonObjectData = jsonObject.optJSONObject("data");
                             if (status == 1) {
+                                Gson gson = new Gson();
+                                LoginBean loginBean = gson.fromJson(jsonObjectData.toString(), LoginBean.class);
+                                //存储个人相关信息
+                                SPUtils.getInstance().put(Constant.SESSION_ID, loginBean.getSession_id());
+                                SPUtils.getInstance().put(Constant.ACCOUNT, loginBean.getUser_info().getMobile());
+                                SPUtils.getInstance().put(Constant.CHAT_TOKEN, loginBean.getUser_info().getChat_token());
+                                SPUtils.getInstance().put(Constant.USER_ID, loginBean.getUser_info().getUser_id());
+                                DataManager.getInstance().setUserInfo(loginBean.getUser_info());
 
-                                ToastUtils.showShort("三方登录success");
+                                if (EmptyUtils.isNotEmpty(SPUtils.getInstance().getString(Constant.SESSION_ID))) {
+                                    SPUtils.getInstance().put(Constant.IS_USER_LOGIN, true);
+                                }
+
+                                startActivity(new Intent(RegisterAndLoginActivity.this, MainActivity.class));
+                                RegisterAndLoginActivity.this.finish();
+                                connect(SPUtils.getInstance().getString(Constant.CHAT_TOKEN));//建立与融云服务器的连接
+                                ToastUtils.showShort(R.string.login_successful);
                             } else {
                                 int code = jsonObject.optInt("code");
                                 if (code == 51008) {

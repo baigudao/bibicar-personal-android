@@ -101,9 +101,8 @@ public class CreateCarRentOrderFragment extends BaseFragment {
             ((TextView) view.findViewById(R.id.tv_deposit)).setText("¥" + carRentDetailInfoBean.getRental_info().getSubscription() + "元/天");//押金
             ((TextView) view.findViewById(R.id.tv_rent_price)).setText("¥" + carRentDetailInfoBean.getRental_info().getOne() + "元/天");//租金
 
-            double sum = carRentDetailInfoBean.getRental_info().getDeposit() + carRentDetailInfoBean.getRental_info().getOne() +
-                    carRentDetailInfoBean.getRental_info().getSubscription();
-            ((TextView) view.findViewById(R.id.tv_cost)).setText("费用：" + sum + "元");
+            double sum = carRentDetailInfoBean.getRental_info().getDeposit();
+            ((TextView) view.findViewById(R.id.tv_cost)).setText("费用：" + sum + "元");//订金
         }
 
         view.findViewById(R.id.rl_weixinpay).setOnClickListener(this);

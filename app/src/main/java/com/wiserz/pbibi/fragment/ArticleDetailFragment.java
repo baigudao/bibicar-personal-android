@@ -19,7 +19,6 @@ import android.widget.TextView;
 
 import com.blankj.utilcode.util.EmptyUtils;
 import com.blankj.utilcode.util.KeyboardUtils;
-import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.TimeUtils;
 import com.blankj.utilcode.util.ToastUtils;
@@ -33,10 +32,12 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.wiserz.pbibi.R;
+import com.wiserz.pbibi.activity.BaseActivity;
 import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
 import com.wiserz.pbibi.bean.ArticleCommentBean;
 import com.wiserz.pbibi.bean.ArticleDetailBean;
 import com.wiserz.pbibi.util.Constant;
+import com.wiserz.pbibi.util.DataManager;
 import com.wiserz.pbibi.view.SharePlatformPopupWindow;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -79,9 +80,6 @@ public class ArticleDetailFragment extends BaseFragment implements BaseRecyclerV
 
     private static final int ARTICLE_COMMENT_LIST_DATA_TYPE = 18;
     private int is_collect;
-
-    private int flag;
-    private int comment_id;
 
     private SmartRefreshLayout smartRefreshLayout;
     private BaseRecyclerViewAdapter baseRecyclerViewAdapter;
@@ -275,16 +273,23 @@ public class ArticleDetailFragment extends BaseFragment implements BaseRecyclerV
     public void onItemClick(Object data, int position) {
         if (data.getClass().getSimpleName().equals("ArticleCommentBean")) {
             ArticleCommentBean articleCommentBean = (ArticleCommentBean) data;
-            LogUtils.e("item的点击事件");
-
             if (EmptyUtils.isNotEmpty(articleCommentBean)) {
-                flag = 1;
-                comment_id = articleCommentBean.getComment_id();
-                et_input_comment.setFocusable(true);
-                et_input_comment.setFocusableInTouchMode(true);
-                et_input_comment.requestFocus();
-                KeyboardUtils.showSoftInput(getActivity());
-                KeyboardUtils.clickBlankArea2HideSoftInput();
+                //查看更多回复
+                int comment_id = articleCommentBean.getComment_id();
+                int feed_id = articleCommentBean.getFeed_id();
+                if (EmptyUtils.isNotEmpty(comment_id) && EmptyUtils.isNotEmpty(feed_id)) {
+                    DataManager.getInstance().setData1(feed_id);
+                    DataManager.getInstance().setData2(comment_id);
+                    DataManager.getInstance().setData3(articleCommentBean);
+                    ((BaseActivity) mContext).gotoPager(CommentDetailFragment.class, null);
+                }
+                //                flag = 1;
+                //                comment_id = articleCommentBean.getComment_id();
+                //                et_input_comment.setFocusable(true);
+                //                et_input_comment.setFocusableInTouchMode(true);
+                //                et_input_comment.requestFocus();
+                //                KeyboardUtils.showSoftInput(getActivity());
+                //                KeyboardUtils.clickBlankArea2HideSoftInput();
             }
         }
     }
@@ -465,8 +470,10 @@ public class ArticleDetailFragment extends BaseFragment implements BaseRecyclerV
                 .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
                 .addParams(Constant.FEED_ID, String.valueOf(feed_id))
                 .addParams(Constant.CONTENT, getCommentContent())
-                .addParams(Constant.REPLY_ID, flag == 1 ? String.valueOf(comment_id) : String.valueOf(0))//flag =1为二级评论
-                .addParams(Constant.FATHER_ID, flag == 1 ? String.valueOf(comment_id) : String.valueOf(0))
+                //                .addParams(Constant.REPLY_ID, flag == 1 ? String.valueOf(comment_id) : String.valueOf(0))//flag =1为二级评论
+                .addParams(Constant.REPLY_ID, String.valueOf(0))//flag =1为二级评论
+                //                .addParams(Constant.FATHER_ID, flag == 1 ? String.valueOf(comment_id) : String.valueOf(0))
+                .addParams(Constant.FATHER_ID, String.valueOf(0))
                 .build()
                 .execute(new StringCallback() {
                     @Override

@@ -1,7 +1,5 @@
 package com.wiserz.pbibi.bean;
 
-import java.util.List;
-
 /**
  * Created by jackie on 2017/8/29 10:03.
  * QQ : 971060378
@@ -16,44 +14,25 @@ public class LoveCarBean extends BaseBean {
      * car_id : 578724dee32a5
      * car_intro :
      * car_name : 宝马 5系三厢 2013款 2.0T 自动
-     * car_no :
      * car_status : 0
-     * car_time : 17天前
      * car_type : 3
-     * check_expiration_time :
-     * city_info : {"city_id":93,"city_lat":360,"city_lng":360,"city_name":"深圳"}
      * contact_address :
      * contact_name :
      * contact_phone : 400-113-8778
      * created : 1468474590
-     * displacement :
-     * engine_no : 123456
-     * exchange_time : 0
      * fav_num : 0
-     * fav_userlist : [{"avatar":"http://img.bibicar.cn/FqKNZJ3khFC9SHdJWTwQ7QYsVW3k","like_id":104,"nickname":"馨子","user_id":454}]
-     * files : [{"file_id":"FqhUXyGeZEyeXbWX2i96hFrcL3zS","file_type":"1","file_url":"http://img.bibicar.cn/FqhUXyGeZEyeXbWX2i96hFrcL3zS?imageMogr2/auto-orient/thumbnail/1000x/strip"}]
-     * gearbox :
-     * guide_price : 0
-     * insurance_due_time :
-     * is_fav : 2
-     * is_like : 1
+     * file_img : http://img.bibicar.cn/FqhUXyGeZEyeXbWX2i96hFrcL3zS?imageMogr2/auto-orient/thumbnail/1000x/strip
      * is_pacted : 2
-     * is_transfer : 0
-     * maintain : 0
      * mileage : 0
      * model_detail : {"CarReferPrice":"55.06万","Car_RepairPolicy":"三年或10万公里","Engine_EnvirStandard":"国4,国5","Engine_ExhaustForFloat":"2.0 L","Engine_InhaleType":"涡轮增压","Engine_Location":"前置","Engine_MaxNJ":"350 N·m","Engine_Type":"N20B20","Engine_horsepower":"245 Ps","Oil_FuelCapacity":"70 L","Oil_FuelTab":"97号","Oil_FuelType":"汽油","Oil_SupplyType":"直喷","OutSet_Height":"1491 mm","OutSet_Length":"5055 mm","OutSet_WheelBase":"3108 mm","OutSet_Width":"1860 mm","Perf_AccelerateTime":"6.9 s","Perf_DriveType":"后轮驱动","Perf_MaxSpeed":"250","Perf_SeatNum":"5 个","Perf_ZongHeYouHao":"7.2 L/100km","UnderPan_ForwardGearNum":"8 挡 手自一体","id":2128,"model_id":111288}
      * model_info : {"model_id":111288,"model_name":"2014 528Li 领先型","model_year":"2014","series_id":2412}
-     * platform_info : {}
      * price : 0
      * sales_volume : 0
      * series_info : {"brand_id":3,"series_id":2412,"series_name":"5系"}
-     * style : 0
      * updated : 1468474590
-     * user_info : {"created":0,"mobile":"","profile":{"age":0,"avatar":"http://img.bibicar.cn/FqKNZJ3khFC9SHdJWTwQ7QYsVW3k","constellation":"","gender":0,"nickname":"馨子","signature":"","type":1},"user_id":454,"username":""}
+     * user_info : {"created":0,"mobile":"","profile":{"age":0,"avatar":"","constellation":"","gender":0,"nickname":"馨子","signature":"","type":1},"user_id":454,"username":""}
      * verify_status : 11
-     * vin_file : FiQwIcl91DrMSwuXWWTOpj6xjl4W
-     * vin_no : 123456
-     * visit_num : 6
+     * visit_num : 8
      */
 
     private String board_time;
@@ -62,44 +41,25 @@ public class LoveCarBean extends BaseBean {
     private String car_id;
     private String car_intro;
     private String car_name;
-    private String car_no;
     private int car_status;
-    private String car_time;
     private int car_type;
-    private String check_expiration_time;
-    private CityInfoBean city_info;
     private String contact_address;
     private String contact_name;
     private String contact_phone;
     private int created;
-    private String displacement;
-    private String engine_no;
-    private int exchange_time;
     private int fav_num;
-    private String gearbox;
-    private int guide_price;
-    private String insurance_due_time;
-    private int is_fav;
-    private int is_like;
+    private String file_img;
     private int is_pacted;
-    private int is_transfer;
-    private int maintain;
     private String mileage;
     private ModelDetailBean model_detail;
     private ModelInfoBean model_info;
-    private PlatformInfoBean platform_info;
     private double price;
     private int sales_volume;
     private SeriesInfoBean series_info;
-    private int style;
     private int updated;
     private UserInfoBean user_info;
     private int verify_status;
-    private String vin_file;
-    private String vin_no;
     private int visit_num;
-    private List<FavUserlistBean> fav_userlist;
-    private List<FilesBean> files;
 
     public String getBoard_time() {
         return board_time;
@@ -149,14 +109,6 @@ public class LoveCarBean extends BaseBean {
         this.car_name = car_name;
     }
 
-    public String getCar_no() {
-        return car_no;
-    }
-
-    public void setCar_no(String car_no) {
-        this.car_no = car_no;
-    }
-
     public int getCar_status() {
         return car_status;
     }
@@ -165,36 +117,12 @@ public class LoveCarBean extends BaseBean {
         this.car_status = car_status;
     }
 
-    public String getCar_time() {
-        return car_time;
-    }
-
-    public void setCar_time(String car_time) {
-        this.car_time = car_time;
-    }
-
     public int getCar_type() {
         return car_type;
     }
 
     public void setCar_type(int car_type) {
         this.car_type = car_type;
-    }
-
-    public String getCheck_expiration_time() {
-        return check_expiration_time;
-    }
-
-    public void setCheck_expiration_time(String check_expiration_time) {
-        this.check_expiration_time = check_expiration_time;
-    }
-
-    public CityInfoBean getCity_info() {
-        return city_info;
-    }
-
-    public void setCity_info(CityInfoBean city_info) {
-        this.city_info = city_info;
     }
 
     public String getContact_address() {
@@ -229,30 +157,6 @@ public class LoveCarBean extends BaseBean {
         this.created = created;
     }
 
-    public String getDisplacement() {
-        return displacement;
-    }
-
-    public void setDisplacement(String displacement) {
-        this.displacement = displacement;
-    }
-
-    public String getEngine_no() {
-        return engine_no;
-    }
-
-    public void setEngine_no(String engine_no) {
-        this.engine_no = engine_no;
-    }
-
-    public int getExchange_time() {
-        return exchange_time;
-    }
-
-    public void setExchange_time(int exchange_time) {
-        this.exchange_time = exchange_time;
-    }
-
     public int getFav_num() {
         return fav_num;
     }
@@ -261,44 +165,12 @@ public class LoveCarBean extends BaseBean {
         this.fav_num = fav_num;
     }
 
-    public String getGearbox() {
-        return gearbox;
+    public String getFile_img() {
+        return file_img;
     }
 
-    public void setGearbox(String gearbox) {
-        this.gearbox = gearbox;
-    }
-
-    public int getGuide_price() {
-        return guide_price;
-    }
-
-    public void setGuide_price(int guide_price) {
-        this.guide_price = guide_price;
-    }
-
-    public String getInsurance_due_time() {
-        return insurance_due_time;
-    }
-
-    public void setInsurance_due_time(String insurance_due_time) {
-        this.insurance_due_time = insurance_due_time;
-    }
-
-    public int getIs_fav() {
-        return is_fav;
-    }
-
-    public void setIs_fav(int is_fav) {
-        this.is_fav = is_fav;
-    }
-
-    public int getIs_like() {
-        return is_like;
-    }
-
-    public void setIs_like(int is_like) {
-        this.is_like = is_like;
+    public void setFile_img(String file_img) {
+        this.file_img = file_img;
     }
 
     public int getIs_pacted() {
@@ -307,22 +179,6 @@ public class LoveCarBean extends BaseBean {
 
     public void setIs_pacted(int is_pacted) {
         this.is_pacted = is_pacted;
-    }
-
-    public int getIs_transfer() {
-        return is_transfer;
-    }
-
-    public void setIs_transfer(int is_transfer) {
-        this.is_transfer = is_transfer;
-    }
-
-    public int getMaintain() {
-        return maintain;
-    }
-
-    public void setMaintain(int maintain) {
-        this.maintain = maintain;
     }
 
     public String getMileage() {
@@ -349,14 +205,6 @@ public class LoveCarBean extends BaseBean {
         this.model_info = model_info;
     }
 
-    public PlatformInfoBean getPlatform_info() {
-        return platform_info;
-    }
-
-    public void setPlatform_info(PlatformInfoBean platform_info) {
-        this.platform_info = platform_info;
-    }
-
     public double getPrice() {
         return price;
     }
@@ -379,14 +227,6 @@ public class LoveCarBean extends BaseBean {
 
     public void setSeries_info(SeriesInfoBean series_info) {
         this.series_info = series_info;
-    }
-
-    public int getStyle() {
-        return style;
-    }
-
-    public void setStyle(int style) {
-        this.style = style;
     }
 
     public int getUpdated() {
@@ -413,44 +253,12 @@ public class LoveCarBean extends BaseBean {
         this.verify_status = verify_status;
     }
 
-    public String getVin_file() {
-        return vin_file;
-    }
-
-    public void setVin_file(String vin_file) {
-        this.vin_file = vin_file;
-    }
-
-    public String getVin_no() {
-        return vin_no;
-    }
-
-    public void setVin_no(String vin_no) {
-        this.vin_no = vin_no;
-    }
-
     public int getVisit_num() {
         return visit_num;
     }
 
     public void setVisit_num(int visit_num) {
         this.visit_num = visit_num;
-    }
-
-    public List<FavUserlistBean> getFav_userlist() {
-        return fav_userlist;
-    }
-
-    public void setFav_userlist(List<FavUserlistBean> fav_userlist) {
-        this.fav_userlist = fav_userlist;
-    }
-
-    public List<FilesBean> getFiles() {
-        return files;
-    }
-
-    public void setFiles(List<FilesBean> files) {
-        this.files = files;
     }
 
     public static class BrandInfoBean {
@@ -496,52 +304,6 @@ public class LoveCarBean extends BaseBean {
 
         public void setBrand_url(String brand_url) {
             this.brand_url = brand_url;
-        }
-    }
-
-    public static class CityInfoBean {
-        /**
-         * city_id : 93
-         * city_lat : 360
-         * city_lng : 360
-         * city_name : 深圳
-         */
-
-        private int city_id;
-        private int city_lat;
-        private int city_lng;
-        private String city_name;
-
-        public int getCity_id() {
-            return city_id;
-        }
-
-        public void setCity_id(int city_id) {
-            this.city_id = city_id;
-        }
-
-        public int getCity_lat() {
-            return city_lat;
-        }
-
-        public void setCity_lat(int city_lat) {
-            this.city_lat = city_lat;
-        }
-
-        public int getCity_lng() {
-            return city_lng;
-        }
-
-        public void setCity_lng(int city_lng) {
-            this.city_lng = city_lng;
-        }
-
-        public String getCity_name() {
-            return city_name;
-        }
-
-        public void setCity_name(String city_name) {
-            this.city_name = city_name;
         }
     }
 
@@ -802,9 +564,49 @@ public class LoveCarBean extends BaseBean {
     }
 
     public static class ModelInfoBean {
-    }
+        /**
+         * model_id : 111288
+         * model_name : 2014 528Li 领先型
+         * model_year : 2014
+         * series_id : 2412
+         */
 
-    public static class PlatformInfoBean {
+        private int model_id;
+        private String model_name;
+        private String model_year;
+        private int series_id;
+
+        public int getModel_id() {
+            return model_id;
+        }
+
+        public void setModel_id(int model_id) {
+            this.model_id = model_id;
+        }
+
+        public String getModel_name() {
+            return model_name;
+        }
+
+        public void setModel_name(String model_name) {
+            this.model_name = model_name;
+        }
+
+        public String getModel_year() {
+            return model_year;
+        }
+
+        public void setModel_year(String model_year) {
+            this.model_year = model_year;
+        }
+
+        public int getSeries_id() {
+            return series_id;
+        }
+
+        public void setSeries_id(int series_id) {
+            this.series_id = series_id;
+        }
     }
 
     public static class SeriesInfoBean {
@@ -847,7 +649,7 @@ public class LoveCarBean extends BaseBean {
         /**
          * created : 0
          * mobile :
-         * profile : {"age":0,"avatar":"http://img.bibicar.cn/FqKNZJ3khFC9SHdJWTwQ7QYsVW3k","constellation":"","gender":0,"nickname":"馨子","signature":"","type":1}
+         * profile : {"age":0,"avatar":"","constellation":"","gender":0,"nickname":"馨子","signature":"","type":1}
          * user_id : 454
          * username :
          */
@@ -901,7 +703,7 @@ public class LoveCarBean extends BaseBean {
         public static class ProfileBean {
             /**
              * age : 0
-             * avatar : http://img.bibicar.cn/FqKNZJ3khFC9SHdJWTwQ7QYsVW3k
+             * avatar :
              * constellation :
              * gender : 0
              * nickname : 馨子
@@ -972,88 +774,6 @@ public class LoveCarBean extends BaseBean {
             public void setType(int type) {
                 this.type = type;
             }
-        }
-    }
-
-    public static class FavUserlistBean {
-        /**
-         * avatar : http://img.bibicar.cn/FqKNZJ3khFC9SHdJWTwQ7QYsVW3k
-         * like_id : 104
-         * nickname : 馨子
-         * user_id : 454
-         */
-
-        private String avatar;
-        private int like_id;
-        private String nickname;
-        private int user_id;
-
-        public String getAvatar() {
-            return avatar;
-        }
-
-        public void setAvatar(String avatar) {
-            this.avatar = avatar;
-        }
-
-        public int getLike_id() {
-            return like_id;
-        }
-
-        public void setLike_id(int like_id) {
-            this.like_id = like_id;
-        }
-
-        public String getNickname() {
-            return nickname;
-        }
-
-        public void setNickname(String nickname) {
-            this.nickname = nickname;
-        }
-
-        public int getUser_id() {
-            return user_id;
-        }
-
-        public void setUser_id(int user_id) {
-            this.user_id = user_id;
-        }
-    }
-
-    public static class FilesBean {
-        /**
-         * file_id : FqhUXyGeZEyeXbWX2i96hFrcL3zS
-         * file_type : 1
-         * file_url : http://img.bibicar.cn/FqhUXyGeZEyeXbWX2i96hFrcL3zS?imageMogr2/auto-orient/thumbnail/1000x/strip
-         */
-
-        private String file_id;
-        private String file_type;
-        private String file_url;
-
-        public String getFile_id() {
-            return file_id;
-        }
-
-        public void setFile_id(String file_id) {
-            this.file_id = file_id;
-        }
-
-        public String getFile_type() {
-            return file_type;
-        }
-
-        public void setFile_type(String file_type) {
-            this.file_type = file_type;
-        }
-
-        public String getFile_url() {
-            return file_url;
-        }
-
-        public void setFile_url(String file_url) {
-            this.file_url = file_url;
         }
     }
 }

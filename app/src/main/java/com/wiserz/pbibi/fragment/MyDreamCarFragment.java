@@ -14,6 +14,7 @@ import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
 import com.wiserz.pbibi.bean.DreamCarBean;
 import com.wiserz.pbibi.util.Constant;
+import com.wiserz.pbibi.util.DataManager;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -33,6 +34,7 @@ import okhttp3.Call;
 public class MyDreamCarFragment extends BaseFragment {
 
     private static final int DREAM_CAR_DATA_TYPE = 26;
+    private int user_id;
 
     @Override
     protected int getLayoutId() {
@@ -41,7 +43,8 @@ public class MyDreamCarFragment extends BaseFragment {
 
     @Override
     protected void initView(View view) {
-
+        user_id = (int) DataManager.getInstance().getData1();
+        DataManager.getInstance().setData1(null);
     }
 
     @Override
@@ -52,11 +55,17 @@ public class MyDreamCarFragment extends BaseFragment {
     @Override
     protected void initData() {
         super.initData();
+        if (EmptyUtils.isNotEmpty(user_id)) {
+            getDataFromNet();
+        }
+    }
+
+    private void getDataFromNet() {
         OkHttpUtils.post()
                 .url(Constant.getDreamCarUrl())
                 .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
                 .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
-                .addParams(Constant.USER_ID, String.valueOf(SPUtils.getInstance().getInt(Constant.USER_ID)))
+                .addParams(Constant.USER_ID, String.valueOf(user_id))
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -96,6 +105,8 @@ public class MyDreamCarFragment extends BaseFragment {
                 recyclerView.setAdapter(baseRecyclerViewAdapter);
                 recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
             }
+        } else {
+            ToastUtils.showShort("你还没有梦想中的车型");
         }
     }
 }

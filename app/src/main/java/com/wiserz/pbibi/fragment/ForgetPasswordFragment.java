@@ -29,8 +29,6 @@ import java.util.TimerTask;
 
 import okhttp3.Call;
 
-import static android.R.attr.password;
-
 /**
  * Created by jackie on 2017/8/26 9:52.
  * QQ : 971060378
@@ -170,7 +168,7 @@ public class ForgetPasswordFragment extends BaseFragment {
                                         //存储个人相关信息
                                         SPUtils.getInstance().put(Constant.SESSION_ID, loginBean.getSession_id());
                                         SPUtils.getInstance().put(Constant.ACCOUNT, phone);
-                                        SPUtils.getInstance().put(Constant.PASSWORD, password);
+                                        SPUtils.getInstance().put(Constant.PASSWORD, newPassword);
                                         SPUtils.getInstance().put(Constant.CHAT_TOKEN, loginBean.getUser_info().getChat_token());
                                         SPUtils.getInstance().put(Constant.USER_ID, loginBean.getUser_info().getUser_id());
                                         DataManager.getInstance().setUserInfo(loginBean.getUser_info());

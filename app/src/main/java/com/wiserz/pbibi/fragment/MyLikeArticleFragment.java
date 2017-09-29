@@ -10,6 +10,10 @@ import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
 import com.wiserz.pbibi.bean.ArticleBean;
@@ -30,11 +34,15 @@ import okhttp3.Call;
  * QQ : 971060378
  * Used as : 我喜欢的文章
  */
-public class MyLikeArticleFragment extends BaseFragment implements BaseRecyclerViewAdapter.OnItemClickListener {
+public class MyLikeArticleFragment extends BaseFragment implements BaseRecyclerViewAdapter.OnItemClickListener, OnRefreshListener, OnLoadmoreListener {
 
     private int mPage;
     private RecyclerView recyclerView;
     private static final int ARTICLE_LIST_DATA_TYPE = 76;
+
+    private SmartRefreshLayout smartRefreshLayout;
+    private BaseRecyclerViewAdapter baseRecyclerViewAdapter;
+    private int refresh_or_load;//0或1
 
     @Override
     protected int getLayoutId() {
@@ -45,6 +53,11 @@ public class MyLikeArticleFragment extends BaseFragment implements BaseRecyclerV
     protected void initView(View view) {
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         mPage = 0;
+
+        smartRefreshLayout = (SmartRefreshLayout) view.findViewById(R.id.smartRefreshLayout);
+        smartRefreshLayout.setOnRefreshListener(this);
+        smartRefreshLayout.setOnLoadmoreListener(this);
+        refresh_or_load = 0;
     }
 
     @Override
@@ -79,7 +92,18 @@ public class MyLikeArticleFragment extends BaseFragment implements BaseRecyclerV
                             int status = jsonObject.optInt("status");
                             JSONObject jsonObjectData = jsonObject.optJSONObject("data");
                             if (status == 1) {
-                                handlerArticleListData(jsonObjectData);
+                                switch (refresh_or_load) {
+                                    case 0:
+                                        smartRefreshLayout.finishRefresh();
+                                        handlerArticleListData(jsonObjectData);
+                                        break;
+                                    case 1:
+                                        smartRefreshLayout.finishLoadmore();
+                                        handlerMoreArticleListData(jsonObjectData);
+                                        break;
+                                    default:
+                                        break;
+                                }
                             } else {
                                 String code = jsonObject.optString("code");
                                 String msg = jsonObjectData.optString("msg");
@@ -92,6 +116,22 @@ public class MyLikeArticleFragment extends BaseFragment implements BaseRecyclerV
                 });
     }
 
+    private void handlerMoreArticleListData(JSONObject jsonObjectData) {
+        ArrayList<ArticleBean> articleBeanArrayList = new ArrayList<>();
+        JSONArray jsonArray = jsonObjectData.optJSONArray("feed_list");
+        Gson gson = new Gson();
+        if (EmptyUtils.isNotEmpty(jsonArray)) {
+            articleBeanArrayList = gson.fromJson(jsonArray.toString(), new TypeToken<ArrayList<ArticleBean>>() {
+            }.getType());
+        }
+
+        if (EmptyUtils.isNotEmpty(articleBeanArrayList) && articleBeanArrayList.size() != 0) {
+            baseRecyclerViewAdapter.addDatas(articleBeanArrayList);
+        } else {
+            ToastUtils.showShort("没有更多了");
+        }
+    }
+
     private void handlerArticleListData(JSONObject jsonObject) {
         ArrayList<ArticleBean> articleBeanArrayList = new ArrayList<>();
         JSONArray jsonArray = jsonObject.optJSONArray("feed_list");
@@ -102,7 +142,7 @@ public class MyLikeArticleFragment extends BaseFragment implements BaseRecyclerV
         }
 
         if (EmptyUtils.isNotEmpty(articleBeanArrayList) && articleBeanArrayList.size() != 0) {
-            BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, articleBeanArrayList, ARTICLE_LIST_DATA_TYPE);
+            baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, articleBeanArrayList, ARTICLE_LIST_DATA_TYPE);
             recyclerView.setAdapter(baseRecyclerViewAdapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
             baseRecyclerViewAdapter.setOnItemClickListener(this);
@@ -121,5 +161,19 @@ public class MyLikeArticleFragment extends BaseFragment implements BaseRecyclerV
             bundle.putInt(Constant.FEED_ID, articleBean.getFeed_id());
             gotoPager(ArticleDetailFragment.class, bundle);
         }
+    }
+
+    @Override
+    public void onRefresh(RefreshLayout refreshlayout) {
+        mPage = 0;
+        refresh_or_load = 0;
+        getDataFromNet();
+    }
+
+    @Override
+    public void onLoadmore(RefreshLayout refreshlayout) {
+        ++mPage;
+        refresh_or_load = 1;
+        getDataFromNet();
     }
 }

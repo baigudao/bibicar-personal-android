@@ -28,6 +28,7 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.wiserz.pbibi.R;
+import com.wiserz.pbibi.activity.BaseActivity;
 import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
 import com.wiserz.pbibi.bean.ArticleCommentBean;
 import com.wiserz.pbibi.bean.FeedInfoBean;
@@ -72,8 +73,6 @@ public class VideoDetailFragment extends BaseFragment implements BaseRecyclerVie
     private ImageView iv_like;
 
     private static final int ARTICLE_COMMENT_LIST_DATA_TYPE = 18;
-    private int flag;
-    private int comment_id;
     private int is_collect;
 
     private SmartRefreshLayout smartRefreshLayout;
@@ -149,8 +148,8 @@ public class VideoDetailFragment extends BaseFragment implements BaseRecyclerVie
                 .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
                 .addParams(Constant.FEED_ID, String.valueOf(feed_id))
                 .addParams(Constant.CONTENT, getCommentContent())
-                .addParams(Constant.REPLY_ID, flag == 1 ? String.valueOf(comment_id) : String.valueOf(0))//flag =1为二级评论
-                .addParams(Constant.FATHER_ID, flag == 1 ? String.valueOf(comment_id) : String.valueOf(0))
+                .addParams(Constant.REPLY_ID, String.valueOf(0))
+                .addParams(Constant.FATHER_ID, String.valueOf(0))
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -317,6 +316,7 @@ public class VideoDetailFragment extends BaseFragment implements BaseRecyclerVie
                     ((TextView) getView().findViewById(R.id.tv_like_num)).setText(feedInfoBean.getLike_num() + "");
 
                     if (EmptyUtils.isNotEmpty(feedInfoBean.getPost_user_info()) && EmptyUtils.isNotEmpty(feedInfoBean.getPost_user_info().getProfile())) {
+                        final int user_id = feedInfoBean.getPost_user_info().getUser_id();
                         Glide.with(mContext)
                                 .load(feedInfoBean.getPost_user_info().getProfile().getAvatar())
                                 .placeholder(R.drawable.user_photo)
@@ -337,7 +337,7 @@ public class VideoDetailFragment extends BaseFragment implements BaseRecyclerVie
                         getView().findViewById(R.id.tv_user_name_post).setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                int user_id = feedInfoBean.getPost_user_info().getUser_id();
+
                                 if (EmptyUtils.isNotEmpty(user_id)) {
                                     Bundle bundle = new Bundle();
                                     bundle.putInt(Constant.USER_ID, user_id);
@@ -345,12 +345,95 @@ public class VideoDetailFragment extends BaseFragment implements BaseRecyclerVie
                                 }
                             }
                         });
-                        getView().findViewById(R.id.tv_focus).setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                ToastUtils.showShort("关注");
-                            }
-                        });
+
+                        final ImageView iv_follow = (ImageView) getView().findViewById(R.id.iv_follow);
+                        if (SPUtils.getInstance().getInt(Constant.USER_ID) != user_id) {
+                            final int is_friend = feedInfoBean.getPost_user_info().getIs_friend();
+                            resetFollowView(iv_follow, is_friend);
+
+                            iv_follow.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    int is_friend = feedInfoBean.getPost_user_info().getIs_friend();
+                                    switch (is_friend) {
+                                        case 1:
+                                            //已经关注，取消关注
+                                            OkHttpUtils.post()
+                                                    .url(Constant.getDeleteFollowUrl())
+                                                    .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
+                                                    .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
+                                                    .addParams(Constant.USER_ID, String.valueOf(user_id))
+                                                    .build()
+                                                    .execute(new StringCallback() {
+                                                        @Override
+                                                        public void onError(Call call, Exception e, int id) {
+
+                                                        }
+
+                                                        @Override
+                                                        public void onResponse(String response, int id) {
+                                                            JSONObject jsonObject = null;
+                                                            try {
+                                                                jsonObject = new JSONObject(response);
+                                                                int status = jsonObject.optInt("status");
+                                                                JSONObject jsonObjectData = jsonObject.optJSONObject("data");
+                                                                if (status == 1) {
+                                                                    feedInfoBean.getPost_user_info().setIs_friend(2);
+                                                                    resetFollowView(iv_follow, 2);
+                                                                } else {
+                                                                    String code = jsonObject.optString("code");
+                                                                    String msg = jsonObjectData.optString("msg");
+                                                                    ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                                                }
+                                                            } catch (JSONException e) {
+                                                                e.printStackTrace();
+                                                            }
+                                                        }
+                                                    });
+                                            break;
+                                        case 2:
+                                            //已经取消关注，再关注
+                                            OkHttpUtils.post()
+                                                    .url(Constant.getCreateFollowUrl())
+                                                    .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
+                                                    .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
+                                                    .addParams(Constant.USER_ID, String.valueOf(user_id))
+                                                    .build()
+                                                    .execute(new StringCallback() {
+                                                        @Override
+                                                        public void onError(Call call, Exception e, int id) {
+
+                                                        }
+
+                                                        @Override
+                                                        public void onResponse(String response, int id) {
+                                                            JSONObject jsonObject = null;
+                                                            try {
+                                                                jsonObject = new JSONObject(response);
+                                                                int status = jsonObject.optInt("status");
+                                                                JSONObject jsonObjectData = jsonObject.optJSONObject("data");
+                                                                if (status == 1) {
+                                                                    feedInfoBean.getPost_user_info().setIs_friend(1);
+                                                                    resetFollowView(iv_follow, 1);
+                                                                } else {
+                                                                    String code = jsonObject.optString("code");
+                                                                    String msg = jsonObjectData.optString("msg");
+                                                                    ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                                                }
+                                                            } catch (JSONException e) {
+                                                                e.printStackTrace();
+                                                            }
+                                                        }
+                                                    });
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                }
+                            });
+                        } else {
+                            iv_follow.setVisibility(View.GONE);
+                        }
                     }
                     ((TextView) getView().findViewById(R.id.tv_publish_time)).setText("发布于" + TimeUtils.date2String(new Date(Long.valueOf(feedInfoBean.getCreated()) * 1000), new SimpleDateFormat("yyyy-MM-dd")));//发布于2017-07-16
 
@@ -369,6 +452,19 @@ public class VideoDetailFragment extends BaseFragment implements BaseRecyclerVie
                     }
                 }
             }
+        }
+    }
+
+    private void resetFollowView(ImageView iv_follow, int is_friend) {
+        switch (is_friend) {
+            case 1:
+                iv_follow.setImageResource(R.drawable.other_followed);
+                break;
+            case 2:
+                iv_follow.setImageResource(R.drawable.other_follow);
+                break;
+            default:
+                break;
         }
     }
 
@@ -456,13 +552,22 @@ public class VideoDetailFragment extends BaseFragment implements BaseRecyclerVie
             ArticleCommentBean articleCommentBean = (ArticleCommentBean) data;
 
             if (EmptyUtils.isNotEmpty(articleCommentBean)) {
-                flag = 1;
-                comment_id = articleCommentBean.getComment_id();
-                et_input_comment.setFocusable(true);
-                et_input_comment.setFocusableInTouchMode(true);
-                et_input_comment.requestFocus();
-                KeyboardUtils.showSoftInput(getActivity());
-                KeyboardUtils.clickBlankArea2HideSoftInput();
+                //查看更多回复
+                int comment_id = articleCommentBean.getComment_id();
+                int feed_id = articleCommentBean.getFeed_id();
+                if (EmptyUtils.isNotEmpty(comment_id) && EmptyUtils.isNotEmpty(feed_id)) {
+                    DataManager.getInstance().setData1(feed_id);
+                    DataManager.getInstance().setData2(comment_id);
+                    DataManager.getInstance().setData3(articleCommentBean);
+                    ((BaseActivity) mContext).gotoPager(CommentDetailFragment.class, null);
+                }
+                //                flag = 1;
+                //                comment_id = articleCommentBean.getComment_id();
+                //                et_input_comment.setFocusable(true);
+                //                et_input_comment.setFocusableInTouchMode(true);
+                //                et_input_comment.requestFocus();
+                //                KeyboardUtils.showSoftInput(getActivity());
+                //                KeyboardUtils.clickBlankArea2HideSoftInput();
             }
         }
     }

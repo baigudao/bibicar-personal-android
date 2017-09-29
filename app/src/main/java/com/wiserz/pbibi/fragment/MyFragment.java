@@ -1,11 +1,11 @@
 package com.wiserz.pbibi.fragment;
 
+import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.EmptyUtils;
-import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
@@ -77,7 +77,9 @@ public class MyFragment extends BaseFragment implements OnRefreshListener {
                 gotoPager(TotalPropertyFragment.class, null);//总资产
                 break;
             case R.id.rl_my_car_repertory:
-                gotoPager(MyCarRepertoryFragment.class, null);//我的车库
+                Bundle bundle = new Bundle();
+                bundle.putInt(Constant.USER_ID,user_id);
+                gotoPager(MyCarRepertoryFragment.class, bundle);//我的车库
                 break;
             case R.id.rl_like:
                 gotoPager(MyLikeFragment.class, null);//喜欢的
@@ -116,7 +118,6 @@ public class MyFragment extends BaseFragment implements OnRefreshListener {
 
                     @Override
                     public void onResponse(String response, int id) {
-                        LogUtils.e(SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER) + "和" + SPUtils.getInstance().getString(Constant.SESSION_ID) + "和" + user_id);
                         JSONObject jsonObject = null;
                         try {
                             jsonObject = new JSONObject(response);

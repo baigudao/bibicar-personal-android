@@ -7,7 +7,7 @@ import java.util.List;
  * QQ : 971060378
  * Used as : 朋友圈中feed_info
  */
-public class FeedInfoDetailBean extends BaseBean{
+public class FeedInfoDetailBean extends BaseBean {
 
     /**
      * collect_num : 0
@@ -141,6 +141,15 @@ public class FeedInfoDetailBean extends BaseBean{
 
         private ProfileBean profile;
         private int user_id;
+        private int is_friend;
+
+        public int getIs_friend() {
+            return is_friend;
+        }
+
+        public void setIs_friend(int is_friend) {
+            this.is_friend = is_friend;
+        }
 
         public ProfileBean getProfile() {
             return profile;

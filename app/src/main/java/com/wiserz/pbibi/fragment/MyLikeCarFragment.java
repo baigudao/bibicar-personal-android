@@ -9,6 +9,10 @@ import com.blankj.utilcode.util.EmptyUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.google.gson.Gson;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
 import com.wiserz.pbibi.bean.CarInfoBean;
@@ -29,12 +33,16 @@ import okhttp3.Call;
  * QQ : 971060378
  * Used as : 我喜欢的车辆
  */
-public class MyLikeCarFragment extends BaseFragment implements BaseRecyclerViewAdapter.OnItemClickListener {
+public class MyLikeCarFragment extends BaseFragment implements BaseRecyclerViewAdapter.OnItemClickListener, OnRefreshListener, OnLoadmoreListener {
 
     private int mPage;
     private RecyclerView recyclerView;
 
     private static final int CAR_LIST_FOR_CAR_CENTER = 100;
+
+    private SmartRefreshLayout smartRefreshLayout;
+    private BaseRecyclerViewAdapter baseRecyclerViewAdapter;
+    private int refresh_or_load;//0或1
 
     @Override
     protected int getLayoutId() {
@@ -45,6 +53,11 @@ public class MyLikeCarFragment extends BaseFragment implements BaseRecyclerViewA
     protected void initView(View view) {
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         mPage = 0;
+
+        smartRefreshLayout = (SmartRefreshLayout) view.findViewById(R.id.smartRefreshLayout);
+        smartRefreshLayout.setOnRefreshListener(this);
+        smartRefreshLayout.setOnLoadmoreListener(this);
+        refresh_or_load = 0;
     }
 
     @Override
@@ -79,7 +92,18 @@ public class MyLikeCarFragment extends BaseFragment implements BaseRecyclerViewA
                             int status = jsonObject.optInt("status");
                             JSONObject jsonObjectData = jsonObject.optJSONObject("data");
                             if (status == 1) {
-                                handlerCarListData(jsonObjectData);
+                                switch (refresh_or_load) {
+                                    case 0:
+                                        smartRefreshLayout.finishRefresh();
+                                        handlerCarListData(jsonObjectData);
+                                        break;
+                                    case 1:
+                                        smartRefreshLayout.finishLoadmore();
+                                        handlerMoreCarListData(jsonObjectData);
+                                        break;
+                                    default:
+                                        break;
+                                }
                             } else {
                                 String code = jsonObject.optString("code");
                                 String msg = jsonObjectData.optString("msg");
@@ -92,11 +116,23 @@ public class MyLikeCarFragment extends BaseFragment implements BaseRecyclerViewA
                 });
     }
 
+    private void handlerMoreCarListData(JSONObject jsonObjectData) {
+        if (EmptyUtils.isNotEmpty(jsonObjectData)) {
+            ArrayList<CarInfoBean> carInfoBeanArrayList = getCarListData(jsonObjectData);
+
+            if (EmptyUtils.isNotEmpty(carInfoBeanArrayList) && carInfoBeanArrayList.size() != 0) {
+                baseRecyclerViewAdapter.addDatas(carInfoBeanArrayList);
+            } else {
+                ToastUtils.showShort("没有更多了");
+            }
+        }
+    }
+
     private void handlerCarListData(JSONObject jsonObjectData) {
         if (EmptyUtils.isNotEmpty(jsonObjectData)) {
             ArrayList<CarInfoBean> carInfoBeanArrayList = getCarListData(jsonObjectData);
             if (EmptyUtils.isNotEmpty(carInfoBeanArrayList) && carInfoBeanArrayList.size() != 0) {
-                BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, carInfoBeanArrayList, CAR_LIST_FOR_CAR_CENTER);
+                baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, carInfoBeanArrayList, CAR_LIST_FOR_CAR_CENTER);
                 recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
                 recyclerView.setAdapter(baseRecyclerViewAdapter);
                 baseRecyclerViewAdapter.setOnItemClickListener(this);
@@ -135,5 +171,19 @@ public class MyLikeCarFragment extends BaseFragment implements BaseRecyclerViewA
                 gotoPager(CarDetailFragment.class, bundle);
             }
         }
+    }
+
+    @Override
+    public void onRefresh(RefreshLayout refreshlayout) {
+        mPage = 0;
+        refresh_or_load = 0;
+        getLikeCarFromNet();
+    }
+
+    @Override
+    public void onLoadmore(RefreshLayout refreshlayout) {
+        ++mPage;
+        refresh_or_load = 1;
+        getLikeCarFromNet();
     }
 }
