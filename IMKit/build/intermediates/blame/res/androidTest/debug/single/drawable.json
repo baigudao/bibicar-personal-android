@@ -1,11 +1,11 @@
 [
     {
-        "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\rc_voice_input_selector.xml",
-        "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\bundles\\debug\\res\\drawable\\rc_voice_input_selector.xml"
-    },
-    {
         "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\rc_menu_background_selector.xml",
         "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\bundles\\debug\\res\\drawable\\rc_menu_background_selector.xml"
+    },
+    {
+        "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\rc_voice_input_selector.xml",
+        "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\bundles\\debug\\res\\drawable\\rc_voice_input_selector.xml"
     },
     {
         "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\rc_btn_public_service_enter_selector.xml",

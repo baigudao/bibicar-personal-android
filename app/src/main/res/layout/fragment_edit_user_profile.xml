@@ -132,6 +132,7 @@
         android:background="@null"
         android:ellipsize="end"
         android:maxLines="3"
+        android:padding="5dp"
         android:textColor="@color/main_text_color"
         android:textColorHint="@color/second_text_color"
         android:textSize="15sp"/>

@@ -4,12 +4,12 @@
         "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\bundles\\debug\\res\\drawable-xhdpi-v4\\rc_ic_phone_normal.png"
     },
     {
-        "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-xhdpi-v4\\rc_radio_button_off.png",
-        "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\bundles\\debug\\res\\drawable-xhdpi-v4\\rc_radio_button_off.png"
-    },
-    {
         "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-xhdpi-v4\\rc_notification_connecting.png",
         "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\bundles\\debug\\res\\drawable-xhdpi-v4\\rc_notification_connecting.png"
+    },
+    {
+        "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-xhdpi-v4\\rc_radio_button_off.png",
+        "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\bundles\\debug\\res\\drawable-xhdpi-v4\\rc_radio_button_off.png"
     },
     {
         "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-xhdpi-v4\\rc_real_time_location_hide.png",
