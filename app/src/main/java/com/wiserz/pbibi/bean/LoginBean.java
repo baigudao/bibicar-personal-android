@@ -5,7 +5,7 @@ package com.wiserz.pbibi.bean;
  * QQ : 971060378
  * Used as : 登录返回的数据bean
  */
-public class LoginBean extends BaseBean{
+public class LoginBean extends BaseBean {
 
     /**
      * session_id : session598ac2ba475d3

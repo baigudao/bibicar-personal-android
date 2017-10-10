@@ -103,65 +103,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         switchFragment(fromFragment, getFragment());
     }
 
-    //    private class MyOnCheckedChangeListener implements RadioGroup.OnCheckedChangeListener {
-    //
-    //        @Override
-    //        public void onCheckedChanged(RadioGroup group, int checkedId) {
-    //            Drawable top_normal = getResources().getDrawable(R.drawable.tab_circle3x);
-    //            switch (checkedId) {
-    //                case R.id.rb_recommend://主页
-    //                    position = 0;
-    //                    rb_community.setCompoundDrawablesWithIntrinsicBounds(null, top_normal, null, null);
-    //                    rb_community.setText("圈子");
-    //                    break;
-    //                case R.id.rb_car_center://车市
-    //                    position = 1;
-    //                    rb_community.setCompoundDrawablesWithIntrinsicBounds(null, top_normal, null, null);
-    //                    rb_community.setText("圈子");
-    //                    break;
-    //                case R.id.rb_community://圈子
-    //                    position = 2;
-    //                    flag++;
-    //                    Drawable top = getResources().getDrawable(R.drawable.tab_circle_c3x);
-    //                    rb_community.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null);
-    //                    rb_community.setText(null);
-    //                    if (flag == 2) {
-    //                        rb_community.setOnClickListener(new View.OnClickListener() {
-    //                            @Override
-    //                            public void onClick(View view) {
-    //                                ToastUtils.showShort("呵呵");
-    //                            }
-    //                        });
-    //                        flag = 1;
-    //                    }
-    //                    break;
-    //                case R.id.rb_message://消息
-    //                    position = 3;
-    //                    rb_community.setCompoundDrawablesWithIntrinsicBounds(null, top_normal, null, null);
-    //                    rb_community.setText("圈子");
-    //                    break;
-    //                case R.id.rb_mine://我的
-    //                    int type = DataManager.getInstance().getUserInfo().getProfile().getType();//1,表示个人用户；2，表示企业用户
-    //                    LogUtils.e("用户类型===" + type);
-    //                    if (type == 1) {
-    //                        position = 4;
-    //                    } else if (type == 2) {
-    //                        position = 5;
-    //                    }
-    //                    rb_community.setCompoundDrawablesWithIntrinsicBounds(null, top_normal, null, null);
-    //                    rb_community.setText("圈子");
-    //                    break;
-    //                default:
-    //                    position = 0;
-    //                    break;
-    //            }
-    //            //根据位置得到对应的Fragment
-    //            BaseFragment toFragment = getFragment();
-    //            //切换Fragment
-    //            switchFragment(fromFragment, toFragment);
-    //        }
-    //    }
-
     /**
      * @param from 刚显示的Fragment,马上就要被隐藏了
      * @param to   马上要切换到的Fragment，一会要显示

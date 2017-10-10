@@ -11,11 +11,13 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.EmptyUtils;
+import com.blankj.utilcode.util.KeyboardUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.TimeUtils;
 import com.blankj.utilcode.util.ToastUtils;
@@ -74,6 +76,10 @@ public class StateDetailFragment extends BaseFragment implements BaseRecyclerVie
     private static final int ARTICLE_COMMENT_LIST_DATA_TYPE = 18;
     private static final int LIKE_LIST_DATA_TYPE = 42;
 
+    private LinearLayout ll_three_point;
+    private LinearLayout ll_input_view;
+    private EditText et_input_comment;
+
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_state_detail;
@@ -94,6 +100,11 @@ public class StateDetailFragment extends BaseFragment implements BaseRecyclerVie
         iv_image.setImageResource(R.drawable.report_selector);
         iv_image.setOnClickListener(this);
 
+        ll_three_point = (LinearLayout) getView().findViewById(R.id.ll_three_point);
+        ll_input_view = (LinearLayout) getView().findViewById(R.id.ll_input_view);
+        view.findViewById(R.id.btn_send).setOnClickListener(this);
+        et_input_comment = (EditText) view.findViewById(R.id.et_input_comment);
+
         iv3 = (ImageView) view.findViewById(R.id.iv3);
         tv_like_num = (TextView) view.findViewById(R.id.tv_like_num);
 
@@ -102,6 +113,10 @@ public class StateDetailFragment extends BaseFragment implements BaseRecyclerVie
         view.findViewById(R.id.rl_like).setOnClickListener(this);
 
         mPage = 0;
+    }
+
+    private String getInputContent() {
+        return et_input_comment.getText().toString().trim();
     }
 
     @Override
@@ -119,16 +134,67 @@ public class StateDetailFragment extends BaseFragment implements BaseRecyclerVie
                 showSharePlatformPopWindow();
                 break;
             case R.id.rl_comment:
-                //                ToastUtils.showShort("评论");
+                resetCommentView();
+                KeyboardUtils.showSoftInput(ll_input_view);
                 break;
             case R.id.rl_like:
                 if (EmptyUtils.isNotEmpty(feed_id)) {
                     likeOrNot();
                 }
                 break;
+            case R.id.btn_send:
+                if (EmptyUtils.isEmpty(getInputContent())) {
+                    ToastUtils.showShort("请输入评论的内容");
+                    return;
+                }
+                OkHttpUtils.post()
+                        .url(Constant.getCreateCommentUrl())
+                        .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
+                        .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
+                        .addParams(Constant.FEED_ID, String.valueOf(feed_id))
+                        .addParams(Constant.CONTENT, getInputContent())
+                        .addParams(Constant.REPLY_ID, String.valueOf(0))
+                        .addParams(Constant.FATHER_ID, String.valueOf(0))
+                        .build()
+                        .execute(new StringCallback() {
+                            @Override
+                            public void onError(Call call, Exception e, int id) {
+                                ToastUtils.showShort("评论失败");
+                            }
+
+                            @Override
+                            public void onResponse(String response, int id) {
+                                JSONObject jsonObject = null;
+                                try {
+                                    jsonObject = new JSONObject(response);
+                                    int status = jsonObject.optInt("status");
+                                    JSONObject jsonObjectData = jsonObject.optJSONObject("data");
+                                    if (status == 1) {
+                                        getCommentListData();
+                                        ToastUtils.showShort("评论成功");
+                                    } else {
+                                        String code = jsonObject.optString("code");
+                                        String msg = jsonObjectData.optString("msg");
+                                        ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                et_input_comment.setText("");
+                KeyboardUtils.hideSoftInput(ll_input_view);
+                ll_three_point.setVisibility(View.VISIBLE);
+                ll_input_view.setVisibility(View.GONE);
+                break;
             default:
                 break;
         }
+    }
+
+    private void resetCommentView() {
+        ll_three_point.setVisibility(View.GONE);
+        ll_input_view.setVisibility(View.VISIBLE);
     }
 
     private void showDialog(View v, int user_id, final ArrayList<FeedBean> feedBeanArrayList) {

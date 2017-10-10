@@ -10,10 +10,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.EmptyUtils;
-import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 import com.qiniu.android.http.ResponseInfo;
 import com.qiniu.android.storage.UpCompletionHandler;
 import com.qiniu.android.storage.UploadManager;
@@ -112,6 +112,7 @@ public class EditUserProfileFragment extends BaseFragment {
                 goBack();
                 break;
             case R.id.btn_register:
+                showLoadingDialog("", null, false);
                 commitDataToServer();
                 break;
             case R.id.iv_circle_image:
@@ -169,11 +170,9 @@ public class EditUserProfileFragment extends BaseFragment {
                 @Override
                 public void complete(String key, ResponseInfo info, JSONObject response) {
                     if (info.isOK()) {
-                        LogUtils.e(file_string, "和" + key, "和" + upload_token);
                         //上传成功
                         int status = response.optInt("status");
                         JSONObject jsonObjectData = response.optJSONObject("data");
-                        LogUtils.e(response);
                         if (status == 1) {
                             String hash = jsonObjectData.optString("hash");
                             if (EmptyUtils.isNotEmpty(hash)) {
@@ -215,14 +214,18 @@ public class EditUserProfileFragment extends BaseFragment {
 
                     @Override
                     public void onResponse(String response, int id) {
-                        LogUtils.e(response);
                         JSONObject jsonObject = null;
                         try {
                             jsonObject = new JSONObject(response);
                             int status = jsonObject.optInt("status");
                             JSONObject jsonObjectData = jsonObject.optJSONObject("data");
                             if (status == 1) {
+                                JSONObject jsonObjectUserInfo = jsonObjectData.optJSONObject("user_info");
+                                Gson gson = new Gson();
+                                LoginBean.UserInfoBean userInfoBean = gson.fromJson(jsonObjectUserInfo.toString(), LoginBean.UserInfoBean.class);
+                                DataManager.getInstance().setUserInfo(userInfoBean);
                                 ToastUtils.showShort("更新成功");
+                                hideLoadingDialog();
                                 goBack();
                             } else {
                                 String code = jsonObject.optString("code");
