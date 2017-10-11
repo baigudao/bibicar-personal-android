@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.EmptyUtils;
+import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
@@ -174,6 +175,7 @@ public class EditUserProfileFragment extends BaseFragment {
                         int status = response.optInt("status");
                         JSONObject jsonObjectData = response.optJSONObject("data");
                         if (status == 1) {
+                            LogUtils.e(file_string, "和" + key, "和" + upload_token);
                             String hash = jsonObjectData.optString("hash");
                             if (EmptyUtils.isNotEmpty(hash)) {
                                 commitDataToRealServer(hash);
@@ -203,8 +205,9 @@ public class EditUserProfileFragment extends BaseFragment {
                 .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
                 .addParams(Constant.NICKNAME, getNickName())
                 .addParams(Constant.AVATAR, hash)
-                .addParams("gender", getGender())
-                .addParams("signature", getSignature())
+                .addParams(Constant.GENDER, getGender().equals("女") ? "0" : "1")
+                .addParams(Constant.SIGNATURE, getSignature())
+                .addParams(Constant.BIRTH, "")
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -281,7 +284,6 @@ public class EditUserProfileFragment extends BaseFragment {
                         .placeholder(R.drawable.user_photo)
                         .error(R.drawable.user_photo)
                         .into(iv_circle_image);
-
                 file_string = CommonUtil.getRealFilePath(mContext, mSelected.get(0));
             }
         }

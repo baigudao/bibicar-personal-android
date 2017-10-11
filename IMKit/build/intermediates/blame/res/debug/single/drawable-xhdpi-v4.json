@@ -1,11 +1,11 @@
 [
     {
-        "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\u1f64f.png",
-        "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\src\\main\\res\\drawable-xhdpi\\u1f64f.png"
-    },
-    {
         "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\u1f60a.png",
         "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\src\\main\\res\\drawable-xhdpi\\u1f60a.png"
+    },
+    {
+        "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\u1f64f.png",
+        "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\src\\main\\res\\drawable-xhdpi\\u1f64f.png"
     },
     {
         "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\u1f44f.png",

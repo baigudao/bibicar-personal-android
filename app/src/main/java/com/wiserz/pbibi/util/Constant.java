@@ -22,6 +22,8 @@ public class Constant {
     public static final String COMPANY = "company";
     public static final String NAME = "name";
     public static final String CODE = "code";
+    public static final String GENDER = "gender";
+    public static final String SIGNATURE = "signature";
     public static final String APP_URL = "app_url";
     public static final String PASSWORD = "password";
     public static final String CARD_FILE = "card_file";
@@ -83,6 +85,7 @@ public class Constant {
     public static final String OLD = "old";
     public static final String PHONE = "phone";
     public static final String AGE = "age";
+    public static final String BIRTH = "birth";
     public static final String BRAND_NAME = "brand_name";
     public static final String DESC = "desc";
     public static final String SOURCE = "source";

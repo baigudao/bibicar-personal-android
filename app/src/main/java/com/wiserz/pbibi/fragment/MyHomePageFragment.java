@@ -160,6 +160,7 @@ public class MyHomePageFragment extends BaseFragment implements BaseRecyclerView
                                 friend_num = jsonObjectData.optInt("friend_num");
                                 handlerUserInfoData(jsonObjectData);
                                 handlerCarInfoData(jsonObjectData);
+                                getMyFriendsUrl();
                             } else {
                                 String code = jsonObject.optString("code");
                                 String msg = jsonObjectData.optString("msg");
@@ -170,6 +171,10 @@ public class MyHomePageFragment extends BaseFragment implements BaseRecyclerView
                         }
                     }
                 });
+
+    }
+
+    private void getMyFriendsUrl() {
         OkHttpUtils.post()
                 .url(Constant.getMyFriendsUrl())
                 .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
@@ -304,6 +309,12 @@ public class MyHomePageFragment extends BaseFragment implements BaseRecyclerView
     }
 
     @Override
+    public void onRefresh(RefreshLayout refreshlayout) {
+        mPage = 0;
+        getDataFromNet();
+    }
+
+    @Override
     public void share() {
         showSharePlatformPopWindow();
     }
@@ -366,11 +377,5 @@ public class MyHomePageFragment extends BaseFragment implements BaseRecyclerView
 
         // 启动分享
         oks.show(context);
-    }
-
-    @Override
-    public void onRefresh(RefreshLayout refreshlayout) {
-        mPage = 0;
-        getDataFromNet();
     }
 }
