@@ -18,6 +18,7 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.constant.SpinnerStyle;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
+import com.umeng.analytics.MobclickAgent;
 import com.wiserz.pbibi.fragment.BaseFragment;
 import com.zhy.http.okhttp.OkHttpUtils;
 
@@ -74,6 +75,9 @@ public class BaseApplication extends Application {
 
         //初始社会化组件
         MobSDK.init(this, "174e89a173460", "");
+
+        //友盟
+        MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
     }
 
     private void configLogUtils() {

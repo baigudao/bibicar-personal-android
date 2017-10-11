@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +15,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.blankj.utilcode.util.SPUtils;
+import com.wiserz.pbibi.BaseApplication;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.adapter.CustomConversationListAdapter;
+import com.wiserz.pbibi.util.Constant;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -46,7 +50,6 @@ import io.rong.push.RongPushClient;
  * QQ : 971060378
  * Used as : 自定义会话列表
  */
-
 public class CustomConversationListFragment extends UriFragment implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, CustomConversationListAdapter.OnPortraitItemClick {
 
     private List<ConversationConfig> mConversationsConfig;
@@ -57,6 +60,14 @@ public class CustomConversationListFragment extends UriFragment implements Adapt
     private ImageView mNotificationBarImage;
     private TextView mNotificationBarText;
     private boolean isShowWithoutConnected = false;
+
+    public LinearLayout getmNotificationBar() {
+        return mNotificationBar;
+    }
+
+    public void setmNotificationBar(LinearLayout mNotificationBar) {
+        this.mNotificationBar = mNotificationBar;
+    }
 
     private RongIMClient.ResultCallback mCallback = new RongIMClient.ResultCallback() { //会话列表数据回调。
 
@@ -127,12 +138,58 @@ public class CustomConversationListFragment extends UriFragment implements Adapt
         this.mConversationsConfig = new ArrayList();
         EventBus.getDefault().register(this);
         InternalModuleManager.getInstance().onLoaded();
+        connect(SPUtils.getInstance().getString(Constant.CHAT_TOKEN));//建立与融云服务器的连接
+    }
+
+    /**
+     * <p>连接服务器，在整个应用程序全局，只需要调用一次，需在 RongIM.init() 之后调用。</p>
+     * <p>如果调用此接口遇到连接失败，SDK 会自动启动重连机制进行最多10次重连，分别是1, 2, 4, 8, 16, 32, 64, 128, 256, 512秒后。
+     * 在这之后如果仍没有连接成功，还会在当检测到设备网络状态变化时再次进行重连。</p>
+     *
+     * @param token 从服务端获取的用户身份令牌（Token）。
+     * @return RongIM  客户端核心类的实例。
+     */
+    private void connect(String token) {
+
+        if (getActivity().getApplicationInfo().packageName.equals(BaseApplication.getCurProcessName(getActivity().getApplicationContext()))) {
+
+            RongIM.connect(token, new RongIMClient.ConnectCallback() {
+
+                /**
+                 * Token 错误。可以从下面两点检查 1.  Token 是否过期，如果过期您需要向 App Server 重新请求一个新的 Token
+                 *                  2.  token 对应的 appKey 和工程里设置的 appKey 是否一致
+                 */
+                @Override
+                public void onTokenIncorrect() {
+
+                }
+
+                /**
+                 * 连接融云成功
+                 * @param userid 当前 token 对应的用户 id
+                 */
+                @Override
+                public void onSuccess(String userid) {
+                    Log.d("LoginActivity", "--onSuccess" + userid);
+                }
+
+                /**
+                 * 连接融云失败
+                 * @param errorCode 错误码，可到官网 查看错误码对应的注释
+                 */
+                @Override
+                public void onError(RongIMClient.ErrorCode errorCode) {
+
+                }
+            });
+        }
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.custom_rc_fr_conversationlist, container, false);
 
-        this.mNotificationBar = (LinearLayout) this.findViewById(view, R.id.rc_status_bar);//网络连接不可用等状态
+        this.mNotificationBar = this.findViewById(view, R.id.rc_status_bar);//网络连接不可用等状态
+        this.setmNotificationBar(mNotificationBar);
         this.mNotificationBar.setVisibility(View.GONE);
         this.mNotificationBarImage = (ImageView) this.findViewById(view, R.id.rc_status_bar_image);
         this.mNotificationBarText = (TextView) this.findViewById(view, R.id.rc_status_bar_text);
@@ -293,7 +350,7 @@ public class CustomConversationListFragment extends UriFragment implements Adapt
         int index = -1;
 
         for (int i = startIndex; i < totalCount; ++i) {
-            UIConversation uiConversation = (UIConversation) this.mAdapter.getItem(i);
+            UIConversation uiConversation = this.mAdapter.getItem(i);
             if (uiConversation.getUnReadMessageCount() > 0) {
                 index = i;
                 break;
@@ -325,6 +382,9 @@ public class CustomConversationListFragment extends UriFragment implements Adapt
             }
 
             if (content != null) {
+                if (this.mNotificationBar == null) {
+                    this.mNotificationBar = getmNotificationBar();
+                }
                 if (this.mNotificationBar.getVisibility() == View.GONE) {
                     final String finalContent = content;
                     this.getHandler().postDelayed(new Runnable() {
@@ -338,7 +398,6 @@ public class CustomConversationListFragment extends UriFragment implements Adapt
                                     CustomConversationListFragment.this.mNotificationBarImage.setImageResource(R.drawable.rc_notification_network_available);
                                 }
                             }
-
                         }
                     }, 4000L);
                 } else {
@@ -350,7 +409,6 @@ public class CustomConversationListFragment extends UriFragment implements Adapt
                     }
                 }
             }
-
         }
     }
 

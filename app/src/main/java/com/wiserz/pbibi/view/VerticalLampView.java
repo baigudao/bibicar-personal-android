@@ -12,16 +12,16 @@ import com.wiserz.pbibi.bean.LampBean;
  */
 public class VerticalLampView extends BaseAutoScrollView<LampBean> {
 
-    public VerticalLampView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
+    public VerticalLampView(Context context) {
+        super(context);
     }
 
     public VerticalLampView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public VerticalLampView(Context context) {
-        super(context);
+    public VerticalLampView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
     }
 
     @Override

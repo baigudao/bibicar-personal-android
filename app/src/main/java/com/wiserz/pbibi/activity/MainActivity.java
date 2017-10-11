@@ -137,7 +137,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         return mBaseFragment.get(position);
     }
 
-    long startTime = 0;
+    private long startTime = 0;
 
     @Override
     public void onBackPressed() {

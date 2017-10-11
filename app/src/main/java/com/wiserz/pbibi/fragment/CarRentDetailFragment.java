@@ -26,6 +26,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
+import com.wiserz.pbibi.bean.CarInfoBean;
 import com.wiserz.pbibi.bean.CarRentDetailInfoBean;
 import com.wiserz.pbibi.bean.CarRentRecommendCarBean;
 import com.wiserz.pbibi.util.Constant;
@@ -273,6 +274,8 @@ public class CarRentDetailFragment extends BaseFragment implements BaseRecyclerV
             getView().findViewById(R.id.tv_check_all_parameter).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    CarInfoBean carInfoBean = new CarInfoBean();
+                    DataManager.getInstance().setData1(carInfoBean);
                     gotoPager(ConcreteParameterFragment.class, null);
                 }
             });

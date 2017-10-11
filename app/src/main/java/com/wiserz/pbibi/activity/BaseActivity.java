@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
+import com.umeng.analytics.MobclickAgent;
 import com.wiserz.pbibi.BaseApplication;
 import com.wiserz.pbibi.fragment.BaseFragment;
 import com.wiserz.pbibi.util.Constant;
@@ -92,5 +93,16 @@ public class BaseActivity extends AppCompatActivity {
                 return (BaseFragment) fragment;
         }
         return BaseApplication.getCurFragment();
+    }
+
+    public void onResume() {
+        super.onResume();
+        //友盟
+        MobclickAgent.onResume(this);
+    }
+
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

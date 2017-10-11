@@ -76,4 +76,6 @@ dependencies {
     compile 'com.github.chrisbanes:PhotoView:2.0.0'
     //SmartRefreshLayout
     compile 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.3'
+    //友盟统计
+    compile 'com.umeng.analytics:analytics:latest.integration'
 }
