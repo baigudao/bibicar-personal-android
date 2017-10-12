@@ -94,10 +94,10 @@ public class SplashActivity extends AppCompatActivity {
                 flag = 1;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     //SDK版本大于等于23，也就是Android 6.0
-                    requestPermission();//请求权限 Xiaomi6.0.1
+                    requestPermission();
                 } else {
                     //SDK版本小于23的走这
-                    afterRequestPermission();//请求权限之后 Meizu5.1
+                    afterRequestPermission();
                 }
             }
         });
