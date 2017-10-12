@@ -48,6 +48,7 @@ import com.wiserz.pbibi.bean.CheHangHomeBean;
 import com.wiserz.pbibi.bean.CheHangUserListBean;
 import com.wiserz.pbibi.bean.DreamCarBean;
 import com.wiserz.pbibi.bean.FeedBean;
+import com.wiserz.pbibi.bean.FriendshipBean;
 import com.wiserz.pbibi.bean.GuaranteeHistoryBean;
 import com.wiserz.pbibi.bean.LikeListBean;
 import com.wiserz.pbibi.bean.LoveCarBean;
@@ -83,6 +84,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import io.rong.imkit.RongIM;
+import io.rong.imlib.model.Conversation;
+import io.rong.imlib.model.UserInfo;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 import okhttp3.Call;
 
@@ -165,6 +169,8 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
 
     private static final int MY_SELLING_CAR_DATA_TYPE = 44;
 
+    private static final int FOLLOW_AND_FAN_DATA_TYPE = 45;
+
     private static final int NEW_CAR_DATA_TYPE = 55;
 
     private static final int CAR_VIDEO_DATA_TYPE = 65;
@@ -207,7 +213,9 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
     @Override
     public BaseRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         ViewHolder viewHolder;
-        if (dataType == MY_SELLING_CAR_DATA_TYPE) {
+        if (dataType == FOLLOW_AND_FAN_DATA_TYPE) {
+            viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_follow_and_fan, null));
+        } else if (dataType == MY_SELLING_CAR_DATA_TYPE) {
             viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_car_center_car_list, null));
         } else if (dataType == LOVE_CAR_DATA_TYPE) {
             viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_car_center_car_list, null));
@@ -873,31 +881,6 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                                     });
                         }
                     });
-
-                    //                    holder.iv_item3.setOnClickListener(new View.OnClickListener() {
-                    //                        @Override
-                    //                        public void onClick(View v) {//iv_comment_item
-                    //                            if (mOnItemClickListener != null) {
-                    //                                mOnItemClickListener.onItemClick(mList.get(position), position);
-                    //                            }
-                    //                        }
-                    //                    });
-                    //                    holder.tv_item4.setOnClickListener(new View.OnClickListener() {
-                    //                        @Override
-                    //                        public void onClick(View v) {//tv_comment_num_item
-                    //                            if (mOnItemClickListener != null) {
-                    //                                mOnItemClickListener.onItemClick(mList.get(position), position);
-                    //                            }
-                    //                        }
-                    //                    });
-                    //                    holder.tv_item5.setOnClickListener(new View.OnClickListener() {
-                    //                        @Override
-                    //                        public void onClick(View v) {//评论的内容
-                    //                            if (mOnItemClickListener != null) {
-                    //                                mOnItemClickListener.onItemClick(mList.get(position), position);
-                    //                            }
-                    //                        }
-                    //                    });
 
                     if (EmptyUtils.isNotEmpty(articleCommentBean.getHot_list())) {
                         holder.tv_item4.setText(String.valueOf(articleCommentBean.getHot_list().getTotal()));//评论数
@@ -1887,6 +1870,35 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                     holder.tv_item1.setText(carModelBean.getModel_name());
                 }
             }
+        } else if (dataType == FOLLOW_AND_FAN_DATA_TYPE) {
+            ArrayList<FriendshipBean> friendshipBeanArrayList = (ArrayList<FriendshipBean>) mList;
+
+            if (EmptyUtils.isNotEmpty(friendshipBeanArrayList)) {
+                final FriendshipBean friendshipBean = friendshipBeanArrayList.get(position);
+                if (EmptyUtils.isNotEmpty(friendshipBean)) {
+                    Glide.with(mContext)
+                            .load(friendshipBean.getProfile().getAvatar())
+                            .placeholder(R.drawable.user_photo)
+                            .error(R.drawable.user_photo)
+                            .into(holder.iv_item1);
+                    holder.tv_item1.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            RongIM.getInstance().startConversation(mContext, Conversation.ConversationType.PRIVATE,
+                                    String.valueOf(friendshipBean.getUser_id()), friendshipBean.getProfile().getNickname());
+                            RongIM.setUserInfoProvider(new RongIM.UserInfoProvider() {
+                                @Override
+                                public UserInfo getUserInfo(String userId) {
+                                    return new UserInfo(String.valueOf(friendshipBean.getUser_id()), friendshipBean.getProfile().getNickname(),
+                                            Uri.parse(friendshipBean.getProfile().getAvatar())); //根据 userId 去你的用户系统里查询对应的用户信息返回给融云 SDK。
+                                }
+
+                            }, true);
+                        }
+                    });
+                    holder.tv_item2.setText(friendshipBean.getProfile().getNickname());
+                }
+            }
         }
     }
 
@@ -1915,6 +1927,9 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
 
     private void resetFollowView(ViewHolder holder, int is_friend) {
         switch (is_friend) {
+            case 0:
+                holder.iv_item6.setVisibility(View.GONE);
+                break;
             case 1:
                 holder.iv_item6.setImageResource(R.drawable.other_followed);
                 break;
@@ -2621,6 +2636,20 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                 });
             } else if (dataType == CAR_MODEL_DATA_TYPE) {
                 tv_item1 = (TextView) itemView.findViewById(R.id.tvSeriesName);
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnItemClickListener != null) {
+                            int position = getLayoutPosition();
+                            mOnItemClickListener.onItemClick(mList.get(position), position);
+                        }
+                    }
+                });
+            } else if (dataType == FOLLOW_AND_FAN_DATA_TYPE) {
+                iv_item1 = (ImageView) itemView.findViewById(R.id.ivAvater);
+                tv_item1 = (TextView) itemView.findViewById(R.id.tvPrivateMsg);
+                tv_item2 = (TextView) itemView.findViewById(R.id.tvNickName);
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override

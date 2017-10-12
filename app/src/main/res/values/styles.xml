@@ -286,4 +286,29 @@
         <item name="progress_unreached_bar_height">0.75dp</item>
     </style>
 
+    <style name="FriendShipTextViewTheme1">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:textColor">@color/pure_white_color</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:paddingLeft">30dp</item>
+        <item name="android:paddingRight">30dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:background">@drawable/round_rect_btn</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="FriendShipTextViewTheme2">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/main_text_color</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
 </resources>

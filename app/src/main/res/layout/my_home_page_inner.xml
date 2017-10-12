@@ -44,6 +44,7 @@
                 android:layout_marginBottom="5dp"
                 android:layout_marginLeft="15dp"
                 android:layout_toRightOf="@id/iv_circle_image"
+                android:clickable="true"
                 android:text="关注 12 丨 粉丝 145 丨BiBi号 12456"
                 android:textColor="@color/pure_white_color"
                 android:textSize="12sp"/>

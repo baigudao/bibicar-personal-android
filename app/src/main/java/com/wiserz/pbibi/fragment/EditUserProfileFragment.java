@@ -10,7 +10,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.EmptyUtils;
-import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
@@ -175,7 +174,6 @@ public class EditUserProfileFragment extends BaseFragment {
                         int status = response.optInt("status");
                         JSONObject jsonObjectData = response.optJSONObject("data");
                         if (status == 1) {
-                            LogUtils.e(file_string, "和" + key, "和" + upload_token);
                             String hash = jsonObjectData.optString("hash");
                             if (EmptyUtils.isNotEmpty(hash)) {
                                 commitDataToRealServer(hash);

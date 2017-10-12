@@ -1,13 +1,13 @@
 package com.wiserz.pbibi.fragment;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.EmptyUtils;
@@ -16,6 +16,10 @@ import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
 import com.wiserz.pbibi.bean.CarInfoBean;
@@ -34,6 +38,9 @@ import java.util.ArrayList;
 
 import cn.sharesdk.onekeyshare.OnekeyShare;
 import cn.sharesdk.onekeyshare.OnekeyShareTheme;
+import io.rong.imkit.RongIM;
+import io.rong.imlib.model.Conversation;
+import io.rong.imlib.model.UserInfo;
 import okhttp3.Call;
 
 /**
@@ -41,7 +48,7 @@ import okhttp3.Call;
  * QQ : 971060378
  * Used as : 其他用户的个人主页
  */
-public class OtherHomePageFragment extends BaseFragment implements BaseRecyclerViewAdapter.OnItemClickListener, BaseRecyclerViewAdapter.OnShareToPlatform {
+public class OtherHomePageFragment extends BaseFragment implements BaseRecyclerViewAdapter.OnItemClickListener, BaseRecyclerViewAdapter.OnShareToPlatform, OnRefreshListener, OnLoadmoreListener {
 
     private int user_id;
 
@@ -51,18 +58,21 @@ public class OtherHomePageFragment extends BaseFragment implements BaseRecyclerV
 
     private int fans_num;
     private int friend_num;
-    private int mPage;
     private int is_friend;
     private int feed_num;
 
-    private LinearLayout ll_follow_and_message;
-    private View view_bottom_line;
+    private int mPage;
 
     private String share_img;
     private String share_title;
     private String share_txt;
     private String share_url;
-    private int user_id_from_net;
+    private UserInfoBean userInfoBean;
+
+    private SmartRefreshLayout smartRefreshLayout;
+    private int refresh_or_load;//0或1
+
+    private BaseRecyclerViewAdapter baseRecyclerViewAdapter;
 
     @Override
     protected int getLayoutId() {
@@ -77,12 +87,15 @@ public class OtherHomePageFragment extends BaseFragment implements BaseRecyclerV
         view.findViewById(R.id.rl_my_car_repertory).setOnClickListener(this);
         view.findViewById(R.id.tv_edit).setVisibility(View.GONE);
 
-        view_bottom_line = view.findViewById(R.id.view_bottom_line);
-        view_bottom_line.setVisibility(View.GONE);
-        ll_follow_and_message = (LinearLayout) view.findViewById(R.id.ll_follow_and_message);
-        ll_follow_and_message.setVisibility(View.GONE);
         view.findViewById(R.id.rl_follow).setOnClickListener(this);
         view.findViewById(R.id.rl_message).setOnClickListener(this);
+
+        view.findViewById(R.id.tv_follow_and_fan).setOnClickListener(this);
+
+        smartRefreshLayout = (SmartRefreshLayout) view.findViewById(R.id.smartRefreshLayout);
+        smartRefreshLayout.setOnRefreshListener(this);
+        smartRefreshLayout.setOnLoadmoreListener(this);
+        refresh_or_load = 0;
 
         mPage = 0;
     }
@@ -99,23 +112,69 @@ public class OtherHomePageFragment extends BaseFragment implements BaseRecyclerV
             case R.id.rl_my_car_repertory:
                 gotoPager(MyCarRepertoryFragment.class, null);
                 break;
-            case R.id.rl_follow://这个个人数据是变化的
-                ToastUtils.showShort("关注");
+            case R.id.rl_follow:
+                switch (is_friend) {
+                    case 1://已关注
+                        ToastUtils.showShort("已经关注");
+                        break;
+                    case 2:
+                        //没有关注，就去关注
+                        OkHttpUtils.post()
+                                .url(Constant.getCreateFollowUrl())
+                                .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
+                                .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
+                                .addParams(Constant.USER_ID, String.valueOf(user_id))
+                                .build()
+                                .execute(new StringCallback() {
+                                    @Override
+                                    public void onError(Call call, Exception e, int id) {
+
+                                    }
+
+                                    @Override
+                                    public void onResponse(String response, int id) {
+                                        JSONObject jsonObject = null;
+                                        try {
+                                            jsonObject = new JSONObject(response);
+                                            int status = jsonObject.optInt("status");
+                                            JSONObject jsonObjectData = jsonObject.optJSONObject("data");
+                                            if (status == 1) {
+                                                is_friend = 1;
+                                                ToastUtils.showShort("关注成功");
+                                            } else {
+                                                String code = jsonObject.optString("code");
+                                                String msg = jsonObjectData.optString("msg");
+                                                ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                            }
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                });
+                        break;
+                    default:
+                        break;
+                }
                 break;
-            case R.id.rl_message://这个个人数据是变化的
-                //                if (mMyUserInfo == null) {
-                //                    return;
-                //                }
-                //                RongIM.getInstance().startConversation(getActivity(), Conversation.ConversationType.PRIVATE,
-                //                        String.valueOf(mMyUserInfo.getUser_info().getUser_id()), mMyUserInfo.getUser_info().getProfile().getNickname());
-                //                RongIM.setUserInfoProvider(new RongIM.UserInfoProvider() {
-                //                    @Override
-                //                    public UserInfo getUserInfo(String userId) {
-                //                        return new UserInfo(String.valueOf(mMyUserInfo.getUser_info().getUser_id()), mMyUserInfo.getUser_info().getProfile().getNickname(),
-                //                                Uri.parse(mMyUserInfo.getUser_info().getProfile().getAvatar())); //根据 userId 去你的用户系统里查询对应的用户信息返回给融云 SDK。
-                //                    }
-                //
-                //                }, true);
+            case R.id.rl_message:
+                if (EmptyUtils.isEmpty(userInfoBean)) {
+                    return;
+                }
+                RongIM.getInstance().startConversation(getActivity(), Conversation.ConversationType.PRIVATE,
+                        String.valueOf(user_id), userInfoBean.getProfile().getNickname());
+                RongIM.setUserInfoProvider(new RongIM.UserInfoProvider() {
+                    @Override
+                    public UserInfo getUserInfo(String userId) {
+                        return new UserInfo(String.valueOf(user_id), userInfoBean.getProfile().getNickname(),
+                                Uri.parse(userInfoBean.getProfile().getAvatar())); //根据 userId 去你的用户系统里查询对应的用户信息返回给融云 SDK。
+                    }
+
+                }, true);
+                break;
+            case R.id.tv_follow_and_fan:
+                Bundle bundle = new Bundle();
+                bundle.putInt(Constant.USER_ID, user_id);
+                gotoPager(FanAndFollowFragment.class, bundle);
                 break;
             default:
                 break;
@@ -155,6 +214,7 @@ public class OtherHomePageFragment extends BaseFragment implements BaseRecyclerV
                                 feed_num = jsonObjectData.optInt("feed_num");
                                 is_friend = jsonObjectData.optInt("is_friend");
                                 friend_num = jsonObjectData.optInt("friend_num");
+                                getMyFriendsUrl();
                                 handlerUserInfoData(jsonObjectData);
                                 handlerCarInfoData(jsonObjectData);
                             } else {
@@ -167,6 +227,9 @@ public class OtherHomePageFragment extends BaseFragment implements BaseRecyclerV
                         }
                     }
                 });
+    }
+
+    private void getMyFriendsUrl() {
         OkHttpUtils.post()
                 .url(Constant.getMyFriendsUrl())
                 .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
@@ -188,15 +251,26 @@ public class OtherHomePageFragment extends BaseFragment implements BaseRecyclerV
                             int status = jsonObject.optInt("status");
                             JSONObject jsonObjectData = jsonObject.optJSONObject("data");
                             if (status == 1) {
-                                share_img = jsonObjectData.optString("share_img");
-                                share_title = jsonObjectData.optString("share_title");
-                                share_txt = jsonObjectData.optString("share_txt");
-                                share_url = jsonObjectData.optString("share_url");
-                                int total = jsonObjectData.optInt("total");
-                                if (getView() != null && EmptyUtils.isNotEmpty(total)) {
-                                    ((TextView) getView().findViewById(R.id.tv_state_num)).setText("动态 (" + total + ")");//动态 （0）
+                                switch (refresh_or_load) {
+                                    case 0:
+                                        smartRefreshLayout.finishRefresh();
+                                        share_img = jsonObjectData.optString("share_img");
+                                        share_title = jsonObjectData.optString("share_title");
+                                        share_txt = jsonObjectData.optString("share_txt");
+                                        share_url = jsonObjectData.optString("share_url");
+                                        int total = jsonObjectData.optInt("total");
+                                        if (getView() != null && EmptyUtils.isNotEmpty(total)) {
+                                            ((TextView) getView().findViewById(R.id.tv_state_num)).setText("动态 (" + total + ")");//动态 （0）
+                                        }
+                                        handlerDataForFeedList(jsonObjectData);
+                                        break;
+                                    case 1:
+                                        smartRefreshLayout.finishLoadmore();
+                                        handlerMoreDataForFeedList(jsonObjectData);
+                                        break;
+                                    default:
+                                        break;
                                 }
-                                handlerDataForFeedList(jsonObjectData);
                             } else {
                                 String code = jsonObject.optString("code");
                                 String msg = jsonObjectData.optString("msg");
@@ -238,6 +312,27 @@ public class OtherHomePageFragment extends BaseFragment implements BaseRecyclerV
         }
     }
 
+    private void handlerMoreDataForFeedList(JSONObject jsonObjectData) {
+        if (EmptyUtils.isNotEmpty(jsonObjectData)) {
+            JSONArray jsonArray = jsonObjectData.optJSONArray("feed_list");
+
+            if (jsonArray.length() == 0) {
+                ToastUtils.showShort("没有更多了");
+                return;
+            }
+
+            if (EmptyUtils.isNotEmpty(jsonArray)) {
+                Gson gson = new Gson();
+                ArrayList<FeedBean> feedBeanArrayList = gson.fromJson(jsonArray.toString(), new TypeToken<ArrayList<FeedBean>>() {
+                }.getType());
+
+                if (EmptyUtils.isNotEmpty(feedBeanArrayList) && feedBeanArrayList.size() != 0) {
+                    baseRecyclerViewAdapter.addDatas(feedBeanArrayList);
+                }
+            }
+        }
+    }
+
     private void handlerDataForFeedList(JSONObject jsonObjectData) {
         if (EmptyUtils.isNotEmpty(jsonObjectData)) {
             JSONArray jsonArray = jsonObjectData.optJSONArray("feed_list");
@@ -248,7 +343,7 @@ public class OtherHomePageFragment extends BaseFragment implements BaseRecyclerV
 
                 if (EmptyUtils.isNotEmpty(feedBeanArrayList) && feedBeanArrayList.size() != 0) {
                     RecyclerView state_recyclerView = (RecyclerView) getView().findViewById(R.id.state_recyclerView);
-                    BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, feedBeanArrayList, MY_STATE_DATA_TYPE);
+                    baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, feedBeanArrayList, MY_STATE_DATA_TYPE);
                     state_recyclerView.setAdapter(baseRecyclerViewAdapter);
                     state_recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
                     baseRecyclerViewAdapter.setOnItemClickListener(this);
@@ -262,11 +357,10 @@ public class OtherHomePageFragment extends BaseFragment implements BaseRecyclerV
         if (EmptyUtils.isNotEmpty(jsonObjectData)) {
             JSONObject jsonObject = jsonObjectData.optJSONObject("user_info");
             Gson gson = new Gson();
-            UserInfoBean userInfoBean = gson.fromJson(jsonObject.toString(), UserInfoBean.class);
+            userInfoBean = gson.fromJson(jsonObject.toString(), UserInfoBean.class);
 
             if (EmptyUtils.isNotEmpty(userInfoBean) && getView() != null) {
                 if (EmptyUtils.isNotEmpty(userInfoBean.getProfile())) {
-                    user_id_from_net = userInfoBean.getUser_id();
                     ((TextView) getView().findViewById(R.id.tv_title)).setText(userInfoBean.getProfile().getNickname() + "的主页");
                     Glide.with(mContext)
                             .load(userInfoBean.getProfile().getAvatar())
@@ -299,6 +393,20 @@ public class OtherHomePageFragment extends BaseFragment implements BaseRecyclerV
                 gotoPager(StateDetailFragment.class, bundle);//动态详情
             }
         }
+    }
+
+    @Override
+    public void onRefresh(RefreshLayout refreshlayout) {
+        mPage = 0;
+        refresh_or_load = 0;
+        getDataFromNet();
+    }
+
+    @Override
+    public void onLoadmore(RefreshLayout refreshlayout) {
+        ++mPage;
+        refresh_or_load = 1;
+        getMyFriendsUrl();
     }
 
     @Override

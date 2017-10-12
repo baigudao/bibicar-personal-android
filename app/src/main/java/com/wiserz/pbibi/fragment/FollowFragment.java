@@ -16,7 +16,6 @@ import com.blankj.utilcode.util.TimeUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
-import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -63,6 +62,8 @@ public class FollowFragment extends BaseFragment implements BaseRecyclerViewAdap
     private int refresh_or_load;//0或1
 
     private static final int RECOMMEND_USER_DATA_TYPE = 34;
+
+    private MyRecyclerViewAdapter myRecyclerViewAdapter;
 
     @Override
     protected int getLayoutId() {
@@ -135,6 +136,7 @@ public class FollowFragment extends BaseFragment implements BaseRecyclerViewAdap
                                         break;
                                     case 1:
                                         smartRefreshLayout.finishLoadmore();
+                                        handlerMoreDataForMyFollow(jsonObjectData);
                                         break;
                                     default:
                                         break;
@@ -185,6 +187,24 @@ public class FollowFragment extends BaseFragment implements BaseRecyclerViewAdap
         }
     }
 
+    private void handlerMoreDataForMyFollow(JSONObject jsonObjectData) {
+        if (EmptyUtils.isNotEmpty(jsonObjectData)) {
+            JSONArray jsonArray = jsonObjectData.optJSONArray("list");
+
+            if (jsonArray.length() == 0) {
+                ToastUtils.showShort("没有更多了");
+                return;
+            }
+
+            if (EmptyUtils.isNotEmpty(jsonArray)) {
+                Gson gson = new Gson();
+                ArrayList<FollowInfoBean> followInfoBeanArrayList = gson.fromJson(jsonArray.toString(), new TypeToken<ArrayList<FollowInfoBean>>() {
+                }.getType());
+                myRecyclerViewAdapter.addDatas(followInfoBeanArrayList, jsonArray);
+            }
+        }
+    }
+
     private void handlerDataForMyFollow(JSONObject jsonObjectData) {
         if (EmptyUtils.isNotEmpty(jsonObjectData)) {
             JSONArray jsonArray = jsonObjectData.optJSONArray("list");
@@ -195,7 +215,7 @@ public class FollowFragment extends BaseFragment implements BaseRecyclerViewAdap
                 }.getType());
 
                 if (EmptyUtils.isNotEmpty(followInfoBeanArrayList) && followInfoBeanArrayList.size() != 0) {
-                    MyRecyclerViewAdapter myRecyclerViewAdapter = new MyRecyclerViewAdapter(mContext, followInfoBeanArrayList, jsonArray);
+                    myRecyclerViewAdapter = new MyRecyclerViewAdapter(mContext, followInfoBeanArrayList, jsonArray);
 
                     my_follow_recyclerView.setAdapter(myRecyclerViewAdapter);
                     my_follow_recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
@@ -210,6 +230,14 @@ public class FollowFragment extends BaseFragment implements BaseRecyclerViewAdap
         private Context mContext;
         private ArrayList<FollowInfoBean> followInfoBeanArrayList;
         private JSONArray jsonArray;
+
+        public JSONArray getJsonArray() {
+            return jsonArray;
+        }
+
+        public void setJsonArray(JSONArray jsonArray) {
+            this.jsonArray = jsonArray;
+        }
 
         public MyRecyclerViewAdapter(Context mContext, ArrayList<FollowInfoBean> followInfoBeanArrayList, JSONArray jsonArray) {
             this.mContext = mContext;
@@ -227,10 +255,21 @@ public class FollowFragment extends BaseFragment implements BaseRecyclerViewAdap
                 followInfoBeanArrayList = new ArrayList<>();
             }
             followInfoBeanArrayList.addAll(dataList);
-            String jsonArrayNew = this.jsonArray.toString() + jsonArray.toString();
-            JsonParser jsonParser = new JsonParser();
-            //            this.jsonArray = jsonParser.parse(jsonArrayNew).getAsJsonArray();
-            notifyDataSetChanged();
+
+            String jsonArrayNew = getNewJsonArray(getJsonArray().toString(), jsonArray.toString());
+
+            //            JSONArray JSONArrayNew = null;
+            //            try {
+            //                JSONArrayNew = new JSONArray(jsonArrayNew);
+            //                setJsonArray(JSONArrayNew);
+            //            } catch (JSONException e) {
+            //                e.printStackTrace();
+            //            }
+            //            notifyDataSetChanged();
+        }
+
+        private String getNewJsonArray(String s, String s1) {
+            return s.substring(0, s.lastIndexOf("]")) + s1.substring(1);
         }
 
 
@@ -263,7 +302,10 @@ public class FollowFragment extends BaseFragment implements BaseRecyclerViewAdap
         public void onBindViewHolder(MyRecyclerViewAdapter.ViewHolder holder, int position) {
             if (EmptyUtils.isNotEmpty(followInfoBeanArrayList) && followInfoBeanArrayList.size() != 0) {
                 FollowInfoBean followInfoBean = followInfoBeanArrayList.get(position);
-                JSONObject jsonObject = jsonArray.optJSONObject(position).optJSONObject("type_info");
+                if (EmptyUtils.isEmpty(jsonArray)) {
+                    this.jsonArray = getJsonArray();
+                }
+                JSONObject jsonObject = this.jsonArray.optJSONObject(position).optJSONObject("type_info");
                 if (EmptyUtils.isNotEmpty(followInfoBean)) {
                     Glide.with(mContext)
                             .load(followInfoBean.getAvatar())

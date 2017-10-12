@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.EmptyUtils;
+import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
@@ -18,6 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
@@ -44,7 +46,7 @@ import okhttp3.Call;
  * QQ : 971060378
  * Used as : 我的主页的页面
  */
-public class MyHomePageFragment extends BaseFragment implements BaseRecyclerViewAdapter.OnItemClickListener, BaseRecyclerViewAdapter.OnShareToPlatform, OnRefreshListener {
+public class MyHomePageFragment extends BaseFragment implements BaseRecyclerViewAdapter.OnItemClickListener, BaseRecyclerViewAdapter.OnShareToPlatform, OnRefreshListener, OnLoadmoreListener {
 
     private static final int MY_CAR_REPERTORY_DATA_TYPE = 24;
 
@@ -52,20 +54,20 @@ public class MyHomePageFragment extends BaseFragment implements BaseRecyclerView
 
     private int fans_num;
     private int friend_num;
-    private int mPage;
     private int is_friend;
     private int feed_num;
 
-    private LinearLayout ll_follow_and_message;
-    private View view_bottom_line;
+    private int mPage;
 
     private String share_img;
     private String share_title;
     private String share_txt;
     private String share_url;
-    private int user_id_from_net;
 
     private SmartRefreshLayout smartRefreshLayout;
+    private int refresh_or_load;//0或1
+
+    private BaseRecyclerViewAdapter baseRecyclerViewAdapter;
 
     @Override
     protected int getLayoutId() {
@@ -79,16 +81,19 @@ public class MyHomePageFragment extends BaseFragment implements BaseRecyclerView
         view.findViewById(R.id.tv_edit).setOnClickListener(this);
         view.findViewById(R.id.rl_my_car_repertory).setOnClickListener(this);
 
-        view_bottom_line = view.findViewById(R.id.view_bottom_line);
+        View view_bottom_line = view.findViewById(R.id.view_bottom_line);
         view_bottom_line.setVisibility(View.GONE);
-        ll_follow_and_message = (LinearLayout) view.findViewById(R.id.ll_follow_and_message);
+        LinearLayout ll_follow_and_message = (LinearLayout) view.findViewById(R.id.ll_follow_and_message);
         ll_follow_and_message.setVisibility(View.GONE);
         view.findViewById(R.id.rl_follow).setOnClickListener(this);
         view.findViewById(R.id.rl_message).setOnClickListener(this);
 
+        view.findViewById(R.id.tv_follow_and_fan).setOnClickListener(this);
+
         smartRefreshLayout = (SmartRefreshLayout) view.findViewById(R.id.smartRefreshLayout);
-        smartRefreshLayout.setEnableLoadmore(false);
         smartRefreshLayout.setOnRefreshListener(this);
+        smartRefreshLayout.setOnLoadmoreListener(this);
+        refresh_or_load = 0;
 
         mPage = 0;
     }
@@ -105,23 +110,10 @@ public class MyHomePageFragment extends BaseFragment implements BaseRecyclerView
             case R.id.rl_my_car_repertory:
                 gotoPager(MyCarRepertoryFragment.class, null);
                 break;
-            case R.id.rl_follow://这个个人数据是变化的
-                ToastUtils.showShort("关注");
-                break;
-            case R.id.rl_message://这个个人数据是变化的
-                //                if (mMyUserInfo == null) {
-                //                    return;
-                //                }
-                //                RongIM.getInstance().startConversation(getActivity(), Conversation.ConversationType.PRIVATE,
-                //                        String.valueOf(mMyUserInfo.getUser_info().getUser_id()), mMyUserInfo.getUser_info().getProfile().getNickname());
-                //                RongIM.setUserInfoProvider(new RongIM.UserInfoProvider() {
-                //                    @Override
-                //                    public UserInfo getUserInfo(String userId) {
-                //                        return new UserInfo(String.valueOf(mMyUserInfo.getUser_info().getUser_id()), mMyUserInfo.getUser_info().getProfile().getNickname(),
-                //                                Uri.parse(mMyUserInfo.getUser_info().getProfile().getAvatar())); //根据 userId 去你的用户系统里查询对应的用户信息返回给融云 SDK。
-                //                    }
-                //
-                //                }, true);
+            case R.id.tv_follow_and_fan:
+                Bundle bundle = new Bundle();
+                bundle.putInt(Constant.USER_ID, SPUtils.getInstance().getInt(Constant.USER_ID));
+                gotoPager(FanAndFollowFragment.class, bundle);
                 break;
             default:
                 break;
@@ -189,22 +181,33 @@ public class MyHomePageFragment extends BaseFragment implements BaseRecyclerView
 
                     @Override
                     public void onResponse(String response, int id) {
+                        LogUtils.e(response);
                         JSONObject jsonObject = null;
                         try {
                             jsonObject = new JSONObject(response);
                             int status = jsonObject.optInt("status");
                             JSONObject jsonObjectData = jsonObject.optJSONObject("data");
                             if (status == 1) {
-                                share_img = jsonObjectData.optString("share_img");
-                                share_title = jsonObjectData.optString("share_title");
-                                share_txt = jsonObjectData.optString("share_txt");
-                                share_url = jsonObjectData.optString("share_url");
-                                int total = jsonObjectData.optInt("total");
-                                if (getView() != null && EmptyUtils.isNotEmpty(total)) {
-                                    ((TextView) getView().findViewById(R.id.tv_state_num)).setText("动态 (" + total + ")");//动态 （0）
+                                switch (refresh_or_load) {
+                                    case 0:
+                                        smartRefreshLayout.finishRefresh();
+                                        share_img = jsonObjectData.optString("share_img");
+                                        share_title = jsonObjectData.optString("share_title");
+                                        share_txt = jsonObjectData.optString("share_txt");
+                                        share_url = jsonObjectData.optString("share_url");
+                                        int total = jsonObjectData.optInt("total");
+                                        if (getView() != null && EmptyUtils.isNotEmpty(total)) {
+                                            ((TextView) getView().findViewById(R.id.tv_state_num)).setText("动态 (" + total + ")");//动态 （0）
+                                        }
+                                        handlerDataForFeedList(jsonObjectData);
+                                        break;
+                                    case 1:
+                                        smartRefreshLayout.finishLoadmore();
+                                        handlerMoreDataForFeedList(jsonObjectData);
+                                        break;
+                                    default:
+                                        break;
                                 }
-                                handlerDataForFeedList(jsonObjectData);
-                                smartRefreshLayout.finishRefresh();
                             } else {
                                 String code = jsonObject.optString("code");
                                 String msg = jsonObjectData.optString("msg");
@@ -246,6 +249,27 @@ public class MyHomePageFragment extends BaseFragment implements BaseRecyclerView
         }
     }
 
+    private void handlerMoreDataForFeedList(JSONObject jsonObjectData) {
+        if (EmptyUtils.isNotEmpty(jsonObjectData)) {
+            JSONArray jsonArray = jsonObjectData.optJSONArray("feed_list");
+
+            if (jsonArray.length() == 0) {
+                ToastUtils.showShort("没有更多了");
+                return;
+            }
+
+            if (EmptyUtils.isNotEmpty(jsonArray)) {
+                Gson gson = new Gson();
+                ArrayList<FeedBean> feedBeanArrayList = gson.fromJson(jsonArray.toString(), new TypeToken<ArrayList<FeedBean>>() {
+                }.getType());
+
+                if (EmptyUtils.isNotEmpty(feedBeanArrayList) && feedBeanArrayList.size() != 0) {
+                    baseRecyclerViewAdapter.addDatas(feedBeanArrayList);
+                }
+            }
+        }
+    }
+
     private void handlerDataForFeedList(JSONObject jsonObjectData) {
         if (EmptyUtils.isNotEmpty(jsonObjectData)) {
             JSONArray jsonArray = jsonObjectData.optJSONArray("feed_list");
@@ -256,7 +280,7 @@ public class MyHomePageFragment extends BaseFragment implements BaseRecyclerView
 
                 if (EmptyUtils.isNotEmpty(feedBeanArrayList) && feedBeanArrayList.size() != 0) {
                     RecyclerView state_recyclerView = (RecyclerView) getView().findViewById(R.id.state_recyclerView);
-                    BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, feedBeanArrayList, MY_STATE_DATA_TYPE);
+                    baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, feedBeanArrayList, MY_STATE_DATA_TYPE);
                     state_recyclerView.setAdapter(baseRecyclerViewAdapter);
                     state_recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
                     baseRecyclerViewAdapter.setOnItemClickListener(this);
@@ -274,7 +298,6 @@ public class MyHomePageFragment extends BaseFragment implements BaseRecyclerView
 
             if (EmptyUtils.isNotEmpty(userInfoBean) && getView() != null) {
                 if (EmptyUtils.isNotEmpty(userInfoBean.getProfile())) {
-                    user_id_from_net = userInfoBean.getUser_id();
                     Glide.with(mContext)
                             .load(userInfoBean.getProfile().getAvatar())
                             .placeholder(R.drawable.user_photo)
@@ -311,7 +334,15 @@ public class MyHomePageFragment extends BaseFragment implements BaseRecyclerView
     @Override
     public void onRefresh(RefreshLayout refreshlayout) {
         mPage = 0;
+        refresh_or_load = 0;
         getDataFromNet();
+    }
+
+    @Override
+    public void onLoadmore(RefreshLayout refreshlayout) {
+        ++mPage;
+        refresh_or_load = 1;
+        getMyFriendsUrl();
     }
 
     @Override

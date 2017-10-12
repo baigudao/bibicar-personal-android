@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.EmptyUtils;
+import com.blankj.utilcode.util.ToastUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wiserz.pbibi.R;
@@ -46,10 +47,13 @@ public class HallRecyclerViewAdapter extends RecyclerView.Adapter implements Bas
     private static final int RECOMMEND_TOPIC_DATA_TYPE = 88;
     private static final int MY_TOPIC_DATA_TYPE = 98;
 
+    private BaseRecyclerViewAdapter baseRecyclerViewAdapter;
+
     public HallRecyclerViewAdapter(Context mContext, JSONObject jsonObjectData) {
         this.mContext = mContext;
         this.jsonObjectData = jsonObjectData;
     }
+
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -105,7 +109,7 @@ public class HallRecyclerViewAdapter extends RecyclerView.Adapter implements Bas
 
             ArrayList<FeedBean> feedBeanArrayList = getHotWeekData(jsonObjectData);
             if (EmptyUtils.isNotEmpty(feedBeanArrayList) && feedBeanArrayList.size() != 0) {
-                BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, feedBeanArrayList, MY_STATE_DATA_TYPE);
+                baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, feedBeanArrayList, MY_STATE_DATA_TYPE);
                 hotWeekViewHolder.recyclerView.setAdapter(baseRecyclerViewAdapter);
                 hotWeekViewHolder.recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
                 baseRecyclerViewAdapter.setOnItemClickListener(this);
@@ -154,6 +158,25 @@ public class HallRecyclerViewAdapter extends RecyclerView.Adapter implements Bas
                 Bundle bundle = new Bundle();
                 bundle.putInt(Constant.FEED_ID, feedBean.getFeed_id());
                 ((BaseActivity) mContext).gotoPager(StateDetailFragment.class, bundle);//动态详情
+            }
+        }
+    }
+
+    public void addData(JSONObject jsonObjectData) {
+        if (EmptyUtils.isNotEmpty(jsonObjectData)) {
+            ArrayList<FeedBean> feedBeanArrayLists = getHotWeekData(jsonObjectData);
+            if (feedBeanArrayLists.size() == 0) {
+                ToastUtils.showShort("没有更多了");
+                return;
+            }
+            if (EmptyUtils.isNotEmpty(feedBeanArrayLists) && feedBeanArrayLists.size() != 0) {
+                baseRecyclerViewAdapter.addDatas(feedBeanArrayLists);
+                //                if (EmptyUtils.isEmpty(feedBeanArrayList)) {
+                //                    feedBeanArrayList = new ArrayList<>();
+                //                }
+                //                feedBeanArrayList.addAll(feedBeanArrayLists);
+                //
+                //                notifyDataSetChanged();
             }
         }
     }

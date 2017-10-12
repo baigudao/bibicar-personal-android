@@ -48,24 +48,24 @@
         "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\src\\main\\res\\drawable\\rc_emoji_grid_item_selector.xml"
     },
     {
-        "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\release\\drawable\\rc_cs_group_checkbox_selector.xml",
-        "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\src\\main\\res\\drawable\\rc_cs_group_checkbox_selector.xml"
-    },
-    {
         "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\release\\drawable\\rc_ic_location.xml",
         "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\src\\main\\res\\drawable\\rc_ic_location.xml"
+    },
+    {
+        "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\release\\drawable\\rc_cs_group_checkbox_selector.xml",
+        "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\src\\main\\res\\drawable\\rc_cs_group_checkbox_selector.xml"
     },
     {
         "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\release\\drawable\\rc_btn_send.xml",
         "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\src\\main\\res\\drawable\\rc_btn_send.xml"
     },
     {
-        "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\release\\drawable\\rc_btn_public_service_enter_selector.xml",
-        "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\src\\main\\res\\drawable\\rc_btn_public_service_enter_selector.xml"
-    },
-    {
         "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\release\\drawable\\rc_bg_item.xml",
         "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\src\\main\\res\\drawable\\rc_bg_item.xml"
+    },
+    {
+        "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\release\\drawable\\rc_btn_public_service_enter_selector.xml",
+        "source": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\src\\main\\res\\drawable\\rc_btn_public_service_enter_selector.xml"
     },
     {
         "merged": "D:\\android_workspace\\bibicar-personal-android\\IMKit\\build\\intermediates\\res\\merged\\release\\drawable\\rc_cs_evaluate_selector.xml",

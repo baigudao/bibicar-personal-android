@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/background_color"
+              android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp">
+
+        <com.wiserz.pbibi.view.CircleImageView
+            android:id="@+id/ivAvater"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/user_photo"/>
+
+        <TextView
+            android:id="@+id/tvPrivateMsg"
+            style="@style/FriendShipTextViewTheme1"
+            android:layout_width="90dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:background="@drawable/btn_background_selector"
+            android:text="@string/private_message"
+            android:textColor="@drawable/btn_text_background_selector"/>
+
+        <TextView
+            android:id="@+id/tvNickName"
+            style="@style/FriendShipTextViewTheme2"
+            android:layout_toLeftOf="@id/tvPrivateMsg"
+            android:layout_toRightOf="@id/ivAvater"
+            android:paddingLeft="10dp"
+            android:text="小明"/>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider_color"/>
+
+</LinearLayout>
