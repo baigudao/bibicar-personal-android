@@ -266,6 +266,7 @@ public class FollowFragment extends BaseFragment implements BaseRecyclerViewAdap
             //                e.printStackTrace();
             //            }
             //            notifyDataSetChanged();
+
         }
 
         private String getNewJsonArray(String s, String s1) {
