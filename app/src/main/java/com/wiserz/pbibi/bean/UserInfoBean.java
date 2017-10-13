@@ -24,6 +24,15 @@ public class UserInfoBean extends BaseBean {
     private double total_money;
     private int user_id;
     private String username;
+    private int is_friend;
+
+    public int getIs_friend() {
+        return is_friend;
+    }
+
+    public void setIs_friend(int is_friend) {
+        this.is_friend = is_friend;
+    }
 
     public int getCreated() {
         return created;

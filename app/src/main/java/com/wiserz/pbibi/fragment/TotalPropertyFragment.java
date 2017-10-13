@@ -123,8 +123,6 @@ public class TotalPropertyFragment extends BaseFragment implements OnRefreshList
     private void handlerMoreDataForTotalProperty(JSONObject jsonObjectData) {
         if (EmptyUtils.isNotEmpty(jsonObjectData)) {
             richListRecyclerViewAdapter.addDatas(jsonObjectData);
-        } else {
-            ToastUtils.showShort("没有更多了");
         }
     }
 

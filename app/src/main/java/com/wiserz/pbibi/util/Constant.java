@@ -26,6 +26,7 @@ public class Constant {
     public static final String SIGNATURE = "signature";
     public static final String APP_URL = "app_url";
     public static final String PASSWORD = "password";
+    public static final String MOBILE_LIST = "mobile_list";
     public static final String CARD_FILE = "card_file";
     public static final String TELENUMBER = "telenumber";
     public static final String ADDRESS = "address";
@@ -250,6 +251,8 @@ public class Constant {
     private static final String mySellingCarUrl = hostUrl + "v4/Publishcar/list";//我的售车
 
     private static final String friendShipListUrl = hostUrl + "v3/friendship/list";//关注和粉丝列表
+
+    private static final String mobileFriend = hostUrl + "v3/user/checkreport";
 
     public static String getRegisterApp() {
         return registerApp;
@@ -621,5 +624,9 @@ public class Constant {
 
     public static String getFriendShipListUrl() {
         return friendShipListUrl;
+    }
+
+    public static String getMobileFriend() {
+        return mobileFriend;
     }
 }

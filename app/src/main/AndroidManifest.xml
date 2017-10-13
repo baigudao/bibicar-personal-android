@@ -32,6 +32,9 @@
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
+    <uses-permission android:name="android.permission.WRITE_CONTACTS"/>
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+
     <application
         android:name=".BaseApplication"
         android:allowBackup="true"

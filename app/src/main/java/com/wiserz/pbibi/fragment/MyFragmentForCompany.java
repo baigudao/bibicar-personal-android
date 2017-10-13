@@ -1,6 +1,7 @@
 package com.wiserz.pbibi.fragment;
 
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
@@ -60,6 +61,7 @@ public class MyFragmentForCompany extends BaseFragment {
     private LinearLayout ll_follow_and_message;
     private RelativeLayout rl_follow;
     private RelativeLayout rl_message;
+    private TextView tv_follow;
     private int is_friend;
     private LoginBean.UserInfoBean myInfos;
 
@@ -87,6 +89,10 @@ public class MyFragmentForCompany extends BaseFragment {
         ll_follow_and_message = (LinearLayout) view.findViewById(R.id.ll_follow_and_message);
         rl_follow = (RelativeLayout) view.findViewById(R.id.rl_follow);
         rl_message = (RelativeLayout) view.findViewById(R.id.rl_message);
+        tv_follow = (TextView) view.findViewById(R.id.tv_follow);
+
+        view.findViewById(R.id.tvFans).setOnClickListener(this);
+        view.findViewById(R.id.tvFollow).setOnClickListener(this);
 
         RadioGroup rg_main = (RadioGroup) view.findViewById(R.id.rg_main);
 
@@ -136,6 +142,12 @@ public class MyFragmentForCompany extends BaseFragment {
                     followCode(getIs_friend());
                 }
                 break;
+            case R.id.tvFollow:
+            case R.id.tvFans:
+                Bundle bundle = new Bundle();
+                bundle.putInt(Constant.USER_ID, user_id);
+                gotoPager(FanAndFollowFragment.class, bundle);
+                break;
             default:
                 break;
         }
@@ -165,7 +177,7 @@ public class MyFragmentForCompany extends BaseFragment {
                                 JSONObject jsonObjectData = jsonObject.optJSONObject("data");
                                 if (status == 1) {
                                     setIs_friend(1);
-                                    ToastUtils.showShort("关注成功");
+                                    tv_follow.setText("已关注");
                                 } else {
                                     String code = jsonObject.optString("code");
                                     String msg = jsonObjectData.optString("msg");
@@ -176,8 +188,39 @@ public class MyFragmentForCompany extends BaseFragment {
                             }
                         }
                     });
-        } else {
-            ToastUtils.showShort("你已经关注过了");
+        } else if (is_friend == 1) {
+            OkHttpUtils.post()
+                    .url(Constant.getDeleteFollowUrl())
+                    .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
+                    .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
+                    .addParams(Constant.USER_ID, String.valueOf(user_id))
+                    .build()
+                    .execute(new StringCallback() {
+                        @Override
+                        public void onError(Call call, Exception e, int id) {
+
+                        }
+
+                        @Override
+                        public void onResponse(String response, int id) {
+                            JSONObject jsonObject = null;
+                            try {
+                                jsonObject = new JSONObject(response);
+                                int status = jsonObject.optInt("status");
+                                JSONObject jsonObjectData = jsonObject.optJSONObject("data");
+                                if (status == 1) {
+                                    setIs_friend(2);
+                                    tv_follow.setText("关注");
+                                } else {
+                                    String code = jsonObject.optString("code");
+                                    String msg = jsonObjectData.optString("msg");
+                                    ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
         }
     }
 

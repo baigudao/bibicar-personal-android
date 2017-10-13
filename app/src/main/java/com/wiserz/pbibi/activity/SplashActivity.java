@@ -55,7 +55,6 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getAdvertisementImageFromNet();//额外增加线程外任务，用于请求启动页面的数据并保存广告图片到SD卡
         flag = 0;
         initView();
     }
@@ -178,6 +177,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void afterRequestPermission() {
+        getAdvertisementImageFromNet();//额外增加线程外任务，用于请求启动页面的数据并保存广告图片到SD卡
         String device_identifier = SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER);
         if (EmptyUtils.isEmpty(device_identifier)) {
             String device_id = CommonUtil.getDeviceId(this);//设备id

@@ -3,6 +3,7 @@ package com.wiserz.pbibi.fragment;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
@@ -100,6 +101,9 @@ public class StateDetailFragment extends BaseFragment implements BaseRecyclerVie
         iv_image.setImageResource(R.drawable.report_selector);
         iv_image.setOnClickListener(this);
 
+        view.findViewById(R.id.iv_circle_image).setOnClickListener(this);
+        view.findViewById(R.id.tv_user_name).setOnClickListener(this);
+
         ll_three_point = (LinearLayout) getView().findViewById(R.id.ll_three_point);
         ll_input_view = (LinearLayout) getView().findViewById(R.id.ll_input_view);
         view.findViewById(R.id.btn_send).setOnClickListener(this);
@@ -186,6 +190,16 @@ public class StateDetailFragment extends BaseFragment implements BaseRecyclerVie
                 KeyboardUtils.hideSoftInput(ll_input_view);
                 ll_three_point.setVisibility(View.VISIBLE);
                 ll_input_view.setVisibility(View.GONE);
+                break;
+            case R.id.tv_user_name:
+            case R.id.iv_circle_image:
+                if (user_id == SPUtils.getInstance().getInt(Constant.USER_ID)) {
+                    gotoPager(MyHomePageFragment.class, null);
+                } else {
+                    Bundle bundle = new Bundle();
+                    bundle.putInt(Constant.USER_ID, user_id);
+                    gotoPager(OtherHomePageFragment.class, bundle);
+                }
                 break;
             default:
                 break;
@@ -481,16 +495,28 @@ public class StateDetailFragment extends BaseFragment implements BaseRecyclerVie
 
     @Override
     public void onItemClick(Object data, int position) {
-        ArticleCommentBean articleCommentBean = (ArticleCommentBean) data;
-        if (EmptyUtils.isNotEmpty(articleCommentBean)) {
-            //查看更多回复
-            int comment_id = articleCommentBean.getComment_id();
-            int feed_id = articleCommentBean.getFeed_id();
-            if (EmptyUtils.isNotEmpty(comment_id) && EmptyUtils.isNotEmpty(feed_id)) {
-                DataManager.getInstance().setData1(feed_id);
-                DataManager.getInstance().setData2(comment_id);
-                DataManager.getInstance().setData3(articleCommentBean);
-                ((BaseActivity) mContext).gotoPager(CommentDetailFragment.class, null);
+        if (data.getClass().getSimpleName().equals("ArticleCommentBean")) {
+            ArticleCommentBean articleCommentBean = (ArticleCommentBean) data;
+            if (EmptyUtils.isNotEmpty(articleCommentBean)) {
+                //查看更多回复
+                int comment_id = articleCommentBean.getComment_id();
+                int feed_id = articleCommentBean.getFeed_id();
+                if (EmptyUtils.isNotEmpty(comment_id) && EmptyUtils.isNotEmpty(feed_id)) {
+                    DataManager.getInstance().setData1(feed_id);
+                    DataManager.getInstance().setData2(comment_id);
+                    DataManager.getInstance().setData3(articleCommentBean);
+                    ((BaseActivity) mContext).gotoPager(CommentDetailFragment.class, null);
+                }
+            }
+        } else if (data.getClass().getSimpleName().equals("LikeListBean")) {
+            LikeListBean likeListBean = (LikeListBean) data;
+            int userID = likeListBean.getUser_id();
+            if (userID == SPUtils.getInstance().getInt(Constant.USER_ID)) {
+                gotoPager(MyHomePageFragment.class, null);
+            } else {
+                Bundle bundle = new Bundle();
+                bundle.putInt(Constant.USER_ID, userID);
+                gotoPager(OtherHomePageFragment.class, bundle);
             }
         }
     }
@@ -508,6 +534,7 @@ public class StateDetailFragment extends BaseFragment implements BaseRecyclerVie
                 BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, likeListBeanArrayList, LIKE_LIST_DATA_TYPE);
                 zan_recyclerView.setAdapter(baseRecyclerViewAdapter);
                 zan_recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
+                baseRecyclerViewAdapter.setOnItemClickListener(this);
             }
         }
     }

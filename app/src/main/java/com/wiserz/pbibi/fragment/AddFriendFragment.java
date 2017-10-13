@@ -4,10 +4,12 @@ import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
 
+import com.blankj.utilcode.util.EmptyUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.util.Constant;
+import com.wiserz.pbibi.util.DataManager;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -55,11 +57,13 @@ public class AddFriendFragment extends BaseFragment {
                 goBack();
                 break;
             case R.id.tvSearch1:
-                ToastUtils.showShort("搜索用户");
+                gotoPager(SearchFragment.class, null);
                 break;
             case R.id.invite_address_list:
-//                DataManager.getInstance().setData1(share_message);
-//                gotoPager(ContactsFragment.class, null);
+                if (EmptyUtils.isNotEmpty(share_message)) {
+                    DataManager.getInstance().setData1(share_message);
+                    gotoPager(ContactsFragment.class, null);
+                }
                 break;
             case R.id.invite_weibo:
                 showShare(mContext, "SinaWeibo", true);

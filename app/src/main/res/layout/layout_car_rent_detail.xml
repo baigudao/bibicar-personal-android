@@ -29,7 +29,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp">
+        android:layout_marginTop="15dp"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/tv_car_price"
@@ -266,6 +267,7 @@
             android:layout_toRightOf="@id/iv1"
             android:text="深圳市南山区海翔广场1204"
             android:textColor="@color/main_text_color"
+            android:textIsSelectable="true"
             android:textSize="14sp"/>
 
         <ImageView
@@ -274,7 +276,8 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
-            android:src="@drawable/v3_topic_more3x"/>
+            android:src="@drawable/v3_topic_more3x"
+            android:visibility="gone"/>
 
     </RelativeLayout>
 

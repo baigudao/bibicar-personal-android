@@ -730,7 +730,7 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                     }
                 }
                 holder.tv_item1.setText(carRentRecommendCarBean.getCar_name());
-                holder.tv_item2.setText("¥" + String.valueOf(carRentRecommendCarBean.getRental_info().getDeposit()) + "/日均");//¥468/日均
+                holder.tv_item2.setText("¥" + String.valueOf(carRentRecommendCarBean.getRental_info().getOne()) + "/日均");//¥468/日均
             }
         } else if (dataType == ARTICLE_COMMENT_LIST_DATA_TYPE) {
             ArrayList<ArticleCommentBean> articleCommentBeanArrayList = (ArrayList<ArticleCommentBean>) mList;
@@ -2397,6 +2397,16 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                 });
             } else if (dataType == LIKE_LIST_DATA_TYPE) {
                 iv_item1 = (ImageView) itemView.findViewById(R.id.iv_circle_image);
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnItemClickListener != null) {
+                            int position = getLayoutPosition();
+                            mOnItemClickListener.onItemClick(mList.get(position), position);
+                        }
+                    }
+                });
             } else if (dataType == THEME_USER_DATA_TYPE) {
                 iv_item1 = (ImageView) itemView.findViewById(R.id.iv_circle_image);
 

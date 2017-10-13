@@ -63,6 +63,8 @@ public class OtherHomePageFragment extends BaseFragment implements BaseRecyclerV
 
     private int mPage;
 
+    private TextView tv_follow;
+
     private String share_img;
     private String share_title;
     private String share_txt;
@@ -90,6 +92,8 @@ public class OtherHomePageFragment extends BaseFragment implements BaseRecyclerV
         view.findViewById(R.id.rl_follow).setOnClickListener(this);
         view.findViewById(R.id.rl_message).setOnClickListener(this);
 
+        tv_follow = (TextView) view.findViewById(R.id.tv_follow);
+
         view.findViewById(R.id.tv_follow_and_fan).setOnClickListener(this);
 
         smartRefreshLayout = (SmartRefreshLayout) view.findViewById(R.id.smartRefreshLayout);
@@ -115,7 +119,38 @@ public class OtherHomePageFragment extends BaseFragment implements BaseRecyclerV
             case R.id.rl_follow:
                 switch (is_friend) {
                     case 1://已关注
-                        ToastUtils.showShort("已经关注");
+                        OkHttpUtils.post()
+                                .url(Constant.getDeleteFollowUrl())
+                                .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
+                                .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
+                                .addParams(Constant.USER_ID, String.valueOf(user_id))
+                                .build()
+                                .execute(new StringCallback() {
+                                    @Override
+                                    public void onError(Call call, Exception e, int id) {
+
+                                    }
+
+                                    @Override
+                                    public void onResponse(String response, int id) {
+                                        JSONObject jsonObject = null;
+                                        try {
+                                            jsonObject = new JSONObject(response);
+                                            int status = jsonObject.optInt("status");
+                                            JSONObject jsonObjectData = jsonObject.optJSONObject("data");
+                                            if (status == 1) {
+                                                is_friend = 2;
+                                                tv_follow.setText("关注");
+                                            } else {
+                                                String code = jsonObject.optString("code");
+                                                String msg = jsonObjectData.optString("msg");
+                                                ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                            }
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                });
                         break;
                     case 2:
                         //没有关注，就去关注
@@ -140,7 +175,11 @@ public class OtherHomePageFragment extends BaseFragment implements BaseRecyclerV
                                             JSONObject jsonObjectData = jsonObject.optJSONObject("data");
                                             if (status == 1) {
                                                 is_friend = 1;
-                                                ToastUtils.showShort("关注成功");
+                                                tv_follow.setText("已关注");
+                                                //                                                Drawable drawable= getResources().getDrawable(R.drawable.v5_add3x);
+                                                //                                                /// 这一步必须要做,否则不会显示.
+                                                //                                                drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                                                //                                                tv_follow.setCompoundDrawables(drawable,null,null,null);
                                             } else {
                                                 String code = jsonObject.optString("code");
                                                 String msg = jsonObjectData.optString("msg");
