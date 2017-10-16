@@ -42,6 +42,7 @@ import okhttp3.Call;
 public class SplashActivity extends AppCompatActivity {
 
     private static final String[] APP_NEED_PERMISSIONS = new String[]{
+            Manifest.permission.READ_CONTACTS,
             Manifest.permission.ACCESS_FINE_LOCATION,//定位
             Manifest.permission.RECORD_AUDIO, //录音
             Manifest.permission.CALL_PHONE,//打电话
