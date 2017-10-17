@@ -25,7 +25,8 @@ public class VRWatchCarActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        BarUtils.hideStatusBar(this);//隐藏状态栏
+        BarUtils.setStatusBarColor(VRWatchCarActivity.this, getResources().getColor(R.color.background_color));
+        //        BarUtils.hideStatusBar(this);//隐藏状态栏
         setContentView(R.layout.activity_vr_watch_car);
         webView = (WebView) findViewById(R.id.tencent_web_view);
     }

@@ -44,7 +44,8 @@ public class GuideActivity extends Activity implements View.OnClickListener {
     }
 
     private void initView() {
-        BarUtils.hideStatusBar((Activity) mContext);//隐藏状态栏
+        BarUtils.setStatusBarColor(GuideActivity.this, getResources().getColor(R.color.background_color));
+        //        BarUtils.hideStatusBar((Activity) mContext);//隐藏状态栏
         setContentView(R.layout.activity_guide);
 
         ViewPager viewpager = (ViewPager) findViewById(R.id.viewpager);

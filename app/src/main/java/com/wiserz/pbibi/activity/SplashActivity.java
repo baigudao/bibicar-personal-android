@@ -64,7 +64,8 @@ public class SplashActivity extends AppCompatActivity {
         if (!NetworkUtils.isConnected()) {
             ToastUtils.showShort("当前无网络");
         }
-        BarUtils.hideStatusBar(SplashActivity.this);
+        BarUtils.setStatusBarColor(SplashActivity.this, getResources().getColor(R.color.background_color));
+        //        BarUtils.hideStatusBar(SplashActivity.this);
         setContentView(R.layout.activity_splash);
         ImageView iv_advertisement = (ImageView) findViewById(R.id.iv_advertisement);
         final CountDownView countDownView = (CountDownView) findViewById(R.id.countDownView);
