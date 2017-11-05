@@ -29,9 +29,11 @@ import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.activity.BaseActivity;
+import com.wiserz.pbibi.activity.RegisterAndLoginActivity;
 import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
 import com.wiserz.pbibi.bean.ArticleCommentBean;
 import com.wiserz.pbibi.bean.FeedInfoBean;
+import com.wiserz.pbibi.util.CommonUtil;
 import com.wiserz.pbibi.util.Constant;
 import com.wiserz.pbibi.util.DataManager;
 import com.wiserz.pbibi.view.SharePlatformPopupWindow;
@@ -325,6 +327,10 @@ public class VideoDetailFragment extends BaseFragment implements BaseRecyclerVie
                         getView().findViewById(R.id.iv_circle_image_post).setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                                if(!CommonUtil.isHadLogin()) {
+                                    gotoPager(RegisterAndLoginActivity.class, null);
+                                    return;
+                                }
                                 int user_id = feedInfoBean.getPost_user_info().getUser_id();
                                 if (EmptyUtils.isNotEmpty(user_id)) {
                                     Bundle bundle = new Bundle();
@@ -337,7 +343,10 @@ public class VideoDetailFragment extends BaseFragment implements BaseRecyclerVie
                         getView().findViewById(R.id.tv_user_name_post).setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-
+                                if(!CommonUtil.isHadLogin()) {
+                                    gotoPager(RegisterAndLoginActivity.class, null);
+                                    return;
+                                }
                                 if (EmptyUtils.isNotEmpty(user_id)) {
                                     Bundle bundle = new Bundle();
                                     bundle.putInt(Constant.USER_ID, user_id);
@@ -354,6 +363,10 @@ public class VideoDetailFragment extends BaseFragment implements BaseRecyclerVie
                             iv_follow.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
+                                    if(!CommonUtil.isHadLogin()) {
+                                        gotoPager(RegisterAndLoginActivity.class, null);
+                                        return;
+                                    }
                                     int is_friend = feedInfoBean.getPost_user_info().getIs_friend();
                                     switch (is_friend) {
                                         case 1:

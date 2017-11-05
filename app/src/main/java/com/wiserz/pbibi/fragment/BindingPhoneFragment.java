@@ -81,12 +81,12 @@ public class BindingPhoneFragment extends BaseFragment {
                     return;
                 }
                 final String mobile = getMobile();
-                if (!RegexUtils.isMobileExact(mobile)) {
-                    Toast.makeText(getActivity(), "请输入正确的手机号码", Toast.LENGTH_SHORT).show();
-                    return;
-                }
                 if (TextUtils.isEmpty(mobile)) {
                     Toast.makeText(getActivity(), getString(R.string.please_input_phone_number), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (!RegexUtils.isMobileExact(mobile)) {
+                    Toast.makeText(getActivity(), getString(R.string.please_input_correct_phone), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 mTotalTime = 60;

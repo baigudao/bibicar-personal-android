@@ -26,9 +26,12 @@ import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wiserz.pbibi.R;
+import com.wiserz.pbibi.activity.BaseActivity;
+import com.wiserz.pbibi.activity.RegisterAndLoginActivity;
 import com.wiserz.pbibi.activity.VRWatchCarActivity;
 import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
 import com.wiserz.pbibi.bean.CarInfoBean;
+import com.wiserz.pbibi.util.CommonUtil;
 import com.wiserz.pbibi.util.Constant;
 import com.wiserz.pbibi.util.DataManager;
 import com.wiserz.pbibi.view.SharePlatformPopupWindow;
@@ -157,6 +160,10 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
     }
 
     private void collectCarOrNot(String car_id, int is_favs) {
+        if(!CommonUtil.isHadLogin()) {
+            gotoPager(RegisterAndLoginActivity.class, null);
+            return;
+        }
         if (is_favs == 1) {
             //为1已经收藏了 需要取消收藏
             OkHttpUtils.post()
@@ -622,16 +629,28 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
         SharePlatformPopupWindow sharePlatformPopWindow = new SharePlatformPopupWindow(getActivity(), new SharePlatformPopupWindow.SharePlatformListener() {
             @Override
             public void onSinaWeiboClicked() {
+                if(!CommonUtil.isHadLogin()) {
+                    gotoPager(RegisterAndLoginActivity.class, null);
+                    return;
+                }
                 showShare(mContext, "SinaWeibo", true);
             }
 
             @Override
             public void onWeChatClicked() {
+                if(!CommonUtil.isHadLogin()) {
+                    gotoPager(RegisterAndLoginActivity.class, null);
+                    return;
+                }
                 showShare(mContext, "Wechat", true);
             }
 
             @Override
             public void onWechatMomentsClicked() {
+                if(!CommonUtil.isHadLogin()) {
+                    gotoPager(RegisterAndLoginActivity.class, null);
+                    return;
+                }
                 showShare(mContext, "WechatMoments", true);
             }
 

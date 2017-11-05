@@ -3,9 +3,12 @@ package com.wiserz.pbibi.fragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.wiserz.pbibi.R;
+import com.wiserz.pbibi.activity.RegisterAndLoginActivity;
+import com.wiserz.pbibi.util.CommonUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +47,10 @@ public class CommunityFragment extends BaseFragment {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_create_topic:
+                if(!CommonUtil.isHadLogin()) {
+                    gotoPager(RegisterAndLoginActivity.class, null);
+                    return;
+                }
                 gotoPager(CreateTopicFragment.class, null);
                 break;
             default:
@@ -60,6 +67,11 @@ public class CommunityFragment extends BaseFragment {
                     position = 0;
                     break;
                 case R.id.rb_follow://话题
+                    if(!CommonUtil.isHadLogin()) {
+                        ((RadioButton)getView().findViewById(R.id.rb_hall)).setChecked(true);
+                        gotoPager(RegisterAndLoginActivity.class, null);
+                        return;
+                    }
                     position = 1;
                     break;
                 default:

@@ -22,9 +22,11 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.wiserz.pbibi.R;
+import com.wiserz.pbibi.activity.RegisterAndLoginActivity;
 import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
 import com.wiserz.pbibi.bean.FollowInfoBean;
 import com.wiserz.pbibi.bean.RecommendUserInfoBean;
+import com.wiserz.pbibi.util.CommonUtil;
 import com.wiserz.pbibi.util.Constant;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -108,6 +110,9 @@ public class FollowFragment extends BaseFragment implements BaseRecyclerViewAdap
     }
 
     private void getDataFromNet() {
+        if(!CommonUtil.isHadLogin()) {
+            return;
+        }
         OkHttpUtils.post()
                 .url(Constant.getMyFocusUrl())
                 .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))

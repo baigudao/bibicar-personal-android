@@ -147,7 +147,7 @@ public abstract class BaseAutoScrollView<T> extends ListView implements AutoScro
     }
 
     private void initItemData(final int position, View convertView, ViewHolder viewHolder, T data) {
-        Glide.with(mContext)
+        Glide.with(mContext.getApplicationContext())
                 .load(getImgUrl(data))
                 .placeholder(R.drawable.user_photo)
                 .bitmapTransform(new CropCircleTransformation(mContext))

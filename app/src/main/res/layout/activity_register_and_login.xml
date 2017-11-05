@@ -1,53 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/background_color"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_color"
+    android:orientation="vertical">
 
-    <include layout="@layout/title_bar"/>
+    <include layout="@layout/title_bar" />
+
+    <RelativeLayout
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="55dp"
+        android:layout_gravity="center_horizontal">
+        <TextView
+            android:id="@+id/tv_get_verfication_code"
+            android:layout_width="90dp"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:text="@string/get_code"
+            android:textColor="@color/btn_no_enable_color"
+            android:gravity="center"
+            android:layout_alignParentRight="true"
+            android:textSize="16sp" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_alignTop="@id/tv_get_verfication_code"
+            android:layout_alignBottom="@id/tv_get_verfication_code"
+            android:layout_toLeftOf="@id/tv_get_verfication_code"
+            android:layout_marginRight="10dp"
+            android:background="@color/btn_no_enable_color"/>
 
     <EditText
         android:id="@+id/et_account_login"
-        android:layout_width="280dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="55dp"
         android:background="@null"
-        android:hint="@string/et_input_account"
-        android:inputType="text"
+        android:hint="@string/please_input_phone_number"
+        android:layout_toLeftOf="@id/tv_get_verfication_code"
+        android:layout_marginRight="20dp"
+        android:inputType="phone"
         android:maxLength="16"
         android:maxLines="1"
         android:textColorHint="@color/btn_no_enable_color"
-        android:textSize="16sp"/>
+        android:textSize="16sp" />
+
+    </RelativeLayout>
 
     <View
         android:layout_width="280dp"
         android:layout_height="1dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="8dp"
-        android:background="@color/divider_color"/>
+        android:background="@color/divider_color" />
 
     <EditText
-        android:id="@+id/et_password_login"
+        android:id="@+id/et_verfication_code_login"
         android:layout_width="280dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="22dp"
         android:background="@null"
-        android:hint="@string/et_input_password"
+        android:hint="@string/please_input_verfication_code"
         android:inputType="textPassword"
         android:maxLength="25"
         android:maxLines="1"
         android:textColorHint="@color/btn_no_enable_color"
-        android:textSize="16sp"/>
+        android:textSize="16sp" />
 
     <View
         android:layout_width="280dp"
         android:layout_height="1dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="8dp"
-        android:background="@color/divider_color"/>
+        android:background="@color/divider_color" />
 
     <LinearLayout
         android:layout_width="280dp"
@@ -61,7 +88,7 @@
             android:layout_height="wrap_content"
             android:text="点击登录，即表示您同意"
             android:textColor="#A2A2A2"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
 
         <Button
             android:id="@+id/btn_user_protocol"
@@ -72,7 +99,7 @@
             android:text="用户协议"
             android:textColor="@drawable/btn_text_user_protocol_selector"
             android:textSize="14sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
     </LinearLayout>
 
@@ -86,7 +113,7 @@
         android:enabled="false"
         android:text="登录"
         android:textColor="@drawable/btn_text_background_selector"
-        android:textSize="16sp"/>
+        android:textSize="16sp" />
 
     <Button
         android:id="@+id/btn_forget_password"
@@ -96,8 +123,9 @@
         android:layout_marginTop="18dp"
         android:background="@null"
         android:text="忘记密码"
+        android:visibility="gone"
         android:textColor="@drawable/text_color_selector_for_forget_password"
-        android:textSize="15sp"/>
+        android:textSize="15sp" />
 
     <TextView
         android:layout_width="186dp"
@@ -105,7 +133,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="100dp"
         android:text="使用社交账号快速登录或注册"
-        android:textColor="#bbbbbb"/>
+        android:textColor="#bbbbbb" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -118,14 +146,14 @@
             android:id="@+id/image_btn_weixin_login"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:background="@drawable/weixin_register_selector"/>
+            android:background="@drawable/weixin_register_selector" />
 
         <ImageButton
             android:id="@+id/image_btn_weibo_login"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginLeft="50dp"
-            android:background="@drawable/weibo_register_selector"/>
+            android:background="@drawable/weibo_register_selector" />
 
     </LinearLayout>
 

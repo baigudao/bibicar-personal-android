@@ -4,6 +4,10 @@
     <string name="start_button">开启BibiCar之旅</string>
     <string name="et_input_account">请输入账号</string>
     <string name="et_input_password">输入6-16位密码</string>
+    <string name="company_register">企业注册</string>
+    <string name="login">登录</string>
+    <string name="get_code">获取验证码</string>
+    <string name="please_input_correct_phone">获取验证码</string>
 
     <string name="login_successful">登录成功</string>
 

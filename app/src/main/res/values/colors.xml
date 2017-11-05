@@ -4,6 +4,8 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
+    <color name="half_pure_white_color">#88ffffff</color>
+
     <color name="main_color">#dda753</color>
     <color name="main_color_half_transparent">#55dda753</color>
     <color name="pure_white_color">#ffffff</color>

@@ -97,6 +97,13 @@ public class SettingFragment extends BaseFragment {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         logout();
+                        SPUtils.getInstance().put(Constant.SESSION_ID,"");
+                        SPUtils.getInstance().put(Constant.ACCOUNT, "");
+                        SPUtils.getInstance().put(Constant.PASSWORD, "");
+                        SPUtils.getInstance().put(Constant.CHAT_TOKEN, "");
+                        SPUtils.getInstance().put(Constant.USER_ID, -1);
+                        SPUtils.getInstance().put(Constant.IS_USER_LOGIN, false);
+                        DataManager.getInstance().setUserInfo(null);
                         gotoPager(RegisterAndLoginActivity.class, null);
                         ((EmptyActivity) mContext).finish();
                     }

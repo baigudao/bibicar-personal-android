@@ -3,6 +3,7 @@ package com.wiserz.pbibi.fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.RadioButton;
 
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
@@ -10,7 +11,9 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.wiserz.pbibi.R;
+import com.wiserz.pbibi.activity.RegisterAndLoginActivity;
 import com.wiserz.pbibi.adapter.RecommendRecyclerViewAdapter;
+import com.wiserz.pbibi.util.CommonUtil;
 import com.wiserz.pbibi.util.Constant;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -49,9 +52,17 @@ public class RecommendFragment extends BaseFragment implements OnRefreshListener
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_top_search:
+                if(!CommonUtil.isHadLogin()) {
+                    gotoPager(RegisterAndLoginActivity.class, null);
+                    return;
+                }
                 gotoPager(SearchFragment.class, null);
                 break;
             case R.id.iv_top_search_history:
+                if(!CommonUtil.isHadLogin()) {
+                    gotoPager(RegisterAndLoginActivity.class, null);
+                    return;
+                }
                 gotoPager(SearchHistoryFragment.class, null);
                 break;
             default:

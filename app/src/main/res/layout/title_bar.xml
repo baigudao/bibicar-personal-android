@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="登录"
+            android:text="@string/login"
             android:textColor="#3A3A3A"
             android:textSize="20sp"/>
 
@@ -36,7 +36,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="14dp"
             android:background="@null"
-            android:text="注册"
+            android:text="@string/company_register"
             android:textColor="@drawable/text_color_selector"
             android:textSize="18sp"
             android:visibility="gone"/>

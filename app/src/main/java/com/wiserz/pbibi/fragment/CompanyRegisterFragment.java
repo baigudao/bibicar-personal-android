@@ -55,7 +55,7 @@ public class CompanyRegisterFragment extends BaseFragment {
     @Override
     protected void initView(View view) {
         view.findViewById(R.id.iv_back).setOnClickListener(this);
-        ((TextView) view.findViewById(R.id.tv_title)).setText("企业注册");
+        ((TextView) view.findViewById(R.id.tv_title)).setText(getResources().getString(R.string.company_register));
         numberProgressBar = (NumberProgressBar) view.findViewById(R.id.numberProgressBar);
 
         WebView wb = (WebView) view.findViewById(R.id.webview_company_register);

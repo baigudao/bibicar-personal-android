@@ -16,8 +16,10 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.activity.BaseActivity;
+import com.wiserz.pbibi.activity.RegisterAndLoginActivity;
 import com.wiserz.pbibi.bean.RichBean;
 import com.wiserz.pbibi.fragment.OtherHomePageFragment;
+import com.wiserz.pbibi.util.CommonUtil;
 import com.wiserz.pbibi.util.Constant;
 import com.wiserz.pbibi.view.CircleImageView;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -136,6 +138,10 @@ public class RichListRecyclerViewAdapter extends RecyclerView.Adapter implements
                     otherViewHolder.iv_circle_image.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            if(!CommonUtil.isHadLogin()) {
+                                ((BaseActivity) mContext).gotoPager(RegisterAndLoginActivity.class, null);
+                                return;
+                            }
                             int user_id = richBean.getUser_id();
                             if (EmptyUtils.isNotEmpty(user_id)) {
                                 Bundle bundle = new Bundle();
@@ -148,6 +154,10 @@ public class RichListRecyclerViewAdapter extends RecyclerView.Adapter implements
                     otherViewHolder.tv_user_name.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            if(!CommonUtil.isHadLogin()) {
+                                ((BaseActivity) mContext).gotoPager(RegisterAndLoginActivity.class, null);
+                                return;
+                            }
                             int user_id = richBean.getUser_id();
                             if (EmptyUtils.isNotEmpty(user_id)) {
                                 Bundle bundle = new Bundle();

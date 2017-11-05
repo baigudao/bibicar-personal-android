@@ -27,11 +27,13 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.activity.BaseActivity;
+import com.wiserz.pbibi.activity.RegisterAndLoginActivity;
 import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
 import com.wiserz.pbibi.bean.ArticleCommentBean;
 import com.wiserz.pbibi.bean.FeedBean;
 import com.wiserz.pbibi.bean.FeedInfoDetailBean;
 import com.wiserz.pbibi.bean.LikeListBean;
+import com.wiserz.pbibi.util.CommonUtil;
 import com.wiserz.pbibi.util.Constant;
 import com.wiserz.pbibi.util.DataManager;
 import com.wiserz.pbibi.view.SharePlatformPopupWindow;
@@ -130,23 +132,43 @@ public class StateDetailFragment extends BaseFragment implements BaseRecyclerVie
                 goBack();
                 break;
             case R.id.iv_image:
+                if(!CommonUtil.isHadLogin()) {
+                    ((BaseActivity) mContext).gotoPager(RegisterAndLoginActivity.class, null);
+                    return;
+                }
                 if (EmptyUtils.isNotEmpty(feed_id) && EmptyUtils.isNotEmpty(user_id)) {
                     showDialog(v, user_id, null);
                 }
                 break;
             case R.id.rl_share:
+                if(!CommonUtil.isHadLogin()) {
+                    ((BaseActivity) mContext).gotoPager(RegisterAndLoginActivity.class, null);
+                    return;
+                }
                 showSharePlatformPopWindow();
                 break;
             case R.id.rl_comment:
+                if(!CommonUtil.isHadLogin()) {
+                    ((BaseActivity) mContext).gotoPager(RegisterAndLoginActivity.class, null);
+                    return;
+                }
                 resetCommentView();
                 KeyboardUtils.showSoftInput(ll_input_view);
                 break;
             case R.id.rl_like:
+                if(!CommonUtil.isHadLogin()) {
+                    gotoPager(RegisterAndLoginActivity.class, null);
+                    return;
+                }
                 if (EmptyUtils.isNotEmpty(feed_id)) {
                     likeOrNot();
                 }
                 break;
             case R.id.btn_send:
+                if(!CommonUtil.isHadLogin()) {
+                    ((BaseActivity) mContext).gotoPager(RegisterAndLoginActivity.class, null);
+                    return;
+                }
                 if (EmptyUtils.isEmpty(getInputContent())) {
                     ToastUtils.showShort("请输入评论的内容");
                     return;
@@ -193,6 +215,10 @@ public class StateDetailFragment extends BaseFragment implements BaseRecyclerVie
                 break;
             case R.id.tv_user_name:
             case R.id.iv_circle_image:
+                if(!CommonUtil.isHadLogin()) {
+                    gotoPager(RegisterAndLoginActivity.class, null);
+                    return;
+                }
                 if (user_id == SPUtils.getInstance().getInt(Constant.USER_ID)) {
                     gotoPager(MyHomePageFragment.class, null);
                 } else {
@@ -301,6 +327,10 @@ public class StateDetailFragment extends BaseFragment implements BaseRecyclerVie
     }
 
     private void likeOrNot() {
+        if(!CommonUtil.isHadLogin()) {
+            gotoPager(RegisterAndLoginActivity.class, null);
+            return;
+        }
         final Handler handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
@@ -509,6 +539,10 @@ public class StateDetailFragment extends BaseFragment implements BaseRecyclerVie
                 }
             }
         } else if (data.getClass().getSimpleName().equals("LikeListBean")) {
+            if(!CommonUtil.isHadLogin()) {
+                gotoPager(RegisterAndLoginActivity.class, null);
+                return;
+            }
             LikeListBean likeListBean = (LikeListBean) data;
             int userID = likeListBean.getUser_id();
             if (userID == SPUtils.getInstance().getInt(Constant.USER_ID)) {
@@ -562,6 +596,10 @@ public class StateDetailFragment extends BaseFragment implements BaseRecyclerVie
                     iv_follow.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            if(!CommonUtil.isHadLogin()) {
+                                gotoPager(RegisterAndLoginActivity.class, null);
+                                return;
+                            }
                             int is_friend = feedInfoDetailBean.getPost_user_info().getIs_friend();
                             switch (is_friend) {
                                 case 1:

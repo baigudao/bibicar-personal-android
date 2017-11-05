@@ -19,9 +19,11 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.activity.BaseActivity;
+import com.wiserz.pbibi.activity.RegisterAndLoginActivity;
 import com.wiserz.pbibi.adapter.ContactsAdapter;
 import com.wiserz.pbibi.bean.ContactsBean;
 import com.wiserz.pbibi.bean.UserInfoBean;
+import com.wiserz.pbibi.util.CommonUtil;
 import com.wiserz.pbibi.util.Constant;
 import com.wiserz.pbibi.util.DataManager;
 import com.wiserz.pbibi.util.Trans2PinYin;
@@ -193,6 +195,10 @@ public class ContactsFragment extends BaseFragment implements AdapterView.OnItem
             //没有注册
             sendSmsWithBody(getActivity(), datas.get(position).getPhone(), SHARE_MESSAGE);
         } else {
+            if(!CommonUtil.isHadLogin()) {
+                gotoPager(RegisterAndLoginActivity.class, null);
+                return;
+            }
             int is_friend = bean.getUserinfo().getIs_friend();
             if (is_friend == 1) {
                 //关注了

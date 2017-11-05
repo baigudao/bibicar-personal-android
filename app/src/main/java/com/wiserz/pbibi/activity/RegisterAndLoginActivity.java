@@ -1,22 +1,28 @@
 package com.wiserz.pbibi.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.blankj.utilcode.util.EmptyUtils;
 import com.blankj.utilcode.util.EncryptUtils;
+import com.blankj.utilcode.util.RegexUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.google.gson.Gson;
 import com.wiserz.pbibi.BaseApplication;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.bean.LoginBean;
+import com.wiserz.pbibi.fragment.CompanyRegisterFragment;
 import com.wiserz.pbibi.fragment.ForgetPasswordFragment;
 import com.wiserz.pbibi.fragment.OauthRegisterFragment;
 import com.wiserz.pbibi.fragment.UserProtocolFragment;
@@ -30,6 +36,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformDb;
@@ -45,8 +53,13 @@ import okhttp3.Call;
  */
 public class RegisterAndLoginActivity extends BaseActivity implements View.OnClickListener {
 
+    private Timer mTimer;
+    private int mTotalTime;
+    private TimerTask mTask;
+
     private EditText et_account_login;
-    private EditText et_password_login;
+    private EditText et_verfication_code_login;
+    private TextView tv_get_verfication_code;
     private Button btn_login;
 
     @Override
@@ -58,15 +71,16 @@ public class RegisterAndLoginActivity extends BaseActivity implements View.OnCli
         btn_register.setOnClickListener(this);
         btn_register.setVisibility(View.VISIBLE);
 
+        tv_get_verfication_code=(TextView) findViewById(R.id.tv_get_verfication_code);
         et_account_login = (EditText) findViewById(R.id.et_account_login);
         et_account_login.addTextChangedListener(new TextChangedListener());
-        et_password_login = (EditText) findViewById(R.id.et_password_login);
-        et_password_login.addTextChangedListener(new TextChangedListener());
+        et_verfication_code_login = (EditText) findViewById(R.id.et_verfication_code_login);
+        et_verfication_code_login.addTextChangedListener(new TextChangedListener());
         btn_login = (Button) findViewById(R.id.btn_login);//登录按钮
         btn_login.setOnClickListener(this);
 
         findViewById(R.id.btn_user_protocol).setOnClickListener(this);
-        findViewById(R.id.btn_forget_password).setOnClickListener(this);
+        findViewById(R.id.tv_get_verfication_code).setOnClickListener(this);
 
         findViewById(R.id.image_btn_weixin_login).setOnClickListener(this);
         findViewById(R.id.image_btn_weibo_login).setOnClickListener(this);
@@ -76,7 +90,7 @@ public class RegisterAndLoginActivity extends BaseActivity implements View.OnCli
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_register:
-                gotoPager(WelcomeRegisterFragment.class, null);
+                gotoPager(CompanyRegisterFragment.class, null);
                 break;
             case R.id.btn_login:
                 login();
@@ -84,8 +98,9 @@ public class RegisterAndLoginActivity extends BaseActivity implements View.OnCli
             case R.id.btn_user_protocol:
                 gotoPager(UserProtocolFragment.class, null);
                 break;
-            case R.id.btn_forget_password:
-                gotoPager(ForgetPasswordFragment.class, null);
+            case R.id.tv_get_verfication_code:
+             //   gotoPager(ForgetPasswordFragment.class, null);
+                getCode();
                 break;
             case R.id.image_btn_weixin_login:
                 login("Wechat");
@@ -98,14 +113,85 @@ public class RegisterAndLoginActivity extends BaseActivity implements View.OnCli
         }
     }
 
+    private void getCode(){
+        String mobile = getAccount();
+        if (TextUtils.isEmpty(mobile)) {
+            Toast.makeText(this, getString(R.string.please_input_phone_number), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (!RegexUtils.isMobileExact(mobile)) {
+            Toast.makeText(this, getString(R.string.please_input_correct_phone), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        mTotalTime = 60;
+        mTimer = new Timer();
+        initTimerTask();
+        mTimer.schedule(mTask, 1000, 1000);
+        OkHttpUtils.post()
+                .url(Constant.getVerificationCodeUrl())
+                .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
+                .addParams(Constant.MOBILE, mobile)
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+                        JSONObject jsonObject = null;
+                        try {
+                            jsonObject = new JSONObject(response);
+                            int status = jsonObject.optInt("status");
+                            JSONObject jsonObjectData = jsonObject.optJSONObject("data");
+                            if (status == 1) {
+                                int code = jsonObjectData.optInt("code");
+                            } else {
+                                String code = jsonObject.optString("code");
+                                String msg = jsonObjectData.optString("msg");
+                                ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+    }
+
+    private void initTimerTask() {
+        mTask = new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        --mTotalTime;
+                        tv_get_verfication_code.setText(String.valueOf(mTotalTime));
+                        if (mTotalTime <= 0) {
+                            mTimer.cancel();
+                            mTimer=null;
+                            tv_get_verfication_code.setText(getString(R.string.get_code));
+                            tv_get_verfication_code.setBackgroundDrawable(null);
+                            tv_get_verfication_code.setTextColor(getResources().getColor(R.color.btn_no_enable_color));
+                        } else {
+                            tv_get_verfication_code.setTextColor(Color.WHITE);
+                            tv_get_verfication_code.setBackgroundDrawable(getResources().getDrawable(R.drawable.my_verification_code_shape));//倒计时时候的背景
+                        }
+                    }
+                });
+            }
+        };
+    }
+
     private void login() {
         final String account = getAccount();
-        final String password = getPassword();
+        final String verficationCode = getVerficationCode();
         OkHttpUtils.post()
-                .url(Constant.getUserLoginUrl())
+                .url(Constant.getUserCodeLoginUrl())
                 .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
                 .addParams(Constant.MOBILE, account)
-                .addParams(Constant.PASSWORD, EncryptUtils.encryptMD5ToString(password))
+                .addParams(Constant.CODE, verficationCode)
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -126,7 +212,7 @@ public class RegisterAndLoginActivity extends BaseActivity implements View.OnCli
                                 //存储个人相关信息
                                 SPUtils.getInstance().put(Constant.SESSION_ID, loginBean.getSession_id());
                                 SPUtils.getInstance().put(Constant.ACCOUNT, account);
-                                SPUtils.getInstance().put(Constant.PASSWORD, password);
+                                SPUtils.getInstance().put(Constant.PASSWORD, verficationCode);
                                 SPUtils.getInstance().put(Constant.CHAT_TOKEN, loginBean.getUser_info().getChat_token());
                                 SPUtils.getInstance().put(Constant.USER_ID, loginBean.getUser_info().getUser_id());
                                 DataManager.getInstance().setUserInfo(loginBean.getUser_info());
@@ -149,6 +235,14 @@ public class RegisterAndLoginActivity extends BaseActivity implements View.OnCli
                         }
                     }
                 });
+    }
+
+    public void onDestroy(){
+        super.onDestroy();
+        if(mTimer!=null){
+            mTimer.cancel();
+        }
+        mTimer=null;
     }
 
     /**
@@ -256,8 +350,8 @@ public class RegisterAndLoginActivity extends BaseActivity implements View.OnCli
         return et_account_login.getText().toString().trim();
     }
 
-    public String getPassword() {
-        return et_password_login.getText().toString().trim();
+    public String getVerficationCode() {
+        return et_verfication_code_login.getText().toString().trim();
     }
 
     private class TextChangedListener implements TextWatcher {
@@ -269,7 +363,7 @@ public class RegisterAndLoginActivity extends BaseActivity implements View.OnCli
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             boolean user = et_account_login.getText().length() > 0;
-            boolean pwd = et_password_login.getText().length() > 0;
+            boolean pwd = et_verfication_code_login.getText().length() > 0;
             if (user & pwd) {
                 btn_login.setEnabled(true);
             } else {

@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:id="@+id/activity_main"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/background_color"
-              android:orientation="vertical"
-              tools:context="com.wiserz.pbibi.activity.MainActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_color"
+    android:orientation="vertical"
+    tools:context="com.wiserz.pbibi.activity.MainActivity">
 
     <!--FrameLayout-->
     <FrameLayout
         android:id="@+id/fl_content"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/divider_color"/>
+        android:background="@color/divider_color" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -39,7 +39,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="8dp"
                 android:scaleType="fitXY"
-                android:src="@drawable/tab_home3x"/>
+                android:src="@drawable/tab_home3x" />
 
             <TextView
                 android:id="@+id/tv_home"
@@ -49,7 +49,7 @@
                 android:layout_marginTop="2dp"
                 android:text="@string/rb_recommend"
                 android:textColor="@color/second_text_color"
-                android:textSize="12sp"/>
+                android:textSize="12sp" />
 
         </LinearLayout>
 
@@ -67,7 +67,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="8dp"
                 android:scaleType="fitXY"
-                android:src="@drawable/tab_market3x"/>
+                android:src="@drawable/tab_market3x" />
 
             <TextView
                 android:id="@+id/tv_car_center"
@@ -77,7 +77,7 @@
                 android:layout_marginTop="2dp"
                 android:text="@string/car_center"
                 android:textColor="@color/second_text_color"
-                android:textSize="12sp"/>
+                android:textSize="12sp" />
 
         </LinearLayout>
 
@@ -94,7 +94,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="8dp"
                 android:scaleType="fitXY"
-                android:src="@drawable/tab_circle3x"/>
+                android:src="@drawable/tab_circle3x" />
 
             <TextView
                 android:id="@+id/tv_community"
@@ -105,7 +105,7 @@
                 android:layout_marginTop="2dp"
                 android:text="@string/rb_community"
                 android:textColor="@color/second_text_color"
-                android:textSize="12sp"/>
+                android:textSize="12sp" />
 
             <ImageView
                 android:id="@+id/iv_publish_state"
@@ -114,7 +114,7 @@
                 android:layout_centerInParent="true"
                 android:onClick="publishState"
                 android:src="@drawable/tab_circle_c3x"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
         </RelativeLayout>
 
@@ -132,7 +132,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="8dp"
                 android:scaleType="fitXY"
-                android:src="@drawable/tab_news3x"/>
+                android:src="@drawable/tab_news3x" />
 
             <TextView
                 android:id="@+id/tv_message"
@@ -142,7 +142,7 @@
                 android:layout_marginTop="2dp"
                 android:text="@string/rb_message"
                 android:textColor="@color/second_text_color"
-                android:textSize="12sp"/>
+                android:textSize="12sp" />
 
         </LinearLayout>
 
@@ -161,7 +161,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="8dp"
                 android:scaleType="fitXY"
-                android:src="@drawable/tab_me3x"/>
+                android:src="@drawable/tab_me3x" />
 
             <TextView
                 android:id="@+id/tv_me"
@@ -171,7 +171,7 @@
                 android:layout_marginTop="2dp"
                 android:text="@string/rb_mine"
                 android:textColor="@color/second_text_color"
-                android:textSize="12sp"/>
+                android:textSize="12sp" />
 
         </LinearLayout>
 

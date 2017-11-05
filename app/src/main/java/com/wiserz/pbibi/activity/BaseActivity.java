@@ -2,11 +2,13 @@ package com.wiserz.pbibi.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.WindowManager;
 
 import com.umeng.analytics.MobclickAgent;
 import com.wiserz.pbibi.BaseApplication;
@@ -22,16 +24,16 @@ import java.util.List;
  */
 public class BaseActivity extends AppCompatActivity {
 
-    private static BaseActivity baseActivity;
+//    private static BaseActivity baseActivity;
 
-    public static BaseActivity getBaseActivity() {
-        return baseActivity;
-    }
+  //  public static BaseActivity getBaseActivity() {
+//        return baseActivity;
+//    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        baseActivity = this;
+   //     baseActivity = this;
     }
 
     /**

@@ -19,9 +19,11 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.activity.BaseActivity;
+import com.wiserz.pbibi.activity.RegisterAndLoginActivity;
 import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
 import com.wiserz.pbibi.bean.AllSecondCommentBean;
 import com.wiserz.pbibi.bean.ArticleCommentBean;
+import com.wiserz.pbibi.util.CommonUtil;
 import com.wiserz.pbibi.util.Constant;
 import com.wiserz.pbibi.util.DataManager;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -228,6 +230,10 @@ public class CommentDetailFragment extends BaseFragment {
             iv_circle_image.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if(!CommonUtil.isHadLogin()) {
+                        gotoPager(RegisterAndLoginActivity.class, null);
+                        return;
+                    }
                     if (EmptyUtils.isNotEmpty(user_id)) {
                         if (SPUtils.getInstance().getInt(Constant.USER_ID) == user_id) {
                             ((BaseActivity) mContext).gotoPager(MyHomePageFragment.class, null);
@@ -243,6 +249,10 @@ public class CommentDetailFragment extends BaseFragment {
             tv_comment_name.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if(!CommonUtil.isHadLogin()) {
+                        gotoPager(RegisterAndLoginActivity.class, null);
+                        return;
+                    }
                     if (EmptyUtils.isNotEmpty(user_id)) {
                         if (SPUtils.getInstance().getInt(Constant.USER_ID) == user_id) {
                             ((BaseActivity) mContext).gotoPager(MyHomePageFragment.class, null);

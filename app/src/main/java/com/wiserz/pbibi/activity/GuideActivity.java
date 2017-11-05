@@ -222,7 +222,7 @@ public class GuideActivity extends Activity implements View.OnClickListener {
     public void onClick(View v) {
         if (v.getId() == R.id.btn_start_main) {
             SPUtils.getInstance().put(Constant.IS_ENTER_GUIDE_VIEW, true);
-            startActivity(new Intent(mContext, RegisterAndLoginActivity.class));
+            startActivity(new Intent(mContext, MainActivity.class));
             finish();
         }
     }

@@ -4,6 +4,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.wiserz.pbibi.R;
+import com.wiserz.pbibi.activity.RegisterAndLoginActivity;
+import com.wiserz.pbibi.util.CommonUtil;
 
 /**
  * Created by jackie on 2017/8/10 18:04.
@@ -36,15 +38,31 @@ public class CarCheckServiceFragment extends BaseFragment {
                 goBack();
                 break;
             case R.id.ll_check_guarantee:
+                if(!CommonUtil.isHadLogin()) {
+                    gotoPager(RegisterAndLoginActivity.class, null);
+                    return;
+                }
                 gotoPager(CheckGuaranteeFragment.class, null);//查维保
                 break;
             case R.id.ll_check_peccancy:
+                if(!CommonUtil.isHadLogin()) {
+                    gotoPager(RegisterAndLoginActivity.class, null);
+                    return;
+                }
                 gotoPager(CheckPeccancyFragment.class, null);//查违章
                 break;
             case R.id.ll_check_sum:
+                if(!CommonUtil.isHadLogin()) {
+                    gotoPager(RegisterAndLoginActivity.class, null);
+                    return;
+                }
                 gotoPager(CheckSumFragment.class, null);//查出险
                 break;
             case R.id.ll_check_history:
+                if(!CommonUtil.isHadLogin()) {
+                    gotoPager(RegisterAndLoginActivity.class, null);
+                    return;
+                }
                 gotoPager(CheckHistoryFragment.class, null);//查询历史
                 break;
             default:

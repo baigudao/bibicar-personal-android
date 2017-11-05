@@ -15,9 +15,12 @@ import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wiserz.pbibi.R;
+import com.wiserz.pbibi.activity.BaseActivity;
+import com.wiserz.pbibi.activity.RegisterAndLoginActivity;
 import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
 import com.wiserz.pbibi.bean.ThemeInfoBean;
 import com.wiserz.pbibi.bean.ThemeUserBean;
+import com.wiserz.pbibi.util.CommonUtil;
 import com.wiserz.pbibi.util.Constant;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -148,6 +151,10 @@ public class TopicMemberFragment extends BaseFragment implements BaseRecyclerVie
                     getView().findViewById(R.id.include_topic_member).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            if(!CommonUtil.isHadLogin()) {
+                                gotoPager(RegisterAndLoginActivity.class, null);
+                                return;
+                            }
                             int user_id = themeInfoBean.getUser_info().getUser_id();
                             if (user_id == SPUtils.getInstance().getInt(Constant.USER_ID)) {
                                 gotoPager(MyHomePageFragment.class, null);
@@ -167,6 +174,10 @@ public class TopicMemberFragment extends BaseFragment implements BaseRecyclerVie
     public void onItemClick(Object data, int position) {
         LogUtils.e(data.getClass().getSimpleName());
         if (data.getClass().getSimpleName().equals("ThemeUserBean")) {
+            if(!CommonUtil.isHadLogin()) {
+                gotoPager(RegisterAndLoginActivity.class, null);
+                return;
+            }
             ThemeUserBean themeUserBean = (ThemeUserBean) data;
             if (EmptyUtils.isNotEmpty(themeUserBean)) {
                 int user_id = themeUserBean.getUser_id();

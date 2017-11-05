@@ -274,4 +274,8 @@ public class CommonUtil {
         mContentValues = values;
         return filePath;
     }
+
+    public static boolean isHadLogin(){
+        return SPUtils.getInstance().getBoolean(Constant.IS_USER_LOGIN);
+    }
 }

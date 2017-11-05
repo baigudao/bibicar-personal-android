@@ -18,9 +18,12 @@ import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wiserz.pbibi.R;
+import com.wiserz.pbibi.activity.BaseActivity;
+import com.wiserz.pbibi.activity.RegisterAndLoginActivity;
 import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
 import com.wiserz.pbibi.bean.ThemeUserBean;
 import com.wiserz.pbibi.bean.TopicInfoBean;
+import com.wiserz.pbibi.util.CommonUtil;
 import com.wiserz.pbibi.util.Constant;
 import com.wiserz.pbibi.util.DataManager;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -247,6 +250,10 @@ public class TopicDetailFragment extends BaseFragment implements BaseRecyclerVie
     @Override
     public void onItemClick(Object data, int position) {
         if (data.getClass().getSimpleName().equals("ThemeUserBean")) {
+            if(!CommonUtil.isHadLogin()) {
+                ((BaseActivity) mContext).gotoPager(RegisterAndLoginActivity.class, null);
+                return;
+            }
             ThemeUserBean themeUserBean = (ThemeUserBean) data;
             if (EmptyUtils.isNotEmpty(themeUserBean)) {
                 int user_id = themeUserBean.getUser_id();

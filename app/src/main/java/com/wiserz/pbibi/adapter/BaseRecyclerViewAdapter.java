@@ -36,6 +36,7 @@ import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.activity.BaseActivity;
+import com.wiserz.pbibi.activity.RegisterAndLoginActivity;
 import com.wiserz.pbibi.bean.AllSecondCommentBean;
 import com.wiserz.pbibi.bean.ArticleBean;
 import com.wiserz.pbibi.bean.ArticleCommentBean;
@@ -70,6 +71,7 @@ import com.wiserz.pbibi.fragment.OtherHomePageFragment;
 import com.wiserz.pbibi.fragment.ShowAllImageFragment;
 import com.wiserz.pbibi.fragment.StateDetailFragment;
 import com.wiserz.pbibi.fragment.VideoDetailFragment;
+import com.wiserz.pbibi.util.CommonUtil;
 import com.wiserz.pbibi.util.Constant;
 import com.wiserz.pbibi.util.DataManager;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -525,6 +527,10 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                     holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            if(!CommonUtil.isHadLogin()) {
+                                ((BaseActivity)mContext).gotoPager(RegisterAndLoginActivity.class, null);
+                                return;
+                            }
                             Bundle bundle = new Bundle();
                             bundle.putInt(Constant.USER_ID, cheHangUserListBean.getUser_id());
                             ((BaseActivity) mContext).gotoPager(MyFragmentForCompany.class, bundle);
@@ -748,6 +754,10 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                     holder.iv_item1.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            if(!CommonUtil.isHadLogin()) {
+                                ((BaseActivity) mContext).gotoPager(RegisterAndLoginActivity.class, null);
+                                return;
+                            }
                             if (EmptyUtils.isNotEmpty(user_id)) {
                                 if (SPUtils.getInstance().getInt(Constant.USER_ID) == user_id) {
                                     ((BaseActivity) mContext).gotoPager(MyHomePageFragment.class, null);
@@ -763,6 +773,10 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                     holder.tv_item1.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            if(!CommonUtil.isHadLogin()) {
+                                ((BaseActivity) mContext).gotoPager(RegisterAndLoginActivity.class, null);
+                                return;
+                            }
                             if (EmptyUtils.isNotEmpty(user_id)) {
                                 if (SPUtils.getInstance().getInt(Constant.USER_ID) == user_id) {
                                     ((BaseActivity) mContext).gotoPager(MyHomePageFragment.class, null);
@@ -941,6 +955,10 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                     holder.iv_item1.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            if(!CommonUtil.isHadLogin()) {
+                                ((BaseActivity) mContext).gotoPager(RegisterAndLoginActivity.class, null);
+                                return;
+                            }
                             if (EmptyUtils.isNotEmpty(user_id)) {
                                 if (SPUtils.getInstance().getInt(Constant.USER_ID) == user_id) {
                                     ((BaseActivity) mContext).gotoPager(MyHomePageFragment.class, null);
@@ -956,6 +974,10 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                     holder.tv_item1.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            if(!CommonUtil.isHadLogin()) {
+                                ((BaseActivity) mContext).gotoPager(RegisterAndLoginActivity.class, null);
+                                return;
+                            }
                             if (EmptyUtils.isNotEmpty(user_id)) {
                                 if (SPUtils.getInstance().getInt(Constant.USER_ID) == user_id) {
                                     ((BaseActivity) mContext).gotoPager(MyHomePageFragment.class, null);
@@ -1228,6 +1250,10 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                             holder.iv_item1.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
+                                    if(!CommonUtil.isHadLogin()) {
+                                        ((BaseActivity) mContext).gotoPager(RegisterAndLoginActivity.class, null);
+                                        return;
+                                    }
                                     Bundle bundle = new Bundle();
                                     bundle.putInt(Constant.USER_ID, feedBean.getPost_user_info().getUser_id());
                                     ((BaseActivity) mContext).gotoPager(OtherHomePageFragment.class, bundle);
@@ -1237,6 +1263,10 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                             holder.tv_item1.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
+                                    if(!CommonUtil.isHadLogin()) {
+                                        ((BaseActivity) mContext).gotoPager(RegisterAndLoginActivity.class, null);
+                                        return;
+                                    }
                                     Bundle bundle = new Bundle();
                                     bundle.putInt(Constant.USER_ID, feedBean.getPost_user_info().getUser_id());
                                     ((BaseActivity) mContext).gotoPager(OtherHomePageFragment.class, bundle);
@@ -1253,6 +1283,10 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                         holder.iv_item6.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                                if(!CommonUtil.isHadLogin()) {
+                                    ((BaseActivity) mContext).gotoPager(RegisterAndLoginActivity.class, null);
+                                    return;
+                                }
                                 int is_friend = feedBean.getPost_user_info().getIs_friend();
                                 switch (is_friend) {
                                     case 1:
@@ -1468,6 +1502,10 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                     holder.iv_item2.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            if(!CommonUtil.isHadLogin()) {
+                                ((BaseActivity) mContext).gotoPager(RegisterAndLoginActivity.class, null);
+                                return;
+                            }
                             if (EmptyUtils.isNotEmpty(mOnShareToPlatform)) {
                                 mOnShareToPlatform.share();
                             }
@@ -1498,6 +1536,10 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                     holder.iv_item4.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            if(!CommonUtil.isHadLogin()) {
+                                ((BaseActivity) mContext).gotoPager(RegisterAndLoginActivity.class, null);
+                                return;
+                            }
                             final Handler handler = new Handler() {
                                 @Override
                                 public void handleMessage(Message msg) {
@@ -1588,6 +1630,10 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                     holder.iv_item5.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            if(!CommonUtil.isHadLogin()) {
+                                ((BaseActivity) mContext).gotoPager(RegisterAndLoginActivity.class, null);
+                                return;
+                            }
                             showDialog(v, feedBean, feedBeanArrayList);
                         }
                     });
@@ -1719,6 +1765,10 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                         holder.iv_item2.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                                if(!CommonUtil.isHadLogin()) {
+                                    ((BaseActivity) mContext).gotoPager(RegisterAndLoginActivity.class, null);
+                                    return;
+                                }
                                 OkHttpUtils.post()
                                         .url(Constant.getCreateFollowUrl())
                                         .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))

@@ -4,8 +4,7 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/pure_white_color
-        </item> <!--以前的颜色：@color/colorPrimaryDark-->
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item> <!--以前的颜色：@color/colorPrimaryDark-->
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowBackground">@drawable/start_pic</item><!--窗口的背景:在应用启动时和xml文件的背景-->
     </style>

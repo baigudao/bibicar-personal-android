@@ -26,6 +26,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.activity.BaseActivity;
+import com.wiserz.pbibi.activity.RegisterAndLoginActivity;
 import com.wiserz.pbibi.bean.ArticleBean;
 import com.wiserz.pbibi.bean.BannerBean;
 import com.wiserz.pbibi.bean.CarInfoBean;
@@ -46,6 +47,7 @@ import com.wiserz.pbibi.fragment.TopicDetailFragment;
 import com.wiserz.pbibi.fragment.VRWatchCarFragment;
 import com.wiserz.pbibi.fragment.VideoDetailFragment;
 import com.wiserz.pbibi.fragment.VideoListFragment;
+import com.wiserz.pbibi.util.CommonUtil;
 import com.wiserz.pbibi.util.Constant;
 import com.wiserz.pbibi.util.DataManager;
 import com.wiserz.pbibi.view.BaseAutoScrollView;
@@ -408,6 +410,10 @@ public class RecommendRecyclerViewAdapter extends RecyclerView.Adapter implement
                 ((BaseActivity) mContext).gotoPager(VideoDetailFragment.class, null);
             }
         } else if (data.getClass().getSimpleName().equals("CheHangHomeBean")) {
+            if(!CommonUtil.isHadLogin()) {
+                ((BaseActivity)mContext).gotoPager(RegisterAndLoginActivity.class, null);
+                return;
+            }
             CheHangHomeBean cheHangHomeBean = (CheHangHomeBean) data;
             if (EmptyUtils.isNotEmpty(cheHangHomeBean)) {
                 int user_id = cheHangHomeBean.getUser_id();

@@ -225,16 +225,16 @@ public class SplashActivity extends AppCompatActivity {
 
         Intent intent;
         boolean isEnterGuideView = SPUtils.getInstance().getBoolean(Constant.IS_ENTER_GUIDE_VIEW);
-        boolean is_user_login = SPUtils.getInstance().getBoolean(Constant.IS_USER_LOGIN);
+//        boolean is_user_login = SPUtils.getInstance().getBoolean(Constant.IS_USER_LOGIN);
         if (isEnterGuideView) {
-            //如果进入了引导页面
-            if (is_user_login) {
-                //如果用户登录过，就直接进入主页面
+//            //如果进入了引导页面
+//            if (is_user_login) {
+//                //如果用户登录过，就直接进入主页面
                 intent = new Intent(SplashActivity.this, MainActivity.class);
-            } else {
-                //如果用户没有登录过，就进入登录注册页面
-                intent = new Intent(SplashActivity.this, RegisterAndLoginActivity.class);
-            }
+//            } else {
+//                //如果用户没有登录过，就进入登录注册页面
+//                intent = new Intent(SplashActivity.this, RegisterAndLoginActivity.class);
+//            }
         } else {
             //如果没有进入引导页面，就进入引导页面
             intent = new Intent(SplashActivity.this, GuideActivity.class);

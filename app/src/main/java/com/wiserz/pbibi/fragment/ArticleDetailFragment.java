@@ -33,9 +33,11 @@ import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.activity.BaseActivity;
+import com.wiserz.pbibi.activity.RegisterAndLoginActivity;
 import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
 import com.wiserz.pbibi.bean.ArticleCommentBean;
 import com.wiserz.pbibi.bean.ArticleDetailBean;
+import com.wiserz.pbibi.util.CommonUtil;
 import com.wiserz.pbibi.util.Constant;
 import com.wiserz.pbibi.util.DataManager;
 import com.wiserz.pbibi.view.SharePlatformPopupWindow;
@@ -130,23 +132,47 @@ public class ArticleDetailFragment extends BaseFragment implements BaseRecyclerV
                 goBack();
                 break;
             case R.id.rl_share_weibo:
+                if(!CommonUtil.isHadLogin()) {
+                    gotoPager(RegisterAndLoginActivity.class, null);
+                    return;
+                }
                 showShare(mContext, "SinaWeibo", true);
                 break;
             case R.id.rl_share_wechat:
+                if(!CommonUtil.isHadLogin()) {
+                    gotoPager(RegisterAndLoginActivity.class, null);
+                    return;
+                }
                 showShare(mContext, "Wechat", true);
                 break;
             case R.id.rl_share_wechatmoments:
+                if(!CommonUtil.isHadLogin()) {
+                    gotoPager(RegisterAndLoginActivity.class, null);
+                    return;
+                }
                 showShare(mContext, "WechatMoments", true);
                 break;
             case R.id.iv_share:
+                if(!CommonUtil.isHadLogin()) {
+                    gotoPager(RegisterAndLoginActivity.class, null);
+                    return;
+                }
                 showSharePlatformPopWindow();
                 break;
             case R.id.iv_like:
+                if(!CommonUtil.isHadLogin()) {
+                    gotoPager(RegisterAndLoginActivity.class, null);
+                    return;
+                }
                 if (EmptyUtils.isNotEmpty(feed_id) && EmptyUtils.isNotEmpty(is_collect)) {
                     collectOrNot(feed_id, is_collect);
                 }
                 break;
             case R.id.btn_send:
+                if(!CommonUtil.isHadLogin()) {
+                    gotoPager(RegisterAndLoginActivity.class, null);
+                    return;
+                }
                 sendComment();
                 break;
             default:
