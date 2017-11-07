@@ -28,8 +28,6 @@ public class CameraFragment extends BaseFragment implements View.OnTouchListener
 
     private boolean mUsingCamera;
 
-    public static final String USE_CAMERA_TYPE = "use_camera_type";
-
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_camera;

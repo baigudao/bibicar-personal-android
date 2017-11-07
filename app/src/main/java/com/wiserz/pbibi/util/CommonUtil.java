@@ -7,15 +7,20 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.blankj.utilcode.util.DeviceUtils;
 import com.blankj.utilcode.util.SPUtils;
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.wiserz.pbibi.R;
 
@@ -273,5 +278,247 @@ public class CommonUtil {
         values.put(MediaStore.Images.ImageColumns.DATA, filePath);
         mContentValues = values;
         return filePath;
+    }
+
+    /**
+     * @param context
+     * @param defaultId
+     * @param path
+     * @param iv
+     */
+    public static void loadImage(Context context, int defaultId, String path, ImageView iv) {
+        if (iv.getMeasuredWidth() > 0 && iv.getMeasuredHeight() > 0) {
+            Glide.with(context)
+                    .load(path)
+                    .override(iv.getMeasuredWidth(), iv.getMeasuredHeight())
+                    .error(defaultId)//load失敗的Drawable
+                    .placeholder(defaultId)
+                    .centerCrop()//中心切圖, 會填滿
+                    .fitCenter()//中心fit, 以原本圖片的長寬為主
+                    .crossFade()
+                    .into(iv);
+        } else {
+            Glide.with(context)
+                    .load(path)
+                    .error(defaultId)//load失敗的Drawable
+                    .placeholder(defaultId)
+                    .centerCrop()//中心切圖, 會填滿
+                    .fitCenter()//中心fit, 以原本圖片的長寬為主
+                    .crossFade()
+                    .into(iv);
+        }
+
+    }
+
+    /**
+     * @param context
+     * @param defaultId
+     * @param uri
+     * @param iv
+     */
+    public static void loadImage(Context context, int defaultId, Uri uri, ImageView iv) {
+        if (iv.getMeasuredWidth() > 0 && iv.getMeasuredHeight() > 0) {
+            Glide.with(context)
+                    .load(uri)
+                    .placeholder(defaultId)
+                    .override(iv.getMeasuredWidth(), iv.getMeasuredHeight())
+                    .error(defaultId)//load失敗的Drawable
+                    .centerCrop()//中心切圖, 會填滿
+                    .fitCenter()//中心fit, 以原本圖片的長寬為主
+                    .crossFade()
+                    .into(iv);
+        } else {
+            Glide.with(context)
+                    .load(uri)
+                    .placeholder(defaultId)
+                    .error(defaultId)//load失敗的Drawable
+                    .centerCrop()//中心切圖, 會填滿
+                    .fitCenter()//中心fit, 以原本圖片的長寬為主
+                    .crossFade()
+                    .into(iv);
+        }
+    }
+
+    /**
+     * 根据给定的宽高取图片
+     *
+     * @param imageFile
+     * @param width
+     * @param height
+     * @return
+     */
+    public static Bitmap getBitmapFromFile(File imageFile, int width, int height) {
+        if (width == 0 || height == 0) {
+            return null;
+        }
+        BitmapFactory.Options opts = new BitmapFactory.Options();
+        int[] bound = getBitmapBound(imageFile.getAbsolutePath());
+        if (width == 0 || height == 0) {
+            return null;
+        }
+        int degree = getBitmapDegree(imageFile.getAbsolutePath());
+        int wmRatio, hmRatio;
+        if (degree % 180 == 0) {
+            wmRatio = bound[0] / width;
+            hmRatio = bound[1] / height;
+        } else {
+            wmRatio = bound[1] / width;
+            hmRatio = bound[0] / height;
+        }
+        if (wmRatio > 1 || hmRatio > 1) {
+            if (wmRatio > hmRatio) {
+                opts.inSampleSize = wmRatio;
+            } else {
+                opts.inSampleSize = hmRatio;
+            }
+        }
+        Bitmap bmp = BitmapFactory.decodeFile(imageFile.getAbsolutePath(), opts);
+        if (degree % 360 != 0 && bmp != null) {
+            Matrix matrix = new Matrix();
+            matrix.setRotate(degree, bmp.getWidth() / 2, bmp.getHeight() / 2);
+            Bitmap newBmp = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);
+            bmp.recycle();
+            return newBmp;
+        }
+        return bmp;
+    }
+
+    public static int[] getBitmapBound(String imageFile) {
+        BitmapFactory.Options opts = new BitmapFactory.Options();
+        opts.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(imageFile, opts);
+        int[] bound = new int[2];
+        bound[0] = opts.outWidth;
+        bound[1] = opts.outHeight;
+        return bound;
+    }
+
+    /**
+     * 读取图片的旋转的角度
+     *
+     * @param path 图片绝对路径
+     * @return 图片的旋转角度
+     */
+    public static int getBitmapDegree(String path) {
+        int degree = 0;
+        try {
+            // 从指定路径下读取图片，并获取其EXIF信息
+            ExifInterface exifInterface = new ExifInterface(path);
+            // 获取图片的旋转信息
+            int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                    ExifInterface.ORIENTATION_NORMAL);
+            switch (orientation) {
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    degree = 90;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    degree = 180;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    degree = 270;
+                    break;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return degree;
+    }
+
+    public static String createImagePath(Context context) {
+        String fileName = UUID.randomUUID().toString() + ".jpg";
+        String dirPath = Environment.getExternalStorageDirectory() + "/Android/data/" + context.getPackageName() + "/download";
+        File file = new File(dirPath);
+        if (!file.exists() || !file.isDirectory())
+            file.mkdirs();
+        String filePath = dirPath + "/" + fileName;
+        return filePath;
+    }
+
+    public static String getSaveFilePath(Context context, String fileName) {
+        String dirPath = Environment.getExternalStorageDirectory() + "/Android/data/" + context.getPackageName() + "/download";
+        File file = new File(dirPath);
+        if (!file.exists() || !file.isDirectory())
+            file.mkdirs();
+        String filePath = dirPath + "/" + fileName;
+        return filePath;
+    }
+
+    /**
+     * 保存JPG图片
+     *
+     * @param bmp
+     */
+    public static String saveJpegByFileName(Bitmap bmp, String fileName, Context context) {
+        String folder = getSaveFilePath(context, fileName);
+        FileOutputStream fout = null;
+        BufferedOutputStream bos = null;
+        try {
+            fout = new FileOutputStream(folder);
+            bos = new BufferedOutputStream(fout);
+            bmp.compress(Bitmap.CompressFormat.JPEG, 70, bos);
+
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } finally {
+            try {
+                if (fout != null) {
+                    fout.close();
+                }
+                if (bos != null) {
+                    bos.flush();
+                    bos.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return folder;
+    }
+
+    /**
+     * 保存JPG图片
+     *
+     * @param bmp
+     */
+    public static String saveJpeg(Bitmap bmp, Context context) {
+        String folder = createImagePath(context);
+        FileOutputStream fout = null;
+        BufferedOutputStream bos = null;
+        try {
+            fout = new FileOutputStream(folder);
+            bos = new BufferedOutputStream(fout);
+            bmp.compress(Bitmap.CompressFormat.JPEG, 70, bos);
+
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } finally {
+            try {
+                if (fout != null) {
+                    fout.close();
+                }
+                if (bos != null) {
+                    bos.flush();
+                    bos.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return folder;
+    }
+
+
+    /**
+     * dp转px
+     *
+     * @param context
+     * @param dipValue
+     * @return
+     */
+    public static int dip2px(Context context, float dipValue) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (dipValue * scale + 0.5f);
     }
 }
