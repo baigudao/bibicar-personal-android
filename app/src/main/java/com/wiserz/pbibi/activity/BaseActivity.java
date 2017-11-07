@@ -90,20 +90,8 @@ public class BaseActivity extends AppCompatActivity {
             startActivity(intent);
             return true;
         } else {
-            if (BaseFragment.class.isAssignableFrom(pagerClass)) { //Fragment的情况
-                String name = pagerClass.getName();
-                Intent intent = new Intent(this, EmptyActivity.class);
-                if (bundle != null) {
-                    intent.putExtras(bundle);
-                }
-                intent.putExtra(Constant.FRAGMENT_NAME, name);
-                startActivity(intent);
-                return true;
-            }
-
             if (BaseFragment.class.isAssignableFrom(pagerClass)) {
                 String name = pagerClass.getName();
-
                 if (!isGoTwo) // 使用EmptyActiviy
                 {
                     Intent intent = new Intent(this, EmptyActivity.class);

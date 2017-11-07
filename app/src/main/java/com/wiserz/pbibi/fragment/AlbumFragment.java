@@ -69,7 +69,9 @@ public class AlbumFragment extends BaseFragment {
 
     @Override
     public void initView(View view) {
-        view.findViewById(R.id.llAlbum).setOnClickListener(this);
+        view.findViewById(R.id.btnBack).setOnClickListener(this);
+        view.findViewById(R.id.tvLeft).setOnClickListener(this);
+        view.findViewById(R.id.tvAlbum).setOnClickListener(this);
         view.findViewById(R.id.alphaView).setOnClickListener(this);
         view.findViewById(R.id.alphaView).setVisibility(View.GONE);
     }
@@ -313,7 +315,7 @@ public class AlbumFragment extends BaseFragment {
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if (id == R.id.llAlbum) {
+        if (id == R.id.tvAlbum) {
             if (mMediaFileAdapter == null) {
                 return;
             }
@@ -335,6 +337,10 @@ public class AlbumFragment extends BaseFragment {
         } else if (id == R.id.alphaView) {
             v.setVisibility(View.GONE);
             getView().findViewById(R.id.list).setVisibility(View.GONE);
+        }else if(id==R.id.btnBack){
+            goBack();
+        }else if(id==R.id.tvLeft){
+            gotoPager(CameraFragment.class,null,true);
         }
     }
 

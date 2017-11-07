@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
+
 import com.wiserz.pbibi.activity.BaseActivity;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.hardwrare.CameraManager;
@@ -46,7 +48,9 @@ public class CameraFragment extends BaseFragment implements View.OnTouchListener
 
     @Override
     public void initView(final View view) {
-        view.findViewById(R.id.btnTakePhoto).setOnTouchListener(this);
+        view.findViewById(R.id.btnBack).setOnClickListener(this);
+        view.findViewById(R.id.tvRight).setOnClickListener(this);
+        view.findViewById(R.id.btnTakePhoto).setOnClickListener(this);
         view.findViewById(R.id.btnFlashlight).setOnClickListener(this);
         view.findViewById(R.id.btnSwitchCamera).setOnClickListener(this);
     }
@@ -85,7 +89,7 @@ public class CameraFragment extends BaseFragment implements View.OnTouchListener
 
 
     private void initCameraLayout() {
-        RelativeLayout topLayout = (RelativeLayout) getView().findViewById(R.id.recorder_surface_parent);
+        RelativeLayout topLayout = (RelativeLayout) getView().findViewById(R.id.camera_surface_parent);
         topLayout.setVisibility(View.VISIBLE);
 
         getView().findViewById(R.id.focusView).setOnTouchListener(this);
@@ -114,9 +118,9 @@ public class CameraFragment extends BaseFragment implements View.OnTouchListener
             @Override
             public void run() {
                 if (isShow) {
-                    getView().findViewById(R.id.recorder_flashlight_parent1).setVisibility(View.VISIBLE);
+                    getView().findViewById(R.id.topView).setVisibility(View.VISIBLE);
                 } else {
-                    getView().findViewById(R.id.recorder_flashlight_parent1).setVisibility(View.GONE);
+                    getView().findViewById(R.id.topView).setVisibility(View.GONE);
                 }
             }
         });
@@ -129,42 +133,6 @@ public class CameraFragment extends BaseFragment implements View.OnTouchListener
         }
         if (v.getId() == R.id.focusView) {
             mCameraContainer.onTouchEvent(event);
-            return true;
-        }
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_UP:
-                mUsingCamera = true;
-                boolean isSuccessful = mCameraContainer.takePicture(new OnCameraListener() {
-                    @Override
-                    public void takePicture(final Bitmap bmp) {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-//                                if (bmp != null) {
-//                                    mCameraContainer.stopPreview();
-//                                    DataManager.getInstance().setObject(bmp);
-//                                    Bundle bundle = new Bundle();
-//                                    bundle.putInt(CameraFragment.USE_CAMERA_TYPE, mCameraUseType);
-//                                    gotoPager(PhotoPreviewFragment.class, bundle);
-//                                } else {
-//                                    SensorControler.getInstance().unlockFocus();
-//                                    mUsingCamera = false;
-//                                    mCameraContainer.startPreview();
-//                                    showOrHideAllBtn(true);
-//                                }
-                            }
-                        });
-                    }
-
-                });
-                if (!isSuccessful) {
-                    mUsingCamera = false;
-                    mCameraContainer.startPreview();
-                    showOrHideAllBtn(true);
-                }
-                break;
-            default:
-                break;
         }
         return true;
     }
@@ -190,6 +158,41 @@ public class CameraFragment extends BaseFragment implements View.OnTouchListener
                 }
             }, 500);
             showSwitchCameraIcon();
+        }else if(id==R.id.btnBack){
+            getActivity().finish();
+        }else if(id==R.id.tvRight){
+            gotoPager(AlbumFragment.class,null,true);
+            getActivity().finish();
+        }else if(id==R.id.btnTakePhoto){
+            mUsingCamera = true;
+            boolean isSuccessful = mCameraContainer.takePicture(new OnCameraListener() {
+                @Override
+                public void takePicture(final Bitmap bmp) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+//                                if (bmp != null) {
+//                                    mCameraContainer.stopPreview();
+//                                    DataManager.getInstance().setObject(bmp);
+//                                    Bundle bundle = new Bundle();
+//                                    bundle.putInt(CameraFragment.USE_CAMERA_TYPE, mCameraUseType);
+//                                    gotoPager(PhotoPreviewFragment.class, bundle);
+//                                } else {
+//                                    SensorControler.getInstance().unlockFocus();
+//                                    mUsingCamera = false;
+//                                    mCameraContainer.startPreview();
+//                                    showOrHideAllBtn(true);
+//                                }
+                        }
+                    });
+                }
+
+            });
+            if (!isSuccessful) {
+                mUsingCamera = false;
+                mCameraContainer.startPreview();
+                showOrHideAllBtn(true);
+            }
         }
     }
 
@@ -208,9 +211,9 @@ public class CameraFragment extends BaseFragment implements View.OnTouchListener
 
     private void showFlashIcon() {
         if (mCameraManager.getLightStatus() == CameraManager.FlashLigthStatus.LIGHT_ON) {
-            ((ImageButton) getView().findViewById(R.id.btnFlashlight)).setImageResource(R.drawable.camera_flashlight_on);
+            ((TextView) getView().findViewById(R.id.btnFlashlight)).setText(getString(R.string.open));
         } else {
-            ((ImageButton) getView().findViewById(R.id.btnFlashlight)).setImageResource(R.drawable.camera_flashlight_off);
+            ((TextView) getView().findViewById(R.id.btnFlashlight)).setText(getString(R.string.close));
         }
     }
 }
