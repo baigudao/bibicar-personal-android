@@ -555,13 +555,15 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
             @Override
             public void onFirstBtnClicked() {
                 //上传新车
-                gotoPager(PostNewCarFragment.class, null);
+                // gotoPager(PostNewCarFragment.class, null);
+                gotoPager(CameraFragment.class, null, true);
             }
 
             @Override
             public void onSecondBtnClicked() {
                 //上传二手车
-                gotoPager(PostSecondHandCarFragment.class, null);
+                //gotoPager(PostSecondHandCarFragment.class, null);
+                gotoPager(AlbumFragment.class, null, true);
             }
 
             @Override

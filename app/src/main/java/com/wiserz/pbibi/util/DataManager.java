@@ -15,7 +15,7 @@ public class DataManager {
 
     private static final Object mObject = new Object();
 
-    private Object mData1, mData2, mData3, mData4, mData5, mData6, mData7, mData8, mData9;
+    private Object mData, mData1, mData2, mData3, mData4, mData5, mData6, mData7, mData8, mData9;
 
     private DataManager() {
     }
@@ -50,6 +50,14 @@ public class DataManager {
         }
         LoginBean.UserInfoBean userInfoBean = CommonUtil.fromJson(LoginBean.UserInfoBean.class, userInfo);
         return userInfoBean;
+    }
+
+    public void setObject(Object data) {
+        mData = data;
+    }
+
+    public Object getObject() {
+        return mData;
     }
 
     public void setData1(Object data1) {

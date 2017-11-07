@@ -1,13 +1,14 @@
 package com.wiserz.pbibi.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.view.WindowManager;
 
 import com.umeng.analytics.MobclickAgent;
@@ -24,16 +25,42 @@ import java.util.List;
  */
 public class BaseActivity extends AppCompatActivity {
 
-//    private static BaseActivity baseActivity;
+    private DisplayMetrics mDisplaymetrics;
 
-  //  public static BaseActivity getBaseActivity() {
-//        return baseActivity;
-//    }
+    private boolean mIsFullScreen;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-   //     baseActivity = this;
+    }
+
+    public DisplayMetrics getDisplaymetrics() {
+        if (mDisplaymetrics == null) {
+            mDisplaymetrics = new DisplayMetrics();
+            ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getMetrics(mDisplaymetrics);
+        }
+        return mDisplaymetrics;
+    }
+
+    public void setScreenFull(boolean isFull) {
+        if (mIsFullScreen == isFull) {
+            return;
+        }
+
+        if (isFull) {
+            WindowManager.LayoutParams params = getWindow().getAttributes();
+            params.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
+            getWindow().setAttributes(params);
+            mIsFullScreen = true;
+        } else {
+            WindowManager.LayoutParams params = getWindow().getAttributes();
+            params.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            getWindow().setAttributes(params);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+            mIsFullScreen = false;
+        }
+
     }
 
     /**
@@ -44,6 +71,17 @@ public class BaseActivity extends AppCompatActivity {
      * @return
      */
     public boolean gotoPager(Class<?> pagerClass, Bundle bundle) {
+        return gotoPager(pagerClass, bundle, false);
+    }
+
+    /**
+     * 页面跳转，如果返回true,则基类已经处理，否则没有处理
+     *
+     * @param pagerClass
+     * @param bundle
+     * @return
+     */
+    public boolean gotoPager(Class<?> pagerClass, Bundle bundle, boolean isGoTwo) {
         if (Activity.class.isAssignableFrom(pagerClass)) { //Activity的情况
             Intent intent = new Intent(this, pagerClass);
             if (bundle != null) {
@@ -61,6 +99,29 @@ public class BaseActivity extends AppCompatActivity {
                 intent.putExtra(Constant.FRAGMENT_NAME, name);
                 startActivity(intent);
                 return true;
+            }
+
+            if (BaseFragment.class.isAssignableFrom(pagerClass)) {
+                String name = pagerClass.getName();
+
+                if (!isGoTwo) // 使用EmptyActiviy
+                {
+                    Intent intent = new Intent(this, EmptyActivity.class);
+                    if (bundle != null) {
+                        intent.putExtras(bundle);
+                    }
+                    intent.putExtra(Constant.FRAGMENT_NAME, name);
+                    startActivity(intent);
+                    return true;
+                } else {
+                    Intent intent = new Intent(this, EmptyTwoActivity.class);
+                    if (bundle != null) {
+                        intent.putExtras(bundle);
+                    }
+                    intent.putExtra(Constant.FRAGMENT_NAME, name);
+                    startActivity(intent);
+                    return true;
+                }
             }
             return false;
         }

@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.wiserz.pbibi.BaseApplication;
 import com.wiserz.pbibi.activity.BaseActivity;
+import com.wiserz.pbibi.util.Constant;
 
 import acplibrary.ACProgressBaseDialog;
 import acplibrary.ACProgressConstant;
@@ -96,6 +97,18 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     public void gotoPager(final Class<?> pagerClass, final Bundle bundle) {
         if (getActivity() instanceof BaseActivity) {
             ((BaseActivity) mContext).gotoPager(pagerClass, bundle);
+        }
+    }
+
+    /**
+     * 跳转到新的界面
+     *
+     * @param pagerClass
+     * @param bundle
+     */
+    public void gotoPager(final Class<?> pagerClass, final Bundle bundle, boolean isGoTwo) {
+        if (getActivity() instanceof BaseActivity) {
+            ((BaseActivity) mContext).gotoPager(pagerClass, bundle, isGoTwo);
         }
     }
 
