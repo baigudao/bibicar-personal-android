@@ -242,20 +242,18 @@ public class AlbumFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-//                ImageView iv = (ImageView) view.findViewById(R.id.iv);
-//                final MediaInfo info = (MediaInfo) iv.getTag(R.id.tag);
-//                if (info != null && iv.getDrawable() != null) {
-//                    DisplayMetrics dm = new DisplayMetrics();
-//                    getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
-//                    Bitmap bmp = CommonUtil.getBitmapFromFile(info.mediaFile, dm.widthPixels, dm.heightPixels);
-//                    if (bmp == null) {
-//                        return;
-//                    }
-//                    DataManager.getInstance().setObject(bmp);
-//                    Bundle bundle = new Bundle();
-//                    bundle.putInt(CameraFragment.USE_CAMERA_TYPE, mCameraUseType);
-//                    gotoPager(PhotoPreviewFragment.class, bundle);
-//                }
+                ImageView iv = (ImageView) view.findViewById(R.id.iv);
+                final MediaInfo info = (MediaInfo) iv.getTag(R.id.tag);
+                if (info != null && iv.getDrawable() != null) {
+                    DisplayMetrics dm = new DisplayMetrics();
+                    getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+                    Bitmap bmp = CommonUtil.getBitmapFromFile(info.mediaFile, dm.widthPixels, dm.heightPixels);
+                    if (bmp == null) {
+                        return;
+                    }
+                    DataManager.getInstance().setObject(bmp);
+                    gotoPager(PhotoPreviewFragment.class, null, true);
+                }
             }
         });
     }

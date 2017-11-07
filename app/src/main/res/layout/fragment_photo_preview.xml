@@ -26,12 +26,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true">
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            android:src="@drawable/top_filter" />
-
         <TextView
             android:id="@+id/tvCancel"
             android:layout_width="wrap_content"
