@@ -521,4 +521,9 @@ public class CommonUtil {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dipValue * scale + 0.5f);
     }
+
+
+    public static boolean isHadLogin(){
+        return  SPUtils.getInstance().getBoolean(Constant.IS_USER_LOGIN, false);
+    }
 }

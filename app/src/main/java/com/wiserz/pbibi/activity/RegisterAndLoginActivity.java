@@ -70,7 +70,7 @@ public class RegisterAndLoginActivity extends BaseActivity implements View.OnCli
         Button btn_register = (Button) findViewById(R.id.btn_register);
         btn_register.setOnClickListener(this);
         btn_register.setVisibility(View.VISIBLE);
-
+        SPUtils.getInstance().put(Constant.IS_USER_LOGIN, false);
         tv_get_verfication_code=(TextView) findViewById(R.id.tv_get_verfication_code);
         et_account_login = (EditText) findViewById(R.id.et_account_login);
         et_account_login.addTextChangedListener(new TextChangedListener());
