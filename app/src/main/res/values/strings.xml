@@ -122,5 +122,6 @@
     <string name="album">相册</string>
     <string name="next_step">下一步</string>
     <string name="make_sure">确认</string>
-
+    <string name="done">完成</string>
+    <string name="undo">还原</string>
 </resources>

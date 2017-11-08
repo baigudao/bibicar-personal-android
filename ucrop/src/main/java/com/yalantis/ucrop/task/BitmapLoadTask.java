@@ -29,13 +29,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import okio.BufferedSource;
-import okio.Okio;
-import okio.Sink;
-
 /**
  * Creates and returns a Bitmap for a given Uri(String url).
  * inSampleSize is calculated based on requiredWidth property. However can be adjusted if OOM occurs.
@@ -230,42 +223,42 @@ public class BitmapLoadTask extends AsyncTask<Void, Void, BitmapLoadTask.BitmapW
 
     private void downloadFile(@NonNull Uri inputUri, @Nullable Uri outputUri) throws NullPointerException, IOException {
         Log.d(TAG, "downloadFile");
-
-        if (outputUri == null) {
-            throw new NullPointerException("Output Uri is null - cannot download image");
-        }
-
-        OkHttpClient client = new OkHttpClient();
-
-        BufferedSource source = null;
-        Sink sink = null;
-        Response response = null;
-        try {
-            Request request = new Request.Builder()
-                    .url(inputUri.toString())
-                    .build();
-            response = client.newCall(request).execute();
-            source = response.body().source();
-
-            OutputStream outputStream = mContext.getContentResolver().openOutputStream(outputUri);
-            if (outputStream != null) {
-                sink = Okio.sink(outputStream);
-                source.readAll(sink);
-            } else {
-                throw new NullPointerException("OutputStream for given output Uri is null");
-            }
-        } finally {
-            BitmapLoadUtils.close(source);
-            BitmapLoadUtils.close(sink);
-            if (response != null) {
-                BitmapLoadUtils.close(response.body());
-            }
-            client.dispatcher().cancelAll();
-
-            // swap uris, because input image was downloaded to the output destination
-            // (cropped image will override it later)
-            mInputUri = mOutputUri;
-        }
+//
+//        if (outputUri == null) {
+//            throw new NullPointerException("Output Uri is null - cannot download image");
+//        }
+//
+//        OkHttpClient client = new OkHttpClient();
+//
+//        BufferedSource source = null;
+//        Sink sink = null;
+//        Response response = null;
+//        try {
+//            Request request = new Request.Builder()
+//                    .url(inputUri.toString())
+//                    .build();
+//            response = client.newCall(request).execute();
+//            source = response.body().source();
+//
+//            OutputStream outputStream = mContext.getContentResolver().openOutputStream(outputUri);
+//            if (outputStream != null) {
+//                sink = Okio.sink(outputStream);
+//                source.readAll(sink);
+//            } else {
+//                throw new NullPointerException("OutputStream for given output Uri is null");
+//            }
+//        } finally {
+//            BitmapLoadUtils.close(source);
+//            BitmapLoadUtils.close(sink);
+//            if (response != null) {
+//                BitmapLoadUtils.close(response.body());
+//            }
+//            client.dispatcher().cancelAll();
+//
+//            // swap uris, because input image was downloaded to the output destination
+//            // (cropped image will override it later)
+//            mInputUri = mOutputUri;
+//        }
     }
 
     @Override

@@ -20,6 +20,6 @@
         android:layout_alignRight="@id/iv_image_all"
         android:layout_margin="6dp"
         android:clickable="true"
-        android:src="@drawable/v3_close3x"/>
+        android:src="@drawable/close"/>
 
 </RelativeLayout>

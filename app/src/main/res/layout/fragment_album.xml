@@ -30,7 +30,7 @@
             android:gravity="center"
             android:text="Camera"
             android:textColor="@android:color/white"
-            android:textSize="15sp" />
+            android:textSize="20sp" />
     </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView

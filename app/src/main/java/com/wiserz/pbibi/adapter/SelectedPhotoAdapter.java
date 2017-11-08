@@ -2,6 +2,7 @@ package com.wiserz.pbibi.adapter;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +11,10 @@ import android.widget.ImageView;
 
 import com.wiserz.pbibi.BaseApplication;
 import com.wiserz.pbibi.R;
+import com.wiserz.pbibi.activity.BaseActivity;
+import com.wiserz.pbibi.fragment.EditPhotoFragment;
 import com.wiserz.pbibi.util.CommonUtil;
+import com.wiserz.pbibi.util.Constant;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -87,7 +91,10 @@ public class SelectedPhotoAdapter extends RecyclerView.Adapter<SelectedPhotoAdap
                 @Override
                 public void onClick(View v) {
                     int pos = (int) v.getTag(R.id.tag);
-
+                    Bundle bundle=new Bundle();
+                    bundle.putString("photoPath",mDataList.get(pos).getAbsolutePath());
+                    bundle.putString("photoIndex",(pos+1)+"/"+mDataList.size());
+                    ((BaseActivity) mContext).gotoPager(EditPhotoFragment.class,bundle,true);
                 }
             });
         }

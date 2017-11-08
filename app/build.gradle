@@ -75,4 +75,6 @@ dependencies {
     compile 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.3'
     //友盟统计
     compile 'com.umeng.analytics:analytics:latest.integration'
+
+    compile project(':ucrop')
 }
