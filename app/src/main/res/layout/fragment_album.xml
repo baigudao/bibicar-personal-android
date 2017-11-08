@@ -25,21 +25,21 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
+            android:drawablePadding="10dp"
             android:drawableRight="@drawable/more_photos"
             android:gravity="center"
-            android:textSize="15sp"
+            android:text="Camera"
             android:textColor="@android:color/white"
-            android:drawablePadding="10dp"
-            android:text="Camera" />
+            android:textSize="15sp" />
     </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/selectPhotoView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/bottomView"
-        android:visibility="gone"
-        android:background="@android:color/black">
+        android:layout_above="@+id/bottomView"
+        android:background="@android:color/black"
+        android:visibility="gone">
 
     </android.support.v7.widget.RecyclerView>
 
@@ -49,54 +49,33 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@android:color/black"
-        android:paddingTop="15dp"
-        android:paddingBottom="15dp">
+        android:paddingBottom="20dp"
+        android:paddingTop="20dp">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/tvOk"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/rlTakePhoto">
-
-            <TextView
-                android:id="@+id/tvOk"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="25sp"
-                android:gravity="center"
-                android:layout_centerInParent="true"
-                android:textColor="@android:color/white"
-                android:visibility="invisible"
-                android:text="@string/sure"/>
-
-            <TextView
-                android:id="@+id/tvNext"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:textSize="25sp"
-                android:visibility="gone"
-                android:layout_centerVertical="true"
-                android:textColor="@android:color/white"
-                android:layout_marginRight="30dp"
-                android:text="@string/next_step"/>
-
-        </RelativeLayout>
+            android:layout_centerInParent="true"
+            android:text="@string/make_sure"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:visibility="invisible" />
 
         <View
             android:id="@+id/pointView"
             android:layout_width="6dp"
             android:layout_height="6dp"
             android:layout_centerHorizontal="true"
-            android:background="@drawable/point_bg"/>
-
+            android:background="@drawable/point_bg" />
 
 
         <LinearLayout
             android:id="@+id/llBottom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
             android:layout_below="@id/pointView"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="5dp"
             android:orientation="horizontal">
 
@@ -104,36 +83,37 @@
                 android:id="@+id/tvLeft"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="15sp"
+                android:text="@string/camera"
                 android:textColor="@color/pure_white_color"
-                android:text="@string/camera"/>
+                android:textSize="15sp" />
+
             <TextView
                 android:id="@+id/tvCenter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="15sp"
                 android:layout_marginLeft="15dp"
+                android:text="@string/album"
                 android:textColor="@color/main_color"
-                android:text="@string/album"/>
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/tvRight"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="15sp"
                 android:layout_marginLeft="15dp"
-                android:visibility="invisible"
+                android:text="@string/album"
                 android:textColor="@color/pure_white_color"
-                android:text="@string/album"/>
+                android:textSize="15sp"
+                android:visibility="invisible" />
         </LinearLayout>
-        </RelativeLayout>
+    </RelativeLayout>
 
     <GridView
         android:id="@+id/gridView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/topView"
         android:layout_above="@id/selectPhotoView"
+        android:layout_below="@id/topView"
         android:background="@android:color/black"
         android:gravity="center"
         android:horizontalSpacing="3dp"

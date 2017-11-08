@@ -6,6 +6,8 @@ import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.AdapterView;
@@ -18,6 +20,7 @@ import android.widget.TextView;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.activity.BaseActivity;
 import com.wiserz.pbibi.adapter.MediaFileAdapter;
+import com.wiserz.pbibi.adapter.SelectedPhotoAdapter;
 import com.wiserz.pbibi.adapter.ShowMediasAdapter;
 import com.wiserz.pbibi.util.CommonUtil;
 import com.wiserz.pbibi.util.DataManager;
@@ -45,12 +48,18 @@ public class AlbumFragment extends BaseFragment {
     public class MediaInfo {
         public File mediaFile;
         public long mediaAddTime;
+        public boolean isSelected;
+        public int index;
     }
 
     private ArrayList<MediaFileInfo> mMediaFileInfos = new ArrayList<>();
     private Cursor mCursor;
     private ShowMediasAdapter mMediasAdapter;
     private MediaFileAdapter mMediaFileAdapter;
+
+    private SelectedPhotoAdapter mSelectedPhotoAdapter;
+    private ArrayList<File> mSelectedPhotos;
+    private ArrayList<MediaInfo> mSelectedMediaInfos;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,15 +82,68 @@ public class AlbumFragment extends BaseFragment {
         view.findViewById(R.id.tvLeft).setOnClickListener(this);
         view.findViewById(R.id.tvAlbum).setOnClickListener(this);
         view.findViewById(R.id.alphaView).setOnClickListener(this);
+        view.findViewById(R.id.bottomView).setOnClickListener(this);
         view.findViewById(R.id.alphaView).setVisibility(View.GONE);
+
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.selectPhotoView);
+        LinearLayoutManager linearLayoutManagerHorizontal = new LinearLayoutManager(getActivity());
+        linearLayoutManagerHorizontal.setOrientation(LinearLayoutManager.HORIZONTAL);
+        recyclerView.setLayoutManager(linearLayoutManagerHorizontal);
+        recyclerView.setAdapter(getSelectedPhotoAdapter());
+    }
+
+    private SelectedPhotoAdapter getSelectedPhotoAdapter() {
+        if (mSelectedPhotoAdapter == null) {
+            mSelectedPhotoAdapter = new SelectedPhotoAdapter(getActivity());
+            mSelectedPhotoAdapter.setOnPhotoDelete(new SelectedPhotoAdapter.OnPhotoOperator() {
+                @Override
+                public void onDelete(int position) {
+                    MediaInfo mediaInfo = getSelectedMediaInfos().remove(position);
+                    mediaInfo.isSelected = false;
+                    int index = 0;
+                    for (MediaInfo info : getSelectedMediaInfos()) {
+                        info.index = (index++);
+                    }
+                    mMediasAdapter.notifyDataSetChanged();
+                    showView();
+                }
+            });
+        }
+        return mSelectedPhotoAdapter;
+    }
+
+    private ArrayList<File> getSelectedPhotos() {
+        if (mSelectedPhotos == null) {
+            mSelectedPhotos = new ArrayList<>();
+        }
+        return mSelectedPhotos;
+    }
+
+    private ArrayList<MediaInfo> getSelectedMediaInfos() {
+        if (mSelectedMediaInfos == null) {
+            mSelectedMediaInfos = new ArrayList<>();
+        }
+        return mSelectedMediaInfos;
+    }
+
+    private void showView() {
+        if (getSelectedPhotos().size() > 0) {
+            getView().findViewById(R.id.selectPhotoView).setVisibility(View.VISIBLE);
+            getView().findViewById(R.id.pointView).setVisibility(View.INVISIBLE);
+            getView().findViewById(R.id.llBottom).setVisibility(View.INVISIBLE);
+            getView().findViewById(R.id.tvOk).setVisibility(View.VISIBLE);
+            ((TextView) getView().findViewById(R.id.tvOk)).setText(getString(R.string.make_sure) + " (" + getSelectedPhotos().size() + ")");
+        } else {
+            getView().findViewById(R.id.selectPhotoView).setVisibility(View.GONE);
+            getView().findViewById(R.id.pointView).setVisibility(View.VISIBLE);
+            getView().findViewById(R.id.llBottom).setVisibility(View.VISIBLE);
+            getView().findViewById(R.id.tvOk).setVisibility(View.INVISIBLE);
+        }
     }
 
     public void onResume() {
         super.onResume();
-        if (DataManager.getInstance().getObject() != null) {
-            getActivity().finish();
-            return;
-        }
+        showView();
         ((BaseActivity) getActivity()).setScreenFull(false);
         if (mMediaFileAdapter == null || mMediaFileInfos.isEmpty()) {
             GBExecutionPool.getExecutor().execute(new Runnable() {
@@ -243,7 +305,9 @@ public class AlbumFragment extends BaseFragment {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                if (getSelectedPhotos().size() == 6) {
+                    return;
+                }
                 ImageView iv = (ImageView) view.findViewById(R.id.iv);
                 final MediaInfo info = (MediaInfo) iv.getTag(R.id.tag);
                 if (info != null && iv.getDrawable() != null) {
@@ -253,8 +317,16 @@ public class AlbumFragment extends BaseFragment {
                     if (bmp == null) {
                         return;
                     }
-                    DataManager.getInstance().setObject(bmp);
-                    gotoPager(PhotoPreviewFragment.class, null, true);
+                    String path = CommonUtil.saveJpeg(bmp, getActivity());
+                    bmp.recycle();
+                    getView().findViewById(R.id.selectPhotoView).setVisibility(View.VISIBLE);
+                    getSelectedPhotos().add(new File(path));
+                    getSelectedPhotoAdapter().setDataList(getSelectedPhotos());
+                    info.isSelected = true;
+                    info.index = getSelectedPhotos().size() - 1;
+                    getSelectedMediaInfos().add(info);
+                    mMediasAdapter.notifyDataSetChanged();
+                    showView();
                 }
             }
         });
@@ -315,32 +387,39 @@ public class AlbumFragment extends BaseFragment {
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if (id == R.id.tvAlbum) {
-            if (mMediaFileAdapter == null) {
-                return;
-            }
-            ListView listView = (ListView) getView().findViewById(R.id.list);
-            if (listView.getVisibility() == View.VISIBLE) {
-                listView.setVisibility(View.GONE);
-                getView().findViewById(R.id.alphaView).setVisibility(View.GONE);
-                return;
-            }
-            listView.setVisibility(View.VISIBLE);
-            if (mMediaFileInfos.size() < 4) {
-                int height = CommonUtil.dip2px(getActivity(), 36) * mMediaFileInfos.size();
-                RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) listView.getLayoutParams();
-                lp.height = height;
-                listView.setLayoutParams(lp);
-            }
-            getView().findViewById(R.id.alphaView).setVisibility(View.VISIBLE);
-            mMediaFileAdapter.notifyDataSetChanged();
-        } else if (id == R.id.alphaView) {
-            v.setVisibility(View.GONE);
-            getView().findViewById(R.id.list).setVisibility(View.GONE);
-        }else if(id==R.id.btnBack){
-            goBack();
-        }else if(id==R.id.tvLeft){
-            gotoPager(CameraFragment.class,null,true);
+        switch (id) {
+            case R.id.tvAlbum:
+                if (mMediaFileAdapter == null) {
+                    return;
+                }
+                ListView listView = (ListView) getView().findViewById(R.id.list);
+                if (listView.getVisibility() == View.VISIBLE) {
+                    listView.setVisibility(View.GONE);
+                    getView().findViewById(R.id.alphaView).setVisibility(View.GONE);
+                    return;
+                }
+                listView.setVisibility(View.VISIBLE);
+                if (mMediaFileInfos.size() < 4) {
+                    int height = CommonUtil.dip2px(getActivity(), 36) * mMediaFileInfos.size();
+                    RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) listView.getLayoutParams();
+                    lp.height = height;
+                    listView.setLayoutParams(lp);
+                }
+                getView().findViewById(R.id.alphaView).setVisibility(View.VISIBLE);
+                mMediaFileAdapter.notifyDataSetChanged();
+                break;
+            case R.id.alphaView:
+                v.setVisibility(View.GONE);
+                getView().findViewById(R.id.list).setVisibility(View.GONE);
+                break;
+            case R.id.btnBack:
+                goBack();
+                break;
+            case R.id.tvLeft:
+                gotoPager(CameraFragment.class, null, true);
+                break;
+            case R.id.bottomView:
+                break;
         }
     }
 

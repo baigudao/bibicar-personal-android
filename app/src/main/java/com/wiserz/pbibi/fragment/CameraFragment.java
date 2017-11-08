@@ -3,6 +3,8 @@ package com.wiserz.pbibi.fragment;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,12 +12,19 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.util.Util;
 import com.wiserz.pbibi.activity.BaseActivity;
 import com.wiserz.pbibi.R;
+import com.wiserz.pbibi.adapter.SelectedPhotoAdapter;
 import com.wiserz.pbibi.hardwrare.CameraManager;
 import com.wiserz.pbibi.hardwrare.OnCameraListener;
+import com.wiserz.pbibi.hardwrare.SensorControler;
+import com.wiserz.pbibi.util.CommonUtil;
 import com.wiserz.pbibi.util.DataManager;
 import com.wiserz.pbibi.view.SquareCameraContainer;
+
+import java.io.File;
+import java.util.ArrayList;
 
 /**
  * Created by gigabud on 15-12-23.
@@ -29,6 +38,9 @@ public class CameraFragment extends BaseFragment implements View.OnTouchListener
     private SquareCameraContainer mCameraContainer;
 
     private boolean mUsingCamera;
+
+    private SelectedPhotoAdapter mSelectedPhotoAdapter;
+    private ArrayList<File> mSelectedPhotos;
 
     @Override
     protected int getLayoutId() {
@@ -53,6 +65,32 @@ public class CameraFragment extends BaseFragment implements View.OnTouchListener
         view.findViewById(R.id.btnTakePhoto).setOnClickListener(this);
         view.findViewById(R.id.btnFlashlight).setOnClickListener(this);
         view.findViewById(R.id.btnSwitchCamera).setOnClickListener(this);
+        view.findViewById(R.id.tvNext).setOnClickListener(this);
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.selectPhotoView);
+        LinearLayoutManager linearLayoutManagerHorizontal = new LinearLayoutManager(getActivity());
+        linearLayoutManagerHorizontal.setOrientation(LinearLayoutManager.HORIZONTAL);
+        recyclerView.setLayoutManager(linearLayoutManagerHorizontal);
+        recyclerView.setAdapter(getSelectedPhotoAdapter());
+    }
+
+    private SelectedPhotoAdapter getSelectedPhotoAdapter() {
+        if (mSelectedPhotoAdapter == null) {
+            mSelectedPhotoAdapter = new SelectedPhotoAdapter(getActivity());
+            mSelectedPhotoAdapter.setOnPhotoDelete(new SelectedPhotoAdapter.OnPhotoOperator() {
+                @Override
+                public void onDelete(int position) {
+                    showView();
+                }
+            });
+        }
+        return mSelectedPhotoAdapter;
+    }
+
+    private ArrayList<File> getSelectedPhotos() {
+        if (mSelectedPhotos == null) {
+            mSelectedPhotos = new ArrayList<>();
+        }
+        return mSelectedPhotos;
     }
 
 
@@ -66,7 +104,6 @@ public class CameraFragment extends BaseFragment implements View.OnTouchListener
         mCameraManager = CameraManager.getInstance(getActivity());
         mCameraManager.setCameraDirection(CameraManager.CameraDirection.CAMERA_BACK);
         initCameraLayout();
-        showOrHideAllBtn(true);
         mUsingCamera = false;
     }
 
@@ -85,6 +122,7 @@ public class CameraFragment extends BaseFragment implements View.OnTouchListener
         }
         mUsingCamera = false;
         mCameraContainer = null;
+        showView();
     }
 
 
@@ -113,18 +151,18 @@ public class CameraFragment extends BaseFragment implements View.OnTouchListener
         showSwitchCameraIcon();
     }
 
-    private void showOrHideAllBtn(final boolean isShow) {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (isShow) {
-                    getView().findViewById(R.id.topView).setVisibility(View.VISIBLE);
-                } else {
-                    getView().findViewById(R.id.topView).setVisibility(View.GONE);
-                }
-            }
-        });
-    }
+//    private void showOrHideAllBtn(final boolean isShow) {
+//        getActivity().runOnUiThread(new Runnable() {
+//            @Override
+//            public void run() {
+//                if (isShow) {
+//                    getView().findViewById(R.id.topView).setVisibility(View.VISIBLE);
+//                } else {
+//                    getView().findViewById(R.id.topView).setVisibility(View.GONE);
+//                }
+//            }
+//        });
+//    }
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
@@ -141,58 +179,85 @@ public class CameraFragment extends BaseFragment implements View.OnTouchListener
     @Override
     public void onClick(final View v) {
         int id = v.getId();
-        if (id == R.id.btnFlashlight) {
-            if (!getActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH)) {
-                return;
-            }
-            mCameraManager.setLightStatus(mCameraManager.getLightStatus().next());
-            showFlashIcon();
-        } else if (id == R.id.btnSwitchCamera) {
-            mCameraManager.setCameraDirection(mCameraManager.getCameraDirection().next());
-            v.setClickable(false);
-            mCameraContainer.switchCamera();
-            v.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    v.setClickable(true);
+        switch (id) {
+            case R.id.btnFlashlight:
+                if (!getActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH)) {
+                    return;
                 }
-            }, 500);
-            showSwitchCameraIcon();
-        }else if(id==R.id.btnBack){
-            getActivity().finish();
-        }else if(id==R.id.tvRight){
-            gotoPager(AlbumFragment.class,null,true);
-            getActivity().finish();
-        }else if(id==R.id.btnTakePhoto){
-            mUsingCamera = true;
-            boolean isSuccessful = mCameraContainer.takePicture(new OnCameraListener() {
-                @Override
-                public void takePicture(final Bitmap bmp) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-//                                if (bmp != null) {
-//                                    mCameraContainer.stopPreview();
-//                                    DataManager.getInstance().setObject(bmp);
-//                                    Bundle bundle = new Bundle();
-//                                    bundle.putInt(CameraFragment.USE_CAMERA_TYPE, mCameraUseType);
-//                                    gotoPager(PhotoPreviewFragment.class, bundle);
-//                                } else {
-//                                    SensorControler.getInstance().unlockFocus();
-//                                    mUsingCamera = false;
-//                                    mCameraContainer.startPreview();
-//                                    showOrHideAllBtn(true);
-//                                }
-                        }
-                    });
+                mCameraManager.setLightStatus(mCameraManager.getLightStatus().next());
+                showFlashIcon();
+                break;
+            case R.id.btnSwitchCamera:
+                mCameraManager.setCameraDirection(mCameraManager.getCameraDirection().next());
+                v.setClickable(false);
+                mCameraContainer.switchCamera();
+                v.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        v.setClickable(true);
+                    }
+                }, 500);
+                showSwitchCameraIcon();
+                break;
+            case R.id.btnBack:
+                getActivity().finish();
+                break;
+            case R.id.tvRight:
+                gotoPager(AlbumFragment.class, null, true);
+                getActivity().finish();
+                break;
+            case R.id.btnTakePhoto:
+                if (mUsingCamera || getSelectedPhotos().size() == 6) {
+                    return;
                 }
+                mUsingCamera = true;
+                boolean isSuccessful = mCameraContainer.takePicture(new OnCameraListener() {
+                    @Override
+                    public void takePicture(final Bitmap bmp) {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                SensorControler.getInstance().unlockFocus();
+                                mUsingCamera = false;
+                                mCameraContainer.startPreview();
+                                if (bmp != null) {
+                                    String path = CommonUtil.saveJpeg(bmp, getActivity());
+                                    bmp.recycle();
+                                    getView().findViewById(R.id.selectPhotoView).setVisibility(View.VISIBLE);
+                                    getSelectedPhotos().add(new File(path));
+                                    getSelectedPhotoAdapter().setDataList(getSelectedPhotos());
+                                    showView();
+                                }
+                            }
+                        });
+                    }
 
-            });
-            if (!isSuccessful) {
-                mUsingCamera = false;
-                mCameraContainer.startPreview();
-                showOrHideAllBtn(true);
-            }
+                });
+                if (!isSuccessful) {
+                    mUsingCamera = false;
+                    mCameraContainer.startPreview();
+                }
+                break;
+            case R.id.tvNext:
+                break;
+
+        }
+    }
+
+    private void showView() {
+        if (getSelectedPhotos().size() > 0) {
+            getView().findViewById(R.id.selectPhotoView).setVisibility(View.VISIBLE);
+            getView().findViewById(R.id.tvPhotoNum).setVisibility(View.VISIBLE);
+            ((TextView) getView().findViewById(R.id.tvPhotoNum)).setText(String.valueOf(getSelectedPhotos().size()));
+            getView().findViewById(R.id.tvNext).setVisibility(View.VISIBLE);
+            getView().findViewById(R.id.pointView).setVisibility(View.INVISIBLE);
+            getView().findViewById(R.id.ll).setVisibility(View.INVISIBLE);
+        } else {
+            getView().findViewById(R.id.selectPhotoView).setVisibility(View.GONE);
+            getView().findViewById(R.id.tvPhotoNum).setVisibility(View.GONE);
+            getView().findViewById(R.id.tvNext).setVisibility(View.GONE);
+            getView().findViewById(R.id.pointView).setVisibility(View.VISIBLE);
+            getView().findViewById(R.id.ll).setVisibility(View.VISIBLE);
         }
     }
 

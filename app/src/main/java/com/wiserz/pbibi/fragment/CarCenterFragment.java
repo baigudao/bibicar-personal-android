@@ -563,7 +563,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
             public void onSecondBtnClicked() {
                 //上传二手车
                 //gotoPager(PostSecondHandCarFragment.class, null);
-                gotoPager(AlbumFragment.class, null, true);
+                gotoPager(CameraFragment.class, null, true);
             }
 
             @Override

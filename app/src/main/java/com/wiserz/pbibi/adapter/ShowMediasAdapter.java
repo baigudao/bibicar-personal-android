@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.wiserz.pbibi.BaseApplication;
 import com.wiserz.pbibi.R;
@@ -61,6 +62,8 @@ public class ShowMediasAdapter extends BaseAdapter {
                     .inflate(R.layout.file_picture_item, null);
             viewHolder = new ViewHolder();
             viewHolder.iv = (ImageView) convertView.findViewById(R.id.iv);
+            viewHolder.rlSelect = convertView.findViewById(R.id.rlSelect);
+            viewHolder.tvPhotoIndex = (TextView) convertView.findViewById(R.id.tvPhotoIndex);
             RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) viewHolder.iv.getLayoutParams();
             lp.width = mItemWidth;
             lp.height = mItemWidth;
@@ -71,10 +74,18 @@ public class ShowMediasAdapter extends BaseAdapter {
         AlbumFragment.MediaInfo mediaInfo = mMediaFileInfo.mediaInfoList.get(position);
         CommonUtil.loadImage(BaseApplication.getAppContext(), 0, Uri.fromFile(mediaInfo.mediaFile), viewHolder.iv);
         viewHolder.iv.setTag(R.id.tag, mediaInfo);
+        if (mediaInfo.isSelected) {
+            viewHolder.rlSelect.setVisibility(View.VISIBLE);
+            viewHolder.tvPhotoIndex.setText(String.valueOf(mediaInfo.index + 1));
+        } else {
+            viewHolder.rlSelect.setVisibility(View.INVISIBLE);
+        }
         return convertView;
     }
 
     class ViewHolder {
         ImageView iv;
+        View rlSelect;
+        TextView tvPhotoIndex;
     }
 }
