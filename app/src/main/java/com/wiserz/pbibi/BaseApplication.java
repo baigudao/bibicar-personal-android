@@ -8,6 +8,8 @@ import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.Utils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.MemoryCategory;
+import com.growingio.android.sdk.collection.Configuration;
+import com.growingio.android.sdk.collection.GrowingIO;
 import com.mob.MobSDK;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.DefaultRefreshFooterCreater;
@@ -76,8 +78,10 @@ public class BaseApplication extends Application {
         //初始社会化组件
         MobSDK.init(this, "174e89a173460", "");
 
-        //友盟
-        MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
+        GrowingIO.startWithConfiguration(this, new Configuration()
+                .useID()
+                .trackAllFragments()
+                .setChannel("应用宝应用商店"));
     }
 
     private void configLogUtils() {

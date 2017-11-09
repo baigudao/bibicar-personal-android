@@ -70,6 +70,14 @@
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+
+            <intent-filter>
+                <data android:scheme="growing.b3d243fc1ddc08a5"/>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+            </intent-filter>
         </activity>
         <activity
             android:name=".activity.MainActivity"
@@ -214,7 +222,7 @@
             android:value="59dd94f29f06fd313b00002c"/>
         <meta-data
             android:name="UMENG_CHANNEL"
-            android:value="Channel ID"/>
+            android:value="Umeng"/>
 
     </application>
 

@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.growingio.android'
 
 android {
     signingConfigs {
@@ -19,6 +20,9 @@ android {
         versionName "2.4.1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
+
+        resValue("string", "growingio_project_id", "8aef45f0785f4762")
+        resValue("string", "growingio_url_scheme", "growing.b3d243fc1ddc08a5")
     }
     buildTypes {
         release {
@@ -75,6 +79,5 @@ dependencies {
     compile 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.3'
     //友盟统计
     compile 'com.umeng.analytics:analytics:latest.integration'
-
-    compile project(':ucrop')
+    compile 'com.growingio.android:vds-android-agent:1.1.1@aar'
 }

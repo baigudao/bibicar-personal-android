@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.umeng.analytics.MobclickAgent;
 import com.wiserz.pbibi.BaseApplication;
 import com.wiserz.pbibi.activity.BaseActivity;
 import com.wiserz.pbibi.util.Constant;
@@ -136,6 +137,7 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
             BaseApplication.setCurFragment(this);
         }
         super.onResume();
+        MobclickAgent.onPageStart(getClass().getName());
     }
 
     /**
@@ -187,5 +189,12 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
         if (mDlgLoading != null) {
             mDlgLoading.dismiss();
         }
+    }
+
+    @Override
+    public void onPause() {
+        // TODO Auto-generated method stub
+        super.onPause();
+        MobclickAgent.onPageEnd(getClass().getName());
     }
 }
