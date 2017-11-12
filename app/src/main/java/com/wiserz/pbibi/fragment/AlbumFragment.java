@@ -16,7 +16,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.activity.BaseActivity;
 import com.wiserz.pbibi.adapter.MediaFileAdapter;
@@ -52,7 +51,7 @@ public class AlbumFragment extends BaseFragment {
         public int index;
     }
 
-    private ArrayList<MediaFileInfo> mMediaFileInfos = new ArrayList<>();
+    private ArrayList<MediaFileInfo> mMediaFileInfos;
     private Cursor mCursor;
     private ShowMediasAdapter mMediasAdapter;
     private MediaFileAdapter mMediaFileAdapter;
@@ -61,13 +60,12 @@ public class AlbumFragment extends BaseFragment {
     private ArrayList<File> mSelectedPhotos;
     private ArrayList<MediaInfo> mSelectedMediaInfos;
 
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle bundle = getArguments();
-        if (bundle == null) {
-            goBack();
-            return;
-        }
+//        if(DataManager.getInstance().getObject()!=null){
+//            mSelectedPhotos=(ArrayList<File>) DataManager.getInstance().getObject();
+//        }
         DataManager.getInstance().setObject(null);
     }
 
@@ -143,9 +141,9 @@ public class AlbumFragment extends BaseFragment {
 
     public void onResume() {
         super.onResume();
-        showView();
         ((BaseActivity) getActivity()).setScreenFull(false);
-        if (mMediaFileAdapter == null || mMediaFileInfos.isEmpty()) {
+        if (mMediaFileInfos==null) {
+            mMediaFileInfos=new ArrayList<>();
             GBExecutionPool.getExecutor().execute(new Runnable() {
                 @Override
                 public void run() {
@@ -189,6 +187,26 @@ public class AlbumFragment extends BaseFragment {
                 }
             });
         }
+        if(DataManager.getInstance().getObject()!=null && DataManager.getInstance().getData1()!=null){
+            String newPath=(String)DataManager.getInstance().getObject();
+            int index=(int) DataManager.getInstance().getData1();
+            getSelectedPhotos().set(index,new File(newPath));
+            getSelectedPhotoAdapter().notifyDataSetChanged();
+        }else if(DataManager.getInstance().getData2()!=null){
+            int index=(int) DataManager.getInstance().getData2();
+            getSelectedPhotos().remove(index);
+            getSelectedPhotoAdapter().notifyDataSetChanged();
+            MediaInfo mediaInfo = getSelectedMediaInfos().remove(index);
+            mediaInfo.isSelected = false;
+            for (MediaInfo info : getSelectedMediaInfos()) {
+                info.index = (index++);
+            }
+            mMediasAdapter.notifyDataSetChanged();
+        }
+        showView();
+        DataManager.getInstance().setObject(null);
+        DataManager.getInstance().setData1(null);
+        DataManager.getInstance().setData2(null);
     }
 
     private void getAlbumMedias() {
@@ -310,7 +328,7 @@ public class AlbumFragment extends BaseFragment {
                 }
                 ImageView iv = (ImageView) view.findViewById(R.id.iv);
                 final MediaInfo info = (MediaInfo) iv.getTag(R.id.tag);
-                if (info != null && iv.getDrawable() != null) {
+                if (info != null && !info.isSelected && iv.getDrawable() != null) {
                     DisplayMetrics dm = new DisplayMetrics();
                     getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
                     Bitmap bmp = CommonUtil.getBitmapFromFile(info.mediaFile, dm.widthPixels, dm.heightPixels);
@@ -416,9 +434,12 @@ public class AlbumFragment extends BaseFragment {
                 goBack();
                 break;
             case R.id.tvLeft:
+ //               DataManager.getInstance().setObject(getSelectedPhotos());
                 gotoPager(CameraFragment.class, null, true);
                 break;
             case R.id.bottomView:
+                DataManager.getInstance().setObject(getSelectedPhotos());
+                getActivity().finish();
                 break;
         }
     }

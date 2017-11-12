@@ -1,16 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rootView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/black">
 
-    <ImageView
-        android:id="@+id/ivPhoto"
-        android:layout_width="match_parent"
+    <RelativeLayout
+        android:id="@+id/rlOperator"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:scaleType="centerInside"/>
+        android:layout_centerInParent="true">
+
+        <com.wiserz.pbibi.view.MosaicView
+            android:id="@+id/mosaicView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"/>
+
+        <com.wiserz.pbibi.view.DrawView
+            android:id="@+id/drawView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"/>
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/topView"
@@ -54,8 +67,8 @@
         android:id="@+id/bottomView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/black"
         android:layout_alignParentBottom="true"
+        android:background="@android:color/black"
         android:padding="15dp">
 
         <ImageView
@@ -77,19 +90,97 @@
             android:id="@+id/ivMasaike"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/ivCrop"
             android:layout_centerVertical="true"
             android:layout_marginRight="40dp"
+            android:layout_toLeftOf="@id/ivCrop"
             android:src="@drawable/masaike_photo" />
 
         <ImageView
             android:id="@+id/ivPen"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/ivMasaike"
             android:layout_centerVertical="true"
             android:layout_marginRight="40dp"
+            android:layout_toLeftOf="@id/ivMasaike"
             android:src="@drawable/pen_photo" />
     </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/selectView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/bottomView"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:id="@+id/llSelectColor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <com.wiserz.pbibi.view.SelectColorView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:circle_color="@color/pure_white_color" />
+
+            <com.wiserz.pbibi.view.SelectColorView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                app:circle_color="@color/color_2b2b2b" />
+
+            <com.wiserz.pbibi.view.SelectColorView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                app:circle_color="@color/color_fe1d11" />
+
+            <com.wiserz.pbibi.view.SelectColorView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                app:circle_color="@color/color_f8f705" />
+
+            <com.wiserz.pbibi.view.SelectColorView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                app:circle_color="@color/color_20d81a" />
+
+            <com.wiserz.pbibi.view.SelectColorView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                app:circle_color="@color/color_1d9afe" />
+
+            <com.wiserz.pbibi.view.SelectColorView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                app:circle_color="@color/color_850afb" />
+
+            <com.wiserz.pbibi.view.SelectColorView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                app:circle_color="@color/color_ff008f" />
+
+            <ImageView
+                android:id="@+id/ivUndo"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="8dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/white_back" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/pure_white_color" />
+    </LinearLayout>
 
 </RelativeLayout>

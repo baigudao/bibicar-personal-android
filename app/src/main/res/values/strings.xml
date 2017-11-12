@@ -124,4 +124,11 @@
     <string name="make_sure">确认</string>
     <string name="done">完成</string>
     <string name="undo">还原</string>
+
+    <string name="basic_message">基本信息</string>
+    <string name="car_detail">详细配置</string>
+    <string name="message_detail">信息越完善，排名越靠前，售出几率越高</string>
+    <string name="car_model">车型</string>
+    <string name="not_seleted">未选择  ></string>
+    <string name="not_write">未填写</string>
 </resources>

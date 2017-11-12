@@ -9,8 +9,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.blankj.utilcode.util.SPUtils;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.fragment.BaseFragment;
 import com.wiserz.pbibi.fragment.CarCenterFragment;

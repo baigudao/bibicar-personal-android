@@ -56,4 +56,11 @@
         <attr name="focus_fail_id" format="integer" />
     </declare-styleable>
 
+    <declare-styleable name="SelectColorView">
+        <attr name="circle_color" format="color"/>
+    </declare-styleable>
+
+    <declare-styleable name="ImageViewRatio">
+        <attr name="ratio" format="float"/>
+    </declare-styleable>
 </resources>

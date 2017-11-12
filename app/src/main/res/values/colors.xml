@@ -54,4 +54,13 @@
     <color name="car_color_14">#000000</color>
     <color name="car_color_15">#88bdbdbd</color>
 
+
+    <color name="color_2b2b2b">#2b2b2b</color>
+    <color name="color_fe1d11">#fe1d11</color>
+    <color name="color_f8f705">#f8f705</color>
+    <color name="color_20d81a">#20d81a</color>
+    <color name="color_1d9afe">#1d9afe</color>
+    <color name="color_850afb">#850afb</color>
+    <color name="color_ff008f">#ff008f</color>
+
 </resources>

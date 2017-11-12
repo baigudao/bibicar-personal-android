@@ -153,12 +153,14 @@ public class MySellingCarFragment extends BaseFragment implements BaseRecyclerVi
             @Override
             public void onFirstBtnClicked() {
                 //上传新车
+                DataManager.getInstance().setObject(null);
                 gotoPager(PostNewCarFragment.class, null);
             }
 
             @Override
             public void onSecondBtnClicked() {
                 //上传二手车
+                DataManager.getInstance().setObject(null);
                 gotoPager(PostSecondHandCarFragment.class, null);
             }
 

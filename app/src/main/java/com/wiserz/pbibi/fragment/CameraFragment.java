@@ -8,11 +8,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.bumptech.glide.util.Util;
 import com.wiserz.pbibi.activity.BaseActivity;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.adapter.SelectedPhotoAdapter;
@@ -49,11 +46,9 @@ public class CameraFragment extends BaseFragment implements View.OnTouchListener
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle bundle = getArguments();
-        if (bundle == null) {
-            goBack();
-            return;
-        }
+//        if(DataManager.getInstance().getObject()!=null){
+//            mSelectedPhotos=(ArrayList<File>) DataManager.getInstance().getObject();
+//        }
         DataManager.getInstance().setObject(null);
         ((BaseActivity) getActivity()).setScreenFull(true);
     }
@@ -71,6 +66,7 @@ public class CameraFragment extends BaseFragment implements View.OnTouchListener
         linearLayoutManagerHorizontal.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(linearLayoutManagerHorizontal);
         recyclerView.setAdapter(getSelectedPhotoAdapter());
+        getSelectedPhotoAdapter().setDataList(getSelectedPhotos());
     }
 
     private SelectedPhotoAdapter getSelectedPhotoAdapter() {
@@ -97,14 +93,23 @@ public class CameraFragment extends BaseFragment implements View.OnTouchListener
     @Override
     public void onResume() {
         super.onResume();
-        if (DataManager.getInstance().getObject() != null) {
-            getActivity().finish();
-            return;
-        }
         mCameraManager = CameraManager.getInstance(getActivity());
         mCameraManager.setCameraDirection(CameraManager.CameraDirection.CAMERA_BACK);
         initCameraLayout();
         mUsingCamera = false;
+        if(DataManager.getInstance().getObject()!=null && DataManager.getInstance().getData1()!=null){
+            String newPath=(String)DataManager.getInstance().getObject();
+            int index=(int) DataManager.getInstance().getData1();
+            getSelectedPhotos().set(index,new File(newPath));
+            getSelectedPhotoAdapter().notifyDataSetChanged();
+        }else if(DataManager.getInstance().getData2()!=null){
+            int index=(int) DataManager.getInstance().getData2();
+            getSelectedPhotos().remove(index);
+            getSelectedPhotoAdapter().notifyDataSetChanged();
+        }
+        DataManager.getInstance().setObject(null);
+        DataManager.getInstance().setData1(null);
+        DataManager.getInstance().setData2(null);
     }
 
     @Override
@@ -203,6 +208,7 @@ public class CameraFragment extends BaseFragment implements View.OnTouchListener
                 getActivity().finish();
                 break;
             case R.id.tvRight:
+ //               DataManager.getInstance().setObject(getSelectedPhotos());
                 gotoPager(AlbumFragment.class, null, true);
                 getActivity().finish();
                 break;
@@ -239,6 +245,8 @@ public class CameraFragment extends BaseFragment implements View.OnTouchListener
                 }
                 break;
             case R.id.tvNext:
+                DataManager.getInstance().setObject(getSelectedPhotos());
+                getActivity().finish();
                 break;
 
         }

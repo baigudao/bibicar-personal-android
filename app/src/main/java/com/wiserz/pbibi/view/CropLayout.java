@@ -63,10 +63,14 @@ public class CropLayout extends RelativeLayout implements View.OnClickListener{
                 mGestureCropImageView.setImageUri(inputUri, outputUri);
             } catch (Exception e) {
                 setResultError(e);
-   //             finish();
+                if(mOnOperatorBmp!=null){
+                    mOnOperatorBmp.onCancel();
+                }
             }
         } else {
-//            finish();
+            if(mOnOperatorBmp!=null){
+                mOnOperatorBmp.onCancel();
+            }
         }
     }
 
@@ -134,7 +138,9 @@ public class CropLayout extends RelativeLayout implements View.OnClickListener{
         @Override
         public void onLoadFailure(@NonNull Exception e) {
             setResultError(e);
-   //         finish();
+            if(mOnOperatorBmp!=null){
+                mOnOperatorBmp.onCancel();
+            }
         }
 
     };
@@ -157,13 +163,17 @@ public class CropLayout extends RelativeLayout implements View.OnClickListener{
             @Override
             public void onBitmapCropped(@NonNull Uri resultUri, int offsetX, int offsetY, int imageWidth, int imageHeight) {
                 setResultUri(resultUri, mGestureCropImageView.getTargetAspectRatio(), offsetX, offsetY, imageWidth, imageHeight);
-   //             finish();
+                if(mOnOperatorBmp!=null){
+                    mOnOperatorBmp.onFinish();
+                }
             }
 
             @Override
             public void onCropFailure(@NonNull Throwable t) {
                 setResultError(t);
-  //              finish();
+                if(mOnOperatorBmp!=null){
+                    mOnOperatorBmp.onCancel();
+                }
             }
         });
     }
@@ -181,6 +191,9 @@ public class CropLayout extends RelativeLayout implements View.OnClickListener{
 
     protected void setResultError(Throwable throwable) {
  //       setResult(UCrop.RESULT_ERROR, new Intent().putExtra(UCrop.EXTRA_ERROR, throwable));
+        if(mOnOperatorBmp!=null){
+            mOnOperatorBmp.onCancel();
+        }
     }
 
     @Override
@@ -197,9 +210,7 @@ public class CropLayout extends RelativeLayout implements View.OnClickListener{
                 }
                 break;
             case R.id.tvOk:
-                if(mOnOperatorBmp!=null){
-                    mOnOperatorBmp.onFinish();
-                }
+                cropAndSaveImage();
                 break;
         }
     }

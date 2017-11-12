@@ -455,7 +455,7 @@ public class CommonUtil {
         try {
             fout = new FileOutputStream(folder);
             bos = new BufferedOutputStream(fout);
-            bmp.compress(Bitmap.CompressFormat.JPEG, 70, bos);
+            bmp.compress(Bitmap.CompressFormat.JPEG, 90, bos);
 
         } catch (IOException e) {
             // TODO Auto-generated catch block
@@ -488,7 +488,39 @@ public class CommonUtil {
         try {
             fout = new FileOutputStream(folder);
             bos = new BufferedOutputStream(fout);
-            bmp.compress(Bitmap.CompressFormat.JPEG, 70, bos);
+            bmp.compress(Bitmap.CompressFormat.JPEG, 90, bos);
+
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } finally {
+            try {
+                if (fout != null) {
+                    fout.close();
+                }
+                if (bos != null) {
+                    bos.flush();
+                    bos.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return folder;
+    }
+
+    /**
+     * 保存JPG图片
+     *
+     * @param bmp
+     */
+    public static String saveJpegByPath(Bitmap bmp, Context context,String folder) {
+        FileOutputStream fout = null;
+        BufferedOutputStream bos = null;
+        try {
+            fout = new FileOutputStream(folder);
+            bos = new BufferedOutputStream(fout);
+            bmp.compress(Bitmap.CompressFormat.JPEG, 90, bos);
 
         } catch (IOException e) {
             // TODO Auto-generated catch block

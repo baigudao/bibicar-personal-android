@@ -12,12 +12,17 @@ import android.graphics.PointF;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+
+import com.tencent.mm.opensdk.utils.Log;
+import com.wiserz.pbibi.fragment.EditPhotoFragment;
 import com.wiserz.pbibi.util.CommonUtil;
+
 import java.util.ArrayList;
 
 /**
- * Created by gigabud on 15-12-1.
+ * Created by gigabud on 17-9-27.
  */
+
 public class DrawView extends View {
 
     private PointF mPreviousPoint;
@@ -31,12 +36,15 @@ public class DrawView extends View {
     private DrawLineInfo mDrawLineInfo;
     public Canvas mCanvas;
 
-    private Bitmap mDrawBmp;
-
+    private int mViewWidth, mViewHeight;
 
     private boolean mIsEnable = false;
 
     private int mPaintColor = Color.RED;
+
+    private Bitmap mDrawBmp;
+
+    private EditPhotoFragment.OnDrawBmp mOnDrawBmp;
 
     public static class DrawLineInfo {   //手指一次按下抬起的绘画信息
         int color;
@@ -51,12 +59,45 @@ public class DrawView extends View {
         Point point;
     }
 
+    public void setOnDrawBmp(EditPhotoFragment.OnDrawBmp onDrawBmp){
+        mOnDrawBmp=onDrawBmp;
+    }
+
+
+    public DrawView(Context context) {
+        this(context, null);
+    }
+
     public DrawView(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs, 0);
+    }
+
+    public DrawView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        mIsEnable=true;
         mPath = new Path();
         mDrawPathsList = new ArrayList<>();
         setBackgroundColor(Color.TRANSPARENT);
         resetDrawPaint(mPaintColor);
+    }
+
+
+    public void setViewWH(int viewWidth,int viewHeight) {
+        mViewWidth = viewWidth;
+        mViewHeight = viewHeight;
+    }
+
+    public void clearPath(){
+        mDrawPathsList.clear();
+        if (mDrawBmp != null && !mDrawBmp.isRecycled()) {
+            mDrawBmp.recycle();
+            mDrawBmp = null;
+        }
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        setMeasuredDimension(mViewWidth, mViewHeight);
     }
 
     public void resetDrawPaint(int paintColor) {
@@ -70,7 +111,7 @@ public class DrawView extends View {
             mPaint.setStrokeJoin(Paint.Join.ROUND);
             mPaint.setStrokeCap(Paint.Cap.ROUND);
         }
-        mPaint.setStrokeWidth(strokeWidth);   //Utils.dip2px(getContext(), 5)
+        mPaint.setStrokeWidth(strokeWidth);
         mPaint.setPathEffect(cornerPathEffect);
         mPaint.setColor(paintColor);
     }
@@ -98,6 +139,9 @@ public class DrawView extends View {
         }
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                if(mOnDrawBmp!=null){
+                    mOnDrawBmp.startDraw();
+                }
                 mDrawLineInfo = new DrawLineInfo();
                 mDrawLineInfo.color = mPaintColor;
                 resetDrawPaint(mPaintColor);
@@ -114,6 +158,9 @@ public class DrawView extends View {
                 drawLine(mPreviousPoint, mStartPoint, mCurrentPoint, false);
                 break;
             case MotionEvent.ACTION_UP:
+                if(mOnDrawBmp!=null){
+                    mOnDrawBmp.endDraw();
+                }
                 mStartPoint = mPreviousPoint;
                 mPreviousPoint = mCurrentPoint;
                 mCurrentPoint = new PointF(event.getX(), event.getY());
@@ -165,8 +212,6 @@ public class DrawView extends View {
     public void drawPathListInBitmap(ArrayList<DrawLineInfo> drawPathList) {
         if (drawPathList != null && !drawPathList.isEmpty()) {
             if (mDrawBmp == null || mDrawBmp.isRecycled()) {
-//                DisplayMetrics displayMetrics = new DisplayMetrics();
-//                ((WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getMetrics(displayMetrics);
                 mDrawBmp = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
                 mCanvas = new Canvas(mDrawBmp);
                 mCanvas.drawBitmap(mDrawBmp, 0, 0, null);
@@ -227,7 +272,6 @@ public class DrawView extends View {
         return drawLineInfo == null || drawLineInfo.drawPaths == null || drawLineInfo.drawPaths.isEmpty();
     }
 
-
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -261,12 +305,4 @@ public class DrawView extends View {
         return new PointF((p1.x + p2.x) * 0.5f, (p1.y + p2.y) * 0.5f);
     }
 
-
-    public void recycleBmp() {
-        if (mDrawBmp != null && !mDrawBmp.isRecycled()) {
-            mDrawBmp.recycle();
-            mDrawBmp = null;
-        }
-    }
 }
-

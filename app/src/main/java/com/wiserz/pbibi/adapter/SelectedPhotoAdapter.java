@@ -2,20 +2,17 @@ package com.wiserz.pbibi.adapter;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-
 import com.wiserz.pbibi.BaseApplication;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.activity.BaseActivity;
 import com.wiserz.pbibi.fragment.EditPhotoFragment;
 import com.wiserz.pbibi.util.CommonUtil;
-import com.wiserz.pbibi.util.Constant;
-
+import com.wiserz.pbibi.util.DataManager;
 import java.io.File;
 import java.util.ArrayList;
 
@@ -70,7 +67,7 @@ public class SelectedPhotoAdapter extends RecyclerView.Adapter<SelectedPhotoAdap
             ivClose = (ImageView) itemView.findViewById(R.id.iv_close);
         }
 
-        public void setData(int position, File photoPath) {
+        public void setData(int position, final File photoPath) {
             CommonUtil.loadImage(BaseApplication.getAppContext(), 0, Uri.fromFile(photoPath), ivPhoto);
             ivPhoto.setTag(R.id.tag, position);
             ivClose.setTag(R.id.tag, position);
@@ -91,10 +88,10 @@ public class SelectedPhotoAdapter extends RecyclerView.Adapter<SelectedPhotoAdap
                 @Override
                 public void onClick(View v) {
                     int pos = (int) v.getTag(R.id.tag);
-                    Bundle bundle=new Bundle();
-                    bundle.putString("photoPath",mDataList.get(pos).getAbsolutePath());
-                    bundle.putString("photoIndex",(pos+1)+"/"+mDataList.size());
-                    ((BaseActivity) mContext).gotoPager(EditPhotoFragment.class,bundle,true);
+                    DataManager.getInstance().setObject(mDataList.get(pos).getAbsolutePath());
+                    DataManager.getInstance().setData1(pos);
+                    DataManager.getInstance().setData2(mDataList.size());
+                    ((BaseActivity) mContext).gotoPager(EditPhotoFragment.class,null,true);
                 }
             });
         }

@@ -1,26 +1,26 @@
 package com.wiserz.pbibi.fragment;
 
 import android.content.res.Resources;
-import android.view.Gravity;
+import android.net.Uri;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.EmptyUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
-import com.google.gson.Gson;
 import com.qiniu.android.http.ResponseInfo;
 import com.qiniu.android.storage.UpCompletionHandler;
 import com.qiniu.android.storage.UploadManager;
+import com.wiserz.pbibi.BaseApplication;
 import com.wiserz.pbibi.R;
-import com.wiserz.pbibi.bean.CityBean;
-import com.wiserz.pbibi.bean.ProvinceBean;
-import com.wiserz.pbibi.bean.UploadCarPhotoInfo;
 import com.wiserz.pbibi.util.CommonUtil;
 import com.wiserz.pbibi.util.Constant;
 import com.wiserz.pbibi.util.DataManager;
-import com.wiserz.pbibi.view.WheelViewPopupWindow;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -28,6 +28,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -45,7 +46,6 @@ public class PostNewCarFragment extends BaseFragment {
 
     private TextView tv_car_type;
     private TextView tvCarColor;
-    private TextView tv_choose_city;
 
     private int brand_id;
     private int series_id;
@@ -53,17 +53,8 @@ public class PostNewCarFragment extends BaseFragment {
 
     private int mColor;
 
-    private ArrayList<ProvinceBean> mProvinceBeenList;
-
-    private String cityCode;
-
-    public String getCityCode() {
-        return cityCode;
-    }
-
-    public void setCityCode(String cityCode) {
-        this.cityCode = cityCode;
-    }
+    private ArrayList<File> mUploadPhotos;
+    private String upload_token;
 
     @Override
     protected int getLayoutId() {
@@ -72,75 +63,34 @@ public class PostNewCarFragment extends BaseFragment {
 
     @Override
     protected void initView(View view) {
+        DataManager.getInstance().setObject(null);
         view.findViewById(R.id.iv_back).setOnClickListener(this);
         ((TextView) view.findViewById(R.id.tv_title)).setText("上传新车");
-        view.findViewById(R.id.iv_add_car_photo).setOnClickListener(this);
+        view.findViewById(R.id.topLine).setVisibility(View.GONE);
         view.findViewById(R.id.btn_post_new_car).setOnClickListener(this);
-
         view.findViewById(R.id.rl_choose_car_color).setOnClickListener(this);
-        view.findViewById(R.id.rl_choose_city).setOnClickListener(this);
         view.findViewById(R.id.rl_choose_car_type).setOnClickListener(this);
+        view.findViewById(R.id.tvCloseWarning).setOnClickListener(this);
+        view.findViewById(R.id.tvDetailMsg).setOnClickListener(this);
+        view.findViewById(R.id.tvBasicMsg).setOnClickListener(this);
 
         tv_car_type = (TextView) view.findViewById(R.id.tv_car_type);
         tvCarColor = (TextView) view.findViewById(R.id.tvCarColor);
-        tv_choose_city = (TextView) view.findViewById(R.id.tv_choose_city);
 
-        mProvinceBeenList = new ArrayList<>();
+        getTokenFromNet();
+        gotoPager(CameraFragment.class,null,true);
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.iv_back:
-                goBack();
-                break;
-            case R.id.iv_add_car_photo:
-                gotoPager(PostPhotoFragment.class, null);
-                break;
-            case R.id.btn_post_new_car:
-                publishNewCar();
-                break;
-            case R.id.rl_choose_car_type:
-                gotoPager(SelectCarBrandFragment.class, null);
-                break;
-            case R.id.rl_choose_city:
-                if (CommonUtil.isListNullOrEmpty(mProvinceBeenList)) {
-                    getProvinceList();
-                }
-                WheelViewPopupWindow mWheelViewPopupWindow = new WheelViewPopupWindow(getActivity(), new WheelViewPopupWindow.OnSelectItemListener() {
-                    @Override
-                    public void onSelect(int index1, Object value1, int index2, Object value2, int index3, Object value3) {
-                        ProvinceBean mSelectProvince = (ProvinceBean) value1;
-                        CityBean mSelectCity = (CityBean) value2;
-                        if (EmptyUtils.isNotEmpty(mSelectProvince) && EmptyUtils.isNotEmpty(mSelectCity) && getView() != null) {
-                            tv_choose_city.setText(mSelectProvince.getProvince() + " " + mSelectCity.getCity_name());
-                            setCityCode(mSelectCity.getCity_code());
-                        }
-                    }
-                }, WheelViewPopupWindow.WHEEL_VIEW_WINDOW_TYPE.TYPE_PROVINCE_CITY);
-                mWheelViewPopupWindow.setProvinceList(mProvinceBeenList);
-                mWheelViewPopupWindow.initView();
-                mWheelViewPopupWindow.showAtLocation(getView(), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
-                break;
-            case R.id.rl_choose_car_color:
-                gotoPager(SelectCarColorFragment.class, null);
-                break;
-            default:
-                break;
+    private ArrayList<File> getUploadPhotos() {
+        if (mUploadPhotos == null) {
+            mUploadPhotos = new ArrayList<>();
         }
+        return mUploadPhotos;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (CommonUtil.isListNullOrEmpty(mProvinceBeenList)) {
-            getProvinceList();
-        }
-    }
-
-    private void getProvinceList() {
+    private void getTokenFromNet() {
         OkHttpUtils.post()
-                .url(Constant.getProvinceListUrl())
+                .url(Constant.getUploadTokenUrl())
                 .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
                 .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
                 .build()
@@ -158,15 +108,7 @@ public class PostNewCarFragment extends BaseFragment {
                             int status = jsonObject.optInt("status");
                             JSONObject jsonObjectData = jsonObject.optJSONObject("data");
                             if (status == 1) {
-                                JSONArray jsonArray = jsonObjectData.optJSONArray("province_list");
-                                if (EmptyUtils.isNotEmpty(jsonArray) && jsonArray.length() != 0) {
-                                    Gson gson = new Gson();
-                                    for (int i = 0; i < jsonArray.length(); i++) {
-                                        JSONObject jsonObject1 = jsonArray.optJSONObject(i);
-                                        ProvinceBean provinceBean = gson.fromJson(jsonObject1.toString(), ProvinceBean.class);
-                                        mProvinceBeenList.add(provinceBean);
-                                    }
-                                }
+                                upload_token = jsonObjectData.optString("upload_token");
                             } else {
                                 String code = jsonObject.optString("code");
                                 String msg = jsonObjectData.optString("msg");
@@ -177,6 +119,109 @@ public class PostNewCarFragment extends BaseFragment {
                         }
                     }
                 });
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.iv_back:
+                goBack();
+                break;
+            case R.id.tvBasicMsg:
+                ((TextView)getView().findViewById(R.id.tvBasicMsg)).setTextColor(getResources().getColor(R.color.main_text_color));
+                ((TextView)getView().findViewById(R.id.tvDetailMsg)).setTextColor(getResources().getColor(R.color.second_text_color));
+                getView().findViewById(R.id.line1).setVisibility(View.VISIBLE);
+                getView().findViewById(R.id.line2).setVisibility(View.GONE);
+                getView().findViewById(R.id.llBasicMsg).setVisibility(View.VISIBLE);
+                getView().findViewById(R.id.llDetailMsg).setVisibility(View.GONE);
+                break;
+            case R.id.tvDetailMsg:
+                ((TextView)getView().findViewById(R.id.tvBasicMsg)).setTextColor(getResources().getColor(R.color.second_text_color));
+                ((TextView)getView().findViewById(R.id.tvDetailMsg)).setTextColor(getResources().getColor(R.color.main_text_color));
+                getView().findViewById(R.id.line1).setVisibility(View.GONE);
+                getView().findViewById(R.id.line2).setVisibility(View.VISIBLE);
+                getView().findViewById(R.id.llBasicMsg).setVisibility(View.GONE);
+                getView().findViewById(R.id.llDetailMsg).setVisibility(View.VISIBLE);
+                break;
+            case R.id.btn_post_new_car:
+                publishNewCar();
+                break;
+            case R.id.rl_choose_car_type:
+                gotoPager(SelectCarBrandFragment.class, null);
+                break;
+            case R.id.tvCloseWarning:
+                getView().findViewById(R.id.rlWarning).setVisibility(View.GONE);
+                break;
+            case R.id.rl_choose_car_color:
+                gotoPager(SelectCarColorFragment.class, null);
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void onResume() {
+        super.onResume();
+        mUploadPhotos = (ArrayList<File>) DataManager.getInstance().getObject();
+        if(mUploadPhotos==null){
+            mUploadPhotos=new ArrayList<>();
+        }
+        resetCarPhotosView();
+
+    }
+
+    private void resetCarPhotosView(){
+        LinearLayout llCarPhotos = (LinearLayout) getView().findViewById(R.id.llCarPhotos);
+        llCarPhotos.removeAllViews();
+        int size;
+        if(mUploadPhotos.size()==6){
+            size=6;
+        }else{
+            size=mUploadPhotos.size()+1;
+        }
+        int row=(size%3==0)?size/3:size/3+1;
+        LinearLayout itemView;
+        for(int i=0;i<row;++i){
+            itemView= (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.item_car_photo,null);
+            llCarPhotos.addView(itemView);
+            int index=i*3;
+            setPhoto((ViewGroup) itemView.getChildAt(0),index<mUploadPhotos.size()?mUploadPhotos.get(index):null,index,index==size-1);
+            setPhoto((ViewGroup) itemView.getChildAt(1),index+1<mUploadPhotos.size()?mUploadPhotos.get(index+1):null,index+1,index+1==size-1);
+            setPhoto((ViewGroup) itemView.getChildAt(2),index+2<mUploadPhotos.size()?mUploadPhotos.get(index+2):null,index+2,index+2==size-1);
+        }
+    }
+
+    private void setPhoto(ViewGroup itemView,File photo,int index,boolean isLast){
+        ImageView ivPhoto=(ImageView) itemView.getChildAt(0);
+        ImageView ivClose=(ImageView) itemView.getChildAt(1);
+        ivPhoto.setTag(R.id.tag, index);
+        ivClose.setTag(R.id.tag, index);
+        ivPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                gotoPager(CameraFragment.class,null,true);
+            }
+        });
+        if(photo!=null){
+            CommonUtil.loadImage(BaseApplication.getAppContext(), 0, Uri.fromFile(photo), ivPhoto);
+            ivClose.setVisibility(View.VISIBLE);
+            ivClose.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int pos = (int) v.getTag(R.id.tag);
+                    File file = mUploadPhotos.remove(pos);
+                    file.delete();
+                    resetCarPhotosView();
+                }
+            });
+        }else{
+            if(isLast) {
+                ivPhoto.setImageResource(R.drawable.add_car_photo);
+                ivClose.setVisibility(View.GONE);
+            }else {
+                itemView.setVisibility(View.INVISIBLE);
+            }
+        }
     }
 
     @Override
@@ -250,12 +295,12 @@ public class PostNewCarFragment extends BaseFragment {
             return null;
     }
 
-    private String getInputPlace() {
-        if (getView() != null)
-            return ((EditText) getView().findViewById(R.id.et_input_place)).getText().toString().trim();
-        else
-            return null;
-    }
+//    private String getInputPlace() {
+//        if (getView() != null)
+//            return ((EditText) getView().findViewById(R.id.et_input_place)).getText().toString().trim();
+//        else
+//            return null;
+//    }
 
     private String getInputName() {
         if (getView() != null)
@@ -274,7 +319,7 @@ public class PostNewCarFragment extends BaseFragment {
     private void publishNewCar() {
         String profile = getInputProfile();
         String phone_num = getInputPhoneNum();
-        String place = getInputPlace();
+ //       String place = getInputPlace();
         String name = getInputName();
         String car_price = getInputPrice();
 
@@ -283,15 +328,15 @@ public class PostNewCarFragment extends BaseFragment {
             return;
         }
 
-        if (EmptyUtils.isEmpty(getCityCode())) {
-            ToastUtils.showShort("请选择所在城市");
-            return;
-        }
+//        if (EmptyUtils.isEmpty(getCityCode())) {
+//            ToastUtils.showShort("请选择所在城市");
+//            return;
+//        }
 
-        if (EmptyUtils.isEmpty(mColor) || mColor == 0) {
-            ToastUtils.showShort("请选择车辆颜色");
-            return;
-        }
+//        if (EmptyUtils.isEmpty(mColor) || mColor == 0) {
+//            ToastUtils.showShort("请选择车辆颜色");
+//            return;
+//        }
 
         if (EmptyUtils.isEmpty(car_price)) {
             ToastUtils.showShort("请填写车辆价格");
@@ -303,10 +348,10 @@ public class PostNewCarFragment extends BaseFragment {
             return;
         }
 
-        if (EmptyUtils.isEmpty(place)) {
-            ToastUtils.showShort("请填写看车地点");
-            return;
-        }
+//        if (EmptyUtils.isEmpty(place)) {
+//            ToastUtils.showShort("请填写看车地点");
+//            return;
+//        }
 
         if (EmptyUtils.isEmpty(phone_num)) {
             ToastUtils.showShort("请填写你的联系电话");
@@ -318,20 +363,20 @@ public class PostNewCarFragment extends BaseFragment {
             return;
         }
 
-        ArrayList<UploadCarPhotoInfo> uploadCarPhotoInfoArrayList = (ArrayList<UploadCarPhotoInfo>) DataManager.getInstance().getData8();
-        String upload_token = (String) DataManager.getInstance().getData9();
-        DataManager.getInstance().setData8(null);
-        DataManager.getInstance().setData9(null);
+        if (EmptyUtils.isNotEmpty(upload_token)) {
+            getTokenFromNet();
+            return;
+        }
 
-        if (EmptyUtils.isNotEmpty(upload_token) && EmptyUtils.isNotEmpty(uploadCarPhotoInfoArrayList) && uploadCarPhotoInfoArrayList.size() != 0) {
-            uploadImage(uploadCarPhotoInfoArrayList, upload_token);
+        if (!getUploadPhotos().isEmpty()) {
+            uploadImage(getUploadPhotos(), upload_token);
         } else {
             ToastUtils.showShort("请添加车辆照片！");
         }
     }
 
-    private void uploadImage(ArrayList<UploadCarPhotoInfo> uploadCarPhotoInfoArrayList, String upload_token) {
-        final int mSize = uploadCarPhotoInfoArrayList.size();
+    private void uploadImage(ArrayList<File> uploadPhotos, String upload_token) {
+        final int mSize = uploadPhotos.size();
 
         mPhotoTypes = new JSONArray();
         mPhotoFile = new JSONArray();
@@ -339,12 +384,12 @@ public class PostNewCarFragment extends BaseFragment {
         UploadManager uploadManager = new UploadManager();
 
         for (int i = 0; i < mSize; i++) {
-            UploadCarPhotoInfo uploadCarPhotoInfo = uploadCarPhotoInfoArrayList.get(i);
+            File photoPath = uploadPhotos.get(i);
 
-            if (EmptyUtils.isNotEmpty(uploadCarPhotoInfo)) {
-                int file_type = uploadCarPhotoInfo.getFile_type();
+            if (EmptyUtils.isNotEmpty(photoPath)) {
+                int file_type = 1;
                 if (EmptyUtils.isNotEmpty(file_type)) {
-                    uploadManager.put(uploadCarPhotoInfo.getFile(), UUID.randomUUID().toString() + "_" + String.valueOf(file_type), upload_token, new UpCompletionHandler() {
+                    uploadManager.put(photoPath, UUID.randomUUID().toString() + "_" + String.valueOf(file_type), upload_token, new UpCompletionHandler() {
                         @Override
                         public void complete(String key, ResponseInfo info, JSONObject response) {
                             if (info.isOK()) {
@@ -384,7 +429,7 @@ public class PostNewCarFragment extends BaseFragment {
 
             String profile = getInputProfile();
             String phone_num = getInputPhoneNum();
-            String place = getInputPlace();
+       //     String place = getInputPlace();
             String name = getInputName();
             String car_price = getInputPrice();
 
@@ -399,8 +444,8 @@ public class PostNewCarFragment extends BaseFragment {
                     .addParams(Constant.PRICE, car_price)
                     .addParams(Constant.CONTACT_NAME, name)
                     .addParams(Constant.CONTACT_PHONE, phone_num)
-                    .addParams(Constant.CONTACT_ADDRESS, place)
-                    .addParams(Constant.CITY_ID, getCityCode())
+                    .addParams(Constant.CONTACT_ADDRESS, "")
+                    .addParams(Constant.CITY_ID, "")
                     .addParams(Constant.BRAND_ID, String.valueOf(brand_id))//车品牌id                    ooo(必填)
                     .addParams(Constant.SERIES_ID, String.valueOf(series_id))//车系列id                  ooo(必填)
                     .addParams(Constant.MODEL_ID, String.valueOf(model_id))//车型id                      ooo(必填)
