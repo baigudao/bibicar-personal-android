@@ -66,7 +66,7 @@ public class RegisterAndLoginActivity extends BaseActivity implements View.OnCli
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_and_login);
-        findViewById(R.id.iv_back).setVisibility(View.GONE);
+        findViewById(R.id.iv_back).setOnClickListener(this);
         Button btn_register = (Button) findViewById(R.id.btn_register);
         btn_register.setOnClickListener(this);
         btn_register.setVisibility(View.VISIBLE);
@@ -89,6 +89,9 @@ public class RegisterAndLoginActivity extends BaseActivity implements View.OnCli
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.iv_back:
+                finish();
+                break;
             case R.id.btn_register:
                 gotoPager(CompanyRegisterFragment.class, null);
                 break;

@@ -32,8 +32,10 @@ import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.wiserz.pbibi.BaseApplication;
 import com.wiserz.pbibi.R;
+import com.wiserz.pbibi.activity.RegisterAndLoginActivity;
 import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
 import com.wiserz.pbibi.bean.CarInfoBean;
+import com.wiserz.pbibi.util.CommonUtil;
 import com.wiserz.pbibi.util.Constant;
 import com.wiserz.pbibi.util.DataManager;
 import com.wiserz.pbibi.view.MorePopupWindow;
@@ -140,6 +142,10 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                 //                gotoPager(LoanPlanFragment.class,null);//贷款方案
 
                 //                gotoPager(ConcreteParameterFragment.class, null);//具体参数
+                if(!CommonUtil.isHadLogin()) {
+                    gotoPager(RegisterAndLoginActivity.class, null);
+                    return;
+                }
                 showPostCarWindow();
                 break;
             case R.id.ll_sort:

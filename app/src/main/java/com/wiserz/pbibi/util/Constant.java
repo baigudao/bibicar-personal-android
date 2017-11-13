@@ -73,6 +73,8 @@ public class Constant {
     public static final String SERIES_ID = "series_id";
     public static final String BOARD_TIME = "board_time";
     public static final String MILEAGE = "mileage";
+    public static final String CAR_INFO_IDS = "car_info_ids";
+    public static final String BOARD_ADDRESS = "board_address";
     public static final String MAINTAIN = "maintain";
     public static final String VIN_FILE = "vin_file";
     public static final String ENGINE_NO = "engine_no";
@@ -122,8 +124,8 @@ public class Constant {
     public static final String HOST_IMAGE_URL = "http://img.bibicar.cn/";//http://img.bibicar.cn/Fja6zKmICAz6l6QCd7-Z0pC-bjt8
 
     //URL常量
-    private final static String hostUrl = "https://api.bibicar.cn/";//正式环境
-    //    private static final String hostUrl = "https://testapi.bibicar.cn/";//测试环境
+   // private final static String hostUrl = "https://api.bibicar.cn/";//正式环境
+        private static final String hostUrl = "https://testapi.bibicar.cn/";//测试环境
 
     private static final String registerApp = hostUrl + "app/register";//App注册
     private static final String verificationCodeUrl = hostUrl + "v3/user/sendcode";//得到验证码
@@ -224,6 +226,7 @@ public class Constant {
     private static final String carBrandUrl = hostUrl + "car/brand";//车辆品牌列表
     private static final String carBrandSeriesUrl = hostUrl + "car/series/brand_id/";//通过品牌id得到车辆系列列表
     private static final String carModelUrl = hostUrl + "car/model/series_id/";//通过系列id得到车型列表
+    private final static String extraInfoUrl = hostUrl + "car/extrainfo";//车基本配置
 
     private static final String likeCarListUrl = hostUrl + "v3/Favoritecar/list";//喜欢的车辆
 
@@ -609,6 +612,10 @@ public class Constant {
 
     public static String getCarModelUrl() {
         return carModelUrl;
+    }
+
+    public static String getCarExtraInfoUrl() {
+        return extraInfoUrl;
     }
 
     public static String getUserInfoUpdateUrl() {

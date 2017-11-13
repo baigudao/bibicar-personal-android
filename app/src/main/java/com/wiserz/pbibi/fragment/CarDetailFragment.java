@@ -10,8 +10,10 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bigkoo.convenientbanner.ConvenientBanner;
@@ -25,6 +27,7 @@ import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.tencent.mm.opensdk.utils.Log;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.activity.BaseActivity;
 import com.wiserz.pbibi.activity.RegisterAndLoginActivity;
@@ -76,6 +79,8 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
     private static final int SAME_STYLE_CAR_DATA_TYPE = 28;
     private int is_fav;
 
+    private ArrayList<String> mAllImageUrls = new ArrayList<>();
+
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_car_detail;
@@ -91,6 +96,7 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
         iv_image.setVisibility(View.VISIBLE);
         iv_image.setImageResource(R.drawable.share_selector);
         iv_image.setOnClickListener(this);
+        view.findViewById(R.id.showAllPhotos).setOnClickListener(this);
         iv_like_image = (ImageView) view.findViewById(R.id.iv_like_image);
         iv_like_image.setVisibility(View.VISIBLE);
         iv_like_image.setOnClickListener(this);
@@ -104,6 +110,9 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
         switch (v.getId()) {
             case R.id.iv_back:
                 goBack();
+                break;
+            case R.id.showAllPhotos:
+                showCarDetailPhotos(true);
                 break;
             case R.id.iv_image:
                 showSharePlatformPopWindow();
@@ -262,6 +271,7 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
 
                     @Override
                     public void onResponse(String response, int id) {
+                        Log.e("aaaaaaaaaa","response: "+response);
                         JSONObject jsonObject = null;
                         try {
                             jsonObject = new JSONObject(response);
@@ -370,104 +380,106 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
                 ArrayList<CarInfoBean.FilesBean.Type3Bean> type3BeanArrayList = (ArrayList<CarInfoBean.FilesBean.Type3Bean>) carInfoBean.getFiles().getType3();
                 ArrayList<CarInfoBean.FilesBean.Type4Bean> type4BeanArrayList = (ArrayList<CarInfoBean.FilesBean.Type4Bean>) carInfoBean.getFiles().getType4();
 
-                ArrayList<String> stringImageUrl = new ArrayList<>();
-
+               // ArrayList<String> stringImageUrl = new ArrayList<>();
+                mAllImageUrls.clear();
                 //车辆照片类型 (1:外观 2:中控内饰 3:发动机及结构 4:更多细节)
                 if (EmptyUtils.isNotEmpty(type1BeanArrayList) && type1BeanArrayList.size() != 0) {
-                    //外观
-                    ImageView iv_car_surface = (ImageView) getView().findViewById(R.id.iv_car_surface);
-                    Glide.with(mContext)
-                            .load(type1BeanArrayList.get(0).getFile_url())
-                            .placeholder(R.drawable.default_bg_ratio_1)
-                            .error(R.drawable.default_bg_ratio_1)
-                            .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
-                            .into(iv_car_surface);
-                    iv_car_surface.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            DataManager.getInstance().setData1(filesBean);
-                            gotoPager(AllImageFragment.class, null);
-                        }
-                    });
-                    int size = type1BeanArrayList.size();
-                    ((TextView) getView().findViewById(R.id.tv_car_surface_num)).setText("(" + size + ")");
+//                    //外观
+//                    ImageView iv_car_surface = (ImageView) getView().findViewById(R.id.iv_car_surface);
+//                    Glide.with(mContext)
+//                            .load(type1BeanArrayList.get(0).getFile_url())
+//                            .placeholder(R.drawable.default_bg_ratio_1)
+//                            .error(R.drawable.default_bg_ratio_1)
+//                            .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
+//                            .into(iv_car_surface);
+//                    iv_car_surface.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            DataManager.getInstance().setData1(filesBean);
+//                            gotoPager(AllImageFragment.class, null);
+//                        }
+//                    });
+//                    int size = type1BeanArrayList.size();
+//                    ((TextView) getView().findViewById(R.id.tv_car_surface_num)).setText("(" + size + ")");
 
                     for (int i = 0; i < type1BeanArrayList.size(); i++) {
-                        stringImageUrl.add(type1BeanArrayList.get(i).getFile_url());
+                        mAllImageUrls.add(type1BeanArrayList.get(i).getFile_url());
                     }
                 }
                 if (EmptyUtils.isNotEmpty(type2BeanArrayList) && type2BeanArrayList.size() != 0) {
-                    //中控内饰
-                    ImageView iv_car_inside = (ImageView) getView().findViewById(R.id.iv_car_inside);
-                    Glide.with(mContext)
-                            .load(type2BeanArrayList.get(0).getFile_url())
-                            .placeholder(R.drawable.default_bg_ratio_1)
-                            .error(R.drawable.default_bg_ratio_1)
-                            .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
-                            .into(iv_car_inside);
-                    iv_car_inside.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            DataManager.getInstance().setData1(filesBean);
-                            gotoPager(AllImageFragment.class, null);
-                        }
-                    });
-                    int size = type2BeanArrayList.size();
-                    ((TextView) getView().findViewById(R.id.tv_car_inside)).setText("(" + size + ")");
+//                    //中控内饰
+//                    ImageView iv_car_inside = (ImageView) getView().findViewById(R.id.iv_car_inside);
+//                    Glide.with(mContext)
+//                            .load(type2BeanArrayList.get(0).getFile_url())
+//                            .placeholder(R.drawable.default_bg_ratio_1)
+//                            .error(R.drawable.default_bg_ratio_1)
+//                            .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
+//                            .into(iv_car_inside);
+//                    iv_car_inside.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            DataManager.getInstance().setData1(filesBean);
+//                            gotoPager(AllImageFragment.class, null);
+//                        }
+//                    });
+//                    int size = type2BeanArrayList.size();
+//                    ((TextView) getView().findViewById(R.id.tv_car_inside)).setText("(" + size + ")");
 
                     for (int i = 0; i < type2BeanArrayList.size(); i++) {
-                        stringImageUrl.add(type2BeanArrayList.get(i).getFile_url());
+                        mAllImageUrls.add(type2BeanArrayList.get(i).getFile_url());
                     }
                 }
                 if (EmptyUtils.isNotEmpty(type3BeanArrayList) && type3BeanArrayList.size() != 0) {
-                    //发动机及结构
-                    ImageView iv_car_structure = (ImageView) getView().findViewById(R.id.iv_car_structure);
-                    Glide.with(mContext)
-                            .load(type3BeanArrayList.get(0).getFile_url())
-                            .placeholder(R.drawable.default_bg_ratio_1)
-                            .error(R.drawable.default_bg_ratio_1)
-                            .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
-                            .into(iv_car_structure);
-                    iv_car_structure.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            DataManager.getInstance().setData1(filesBean);
-                            gotoPager(AllImageFragment.class, null);
-                        }
-                    });
-                    int size = type3BeanArrayList.size();
-                    ((TextView) getView().findViewById(R.id.tv_car_structure)).setText("(" + size + ")");
+//                    //发动机及结构
+//                    ImageView iv_car_structure = (ImageView) getView().findViewById(R.id.iv_car_structure);
+//                    Glide.with(mContext)
+//                            .load(type3BeanArrayList.get(0).getFile_url())
+//                            .placeholder(R.drawable.default_bg_ratio_1)
+//                            .error(R.drawable.default_bg_ratio_1)
+//                            .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
+//                            .into(iv_car_structure);
+//                    iv_car_structure.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            DataManager.getInstance().setData1(filesBean);
+//                            gotoPager(AllImageFragment.class, null);
+//                        }
+//                    });
+//                    int size = type3BeanArrayList.size();
+//                    ((TextView) getView().findViewById(R.id.tv_car_structure)).setText("(" + size + ")");
 
                     for (int i = 0; i < type3BeanArrayList.size(); i++) {
-                        stringImageUrl.add(type3BeanArrayList.get(i).getFile_url());
+                        mAllImageUrls.add(type3BeanArrayList.get(i).getFile_url());
                     }
                 }
                 if (EmptyUtils.isNotEmpty(type4BeanArrayList) && type4BeanArrayList.size() != 0) {
                     //更多细节
-                    ImageView iv_car_more_detail = (ImageView) getView().findViewById(R.id.iv_car_more_detail);
-                    Glide.with(mContext)
-                            .load(type4BeanArrayList.get(0).getFile_url())
-                            .placeholder(R.drawable.default_bg_ratio_1)
-                            .error(R.drawable.default_bg_ratio_1)
-                            .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
-                            .into(iv_car_more_detail);
-                    iv_car_more_detail.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            DataManager.getInstance().setData1(filesBean);
-                            gotoPager(AllImageFragment.class, null);
-                        }
-                    });
-                    int size = type4BeanArrayList.size();
-                    ((TextView) getView().findViewById(R.id.tv_car_more_detail)).setText("(" + size + ")");
+//                    ImageView iv_car_more_detail = (ImageView) getView().findViewById(R.id.iv_car_more_detail);
+//                    Glide.with(mContext)
+//                            .load(type4BeanArrayList.get(0).getFile_url())
+//                            .placeholder(R.drawable.default_bg_ratio_1)
+//                            .error(R.drawable.default_bg_ratio_1)
+//                            .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
+//                            .into(iv_car_more_detail);
+//                    iv_car_more_detail.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            DataManager.getInstance().setData1(filesBean);
+//                            gotoPager(AllImageFragment.class, null);
+//                        }
+//                    });
+//                    int size = type4BeanArrayList.size();
+//                    ((TextView) getView().findViewById(R.id.tv_car_more_detail)).setText("(" + size + ")");
 
                     for (int i = 0; i < type4BeanArrayList.size(); i++) {
-                        stringImageUrl.add(type4BeanArrayList.get(i).getFile_url());
+                        mAllImageUrls.add(type4BeanArrayList.get(i).getFile_url());
                     }
                 }
 
+                showCarDetailPhotos(false);
+
                 ConvenientBanner convenientBanner = (ConvenientBanner) getView().findViewById(R.id.convenientBanner);
-                if (EmptyUtils.isNotEmpty(stringImageUrl) && stringImageUrl.size() != 0) {
+                if (EmptyUtils.isNotEmpty(mAllImageUrls) && mAllImageUrls.size() != 0) {
                     //自定义你的Holder，实现更多复杂的界面，不一定是图片翻页，其他任何控件翻页亦可。
                     //            convenientBanner.startTurning(5000);
                     convenientBanner.setPages(new CBViewHolderCreator<LocalImageHolderView>() {
@@ -475,7 +487,7 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
                         public LocalImageHolderView createHolder() {
                             return new LocalImageHolderView();
                         }
-                    }, stringImageUrl)
+                    }, mAllImageUrls)
                             //设置两个点图片作为翻页指示器，不设置则没有指示器，可以根据自己需求自行配合自己的指示器,不需要圆点指示器可用不设
                             //                    .setPageIndicator(new int[]{R.drawable.point_normal1, R.drawable.point_checked})
                             //设置指示器的方向
@@ -558,6 +570,36 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
                     gotoPager(CarServiceFragment.class, null);
                 }
             });
+        }
+    }
+
+    private void showCarDetailPhotos(boolean isShowAll){
+        LinearLayout llAllCarPhotos=(LinearLayout) getView().findViewById(R.id.llAllCarPhotos);
+        llAllCarPhotos.removeAllViews();
+        LayoutInflater inflater=LayoutInflater.from(getActivity());
+        View itemView;
+        int size;
+        if(mAllImageUrls.size()<=3){
+            size=mAllImageUrls.size();
+            getView().findViewById(R.id.showAllPhotos).setVisibility(View.GONE);
+        }else{
+            if(isShowAll){
+                size=mAllImageUrls.size();
+                getView().findViewById(R.id.showAllPhotos).setVisibility(View.GONE);
+            }else{
+                size=3;
+                getView().findViewById(R.id.showAllPhotos).setVisibility(View.VISIBLE);
+            }
+        }
+        for(int i=0;i<size;++i){
+            itemView=inflater.inflate(R.layout.item_car_detail_photo,null);
+            llAllCarPhotos.addView(itemView);
+            Glide.with(mContext)
+                    .load(mAllImageUrls.get(i))
+                    .placeholder(R.drawable.default_bg_ratio_1)
+                    .error(R.drawable.default_bg_ratio_1)
+                    .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
+                    .into((ImageView)itemView.findViewById(R.id.ivPhoto));
         }
     }
 

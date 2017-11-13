@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.net.Uri;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,16 +18,21 @@ import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.qiniu.android.http.ResponseInfo;
 import com.qiniu.android.storage.UpCompletionHandler;
 import com.qiniu.android.storage.UploadManager;
+import com.tencent.mm.opensdk.utils.Log;
 import com.wiserz.pbibi.BaseApplication;
 import com.wiserz.pbibi.R;
+import com.wiserz.pbibi.bean.CarConfiguration;
+import com.wiserz.pbibi.bean.CityBean;
 import com.wiserz.pbibi.bean.ProvinceBean;
 import com.wiserz.pbibi.util.CommonUtil;
 import com.wiserz.pbibi.util.Constant;
 import com.wiserz.pbibi.util.DataManager;
 import com.wiserz.pbibi.util.GifSizeFilter;
+import com.wiserz.pbibi.view.WheelViewPopupWindow;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.engine.impl.GlideEngine;
@@ -40,6 +46,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
@@ -80,6 +87,7 @@ public class PostSecondHandCarFragment extends BaseFragment {
     private ArrayList<ProvinceBean> mProvinceBeenList;
 
     private String firstPostLicenseTime;
+    private String broadPlace;
 
     public String getFirstPostLicenseTime() {
         return firstPostLicenseTime;
@@ -89,8 +97,18 @@ public class PostSecondHandCarFragment extends BaseFragment {
         this.firstPostLicenseTime = firstPostLicenseTime;
     }
 
+    public void setBroadPlace(String broadPlace) {
+        this.broadPlace = broadPlace;
+    }
+
+    public String getBroadPlace() {
+        return this.broadPlace;
+    }
+
     private ArrayList<File> mUploadPhotos;
     private String upload_token;
+    private ArrayList<CarConfiguration> mCarConfigurationList;
+    private ArrayList<String> mSelectedConfig=new ArrayList<>();
 
     private ArrayList<File> getUploadPhotos() {
         if (mUploadPhotos == null) {
@@ -114,6 +132,7 @@ public class PostSecondHandCarFragment extends BaseFragment {
         view.findViewById(R.id.rl_choose_car_color).setOnClickListener(this);
         view.findViewById(R.id.rl_first_post_license).setOnClickListener(this);
         view.findViewById(R.id.rl_choose_car_type).setOnClickListener(this);
+        view.findViewById(R.id.rl_choose_brand_place).setOnClickListener(this);
         ll_image_vin = (LinearLayout) view.findViewById(R.id.ll_image_vin);
         tv_car_color = (TextView) view.findViewById(R.id.tv_car_color);
         tv_car_type = (TextView) view.findViewById(R.id.tv_car_type);
@@ -136,7 +155,151 @@ public class PostSecondHandCarFragment extends BaseFragment {
         uploadManager = new UploadManager();
 
         getTokenFromNet();
+        getCarExtraInfo();
         gotoPager(CameraFragment.class,null,true);
+    }
+
+    private void getCarExtraInfo() {
+        OkHttpUtils.post()
+                .url(Constant.getCarExtraInfoUrl())
+                .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+                        JSONObject jsonObject = null;
+                        try {
+                            jsonObject = new JSONObject(response);
+                            int status = jsonObject.optInt("status");
+                            JSONArray jsonObjectData = jsonObject.optJSONArray("data");
+                            if (status == 1) {
+                                mCarConfigurationList=getCarConfigurations(jsonObjectData);
+                                resetCarConfigurations(mCarConfigurationList);
+                            } else {
+                                String code = jsonObject.optString("code");
+                                String msg = jsonObject.optString("msg");
+                                ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+    }
+
+    private ArrayList<CarConfiguration> getCarConfigurations(JSONArray array) {
+        if (array == null) {
+            return new ArrayList<>();
+        } else {
+            return  new Gson().fromJson(array.toString(), new TypeToken<ArrayList<CarConfiguration>>() {}.getType());
+        }
+    }
+
+    private void resetCarConfigurations(ArrayList<CarConfiguration> list){
+        LinearLayout llDetailMsg=(LinearLayout)getView().findViewById(R.id.llDetailMsg);
+        llDetailMsg.removeAllViews();
+        mSelectedConfig.clear();
+        if(list==null || list.isEmpty()){
+            return;
+        }
+        LayoutInflater layoutInflater=LayoutInflater.from(getActivity());
+        LinearLayout layout;
+        ArrayList<CarConfiguration.Configuration> itemList;
+        for(CarConfiguration config:list){
+            layout=(LinearLayout) layoutInflater.inflate(R.layout.item_car_configuration,null);
+            llDetailMsg.addView(layout);
+            ((TextView) layout.findViewById(R.id.tvConfigName)).setText(config.getType_name());
+            itemList=config.getList();
+            int itemCount=itemList.size();
+            int rowCount=3;
+            int typeId=config.getType_id();
+            if(typeId==3 || typeId==4 || typeId==5){
+                rowCount=2;
+            }
+            int row=itemCount%rowCount==0?itemCount/rowCount:itemCount/rowCount+1;
+            LinearLayout itemLayout;
+            TextView tvName1,tvName2,tvName3;
+            for(int j=0;j<row;++j){
+                itemLayout=(LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.item_configuration_detail,null);
+                ((LinearLayout) layout.findViewById(R.id.llDetails)).addView(itemLayout);
+                tvName1=((TextView) itemLayout.findViewById(R.id.tvName1));
+                tvName2=((TextView) itemLayout.findViewById(R.id.tvName2));
+                tvName3=((TextView) itemLayout.findViewById(R.id.tvName3));
+                if(j*rowCount<itemCount){
+                    tvName1.setText(itemList.get(j*rowCount).getName());
+                    tvName1.setTag(R.id.tag,itemList.get(j*rowCount).getId());
+                    tvName1.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            String id=String.valueOf(view.getTag(R.id.tag));
+                            if(mSelectedConfig.contains(id)){
+                                mSelectedConfig.remove(id);
+                                view.setBackgroundResource(R.drawable.back_config_not_selected);
+                                ((TextView)view).setTextColor(getResources().getColor(R.color.main_text_color));
+                            }else{
+                                mSelectedConfig.add(id);
+                                view.setBackgroundResource(R.drawable.back_config_selected);
+                                ((TextView)view).setTextColor(getResources().getColor(R.color.main_color));
+                            }
+                        }
+                    });
+                }else{
+                    tvName1.setVisibility(View.GONE);
+                }
+                if(j*rowCount+1<itemCount){
+                    tvName2.setText(itemList.get(j*rowCount+1).getName());
+                    tvName2.setTag(R.id.tag,itemList.get(j*rowCount).getId());
+                    tvName2.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            String id=String.valueOf(view.getTag(R.id.tag));
+                            if(mSelectedConfig.contains(id)){
+                                mSelectedConfig.remove(id);
+                                view.setBackgroundResource(R.drawable.back_config_not_selected);
+                                ((TextView)view).setTextColor(getResources().getColor(R.color.main_text_color));
+                            }else{
+                                mSelectedConfig.add(id);
+                                view.setBackgroundResource(R.drawable.back_config_selected);
+                                ((TextView)view).setTextColor(getResources().getColor(R.color.main_color));
+                            }
+                        }
+                    });
+                }else{
+                    tvName2.setVisibility(View.GONE);
+                }
+                if(rowCount==2){
+                    tvName3.setVisibility(View.GONE);
+                }else {
+                    if (j * rowCount + 2 < itemCount) {
+                        tvName3.setText(itemList.get(j * rowCount + 2).getName());
+                        tvName3.setTag(R.id.tag,itemList.get(j * rowCount + 2).getId());
+                        tvName3.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                String id=String.valueOf(view.getTag(R.id.tag));
+                                if(mSelectedConfig.contains(id)){
+                                    mSelectedConfig.remove(id);
+                                    view.setBackgroundResource(R.drawable.back_config_not_selected);
+                                    ((TextView)view).setTextColor(getResources().getColor(R.color.main_text_color));
+                                }else{
+                                    mSelectedConfig.add(id);
+                                    view.setBackgroundResource(R.drawable.back_config_selected);
+                                    ((TextView)view).setTextColor(getResources().getColor(R.color.main_color));
+                                }
+                            }
+                        });
+                    } else {
+                        tvName3.setVisibility(View.GONE);
+                    }
+                }
+            }
+        }
+
     }
 
     private void getTokenFromNet() {
@@ -294,26 +457,30 @@ public class PostSecondHandCarFragment extends BaseFragment {
             case R.id.rl_choose_car_color:
                 gotoPager(SelectCarColorFragment.class, null);
                 break;
+            case R.id.rl_first_post_license:
+                showWheelView((TextView) getView().findViewById(R.id.tv_first_post_license), WheelViewPopupWindow.WHEEL_VIEW_WINDOW_TYPE.TYPE_DATA);
+                break;
 
-//            case R.id.rl_choose_city:
-//                if (CommonUtil.isListNullOrEmpty(mProvinceBeenList)) {
-//                    getProvinceList();
-//                }
-//                WheelViewPopupWindow mWheelViewPopupWindow = new WheelViewPopupWindow(getActivity(), new WheelViewPopupWindow.OnSelectItemListener() {
-//                    @Override
-//                    public void onSelect(int index1, Object value1, int index2, Object value2, int index3, Object value3) {
-//                        ProvinceBean mSelectProvince = (ProvinceBean) value1;
-//                        CityBean mSelectCity = (CityBean) value2;
-//                        if (EmptyUtils.isNotEmpty(mSelectProvince) && EmptyUtils.isNotEmpty(mSelectCity) && getView() != null) {
-//                            tv_city.setText(mSelectProvince.getProvince() + " " + mSelectCity.getCity_name());
-//                            setCityCode(mSelectCity.getCity_code());
-//                        }
-//                    }
-//                }, WheelViewPopupWindow.WHEEL_VIEW_WINDOW_TYPE.TYPE_PROVINCE_CITY);
-//                mWheelViewPopupWindow.setProvinceList(mProvinceBeenList);
-//                mWheelViewPopupWindow.initView();
-//                mWheelViewPopupWindow.showAtLocation(getView(), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
-//                break;
+            case R.id.rl_choose_brand_place:
+                if (CommonUtil.isListNullOrEmpty(mProvinceBeenList)) {
+                    getProvinceList();
+                    return;
+                }
+                WheelViewPopupWindow mWheelViewPopupWindow = new WheelViewPopupWindow(getActivity(), new WheelViewPopupWindow.OnSelectItemListener() {
+                    @Override
+                    public void onSelect(int index1, Object value1, int index2, Object value2, int index3, Object value3) {
+                        ProvinceBean mSelectProvince = (ProvinceBean) value1;
+                        CityBean mSelectCity = (CityBean) value2;
+                        if (EmptyUtils.isNotEmpty(mSelectProvince) && EmptyUtils.isNotEmpty(mSelectCity) && getView() != null) {
+                            ((TextView) getView().findViewById(R.id.tv_brand_place)).setText(mSelectCity.getCity_name());
+                            setBroadPlace(mSelectCity.getCity_name());
+                        }
+                    }
+                }, WheelViewPopupWindow.WHEEL_VIEW_WINDOW_TYPE.TYPE_PROVINCE_CITY);
+                mWheelViewPopupWindow.setProvinceList(mProvinceBeenList);
+                mWheelViewPopupWindow.initView();
+                mWheelViewPopupWindow.showAtLocation(getView(), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+                break;
             case R.id.rl_choose_car_type:
                 gotoPager(SelectCarBrandFragment.class, null);
                 break;
@@ -326,50 +493,23 @@ public class PostSecondHandCarFragment extends BaseFragment {
     }
 
 
-//    private void showWheelView(final TextView tvSelect, final WheelViewPopupWindow.WHEEL_VIEW_WINDOW_TYPE type) {
-//        WheelViewPopupWindow wheelViewPopupWindow = new WheelViewPopupWindow(getActivity(), new WheelViewPopupWindow.OnSelectItemListener() {
-//            @Override
-//            public void onSelect(int index1, Object value1, int index2, Object value2, int index3, Object value3) {
-//                if (type == WheelViewPopupWindow.WHEEL_VIEW_WINDOW_TYPE.TYPE_YES_NO) {
-//                    switch (index1) {
-//                        case 0:
-//                            setmIsTransfer("1");
-//                            break;
-//                        case 1:
-//                            setmIsTransfer("0");
-//                            break;
-//                        default:
-//                            break;
-//                    }
-//                    tvSelect.setText((String) value1);
-//                } else if (type == WheelViewPopupWindow.WHEEL_VIEW_WINDOW_TYPE.TYPE_NUMBER) {
-//                    setmExchangeTime(String.valueOf(index1));
-//                    tvSelect.setText(String.valueOf(index1));
-//                } else if (type == WheelViewPopupWindow.WHEEL_VIEW_WINDOW_TYPE.TYPE_DATA) {
-//                    int year = Calendar.getInstance().get(Calendar.YEAR) - 10 + index1 - 40;
-//                    int month = index2 + 1;
-//                    int day = index3 + 1;
-//                    String choose_time = year + "-" + (month < 10 ? (0 + "" + String.valueOf(month)) : String.valueOf(month)) + "-" + (day < 10 ? (0 + "" + String.valueOf(day)) : String.valueOf(day));
-//                    tvSelect.setText(choose_time);
-//                    switch (flag) {
-//                        case 0:
-//                            setFirstPostLicenseTime(choose_time);
-//                            break;
-//                        case 1:
-//                            setInsuranceDateTime(choose_time);
-//                            break;
-//                        case 2:
-//                            setAnnualSurveyDate(choose_time);
-//                            break;
-//                        default:
-//                            break;
-//                    }
-//                }
-//            }
-//        }, type);
-//        wheelViewPopupWindow.initView();
-//        wheelViewPopupWindow.showAtLocation(getView(), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
-//    }
+    private void showWheelView(final TextView tvSelect, final WheelViewPopupWindow.WHEEL_VIEW_WINDOW_TYPE type) {
+        WheelViewPopupWindow wheelViewPopupWindow = new WheelViewPopupWindow(getActivity(), new WheelViewPopupWindow.OnSelectItemListener() {
+            @Override
+            public void onSelect(int index1, Object value1, int index2, Object value2, int index3, Object value3) {
+                if (type == WheelViewPopupWindow.WHEEL_VIEW_WINDOW_TYPE.TYPE_DATA) {
+                    int year = Calendar.getInstance().get(Calendar.YEAR) - 10 + index1 - 40;
+                    int month = index2 + 1;
+                    int day = index3 + 1;
+                    String choose_time = year + "-" + (month < 10 ? (0 + "" + String.valueOf(month)) : String.valueOf(month)) + "-" + (day < 10 ? (0 + "" + String.valueOf(day)) : String.valueOf(day));
+                    tvSelect.setText(choose_time);
+                    setFirstPostLicenseTime(choose_time);
+                }
+            }
+        }, type);
+        wheelViewPopupWindow.initView();
+        wheelViewPopupWindow.showAtLocation(getView(), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+    }
 
     @Override
     public void onStart() {
@@ -587,10 +727,10 @@ public class PostSecondHandCarFragment extends BaseFragment {
             return;
         }
 
-//        if (EmptyUtils.isEmpty(getCityCode())) {
-//            ToastUtils.showShort("请选择所在城市");
-//            return;
-//        }
+        if (EmptyUtils.isEmpty(getBroadPlace())) {
+            ToastUtils.showShort("请选择上牌地点");
+            return;
+        }
 
         if (EmptyUtils.isEmpty(tableMileage)) {
             ToastUtils.showShort("请输入行驶里程");
@@ -630,7 +770,7 @@ public class PostSecondHandCarFragment extends BaseFragment {
             return;
         }
 
-        if (EmptyUtils.isNotEmpty(upload_token)) {
+        if (EmptyUtils.isEmpty(upload_token)) {
             getTokenFromNet();
             return;
         }
@@ -698,6 +838,16 @@ public class PostSecondHandCarFragment extends BaseFragment {
             String name = getName();
             String car_price = getPrice();
 
+            String carInfoIds="";
+            int size=mSelectedConfig.size();
+            for(int i=0;i<size;++i){
+                carInfoIds+=mSelectedConfig.get(i);
+                if(i<size-1){
+                    carInfoIds+=",";
+                }
+            }
+            Log.e("aaaaaaaaa","carInfoIds: "+carInfoIds+", "+this.broadPlace);
+
             OkHttpUtils.post()
                     .url(Constant.getPublishSecondCarUrl())
                     .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
@@ -720,12 +870,14 @@ public class PostSecondHandCarFragment extends BaseFragment {
                     .addParams(Constant.IS_TRANSFER, String.valueOf(0))//是否过户
                     .addParams(Constant.CAR_STATUS, String.valueOf(0))//车辆状态
                     .addParams(Constant.VIN_NO, getVIN())//vin码        LGBP12E21DY196239                ooo(必填)
-                    .addParams(Constant.VIN_FILE, vin_hash)//vin文件
+                    .addParams(Constant.VIN_FILE, vin_hash==null?"":vin_hash)//vin文件
                     .addParams(Constant.EXCHANGE_TIME, String.valueOf(0))//交易时间
                     .addParams(Constant.ENGINE_NO, "")//发动机号
                     .addParams(Constant.MAINTAIN, String.valueOf(0))
                     .addParams(Constant.BOARD_TIME, getFirstPostLicenseTime())
                     .addParams(Constant.MILEAGE, tableMileage)
+                    .addParams(Constant.BOARD_ADDRESS, getBroadPlace())
+                    .addParams(Constant.CAR_INFO_IDS,carInfoIds)
                     .addParams(Constant.CAR_ID, "")
                     .addParams(Constant.CHECK_EXPIRATION_TIME, "")//年检到期日期
                     .addParams(Constant.INSURANCE_DUE_TIME, "")//保险到期日期

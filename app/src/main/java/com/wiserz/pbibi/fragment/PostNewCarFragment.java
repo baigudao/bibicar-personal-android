@@ -13,11 +13,15 @@ import android.widget.TextView;
 import com.blankj.utilcode.util.EmptyUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.qiniu.android.http.ResponseInfo;
 import com.qiniu.android.storage.UpCompletionHandler;
 import com.qiniu.android.storage.UploadManager;
+import com.tencent.mm.opensdk.utils.Log;
 import com.wiserz.pbibi.BaseApplication;
 import com.wiserz.pbibi.R;
+import com.wiserz.pbibi.bean.CarConfiguration;
 import com.wiserz.pbibi.util.CommonUtil;
 import com.wiserz.pbibi.util.Constant;
 import com.wiserz.pbibi.util.DataManager;
@@ -55,6 +59,8 @@ public class PostNewCarFragment extends BaseFragment {
 
     private ArrayList<File> mUploadPhotos;
     private String upload_token;
+    private ArrayList<CarConfiguration> mCarConfigurationList;
+    private ArrayList<String> mSelectedConfig=new ArrayList<>();
 
     @Override
     protected int getLayoutId() {
@@ -78,6 +84,7 @@ public class PostNewCarFragment extends BaseFragment {
         tvCarColor = (TextView) view.findViewById(R.id.tvCarColor);
 
         getTokenFromNet();
+        getCarExtraInfo();
         gotoPager(CameraFragment.class,null,true);
     }
 
@@ -119,6 +126,149 @@ public class PostNewCarFragment extends BaseFragment {
                         }
                     }
                 });
+    }
+
+    private void getCarExtraInfo() {
+        OkHttpUtils.post()
+                .url(Constant.getCarExtraInfoUrl())
+                .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+                        JSONObject jsonObject = null;
+                        try {
+                            jsonObject = new JSONObject(response);
+                            int status = jsonObject.optInt("status");
+                            JSONArray jsonObjectData = jsonObject.optJSONArray("data");
+                            if (status == 1) {
+                                mCarConfigurationList=getCarConfigurations(jsonObjectData);
+                                resetCarConfigurations(mCarConfigurationList);
+                            } else {
+                                String code = jsonObject.optString("code");
+                                String msg = jsonObject.optString("msg");
+                                ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+    }
+
+    private void resetCarConfigurations(ArrayList<CarConfiguration> list){
+        LinearLayout llDetailMsg=(LinearLayout)getView().findViewById(R.id.llDetailMsg);
+        llDetailMsg.removeAllViews();
+        mSelectedConfig.clear();
+        if(list==null || list.isEmpty()){
+            return;
+        }
+        LayoutInflater layoutInflater=LayoutInflater.from(getActivity());
+        LinearLayout layout;
+        ArrayList<CarConfiguration.Configuration> itemList;
+        for(CarConfiguration config:list){
+            layout=(LinearLayout) layoutInflater.inflate(R.layout.item_car_configuration,null);
+            llDetailMsg.addView(layout);
+            ((TextView) layout.findViewById(R.id.tvConfigName)).setText(config.getType_name());
+            itemList=config.getList();
+            int itemCount=itemList.size();
+            int rowCount=3;
+            int typeId=config.getType_id();
+            if(typeId==3 || typeId==4 || typeId==5){
+                rowCount=2;
+            }
+            int row=itemCount%rowCount==0?itemCount/rowCount:itemCount/rowCount+1;
+            LinearLayout itemLayout;
+            TextView tvName1,tvName2,tvName3;
+            for(int j=0;j<row;++j){
+                itemLayout=(LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.item_configuration_detail,null);
+                ((LinearLayout) layout.findViewById(R.id.llDetails)).addView(itemLayout);
+                tvName1=((TextView) itemLayout.findViewById(R.id.tvName1));
+                tvName2=((TextView) itemLayout.findViewById(R.id.tvName2));
+                tvName3=((TextView) itemLayout.findViewById(R.id.tvName3));
+                if(j*rowCount<itemCount){
+                    tvName1.setText(itemList.get(j*rowCount).getName());
+                    tvName1.setTag(R.id.tag,itemList.get(j*rowCount).getId());
+                    tvName1.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            String id=String.valueOf(view.getTag(R.id.tag));
+                            if(mSelectedConfig.contains(id)){
+                                mSelectedConfig.remove(id);
+                                view.setBackgroundResource(R.drawable.back_config_not_selected);
+                                ((TextView)view).setTextColor(getResources().getColor(R.color.main_text_color));
+                            }else{
+                                mSelectedConfig.add(id);
+                                view.setBackgroundResource(R.drawable.back_config_selected);
+                                ((TextView)view).setTextColor(getResources().getColor(R.color.main_color));
+                            }
+                        }
+                    });
+                }else{
+                    tvName1.setVisibility(View.GONE);
+                }
+                if(j*rowCount+1<itemCount){
+                    tvName2.setText(itemList.get(j*rowCount+1).getName());
+                    tvName2.setTag(R.id.tag,itemList.get(j*rowCount).getId());
+                    tvName2.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            String id=String.valueOf(view.getTag(R.id.tag));
+                            if(mSelectedConfig.contains(id)){
+                                mSelectedConfig.remove(id);
+                                view.setBackgroundResource(R.drawable.back_config_not_selected);
+                                ((TextView)view).setTextColor(getResources().getColor(R.color.main_text_color));
+                            }else{
+                                mSelectedConfig.add(id);
+                                view.setBackgroundResource(R.drawable.back_config_selected);
+                                ((TextView)view).setTextColor(getResources().getColor(R.color.main_color));
+                            }
+                        }
+                    });
+                }else{
+                    tvName2.setVisibility(View.GONE);
+                }
+                if(rowCount==2){
+                    tvName3.setVisibility(View.GONE);
+                }else {
+                    if (j * rowCount + 2 < itemCount) {
+                        tvName3.setText(itemList.get(j * rowCount + 2).getName());
+                        tvName3.setTag(R.id.tag,itemList.get(j * rowCount + 2).getId());
+                        tvName3.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                String id=String.valueOf(view.getTag(R.id.tag));
+                                if(mSelectedConfig.contains(id)){
+                                    mSelectedConfig.remove(id);
+                                    view.setBackgroundResource(R.drawable.back_config_not_selected);
+                                    ((TextView)view).setTextColor(getResources().getColor(R.color.main_text_color));
+                                }else{
+                                    mSelectedConfig.add(id);
+                                    view.setBackgroundResource(R.drawable.back_config_selected);
+                                    ((TextView)view).setTextColor(getResources().getColor(R.color.main_color));
+                                }
+                            }
+                        });
+                    } else {
+                        tvName3.setVisibility(View.GONE);
+                    }
+                }
+            }
+        }
+
+    }
+
+    private ArrayList<CarConfiguration> getCarConfigurations(JSONArray array) {
+        if (array == null) {
+            return new ArrayList<>();
+        } else {
+            return  new Gson().fromJson(array.toString(), new TypeToken<ArrayList<CarConfiguration>>() {}.getType());
+        }
     }
 
     @Override
@@ -328,16 +478,6 @@ public class PostNewCarFragment extends BaseFragment {
             return;
         }
 
-//        if (EmptyUtils.isEmpty(getCityCode())) {
-//            ToastUtils.showShort("请选择所在城市");
-//            return;
-//        }
-
-//        if (EmptyUtils.isEmpty(mColor) || mColor == 0) {
-//            ToastUtils.showShort("请选择车辆颜色");
-//            return;
-//        }
-
         if (EmptyUtils.isEmpty(car_price)) {
             ToastUtils.showShort("请填写车辆价格");
             return;
@@ -347,11 +487,6 @@ public class PostNewCarFragment extends BaseFragment {
             ToastUtils.showShort("请填写联系人");
             return;
         }
-
-//        if (EmptyUtils.isEmpty(place)) {
-//            ToastUtils.showShort("请填写看车地点");
-//            return;
-//        }
 
         if (EmptyUtils.isEmpty(phone_num)) {
             ToastUtils.showShort("请填写你的联系电话");
@@ -363,7 +498,7 @@ public class PostNewCarFragment extends BaseFragment {
             return;
         }
 
-        if (EmptyUtils.isNotEmpty(upload_token)) {
+        if (EmptyUtils.isEmpty(upload_token)) {
             getTokenFromNet();
             return;
         }
@@ -392,6 +527,7 @@ public class PostNewCarFragment extends BaseFragment {
                     uploadManager.put(photoPath, UUID.randomUUID().toString() + "_" + String.valueOf(file_type), upload_token, new UpCompletionHandler() {
                         @Override
                         public void complete(String key, ResponseInfo info, JSONObject response) {
+                            Log.e("aaaaaaaaa1","response: "+response.toString());
                             if (info.isOK()) {
                                 //上传成功
                                 int status = response.optInt("status");
@@ -429,10 +565,16 @@ public class PostNewCarFragment extends BaseFragment {
 
             String profile = getInputProfile();
             String phone_num = getInputPhoneNum();
-       //     String place = getInputPlace();
             String name = getInputName();
             String car_price = getInputPrice();
-
+            String carInfoIds="";
+            int size=mSelectedConfig.size();
+            for(int i=0;i<size;++i){
+                carInfoIds+=mSelectedConfig.get(i);
+                if(i<size-1){
+                    carInfoIds+=",";
+                }
+            }
             OkHttpUtils.post()
                     .url(Constant.getPublishNewCarUrl())
                     .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
@@ -461,6 +603,8 @@ public class PostNewCarFragment extends BaseFragment {
                     .addParams(Constant.MAINTAIN, String.valueOf(0))
                     .addParams(Constant.BOARD_TIME, "")
                     .addParams(Constant.MILEAGE, String.valueOf(0.000000))
+                    .addParams(Constant.BOARD_ADDRESS,"")
+                    .addParams(Constant.CAR_INFO_IDS,carInfoIds)
                     .addParams(Constant.CAR_ID, "")
                     .build()
                     .execute(new StringCallback() {
