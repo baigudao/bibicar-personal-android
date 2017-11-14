@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.activity.BaseActivity;
 import com.wiserz.pbibi.adapter.MediaFileAdapter;
@@ -60,6 +61,13 @@ public class AlbumFragment extends BaseFragment {
     private ArrayList<File> mSelectedPhotos;
     private ArrayList<MediaInfo> mSelectedMediaInfos;
 
+    private SelectPhotoFragment mSelectPhotoFragment;
+
+    public BaseFragment setParentFragment(SelectPhotoFragment selectPhotoFragment) {
+        mSelectPhotoFragment = selectPhotoFragment;
+        return this;
+    }
+
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,10 +85,9 @@ public class AlbumFragment extends BaseFragment {
     @Override
     public void initView(View view) {
         view.findViewById(R.id.btnBack).setOnClickListener(this);
-        view.findViewById(R.id.tvLeft).setOnClickListener(this);
         view.findViewById(R.id.tvAlbum).setOnClickListener(this);
         view.findViewById(R.id.alphaView).setOnClickListener(this);
-        view.findViewById(R.id.bottomView).setOnClickListener(this);
+        view.findViewById(R.id.tvOk).setOnClickListener(this);
         view.findViewById(R.id.alphaView).setVisibility(View.GONE);
 
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.selectPhotoView);
@@ -127,23 +134,20 @@ public class AlbumFragment extends BaseFragment {
     private void showView() {
         if (getSelectedPhotos().size() > 0) {
             getView().findViewById(R.id.selectPhotoView).setVisibility(View.VISIBLE);
-            getView().findViewById(R.id.pointView).setVisibility(View.INVISIBLE);
-            getView().findViewById(R.id.llBottom).setVisibility(View.INVISIBLE);
+            mSelectPhotoFragment.setViewPagerCanScroll(false);
             getView().findViewById(R.id.tvOk).setVisibility(View.VISIBLE);
             ((TextView) getView().findViewById(R.id.tvOk)).setText(getString(R.string.make_sure) + " (" + getSelectedPhotos().size() + ")");
         } else {
             getView().findViewById(R.id.selectPhotoView).setVisibility(View.GONE);
-            getView().findViewById(R.id.pointView).setVisibility(View.VISIBLE);
-            getView().findViewById(R.id.llBottom).setVisibility(View.VISIBLE);
+            mSelectPhotoFragment.setViewPagerCanScroll(true);
             getView().findViewById(R.id.tvOk).setVisibility(View.INVISIBLE);
         }
     }
 
     public void onResume() {
         super.onResume();
-        ((BaseActivity) getActivity()).setScreenFull(false);
-        if (mMediaFileInfos==null) {
-            mMediaFileInfos=new ArrayList<>();
+        if (mMediaFileInfos == null) {
+            mMediaFileInfos = new ArrayList<>();
             GBExecutionPool.getExecutor().execute(new Runnable() {
                 @Override
                 public void run() {
@@ -187,13 +191,13 @@ public class AlbumFragment extends BaseFragment {
                 }
             });
         }
-        if(DataManager.getInstance().getObject()!=null && DataManager.getInstance().getData1()!=null){
-            String newPath=(String)DataManager.getInstance().getObject();
-            int index=(int) DataManager.getInstance().getData1();
-            getSelectedPhotos().set(index,new File(newPath));
+        if (DataManager.getInstance().getObject() != null && DataManager.getInstance().getData1() != null) {
+            String newPath = (String) DataManager.getInstance().getObject();
+            int index = (int) DataManager.getInstance().getData1();
+            getSelectedPhotos().set(index, new File(newPath));
             getSelectedPhotoAdapter().notifyDataSetChanged();
-        }else if(DataManager.getInstance().getData2()!=null){
-            int index=(int) DataManager.getInstance().getData2();
+        } else if (DataManager.getInstance().getData2() != null) {
+            int index = (int) DataManager.getInstance().getData2();
             getSelectedPhotos().remove(index);
             getSelectedPhotoAdapter().notifyDataSetChanged();
             MediaInfo mediaInfo = getSelectedMediaInfos().remove(index);
@@ -323,11 +327,24 @@ public class AlbumFragment extends BaseFragment {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (getSelectedPhotos().size() == 6) {
-                    return;
-                }
                 ImageView iv = (ImageView) view.findViewById(R.id.iv);
                 final MediaInfo info = (MediaInfo) iv.getTag(R.id.tag);
+                if (info != null && info.isSelected) {
+                    info.isSelected = false;
+                    getSelectedPhotos().remove(info.index);
+                    getSelectedPhotoAdapter().notifyDataSetChanged();
+                    getSelectedMediaInfos().remove(info);
+                    int index = 0;
+                    for (MediaInfo mediaInfo : getSelectedMediaInfos()) {
+                        mediaInfo.index = (index++);
+                    }
+                    mMediasAdapter.notifyDataSetChanged();
+                    return;
+                }
+                if (getSelectedPhotos().size() + mSelectPhotoFragment.getCurrentPhotoNum() == 6) {
+                    return;
+                }
+
                 if (info != null && !info.isSelected && iv.getDrawable() != null) {
                     DisplayMetrics dm = new DisplayMetrics();
                     getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
@@ -337,6 +354,11 @@ public class AlbumFragment extends BaseFragment {
                     }
                     String path = CommonUtil.saveJpeg(bmp, getActivity());
                     bmp.recycle();
+                    if(mSelectPhotoFragment.getCurrentPhotoNum()==-1){
+                        DataManager.getInstance().setData3(path);
+                        goBack();
+                        return;
+                    }
                     getView().findViewById(R.id.selectPhotoView).setVisibility(View.VISIBLE);
                     getSelectedPhotos().add(new File(path));
                     getSelectedPhotoAdapter().setDataList(getSelectedPhotos());
@@ -433,11 +455,7 @@ public class AlbumFragment extends BaseFragment {
             case R.id.btnBack:
                 goBack();
                 break;
-            case R.id.tvLeft:
- //               DataManager.getInstance().setObject(getSelectedPhotos());
-                gotoPager(CameraFragment.class, null, true);
-                break;
-            case R.id.bottomView:
+            case R.id.tvOk:
                 DataManager.getInstance().setObject(getSelectedPhotos());
                 getActivity().finish();
                 break;

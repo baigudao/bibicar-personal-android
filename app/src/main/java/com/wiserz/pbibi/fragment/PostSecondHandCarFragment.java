@@ -25,6 +25,7 @@ import com.qiniu.android.storage.UploadManager;
 import com.tencent.mm.opensdk.utils.Log;
 import com.wiserz.pbibi.BaseApplication;
 import com.wiserz.pbibi.R;
+import com.wiserz.pbibi.activity.BaseActivity;
 import com.wiserz.pbibi.bean.CarConfiguration;
 import com.wiserz.pbibi.bean.CityBean;
 import com.wiserz.pbibi.bean.ProvinceBean;
@@ -108,7 +109,7 @@ public class PostSecondHandCarFragment extends BaseFragment {
     private ArrayList<File> mUploadPhotos;
     private String upload_token;
     private ArrayList<CarConfiguration> mCarConfigurationList;
-    private ArrayList<String> mSelectedConfig=new ArrayList<>();
+    private ArrayList<String> mSelectedConfig = new ArrayList<>();
 
     private ArrayList<File> getUploadPhotos() {
         if (mUploadPhotos == null) {
@@ -129,6 +130,7 @@ public class PostSecondHandCarFragment extends BaseFragment {
         ((TextView) view.findViewById(R.id.tv_title)).setText("上传二手车");
 
         view.findViewById(R.id.btn_post_second_car).setOnClickListener(this);
+        view.findViewById(R.id.btn_post_second_car_2).setOnClickListener(this);
         view.findViewById(R.id.rl_choose_car_color).setOnClickListener(this);
         view.findViewById(R.id.rl_first_post_license).setOnClickListener(this);
         view.findViewById(R.id.rl_choose_car_type).setOnClickListener(this);
@@ -150,13 +152,14 @@ public class PostSecondHandCarFragment extends BaseFragment {
         ImageView iv_add_car_vin = (ImageView) view.findViewById(R.id.iv_add_car_vin);
         iv_add_car_vin.setOnClickListener(this);
         iv_image_vin = (ImageView) view.findViewById(R.id.iv_image_vin);
+        iv_image_vin.setOnClickListener(this);
 
         mProvinceBeenList = new ArrayList<>();
         uploadManager = new UploadManager();
 
         getTokenFromNet();
         getCarExtraInfo();
-        gotoPager(CameraFragment.class,null,true);
+        gotoPager(SelectPhotoFragment.class, null, true);
     }
 
     private void getCarExtraInfo() {
@@ -178,7 +181,7 @@ public class PostSecondHandCarFragment extends BaseFragment {
                             int status = jsonObject.optInt("status");
                             JSONArray jsonObjectData = jsonObject.optJSONArray("data");
                             if (status == 1) {
-                                mCarConfigurationList=getCarConfigurations(jsonObjectData);
+                                mCarConfigurationList = getCarConfigurations(jsonObjectData);
                                 resetCarConfigurations(mCarConfigurationList);
                             } else {
                                 String code = jsonObject.optString("code");
@@ -196,100 +199,101 @@ public class PostSecondHandCarFragment extends BaseFragment {
         if (array == null) {
             return new ArrayList<>();
         } else {
-            return  new Gson().fromJson(array.toString(), new TypeToken<ArrayList<CarConfiguration>>() {}.getType());
+            return new Gson().fromJson(array.toString(), new TypeToken<ArrayList<CarConfiguration>>() {
+            }.getType());
         }
     }
 
-    private void resetCarConfigurations(ArrayList<CarConfiguration> list){
-        LinearLayout llDetailMsg=(LinearLayout)getView().findViewById(R.id.llDetailMsg);
+    private void resetCarConfigurations(ArrayList<CarConfiguration> list) {
+        LinearLayout llDetailMsg = (LinearLayout) getView().findViewById(R.id.llDetailMsg);
         llDetailMsg.removeAllViews();
         mSelectedConfig.clear();
-        if(list==null || list.isEmpty()){
+        if (list == null || list.isEmpty()) {
             return;
         }
-        LayoutInflater layoutInflater=LayoutInflater.from(getActivity());
+        LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
         LinearLayout layout;
         ArrayList<CarConfiguration.Configuration> itemList;
-        for(CarConfiguration config:list){
-            layout=(LinearLayout) layoutInflater.inflate(R.layout.item_car_configuration,null);
+        for (CarConfiguration config : list) {
+            layout = (LinearLayout) layoutInflater.inflate(R.layout.item_car_configuration, null);
             llDetailMsg.addView(layout);
             ((TextView) layout.findViewById(R.id.tvConfigName)).setText(config.getType_name());
-            itemList=config.getList();
-            int itemCount=itemList.size();
-            int rowCount=3;
-            int typeId=config.getType_id();
-            if(typeId==3 || typeId==4 || typeId==5){
-                rowCount=2;
+            itemList = config.getList();
+            int itemCount = itemList.size();
+            int rowCount = 3;
+            int typeId = config.getType_id();
+            if (typeId == 3 || typeId == 4 || typeId == 5) {
+                rowCount = 2;
             }
-            int row=itemCount%rowCount==0?itemCount/rowCount:itemCount/rowCount+1;
+            int row = itemCount % rowCount == 0 ? itemCount / rowCount : itemCount / rowCount + 1;
             LinearLayout itemLayout;
-            TextView tvName1,tvName2,tvName3;
-            for(int j=0;j<row;++j){
-                itemLayout=(LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.item_configuration_detail,null);
+            TextView tvName1, tvName2, tvName3;
+            for (int j = 0; j < row; ++j) {
+                itemLayout = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.item_configuration_detail, null);
                 ((LinearLayout) layout.findViewById(R.id.llDetails)).addView(itemLayout);
-                tvName1=((TextView) itemLayout.findViewById(R.id.tvName1));
-                tvName2=((TextView) itemLayout.findViewById(R.id.tvName2));
-                tvName3=((TextView) itemLayout.findViewById(R.id.tvName3));
-                if(j*rowCount<itemCount){
-                    tvName1.setText(itemList.get(j*rowCount).getName());
-                    tvName1.setTag(R.id.tag,itemList.get(j*rowCount).getId());
+                tvName1 = ((TextView) itemLayout.findViewById(R.id.tvName1));
+                tvName2 = ((TextView) itemLayout.findViewById(R.id.tvName2));
+                tvName3 = ((TextView) itemLayout.findViewById(R.id.tvName3));
+                if (j * rowCount < itemCount) {
+                    tvName1.setText(itemList.get(j * rowCount).getName());
+                    tvName1.setTag(R.id.tag, itemList.get(j * rowCount).getId());
                     tvName1.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            String id=String.valueOf(view.getTag(R.id.tag));
-                            if(mSelectedConfig.contains(id)){
+                            String id = String.valueOf(view.getTag(R.id.tag));
+                            if (mSelectedConfig.contains(id)) {
                                 mSelectedConfig.remove(id);
                                 view.setBackgroundResource(R.drawable.back_config_not_selected);
-                                ((TextView)view).setTextColor(getResources().getColor(R.color.main_text_color));
-                            }else{
+                                ((TextView) view).setTextColor(getResources().getColor(R.color.main_text_color));
+                            } else {
                                 mSelectedConfig.add(id);
                                 view.setBackgroundResource(R.drawable.back_config_selected);
-                                ((TextView)view).setTextColor(getResources().getColor(R.color.main_color));
+                                ((TextView) view).setTextColor(getResources().getColor(R.color.main_color));
                             }
                         }
                     });
-                }else{
+                } else {
                     tvName1.setVisibility(View.GONE);
                 }
-                if(j*rowCount+1<itemCount){
-                    tvName2.setText(itemList.get(j*rowCount+1).getName());
-                    tvName2.setTag(R.id.tag,itemList.get(j*rowCount).getId());
+                if (j * rowCount + 1 < itemCount) {
+                    tvName2.setText(itemList.get(j * rowCount + 1).getName());
+                    tvName2.setTag(R.id.tag, itemList.get(j * rowCount).getId());
                     tvName2.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            String id=String.valueOf(view.getTag(R.id.tag));
-                            if(mSelectedConfig.contains(id)){
+                            String id = String.valueOf(view.getTag(R.id.tag));
+                            if (mSelectedConfig.contains(id)) {
                                 mSelectedConfig.remove(id);
                                 view.setBackgroundResource(R.drawable.back_config_not_selected);
-                                ((TextView)view).setTextColor(getResources().getColor(R.color.main_text_color));
-                            }else{
+                                ((TextView) view).setTextColor(getResources().getColor(R.color.main_text_color));
+                            } else {
                                 mSelectedConfig.add(id);
                                 view.setBackgroundResource(R.drawable.back_config_selected);
-                                ((TextView)view).setTextColor(getResources().getColor(R.color.main_color));
+                                ((TextView) view).setTextColor(getResources().getColor(R.color.main_color));
                             }
                         }
                     });
-                }else{
+                } else {
                     tvName2.setVisibility(View.GONE);
                 }
-                if(rowCount==2){
+                if (rowCount == 2) {
                     tvName3.setVisibility(View.GONE);
-                }else {
+                } else {
                     if (j * rowCount + 2 < itemCount) {
                         tvName3.setText(itemList.get(j * rowCount + 2).getName());
-                        tvName3.setTag(R.id.tag,itemList.get(j * rowCount + 2).getId());
+                        tvName3.setTag(R.id.tag, itemList.get(j * rowCount + 2).getId());
                         tvName3.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                String id=String.valueOf(view.getTag(R.id.tag));
-                                if(mSelectedConfig.contains(id)){
+                                String id = String.valueOf(view.getTag(R.id.tag));
+                                if (mSelectedConfig.contains(id)) {
                                     mSelectedConfig.remove(id);
                                     view.setBackgroundResource(R.drawable.back_config_not_selected);
-                                    ((TextView)view).setTextColor(getResources().getColor(R.color.main_text_color));
-                                }else{
+                                    ((TextView) view).setTextColor(getResources().getColor(R.color.main_text_color));
+                                } else {
                                     mSelectedConfig.add(id);
                                     view.setBackgroundResource(R.drawable.back_config_selected);
-                                    ((TextView)view).setTextColor(getResources().getColor(R.color.main_color));
+                                    ((TextView) view).setTextColor(getResources().getColor(R.color.main_color));
                                 }
                             }
                         });
@@ -337,63 +341,96 @@ public class PostSecondHandCarFragment extends BaseFragment {
 
     public void onResume() {
         super.onResume();
-        mUploadPhotos = (ArrayList<File>) DataManager.getInstance().getObject();
-        if(mUploadPhotos==null){
-            mUploadPhotos=new ArrayList<>();
+        if(DataManager.getInstance().getObject()!=null && DataManager.getInstance().getData1()!=null){
+            String newPath=(String)DataManager.getInstance().getObject();
+            int index=(int) DataManager.getInstance().getData1();
+            getUploadPhotos().set(index,new File(newPath));
+        }else if(DataManager.getInstance().getData2()!=null){
+            int index=(int) DataManager.getInstance().getData2();
+            getUploadPhotos().remove(index);
+        }else if(DataManager.getInstance().getObject()!=null) {
+            getUploadPhotos().addAll((ArrayList< File >)DataManager.getInstance().getObject());
+        }else if(DataManager.getInstance().getData3()!=null){
+            File file_vin = new File((String) DataManager.getInstance().getData3());
+            ll_image_vin.setVisibility(View.GONE);
+            Glide.with(mContext)
+                    .load(file_vin)
+                    .placeholder(R.drawable.default_bg_ratio_1)
+                    .error(R.drawable.default_bg_ratio_1)
+                    .into(iv_image_vin);
+            uploadVinImage(file_vin);
         }
+        DataManager.getInstance().setObject(null);
+        DataManager.getInstance().setData1(null);
+        DataManager.getInstance().setData2(null);
+        DataManager.getInstance().setData3(null);
         resetCarPhotosView();
-
     }
 
-    private void resetCarPhotosView(){
+    private void resetCarPhotosView() {
         LinearLayout llCarPhotos = (LinearLayout) getView().findViewById(R.id.llCarPhotos);
         llCarPhotos.removeAllViews();
         int size;
-        if(mUploadPhotos.size()==6){
-            size=6;
-        }else{
-            size=mUploadPhotos.size()+1;
+        if (getUploadPhotos().size() == 6) {
+            size = 6;
+        } else {
+            size = getUploadPhotos().size() + 1;
         }
-        int row=(size%3==0)?size/3:size/3+1;
+        int row = (size % 3 == 0) ? size / 3 : size / 3 + 1;
         LinearLayout itemView;
-        for(int i=0;i<row;++i){
-            itemView= (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.item_car_photo,null);
+        for (int i = 0; i < row; ++i) {
+            itemView = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.item_car_photo, null);
             llCarPhotos.addView(itemView);
-            int index=i*3;
-            setPhoto((ViewGroup) itemView.getChildAt(0),index<mUploadPhotos.size()?mUploadPhotos.get(index):null,index,index==size-1);
-            setPhoto((ViewGroup) itemView.getChildAt(1),index+1<mUploadPhotos.size()?mUploadPhotos.get(index+1):null,index+1,index+1==size-1);
-            setPhoto((ViewGroup) itemView.getChildAt(2),index+2<mUploadPhotos.size()?mUploadPhotos.get(index+2):null,index+2,index+2==size-1);
+            int index = i * 3;
+            setPhoto((ViewGroup) itemView.getChildAt(0), index < getUploadPhotos().size() ? getUploadPhotos().get(index) : null, index, index == size - 1);
+            setPhoto((ViewGroup) itemView.getChildAt(1), index + 1 < getUploadPhotos().size() ? getUploadPhotos().get(index + 1) : null, index + 1, index + 1 == size - 1);
+            setPhoto((ViewGroup) itemView.getChildAt(2), index + 2 < getUploadPhotos().size() ? getUploadPhotos().get(index + 2) : null, index + 2, index + 2 == size - 1);
         }
     }
 
-    private void setPhoto(ViewGroup itemView,File photo,int index,boolean isLast){
-        ImageView ivPhoto=(ImageView) itemView.getChildAt(0);
-        ImageView ivClose=(ImageView) itemView.getChildAt(1);
-        ivPhoto.setTag(R.id.tag, index);
-        ivClose.setTag(R.id.tag, index);
-        ivPhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                gotoPager(CameraFragment.class,null,true);
-            }
-        });
-        if(photo!=null){
+    private void setPhoto(ViewGroup itemView, File photo, int index, boolean isLast) {
+        ImageView ivPhoto = (ImageView) itemView.getChildAt(0);
+        ImageView ivClose = (ImageView) itemView.getChildAt(1);
+        if (photo != null) {
             CommonUtil.loadImage(BaseApplication.getAppContext(), 0, Uri.fromFile(photo), ivPhoto);
             ivClose.setVisibility(View.VISIBLE);
+            ivPhoto.setTag(R.id.tag, index);
+            ivClose.setTag(R.id.tag, index);
+            ivPhoto.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int pos = (int) view.getTag(R.id.tag);
+                    if (pos < getUploadPhotos().size()) {
+                        DataManager.getInstance().setObject(getUploadPhotos().get(pos).getAbsolutePath());
+                        DataManager.getInstance().setData1(pos);
+                        DataManager.getInstance().setData2(getUploadPhotos().size());
+                        ((BaseActivity) mContext).gotoPager(EditPhotoFragment.class, null, true);
+                    }
+                }
+            });
             ivClose.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int pos = (int) v.getTag(R.id.tag);
-                    File file = mUploadPhotos.remove(pos);
-                    file.delete();
+                    File file = getUploadPhotos().remove(pos);
+                    if (file != null) {
+                        file.delete();
+                    }
                     resetCarPhotosView();
                 }
             });
-        }else{
-            if(isLast) {
+        } else {
+            if (isLast) {
                 ivPhoto.setImageResource(R.drawable.add_car_photo);
+                ivPhoto.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        DataManager.getInstance().setObject(getUploadPhotos().size());
+                        gotoPager(SelectPhotoFragment.class, null, true);
+                    }
+                });
                 ivClose.setVisibility(View.GONE);
-            }else {
+            } else {
                 itemView.setVisibility(View.INVISIBLE);
             }
         }
@@ -432,24 +469,25 @@ public class PostSecondHandCarFragment extends BaseFragment {
             case R.id.iv_back:
                 goBack();
                 break;
+            case R.id.btn_post_second_car_2:
             case R.id.btn_post_second_car:
                 publishSecondCar();
                 break;
             case R.id.tvBasicMsg:
-                ((TextView)getView().findViewById(R.id.tvBasicMsg)).setTextColor(getResources().getColor(R.color.main_text_color));
-                ((TextView)getView().findViewById(R.id.tvDetailMsg)).setTextColor(getResources().getColor(R.color.second_text_color));
+                ((TextView) getView().findViewById(R.id.tvBasicMsg)).setTextColor(getResources().getColor(R.color.main_text_color));
+                ((TextView) getView().findViewById(R.id.tvDetailMsg)).setTextColor(getResources().getColor(R.color.second_text_color));
                 getView().findViewById(R.id.line1).setVisibility(View.VISIBLE);
                 getView().findViewById(R.id.line2).setVisibility(View.GONE);
-                getView().findViewById(R.id.llBasicMsg).setVisibility(View.VISIBLE);
-                getView().findViewById(R.id.llDetailMsg).setVisibility(View.GONE);
+                getView().findViewById(R.id.scrollBasicMsg).setVisibility(View.VISIBLE);
+                getView().findViewById(R.id.scrollDetailMsg).setVisibility(View.GONE);
                 break;
             case R.id.tvDetailMsg:
-                ((TextView)getView().findViewById(R.id.tvBasicMsg)).setTextColor(getResources().getColor(R.color.second_text_color));
-                ((TextView)getView().findViewById(R.id.tvDetailMsg)).setTextColor(getResources().getColor(R.color.main_text_color));
+                ((TextView) getView().findViewById(R.id.tvBasicMsg)).setTextColor(getResources().getColor(R.color.second_text_color));
+                ((TextView) getView().findViewById(R.id.tvDetailMsg)).setTextColor(getResources().getColor(R.color.main_text_color));
                 getView().findViewById(R.id.line1).setVisibility(View.GONE);
                 getView().findViewById(R.id.line2).setVisibility(View.VISIBLE);
-                getView().findViewById(R.id.llBasicMsg).setVisibility(View.GONE);
-                getView().findViewById(R.id.llDetailMsg).setVisibility(View.VISIBLE);
+                getView().findViewById(R.id.scrollBasicMsg).setVisibility(View.GONE);
+                getView().findViewById(R.id.scrollDetailMsg).setVisibility(View.VISIBLE);
                 break;
             case R.id.tvCloseWarning:
                 getView().findViewById(R.id.rlWarning).setVisibility(View.GONE);
@@ -484,8 +522,10 @@ public class PostSecondHandCarFragment extends BaseFragment {
             case R.id.rl_choose_car_type:
                 gotoPager(SelectCarBrandFragment.class, null);
                 break;
+            case R.id.iv_image_vin:
             case R.id.iv_add_car_vin:
-                addVinImage();
+                DataManager.getInstance().setObject(-1);
+                gotoPager(SelectPhotoFragment.class,null,true);
                 break;
             default:
                 break;
@@ -617,45 +657,6 @@ public class PostSecondHandCarFragment extends BaseFragment {
         tv_car_color.setText(text);
     }
 
-    private void addVinImage() {
-        Matisse.from(PostSecondHandCarFragment.this)
-                .choose(MimeType.of(MimeType.JPEG, MimeType.PNG))//MimeType.ofAll()
-                .countable(false)
-                .maxSelectable(1)
-                .theme(R.style.Matisse_Zhihu)
-                .addFilter(new GifSizeFilter(320, 320, 5 * Filter.K * Filter.K))
-                .gridExpectedSize(getResources().getDimensionPixelSize(R.dimen.grid_expected_size))
-                .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
-                .thumbnailScale(0.85f)
-                //                .capture(true)
-                //                .captureStrategy(new CaptureStrategy(true,"com.bibicar.capture"))
-                .imageEngine(new GlideEngine())
-                .forResult(REQUEST_CODE_CHOOSE);
-    }
-
-    List<Uri> mSelected;
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_CHOOSE && resultCode == RESULT_OK) {
-            mSelected = Matisse.obtainResult(data);
-
-            if (EmptyUtils.isNotEmpty(mSelected) && mSelected.size() != 0) {
-                File file_vin = new File(CommonUtil.getRealFilePath(mContext, mSelected.get(0)));
-                ll_image_vin.setVisibility(View.GONE);
-                Glide.with(mContext)
-                        .load(file_vin)
-                        .placeholder(R.drawable.default_bg_ratio_1)
-                        .error(R.drawable.default_bg_ratio_1)
-                        .into(iv_image_vin);
-                uploadVinImage(file_vin);
-            } else {
-                ToastUtils.showShort("选择图片失败");
-            }
-        }
-    }
-
     private void uploadVinImage(final File file_vin) {
         if (EmptyUtils.isNotEmpty(file_vin)) {
             OkHttpUtils.post()
@@ -748,12 +749,6 @@ public class PostSecondHandCarFragment extends BaseFragment {
         }
 
 
-//        if (EmptyUtils.isEmpty(mColor) || mColor == 0) {
-//            ToastUtils.showShort("请选择车辆颜色");
-//            return;
-//        }
-
-
         if (EmptyUtils.isEmpty(getVIN()) && EmptyUtils.isEmpty(vin_hash)) {
             ToastUtils.showShort("请输入VIN码或上传VIN照片");
             return;
@@ -838,15 +833,15 @@ public class PostSecondHandCarFragment extends BaseFragment {
             String name = getName();
             String car_price = getPrice();
 
-            String carInfoIds="";
-            int size=mSelectedConfig.size();
-            for(int i=0;i<size;++i){
-                carInfoIds+=mSelectedConfig.get(i);
-                if(i<size-1){
-                    carInfoIds+=",";
+            String carInfoIds = "";
+            int size = mSelectedConfig.size();
+            for (int i = 0; i < size; ++i) {
+                carInfoIds += mSelectedConfig.get(i);
+                if (i < size - 1) {
+                    carInfoIds += ",";
                 }
             }
-            Log.e("aaaaaaaaa","carInfoIds: "+carInfoIds+", "+this.broadPlace);
+            Log.e("aaaaaaaaa", "carInfoIds: " + carInfoIds + ", " + this.broadPlace);
 
             OkHttpUtils.post()
                     .url(Constant.getPublishSecondCarUrl())
@@ -870,14 +865,14 @@ public class PostSecondHandCarFragment extends BaseFragment {
                     .addParams(Constant.IS_TRANSFER, String.valueOf(0))//是否过户
                     .addParams(Constant.CAR_STATUS, String.valueOf(0))//车辆状态
                     .addParams(Constant.VIN_NO, getVIN())//vin码        LGBP12E21DY196239                ooo(必填)
-                    .addParams(Constant.VIN_FILE, vin_hash==null?"":vin_hash)//vin文件
+                    .addParams(Constant.VIN_FILE, vin_hash == null ? "" : vin_hash)//vin文件
                     .addParams(Constant.EXCHANGE_TIME, String.valueOf(0))//交易时间
                     .addParams(Constant.ENGINE_NO, "")//发动机号
                     .addParams(Constant.MAINTAIN, String.valueOf(0))
                     .addParams(Constant.BOARD_TIME, getFirstPostLicenseTime())
                     .addParams(Constant.MILEAGE, tableMileage)
                     .addParams(Constant.BOARD_ADDRESS, getBroadPlace())
-                    .addParams(Constant.CAR_INFO_IDS,carInfoIds)
+                    .addParams(Constant.CAR_INFO_IDS, carInfoIds)
                     .addParams(Constant.CAR_ID, "")
                     .addParams(Constant.CHECK_EXPIRATION_TIME, "")//年检到期日期
                     .addParams(Constant.INSURANCE_DUE_TIME, "")//保险到期日期

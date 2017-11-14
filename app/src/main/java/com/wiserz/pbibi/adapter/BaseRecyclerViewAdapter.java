@@ -1934,6 +1934,9 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                     holder.tv_item1.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            if(friendshipBean.getUser_id()==SPUtils.getInstance().getInt(Constant.USER_ID)){
+                                return;
+                            }
                             RongIM.getInstance().startConversation(mContext, Conversation.ConversationType.PRIVATE,
                                     String.valueOf(friendshipBean.getUser_id()), friendshipBean.getProfile().getNickname());
                             RongIM.setUserInfoProvider(new RongIM.UserInfoProvider() {

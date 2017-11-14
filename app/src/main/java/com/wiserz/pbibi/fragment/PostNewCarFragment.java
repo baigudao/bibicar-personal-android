@@ -21,6 +21,7 @@ import com.qiniu.android.storage.UploadManager;
 import com.tencent.mm.opensdk.utils.Log;
 import com.wiserz.pbibi.BaseApplication;
 import com.wiserz.pbibi.R;
+import com.wiserz.pbibi.activity.BaseActivity;
 import com.wiserz.pbibi.bean.CarConfiguration;
 import com.wiserz.pbibi.util.CommonUtil;
 import com.wiserz.pbibi.util.Constant;
@@ -74,6 +75,7 @@ public class PostNewCarFragment extends BaseFragment {
         ((TextView) view.findViewById(R.id.tv_title)).setText("上传新车");
         view.findViewById(R.id.topLine).setVisibility(View.GONE);
         view.findViewById(R.id.btn_post_new_car).setOnClickListener(this);
+        view.findViewById(R.id.btn_post_new_car_2).setOnClickListener(this);
         view.findViewById(R.id.rl_choose_car_color).setOnClickListener(this);
         view.findViewById(R.id.rl_choose_car_type).setOnClickListener(this);
         view.findViewById(R.id.tvCloseWarning).setOnClickListener(this);
@@ -85,7 +87,7 @@ public class PostNewCarFragment extends BaseFragment {
 
         getTokenFromNet();
         getCarExtraInfo();
-        gotoPager(CameraFragment.class,null,true);
+        gotoPager(SelectPhotoFragment.class,null,true);
     }
 
     private ArrayList<File> getUploadPhotos() {
@@ -282,17 +284,18 @@ public class PostNewCarFragment extends BaseFragment {
                 ((TextView)getView().findViewById(R.id.tvDetailMsg)).setTextColor(getResources().getColor(R.color.second_text_color));
                 getView().findViewById(R.id.line1).setVisibility(View.VISIBLE);
                 getView().findViewById(R.id.line2).setVisibility(View.GONE);
-                getView().findViewById(R.id.llBasicMsg).setVisibility(View.VISIBLE);
-                getView().findViewById(R.id.llDetailMsg).setVisibility(View.GONE);
+                getView().findViewById(R.id.scrollBasicMsg).setVisibility(View.VISIBLE);
+                getView().findViewById(R.id.scrollDetailMsg).setVisibility(View.GONE);
                 break;
             case R.id.tvDetailMsg:
                 ((TextView)getView().findViewById(R.id.tvBasicMsg)).setTextColor(getResources().getColor(R.color.second_text_color));
                 ((TextView)getView().findViewById(R.id.tvDetailMsg)).setTextColor(getResources().getColor(R.color.main_text_color));
                 getView().findViewById(R.id.line1).setVisibility(View.GONE);
                 getView().findViewById(R.id.line2).setVisibility(View.VISIBLE);
-                getView().findViewById(R.id.llBasicMsg).setVisibility(View.GONE);
-                getView().findViewById(R.id.llDetailMsg).setVisibility(View.VISIBLE);
+                getView().findViewById(R.id.scrollBasicMsg).setVisibility(View.GONE);
+                getView().findViewById(R.id.scrollDetailMsg).setVisibility(View.VISIBLE);
                 break;
+            case R.id.btn_post_new_car_2:
             case R.id.btn_post_new_car:
                 publishNewCar();
                 break;
@@ -312,22 +315,30 @@ public class PostNewCarFragment extends BaseFragment {
 
     public void onResume() {
         super.onResume();
-        mUploadPhotos = (ArrayList<File>) DataManager.getInstance().getObject();
-        if(mUploadPhotos==null){
-            mUploadPhotos=new ArrayList<>();
+        if(DataManager.getInstance().getObject()!=null && DataManager.getInstance().getData1()!=null){
+            String newPath=(String)DataManager.getInstance().getObject();
+            int index=(int) DataManager.getInstance().getData1();
+            getUploadPhotos().set(index,new File(newPath));
+        }else if(DataManager.getInstance().getData2()!=null){
+            int index=(int) DataManager.getInstance().getData2();
+            getUploadPhotos().remove(index);
+        }else if(DataManager.getInstance().getObject()!=null) {
+            getUploadPhotos().addAll((ArrayList< File >)DataManager.getInstance().getObject());
         }
+        DataManager.getInstance().setObject(null);
+        DataManager.getInstance().setData1(null);
+        DataManager.getInstance().setData2(null);
         resetCarPhotosView();
-
     }
 
     private void resetCarPhotosView(){
         LinearLayout llCarPhotos = (LinearLayout) getView().findViewById(R.id.llCarPhotos);
         llCarPhotos.removeAllViews();
         int size;
-        if(mUploadPhotos.size()==6){
+        if(getUploadPhotos().size()==6){
             size=6;
         }else{
-            size=mUploadPhotos.size()+1;
+            size=getUploadPhotos().size()+1;
         }
         int row=(size%3==0)?size/3:size/3+1;
         LinearLayout itemView;
@@ -335,40 +346,55 @@ public class PostNewCarFragment extends BaseFragment {
             itemView= (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.item_car_photo,null);
             llCarPhotos.addView(itemView);
             int index=i*3;
-            setPhoto((ViewGroup) itemView.getChildAt(0),index<mUploadPhotos.size()?mUploadPhotos.get(index):null,index,index==size-1);
-            setPhoto((ViewGroup) itemView.getChildAt(1),index+1<mUploadPhotos.size()?mUploadPhotos.get(index+1):null,index+1,index+1==size-1);
-            setPhoto((ViewGroup) itemView.getChildAt(2),index+2<mUploadPhotos.size()?mUploadPhotos.get(index+2):null,index+2,index+2==size-1);
+            setPhoto((ViewGroup) itemView.getChildAt(0),index<getUploadPhotos().size()?getUploadPhotos().get(index):null,index,index==size-1);
+            setPhoto((ViewGroup) itemView.getChildAt(1),index+1<getUploadPhotos().size()?getUploadPhotos().get(index+1):null,index+1,index+1==size-1);
+            setPhoto((ViewGroup) itemView.getChildAt(2),index+2<getUploadPhotos().size()?getUploadPhotos().get(index+2):null,index+2,index+2==size-1);
         }
     }
 
-    private void setPhoto(ViewGroup itemView,File photo,int index,boolean isLast){
-        ImageView ivPhoto=(ImageView) itemView.getChildAt(0);
-        ImageView ivClose=(ImageView) itemView.getChildAt(1);
-        ivPhoto.setTag(R.id.tag, index);
-        ivClose.setTag(R.id.tag, index);
-        ivPhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                gotoPager(CameraFragment.class,null,true);
-            }
-        });
-        if(photo!=null){
+    private void setPhoto(ViewGroup itemView, File photo, int index, boolean isLast) {
+        ImageView ivPhoto = (ImageView) itemView.getChildAt(0);
+        ImageView ivClose = (ImageView) itemView.getChildAt(1);
+        if (photo != null) {
             CommonUtil.loadImage(BaseApplication.getAppContext(), 0, Uri.fromFile(photo), ivPhoto);
             ivClose.setVisibility(View.VISIBLE);
+            ivPhoto.setTag(R.id.tag, index);
+            ivClose.setTag(R.id.tag, index);
+            ivPhoto.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int pos = (int) view.getTag(R.id.tag);
+                    if(pos<getUploadPhotos().size()){
+                        DataManager.getInstance().setObject(getUploadPhotos().get(pos).getAbsolutePath());
+                        DataManager.getInstance().setData1(pos);
+                        DataManager.getInstance().setData2(getUploadPhotos().size());
+                        ((BaseActivity) mContext).gotoPager(EditPhotoFragment.class, null, true);
+                    }
+                }
+            });
             ivClose.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int pos = (int) v.getTag(R.id.tag);
-                    File file = mUploadPhotos.remove(pos);
-                    file.delete();
+                    File file = getUploadPhotos().remove(pos);
+                    if (file != null) {
+                        file.delete();
+                    }
                     resetCarPhotosView();
                 }
             });
-        }else{
-            if(isLast) {
+        } else {
+            if (isLast) {
                 ivPhoto.setImageResource(R.drawable.add_car_photo);
+                ivPhoto.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        DataManager.getInstance().setObject(getUploadPhotos().size());
+                        gotoPager(SelectPhotoFragment.class, null, true);
+                    }
+                });
                 ivClose.setVisibility(View.GONE);
-            }else {
+            } else {
                 itemView.setVisibility(View.INVISIBLE);
             }
         }
@@ -478,10 +504,10 @@ public class PostNewCarFragment extends BaseFragment {
             return;
         }
 
-        if (EmptyUtils.isEmpty(car_price)) {
-            ToastUtils.showShort("请填写车辆价格");
-            return;
-        }
+//        if (EmptyUtils.isEmpty(car_price)) {
+//            ToastUtils.showShort("请填写车辆价格");
+//            return;
+//        }
 
         if (EmptyUtils.isEmpty(name)) {
             ToastUtils.showShort("请填写联系人");
@@ -493,10 +519,10 @@ public class PostNewCarFragment extends BaseFragment {
             return;
         }
 
-        if (EmptyUtils.isEmpty(profile)) {
-            ToastUtils.showShort("请填写车主说的内容");
-            return;
-        }
+//        if (EmptyUtils.isEmpty(profile)) {
+//            ToastUtils.showShort("请填写车主说的内容");
+//            return;
+//        }
 
         if (EmptyUtils.isEmpty(upload_token)) {
             getTokenFromNet();

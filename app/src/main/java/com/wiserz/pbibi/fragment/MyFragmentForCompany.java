@@ -123,7 +123,7 @@ public class MyFragmentForCompany extends BaseFragment {
                 ToastUtils.showShort("分享");
                 break;
             case R.id.rl_message:
-                if (myInfos == null) {
+                if (myInfos == null || myInfos.getUser_id() == SPUtils.getInstance().getInt(Constant.USER_ID)) {
                     return;
                 }
                 RongIM.getInstance().startConversation(getActivity(), Conversation.ConversationType.PRIVATE,

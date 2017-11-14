@@ -143,6 +143,7 @@ public class RegisterAndLoginActivity extends BaseActivity implements View.OnCli
 
                     @Override
                     public void onResponse(String response, int id) {
+                        Log.e("aaaaaaaaa","response: "+response);
                         JSONObject jsonObject = null;
                         try {
                             jsonObject = new JSONObject(response);

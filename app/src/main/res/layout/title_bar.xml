@@ -30,7 +30,7 @@
 
         <Button
             android:id="@+id/btn_register"
-            android:layout_width="70dp"
+            android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"

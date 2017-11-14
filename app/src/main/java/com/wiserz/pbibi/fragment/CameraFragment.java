@@ -38,6 +38,12 @@ public class CameraFragment extends BaseFragment implements View.OnTouchListener
 
     private SelectedPhotoAdapter mSelectedPhotoAdapter;
     private ArrayList<File> mSelectedPhotos;
+    private SelectPhotoFragment mSelectPhotoFragment;
+
+    public BaseFragment setParentFragment(SelectPhotoFragment selectPhotoFragment){
+        mSelectPhotoFragment=selectPhotoFragment;
+        return this;
+    }
 
     @Override
     protected int getLayoutId() {
@@ -50,13 +56,11 @@ public class CameraFragment extends BaseFragment implements View.OnTouchListener
 //            mSelectedPhotos=(ArrayList<File>) DataManager.getInstance().getObject();
 //        }
         DataManager.getInstance().setObject(null);
-        ((BaseActivity) getActivity()).setScreenFull(true);
     }
 
     @Override
     public void initView(final View view) {
         view.findViewById(R.id.btnBack).setOnClickListener(this);
-        view.findViewById(R.id.tvRight).setOnClickListener(this);
         view.findViewById(R.id.btnTakePhoto).setOnClickListener(this);
         view.findViewById(R.id.btnFlashlight).setOnClickListener(this);
         view.findViewById(R.id.btnSwitchCamera).setOnClickListener(this);
@@ -156,19 +160,6 @@ public class CameraFragment extends BaseFragment implements View.OnTouchListener
         showSwitchCameraIcon();
     }
 
-//    private void showOrHideAllBtn(final boolean isShow) {
-//        getActivity().runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                if (isShow) {
-//                    getView().findViewById(R.id.topView).setVisibility(View.VISIBLE);
-//                } else {
-//                    getView().findViewById(R.id.topView).setVisibility(View.GONE);
-//                }
-//            }
-//        });
-//    }
-
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         if (mUsingCamera || mCameraContainer == null) {
@@ -207,13 +198,8 @@ public class CameraFragment extends BaseFragment implements View.OnTouchListener
             case R.id.btnBack:
                 getActivity().finish();
                 break;
-            case R.id.tvRight:
- //               DataManager.getInstance().setObject(getSelectedPhotos());
-                gotoPager(AlbumFragment.class, null, true);
-                getActivity().finish();
-                break;
             case R.id.btnTakePhoto:
-                if (mUsingCamera || getSelectedPhotos().size() == 6) {
+                if (mUsingCamera || getSelectedPhotos().size()+mSelectPhotoFragment.getCurrentPhotoNum() == 6) {
                     return;
                 }
                 mUsingCamera = true;
@@ -223,17 +209,22 @@ public class CameraFragment extends BaseFragment implements View.OnTouchListener
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                SensorControler.getInstance().unlockFocus();
-                                mUsingCamera = false;
-                                mCameraContainer.startPreview();
                                 if (bmp != null) {
                                     String path = CommonUtil.saveJpeg(bmp, getActivity());
                                     bmp.recycle();
+                                    if(mSelectPhotoFragment.getCurrentPhotoNum()==-1){
+                                        DataManager.getInstance().setData3(path);
+                                        goBack();
+                                        return;
+                                    }
                                     getView().findViewById(R.id.selectPhotoView).setVisibility(View.VISIBLE);
                                     getSelectedPhotos().add(new File(path));
                                     getSelectedPhotoAdapter().setDataList(getSelectedPhotos());
                                     showView();
                                 }
+                                SensorControler.getInstance().unlockFocus();
+                                mUsingCamera = false;
+                                mCameraContainer.startPreview();
                             }
                         });
                     }
@@ -258,14 +249,12 @@ public class CameraFragment extends BaseFragment implements View.OnTouchListener
             getView().findViewById(R.id.tvPhotoNum).setVisibility(View.VISIBLE);
             ((TextView) getView().findViewById(R.id.tvPhotoNum)).setText(String.valueOf(getSelectedPhotos().size()));
             getView().findViewById(R.id.tvNext).setVisibility(View.VISIBLE);
-            getView().findViewById(R.id.pointView).setVisibility(View.INVISIBLE);
-            getView().findViewById(R.id.ll).setVisibility(View.INVISIBLE);
+            mSelectPhotoFragment.setViewPagerCanScroll(false);
         } else {
             getView().findViewById(R.id.selectPhotoView).setVisibility(View.GONE);
             getView().findViewById(R.id.tvPhotoNum).setVisibility(View.GONE);
             getView().findViewById(R.id.tvNext).setVisibility(View.GONE);
-            getView().findViewById(R.id.pointView).setVisibility(View.VISIBLE);
-            getView().findViewById(R.id.ll).setVisibility(View.VISIBLE);
+            mSelectPhotoFragment.setViewPagerCanScroll(true);
         }
     }
 

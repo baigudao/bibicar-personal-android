@@ -132,29 +132,7 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
                 }
                 break;
             case R.id.btn_line_contact:
-                if (EmptyUtils.isNotEmpty(carInfoBean)) {
-                    CarInfoBean.UserInfoBean userInfoBean = carInfoBean.getUser_info();
-                    if (EmptyUtils.isNotEmpty(userInfoBean)) {
-                        CarInfoBean.UserInfoBean.ProfileBean profileBean = userInfoBean.getProfile();
-                        final int user_id = userInfoBean.getUser_id();
-                        if (EmptyUtils.isNotEmpty(profileBean)) {
-                            final String avatar = profileBean.getAvatar();
-                            final String nick_name = profileBean.getNickname();
-
-                            if (EmptyUtils.isNotEmpty(user_id) && EmptyUtils.isNotEmpty(avatar) && EmptyUtils.isNotEmpty(nick_name)) {
-                                RongIM.getInstance().startConversation(mContext, Conversation.ConversationType.PRIVATE, String.valueOf(user_id), nick_name);
-                                RongIM.setUserInfoProvider(new RongIM.UserInfoProvider() {
-                                    @Override
-                                    public UserInfo getUserInfo(String s) {
-                                        return new UserInfo(String.valueOf(user_id), nick_name, Uri.parse(avatar));//根据 userId 去你的用户系统里查询对应的用户信息返回给融云 SDK。
-                                    }
-                                }, true);
-                            } else {
-                                ToastUtils.showShort("该车的相关信息为空");
-                            }
-                        }
-                    }
-                }
+                goContactFragment();
                 break;
             case R.id.btn_phone_contact:
                 if (EmptyUtils.isEmpty(contact_phone)) {
@@ -166,6 +144,36 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
                 break;
             default:
                 break;
+        }
+    }
+
+    private void goContactFragment(){
+        if (!CommonUtil.isHadLogin()) {
+            gotoPager(RegisterAndLoginActivity.class, null);
+            return;
+        }
+        if (EmptyUtils.isNotEmpty(carInfoBean)) {
+            CarInfoBean.UserInfoBean userInfoBean = carInfoBean.getUser_info();
+            if (EmptyUtils.isNotEmpty(userInfoBean)) {
+                CarInfoBean.UserInfoBean.ProfileBean profileBean = userInfoBean.getProfile();
+                final int user_id = userInfoBean.getUser_id();
+                if (EmptyUtils.isNotEmpty(profileBean) && user_id!=SPUtils.getInstance().getInt(Constant.USER_ID)) {
+                    final String avatar = profileBean.getAvatar();
+                    final String nick_name = profileBean.getNickname();
+
+                    if (EmptyUtils.isNotEmpty(user_id) && EmptyUtils.isNotEmpty(avatar) && EmptyUtils.isNotEmpty(nick_name)) {
+                        RongIM.getInstance().startConversation(mContext, Conversation.ConversationType.PRIVATE, String.valueOf(user_id), nick_name);
+                        RongIM.setUserInfoProvider(new RongIM.UserInfoProvider() {
+                            @Override
+                            public UserInfo getUserInfo(String s) {
+                                return new UserInfo(String.valueOf(user_id), nick_name, Uri.parse(avatar));//根据 userId 去你的用户系统里查询对应的用户信息返回给融云 SDK。
+                            }
+                        }, true);
+                    } else {
+                        ToastUtils.showShort("该车的相关信息为空");
+                    }
+                }
+            }
         }
     }
 
@@ -579,9 +587,7 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
             getView().findViewById(R.id.tv_contact_car_owner).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (EmptyUtils.isNotEmpty(carInfoBean.getContact_phone())) {
-                        showCallPhoneDialog(carInfoBean.getContact_phone());
-                    }
+                    goContactFragment();
                 }
             });
 

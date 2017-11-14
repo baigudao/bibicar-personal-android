@@ -1,31 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/background_color"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_color"
+    android:orientation="vertical">
 
-    <include layout="@layout/title_bar"/>
+    <include layout="@layout/title_bar" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp">
+
         <View
             android:id="@+id/centerView"
             android:layout_width="1dp"
             android:layout_height="1dp"
-            android:layout_centerHorizontal="true"/>
+            android:layout_centerHorizontal="true" />
+
         <TextView
             android:id="@+id/tvBasicMsg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/basic_message"
-            android:layout_toLeftOf="@id/centerView"
-            android:textColor="@color/main_text_color"
             android:layout_marginRight="15dp"
+            android:layout_toLeftOf="@id/centerView"
+            android:text="@string/basic_message"
+            android:textColor="@color/main_text_color"
             android:textSize="15sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tvDetailMsg"
@@ -36,34 +38,35 @@
             android:text="@string/car_detail"
             android:textColor="@color/second_text_color"
             android:textSize="15sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
         <View
             android:id="@+id/line1"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="10dp"
-            android:layout_below="@id/tvBasicMsg"
             android:layout_alignLeft="@id/tvBasicMsg"
             android:layout_alignRight="@id/tvBasicMsg"
-            android:background="@color/main_text_color"/>
+            android:layout_below="@id/tvBasicMsg"
+            android:layout_marginTop="10dp"
+            android:background="@color/main_text_color" />
+
         <View
             android:id="@+id/line2"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="10dp"
-            android:layout_below="@id/tvDetailMsg"
             android:layout_alignLeft="@id/tvDetailMsg"
             android:layout_alignRight="@id/tvDetailMsg"
-            android:visibility="gone"
-            android:background="@color/main_text_color"/>
+            android:layout_below="@id/tvDetailMsg"
+            android:layout_marginTop="10dp"
+            android:background="@color/main_text_color"
+            android:visibility="gone" />
     </RelativeLayout>
 
     <View
         android:id="@+id/topLine2"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/divider_color"/>
+        android:background="@color/divider_color" />
 
     <RelativeLayout
         android:id="@+id/rlWarning"
@@ -74,41 +77,38 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:drawableLeft="@drawable/laba"
+            android:drawablePadding="15dp"
+            android:gravity="center"
             android:text="@string/message_detail"
             android:textColor="@color/warning_color"
-            android:textSize="12sp"
-            android:drawableLeft="@drawable/laba"
-            android:layout_centerHorizontal="true"
-            android:gravity="center"
-            android:drawablePadding="15dp" />
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/tvCloseWarning"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="X"
-            android:textColor="@color/warning_color"
-            android:textSize="12sp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="15dp" />
+            android:layout_marginRight="15dp"
+            android:text="X"
+            android:textColor="@color/warning_color"
+            android:textSize="12sp" />
 
     </RelativeLayout>
 
     <com.wiserz.pbibi.view.MyScrollView
+        android:id="@+id/scrollBasicMsg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <LinearLayout
+            android:id="@+id/llBasicMsg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/llBasicMsg"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -117,16 +117,16 @@
                 android:text="车辆照片"
                 android:textColor="@color/main_text_color"
                 android:textSize="15sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:id="@+id/llCarPhotos"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:orientation="vertical"
                 android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                android:orientation="vertical">
+                android:paddingRight="15dp">
 
             </LinearLayout>
 
@@ -138,13 +138,13 @@
                 android:text="车辆信息"
                 android:textColor="@color/main_text_color"
                 android:textSize="15sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginTop="20dp"
-                android:background="@color/divider_color"/>
+                android:background="@color/divider_color" />
 
             <RelativeLayout
                 android:id="@+id/rl_choose_car_type"
@@ -160,7 +160,7 @@
                     android:layout_marginLeft="15dp"
                     android:text="*"
                     android:textColor="@color/warning_color"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -169,7 +169,7 @@
                     android:layout_marginLeft="28dp"
                     android:text="车型"
                     android:textColor="@color/main_text_color"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/tv_car_type"
@@ -183,60 +183,60 @@
                     android:maxLines="1"
                     android:text="@string/not_seleted"
                     android:textColor="@color/third_text_color"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
             </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/divider_color"/>
+                android:background="@color/divider_color" />
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:clickable="true">
+
+          <!--      <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
+                    android:text="*"
+                    android:textColor="@color/warning_color"
+                    android:textSize="15sp" />-->
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
+                    android:text="车辆价格（万元）"
+                    android:textColor="@color/main_text_color"
+                    android:textSize="15sp" />
+
+                <EditText
+                    android:id="@+id/et_input_price"
+                    android:layout_width="100dp"
                     android:layout_height="50dp"
-                    android:clickable="true">
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@null"
+                    android:gravity="center|right"
+                    android:hint="@string/not_write"
+                    android:inputType="numberDecimal"
+                    android:maxLength="9"
+                    android:maxLines="1"
+                    android:textColorHint="@color/third_text_color"
+                    android:textSize="15sp" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="15dp"
-                        android:text="*"
-                        android:textColor="@color/warning_color"
-                        android:textSize="15sp"/>
+            </RelativeLayout>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="28dp"
-                        android:text="车辆价格（万元）"
-                        android:textColor="@color/main_text_color"
-                        android:textSize="15sp"/>
-
-                    <EditText
-                        android:id="@+id/et_input_price"
-                        android:layout_width="100dp"
-                        android:layout_height="50dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="15dp"
-                        android:background="@null"
-                        android:gravity="center|right"
-                        android:hint="@string/not_write"
-                        android:inputType="numberDecimal"
-                        android:maxLength="9"
-                        android:maxLines="1"
-                        android:textColorHint="@color/third_text_color"
-                        android:textSize="15sp"/>
-
-                </RelativeLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/divider_color"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/divider_color" />
 
             <RelativeLayout
                 android:id="@+id/rl_choose_car_color"
@@ -252,7 +252,7 @@
                     android:layout_marginLeft="15dp"
                     android:text="车辆颜色"
                     android:textColor="@color/main_text_color"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/tvCarColor"
@@ -263,15 +263,14 @@
                     android:layout_marginRight="15dp"
                     android:text="红色"
                     android:textColor="@color/third_text_color"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
             </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="10dp"
-                android:background="@color/divider_color"/>
-
+                android:background="@color/divider_color" />
 
 
             <TextView
@@ -282,13 +281,13 @@
                 android:text="联系人信息"
                 android:textColor="@color/main_text_color"
                 android:textSize="15sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginTop="20dp"
-                android:background="@color/divider_color"/>
+                android:background="@color/divider_color" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -302,7 +301,7 @@
                     android:layout_marginLeft="15dp"
                     android:text="*"
                     android:textColor="@color/warning_color"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -311,7 +310,7 @@
                     android:layout_marginLeft="28dp"
                     android:text="联系人"
                     android:textColor="@color/main_text_color"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
                 <EditText
                     android:id="@+id/et_input_name"
@@ -327,14 +326,14 @@
                     android:maxLength="6"
                     android:maxLines="1"
                     android:textColorHint="@color/third_text_color"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
             </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/divider_color"/>
+                android:background="@color/divider_color" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -348,7 +347,7 @@
                     android:layout_marginLeft="15dp"
                     android:text="*"
                     android:textColor="@color/warning_color"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -357,7 +356,7 @@
                     android:layout_marginLeft="28dp"
                     android:text="联系电话"
                     android:textColor="@color/main_text_color"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
                 <EditText
                     android:id="@+id/et_input_phone_num"
@@ -373,14 +372,14 @@
                     android:maxLength="11"
                     android:maxLines="1"
                     android:textColorHint="@color/third_text_color"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
             </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="10dp"
-                android:background="@color/divider_color"/>
+                android:background="@color/divider_color" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -390,7 +389,7 @@
                 android:text="车辆描述"
                 android:textColor="@color/main_text_color"
                 android:textSize="15sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -410,19 +409,7 @@
                     android:padding="12dp"
                     android:textColor="@color/second_text_color"
                     android:textColorHint="@color/third_text_color"
-                    android:textSize="14sp"/>
-
-            </LinearLayout>
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/llDetailMsg"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:orientation="vertical">
+                    android:textSize="14sp" />
 
             </LinearLayout>
 
@@ -436,10 +423,41 @@
                 android:background="@drawable/btn_background_selector"
                 android:text="发布车辆"
                 android:textColor="@drawable/btn_text_background_selector"
-                android:textSize="16sp"/>
-
+                android:textSize="16sp" />
         </LinearLayout>
 
+    </com.wiserz.pbibi.view.MyScrollView>
+
+    <com.wiserz.pbibi.view.MyScrollView
+        android:id="@+id/scrollDetailMsg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/llDetailMsg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_post_new_car_2"
+                android:layout_width="300dp"
+                android:layout_height="45dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="30dp"
+                android:layout_marginTop="50dp"
+                android:background="@drawable/btn_background_selector"
+                android:text="发布车辆"
+                android:textColor="@drawable/btn_text_background_selector"
+                android:textSize="16sp" />
+        </LinearLayout>
     </com.wiserz.pbibi.view.MyScrollView>
 
 </LinearLayout>

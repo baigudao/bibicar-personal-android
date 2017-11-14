@@ -196,7 +196,7 @@ public class OtherHomePageFragment extends BaseFragment implements BaseRecyclerV
                 }
                 break;
             case R.id.rl_message:
-                if (EmptyUtils.isEmpty(userInfoBean)) {
+                if (EmptyUtils.isEmpty(userInfoBean) || user_id == SPUtils.getInstance().getInt(Constant.USER_ID)) {
                     return;
                 }
                 RongIM.getInstance().startConversation(getActivity(), Conversation.ConversationType.PRIVATE,
