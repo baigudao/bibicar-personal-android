@@ -33,6 +33,7 @@ import com.wiserz.pbibi.activity.BaseActivity;
 import com.wiserz.pbibi.activity.RegisterAndLoginActivity;
 import com.wiserz.pbibi.activity.VRWatchCarActivity;
 import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
+import com.wiserz.pbibi.bean.CarConfiguration;
 import com.wiserz.pbibi.bean.CarInfoBean;
 import com.wiserz.pbibi.util.CommonUtil;
 import com.wiserz.pbibi.util.Constant;
@@ -169,7 +170,7 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
     }
 
     private void collectCarOrNot(String car_id, int is_favs) {
-        if(!CommonUtil.isHadLogin()) {
+        if (!CommonUtil.isHadLogin()) {
             gotoPager(RegisterAndLoginActivity.class, null);
             return;
         }
@@ -271,7 +272,6 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
 
                     @Override
                     public void onResponse(String response, int id) {
-                        Log.e("aaaaaaaaaa","response: "+response);
                         JSONObject jsonObject = null;
                         try {
                             jsonObject = new JSONObject(response);
@@ -349,6 +349,7 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
         }
     }
 
+
     private void handlerCarInfoData(JSONObject car_info) {
         Gson gson = new Gson();
         carInfoBean = gson.fromJson(car_info.toString(), CarInfoBean.class);
@@ -380,7 +381,7 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
                 ArrayList<CarInfoBean.FilesBean.Type3Bean> type3BeanArrayList = (ArrayList<CarInfoBean.FilesBean.Type3Bean>) carInfoBean.getFiles().getType3();
                 ArrayList<CarInfoBean.FilesBean.Type4Bean> type4BeanArrayList = (ArrayList<CarInfoBean.FilesBean.Type4Bean>) carInfoBean.getFiles().getType4();
 
-               // ArrayList<String> stringImageUrl = new ArrayList<>();
+                // ArrayList<String> stringImageUrl = new ArrayList<>();
                 mAllImageUrls.clear();
                 //车辆照片类型 (1:外观 2:中控内饰 3:发动机及结构 4:更多细节)
                 if (EmptyUtils.isNotEmpty(type1BeanArrayList) && type1BeanArrayList.size() != 0) {
@@ -505,6 +506,8 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
                 }
             }
 
+            resetCarConfigs(carInfoBean.getCar_extra_info());
+
             if (EmptyUtils.isNotEmpty(carInfoBean.getCar_name())) {
                 ((TextView) getView().findViewById(R.id.tv_car_name)).setText(carInfoBean.getCar_name());
             }
@@ -522,13 +525,29 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
                 }
             });
 
-            ((TextView) getView().findViewById(R.id.tv_car_distance)).setText(EmptyUtils.isEmpty(carInfoBean.getMileage()) ? " " : carInfoBean.getMileage() + "万公里");
-            ((TextView) getView().findViewById(R.id.tv_register_time)).setText(EmptyUtils.isEmpty(carInfoBean.getBoard_time()) ? " " : carInfoBean.getBoard_time() + "年");
-            ((TextView) getView().findViewById(R.id.tv_car_displacement)).setText(EmptyUtils.isEmpty(carInfoBean.getModel_detail().getEngine_ExhaustForFloat()) ? " " : carInfoBean.getModel_detail().getEngine_ExhaustForFloat());
-            ((TextView) getView().findViewById(R.id.tv_exchange_num)).setText(EmptyUtils.isEmpty(carInfoBean.getExchange_time()) ? " " : carInfoBean.getExchange_time() + "次");
-            ((TextView) getView().findViewById(R.id.tv_car_grounding)).setText(EmptyUtils.isEmpty(carInfoBean.getModel_info().getModel_year()) ? " " : carInfoBean.getModel_info().getModel_year() + "年");
-            ((TextView) getView().findViewById(R.id.tv_car_environmental)).setText(EmptyUtils.isEmpty(carInfoBean.getModel_detail().getEngine_EnvirStandard()) ? " " : carInfoBean.getModel_detail().getEngine_EnvirStandard());
+            if (carInfoBean.getCar_type() == 0) {
+                ((TextView) getView().findViewById(R.id.tvValue1)).setText(EmptyUtils.isEmpty(carInfoBean.getModel_detail().getCarReferPrice()) ? " " : carInfoBean.getModel_detail().getCarReferPrice());
+                ((TextView) getView().findViewById(R.id.tvValue2)).setText(EmptyUtils.isEmpty(carInfoBean.getModel_detail().getEngine_ExhaustForFloat()) ? " " : carInfoBean.getModel_detail().getEngine_ExhaustForFloat());
+                ((TextView) getView().findViewById(R.id.tvValue3)).setText(EmptyUtils.isEmpty(carInfoBean.getModel_detail().getPerf_AccelerateTime()) ? " " : carInfoBean.getModel_detail().getPerf_AccelerateTime());
+                ((TextView) getView().findViewById(R.id.tvValue4)).setText(EmptyUtils.isEmpty(carInfoBean.getGearbox()) ? " " : carInfoBean.getGearbox());
+                ((TextView) getView().findViewById(R.id.tvValue5)).setText(EmptyUtils.isEmpty(carInfoBean.getModel_detail().getPerf_DriveType()) ? " " : carInfoBean.getModel_detail().getPerf_DriveType());
+                ((TextView) getView().findViewById(R.id.tvValue6)).setText(EmptyUtils.isEmpty(carInfoBean.getModel_detail().getEngine_EnvirStandard()) ? " " : carInfoBean.getModel_detail().getEngine_EnvirStandard());
 
+                ((TextView) getView().findViewById(R.id.tv1)).setText("厂商指导价");
+                ((TextView) getView().findViewById(R.id.tv2)).setText("排量");
+                ((TextView) getView().findViewById(R.id.tv3)).setText("百公里加速度");
+                ((TextView) getView().findViewById(R.id.tv4)).setText("变速箱");
+                ((TextView) getView().findViewById(R.id.tv5)).setText("驱动方式");
+                ((TextView) getView().findViewById(R.id.tv6)).setText("环保标准");
+            } else {
+                ((TextView) getView().findViewById(R.id.tvValue1)).setText(EmptyUtils.isEmpty(carInfoBean.getMileage()) ? " " : carInfoBean.getMileage() + "万公里");
+                ((TextView) getView().findViewById(R.id.tvValue2)).setText(EmptyUtils.isEmpty(carInfoBean.getBoard_time()) ? " " : carInfoBean.getBoard_time() + "年");
+                ((TextView) getView().findViewById(R.id.tvValue3)).setText(EmptyUtils.isEmpty(carInfoBean.getBoard_address()) ? " " : carInfoBean.getBoard_address());
+                ((TextView) getView().findViewById(R.id.tvValue4)).setText(EmptyUtils.isEmpty(carInfoBean.getModel_detail().getPerf_AccelerateTime()) ? " " : carInfoBean.getModel_detail().getPerf_AccelerateTime());
+                ((TextView) getView().findViewById(R.id.tvValue5)).setText(EmptyUtils.isEmpty(carInfoBean.getModel_detail().getEngine_ExhaustForFloat()) ? " " : carInfoBean.getModel_detail().getEngine_ExhaustForFloat());
+                ((TextView) getView().findViewById(R.id.tvValue6)).setText(EmptyUtils.isEmpty(carInfoBean.getModel_detail().getEngine_EnvirStandard()) ? " " : carInfoBean.getModel_detail().getEngine_EnvirStandard());
+
+            }
             if (EmptyUtils.isNotEmpty(carInfoBean.getUser_info()) && EmptyUtils.isNotEmpty(carInfoBean.getUser_info().getProfile())) {
                 if (EmptyUtils.isNotEmpty(carInfoBean.getUser_info().getProfile().getAvatar())) {
                     Glide.with(mContext)
@@ -550,8 +569,10 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
                         ToastUtils.showShort("车主名");
                     }
                 });
-                if (EmptyUtils.isNotEmpty(carInfoBean.getUser_info().getProfile().getSignature())) {
-                    ((TextView) getView().findViewById(R.id.tv_car_owner_detail)).setText(carInfoBean.getUser_info().getProfile().getSignature());
+                if (EmptyUtils.isNotEmpty(carInfoBean.getCar_intro())) {
+                    ((TextView) getView().findViewById(R.id.tv_car_owner_detail)).setText(carInfoBean.getCar_intro());
+                } else {
+                    ((TextView) getView().findViewById(R.id.tv_car_owner_detail)).setText("");
                 }
             }
 
@@ -573,33 +594,73 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
         }
     }
 
-    private void showCarDetailPhotos(boolean isShowAll){
-        LinearLayout llAllCarPhotos=(LinearLayout) getView().findViewById(R.id.llAllCarPhotos);
+    private void resetCarConfigs(ArrayList<CarConfiguration.Configuration> list) {
+        LinearLayout llConfigs = (LinearLayout) getView().findViewById(R.id.llConfigs);
+        llConfigs.removeViews(1, llConfigs.getChildCount() - 1);
+        if (list == null || list.isEmpty()) {
+            llConfigs.setVisibility(View.GONE);
+            getView().findViewById(R.id.configLine).setVisibility(View.GONE);
+            return;
+        }
+        llConfigs.setVisibility(View.VISIBLE);
+        getView().findViewById(R.id.configLine).setVisibility(View.VISIBLE);
+        int size = list.size();
+        int row = size % 3 == 0 ? size / 3 : size / 3 + 1;
+        View itemView;
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        TextView tvName1, tvName2, tvName3;
+        for (int i = 0; i < row; ++i) {
+            itemView = inflater.inflate(R.layout.item_car_detail_configs, null);
+            llConfigs.addView(itemView);
+            tvName1 = ((TextView) itemView.findViewById(R.id.tvName1));
+            tvName2 = ((TextView) itemView.findViewById(R.id.tvName2));
+            tvName3 = ((TextView) itemView.findViewById(R.id.tvName3));
+            if (i * 3 < size) {
+                tvName1.setText(list.get(i * 3).getName());
+            } else {
+                tvName1.setVisibility(View.GONE);
+            }
+            if (i * 3 + 1 < size) {
+                tvName2.setText(list.get(i * 3 + 1).getName());
+            } else {
+                tvName2.setVisibility(View.GONE);
+            }
+            if (i * 3 + 2 < size) {
+                tvName3.setText(list.get(i * 3 + 2).getName());
+            } else {
+                tvName3.setVisibility(View.GONE);
+            }
+        }
+
+    }
+
+    private void showCarDetailPhotos(boolean isShowAll) {
+        LinearLayout llAllCarPhotos = (LinearLayout) getView().findViewById(R.id.llAllCarPhotos);
         llAllCarPhotos.removeAllViews();
-        LayoutInflater inflater=LayoutInflater.from(getActivity());
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
         View itemView;
         int size;
-        if(mAllImageUrls.size()<=3){
-            size=mAllImageUrls.size();
+        if (mAllImageUrls.size() <= 3) {
+            size = mAllImageUrls.size();
             getView().findViewById(R.id.showAllPhotos).setVisibility(View.GONE);
-        }else{
-            if(isShowAll){
-                size=mAllImageUrls.size();
+        } else {
+            if (isShowAll) {
+                size = mAllImageUrls.size();
                 getView().findViewById(R.id.showAllPhotos).setVisibility(View.GONE);
-            }else{
-                size=3;
+            } else {
+                size = 3;
                 getView().findViewById(R.id.showAllPhotos).setVisibility(View.VISIBLE);
             }
         }
-        for(int i=0;i<size;++i){
-            itemView=inflater.inflate(R.layout.item_car_detail_photo,null);
+        for (int i = 0; i < size; ++i) {
+            itemView = inflater.inflate(R.layout.item_car_detail_photo, null);
             llAllCarPhotos.addView(itemView);
             Glide.with(mContext)
                     .load(mAllImageUrls.get(i))
                     .placeholder(R.drawable.default_bg_ratio_1)
                     .error(R.drawable.default_bg_ratio_1)
                     .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
-                    .into((ImageView)itemView.findViewById(R.id.ivPhoto));
+                    .into((ImageView) itemView.findViewById(R.id.ivPhoto));
         }
     }
 
@@ -671,7 +732,7 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
         SharePlatformPopupWindow sharePlatformPopWindow = new SharePlatformPopupWindow(getActivity(), new SharePlatformPopupWindow.SharePlatformListener() {
             @Override
             public void onSinaWeiboClicked() {
-                if(!CommonUtil.isHadLogin()) {
+                if (!CommonUtil.isHadLogin()) {
                     gotoPager(RegisterAndLoginActivity.class, null);
                     return;
                 }
@@ -680,7 +741,7 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
 
             @Override
             public void onWeChatClicked() {
-                if(!CommonUtil.isHadLogin()) {
+                if (!CommonUtil.isHadLogin()) {
                     gotoPager(RegisterAndLoginActivity.class, null);
                     return;
                 }
@@ -689,7 +750,7 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
 
             @Override
             public void onWechatMomentsClicked() {
-                if(!CommonUtil.isHadLogin()) {
+                if (!CommonUtil.isHadLogin()) {
                     gotoPager(RegisterAndLoginActivity.class, null);
                     return;
                 }

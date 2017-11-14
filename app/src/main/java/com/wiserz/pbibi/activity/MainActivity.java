@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.fragment.BaseFragment;
 import com.wiserz.pbibi.fragment.CarCenterFragment;
@@ -19,6 +20,7 @@ import com.wiserz.pbibi.fragment.MyFragmentForCompany;
 import com.wiserz.pbibi.fragment.PublishStateFragment;
 import com.wiserz.pbibi.fragment.RecommendFragment;
 import com.wiserz.pbibi.util.CommonUtil;
+import com.wiserz.pbibi.util.GBExecutionPool;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -163,17 +165,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 position = 2;
                 break;
             case R.id.ll_message:
-                if(CommonUtil.isHadLogin()) {
+                if (CommonUtil.isHadLogin()) {
                     position = 3;
-                }else{
+                } else {
                     gotoPager(RegisterAndLoginActivity.class, null);
                     return;
                 }
                 break;
             case R.id.ll_me:
-                if(CommonUtil.isHadLogin()) {
+                if (CommonUtil.isHadLogin()) {
                     position = 4;
-                }else{
+                } else {
                     gotoPager(RegisterAndLoginActivity.class, null);
                     return;
                 }
@@ -221,11 +223,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
-    public void onResume(){
+    public void onResume() {
         super.onResume();
-        if((position==3 || position==4) && !CommonUtil.isHadLogin()){
+        if ((position == 3 || position == 4) && !CommonUtil.isHadLogin()) {
             findViewById(R.id.ll_home).performClick();
         }
+        GBExecutionPool.getExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                CommonUtil.deletePhotoFile(MainActivity.this);
+            }
+        });
     }
 
     private void resetTab() {
@@ -243,7 +251,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     public void publishState(View view) {
-        if(!CommonUtil.isHadLogin()) {
+        if (!CommonUtil.isHadLogin()) {
             gotoPager(RegisterAndLoginActivity.class, null);
             return;
         }

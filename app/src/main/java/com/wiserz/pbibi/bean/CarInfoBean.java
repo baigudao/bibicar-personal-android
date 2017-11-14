@@ -1,5 +1,6 @@
 package com.wiserz.pbibi.bean;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,6 +39,7 @@ public class CarInfoBean extends BaseBean {
     private String car_name;
     private int car_status;
     private int car_type;
+    private String car_intro;
     private int created;
     private int fav_num;
     private String file_img;
@@ -57,9 +59,35 @@ public class CarInfoBean extends BaseBean {
     private String gearbox;
     private String mileage;
     private String board_time;
+    private String board_address;
     private String exchange_time;
     private int is_like;
     private int is_fav;
+    private ArrayList<CarConfiguration.Configuration> car_extra_info;
+
+    public ArrayList<CarConfiguration.Configuration> getCar_extra_info() {
+        return car_extra_info;
+    }
+
+    public void setCar_extra_info(ArrayList<CarConfiguration.Configuration> car_extra_info) {
+        this.car_extra_info = car_extra_info;
+    }
+
+    public String getBoard_address() {
+        return board_address;
+    }
+
+    public void setBoard_address(String board_address) {
+        this.board_address = board_address;
+    }
+
+    public String getCar_intro() {
+        return car_intro;
+    }
+
+    public void setCar_intro(String car_intro) {
+        this.car_intro = car_intro;
+    }
 
     public int getIs_fav() {
         return is_fav;

@@ -15,6 +15,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -514,7 +515,7 @@ public class CommonUtil {
      *
      * @param bmp
      */
-    public static String saveJpegByPath(Bitmap bmp, Context context,String folder) {
+    public static String saveJpegByPath(Bitmap bmp, Context context, String folder) {
         FileOutputStream fout = null;
         BufferedOutputStream bos = null;
         try {
@@ -541,6 +542,19 @@ public class CommonUtil {
         return folder;
     }
 
+    /**
+     */
+    public static void deletePhotoFile(Context context) {
+        String dirPath = Environment.getExternalStorageDirectory() + "/Android/data/" + context.getPackageName() + "/download";
+        File file = new File(dirPath);
+        if (file.exists()) {
+            File[] files = file.listFiles();
+            for (File f : files) {
+                f.delete();
+            }
+        }
+    }
+
 
     /**
      * dp转px
@@ -555,7 +569,7 @@ public class CommonUtil {
     }
 
 
-    public static boolean isHadLogin(){
-        return  SPUtils.getInstance().getBoolean(Constant.IS_USER_LOGIN, false);
+    public static boolean isHadLogin() {
+        return SPUtils.getInstance().getBoolean(Constant.IS_USER_LOGIN, false);
     }
 }

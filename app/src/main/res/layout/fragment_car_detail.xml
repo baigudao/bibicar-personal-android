@@ -140,7 +140,7 @@
                     android:layout_weight="1">
 
                     <TextView
-                        android:id="@+id/tv_car_distance"
+                        android:id="@+id/tvValue1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
@@ -149,9 +149,10 @@
                         android:textSize="14sp" />
 
                     <TextView
+                        android:id="@+id/tv1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/tv_car_distance"
+                        android:layout_below="@id/tvValue1"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="5dp"
                         android:text="表显里程"
@@ -166,7 +167,7 @@
                     android:layout_weight="1">
 
                     <TextView
-                        android:id="@+id/tv_register_time"
+                        android:id="@+id/tvValue2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
@@ -175,9 +176,10 @@
                         android:textSize="14sp" />
 
                     <TextView
+                        android:id="@+id/tv2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/tv_register_time"
+                        android:layout_below="@id/tvValue2"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="5dp"
                         android:text="上牌日期"
@@ -192,7 +194,7 @@
                     android:layout_weight="1">
 
                     <TextView
-                        android:id="@+id/tv_car_displacement"
+                        android:id="@+id/tvValue3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
@@ -201,12 +203,13 @@
                         android:textSize="14sp" />
 
                     <TextView
+                        android:id="@+id/tv3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/tv_car_displacement"
+                        android:layout_below="@id/tvValue3"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="5dp"
-                        android:text="排量"
+                        android:text="上牌地点"
                         android:textColor="@color/second_text_color"
                         android:textSize="12sp" />
 
@@ -226,7 +229,7 @@
                     android:layout_weight="1">
 
                     <TextView
-                        android:id="@+id/tv_exchange_num"
+                        android:id="@+id/tvValue4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
@@ -235,12 +238,13 @@
                         android:textSize="14sp" />
 
                     <TextView
+                        android:id="@+id/tv4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/tv_exchange_num"
+                        android:layout_below="@id/tvValue4"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="5dp"
-                        android:text="过户次数"
+                        android:text="百公里加速"
                         android:textColor="#929292"
                         android:textSize="12sp" />
 
@@ -252,7 +256,7 @@
                     android:layout_weight="1">
 
                     <TextView
-                        android:id="@+id/tv_car_grounding"
+                        android:id="@+id/tvValue5"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
@@ -261,12 +265,13 @@
                         android:textSize="14sp" />
 
                     <TextView
+                        android:id="@+id/tv5"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/tv_car_grounding"
+                        android:layout_below="@id/tvValue5"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="5dp"
-                        android:text="上市日期"
+                        android:text="排量"
                         android:textColor="#929292"
                         android:textSize="12sp" />
 
@@ -278,7 +283,7 @@
                     android:layout_weight="1">
 
                     <TextView
-                        android:id="@+id/tv_car_environmental"
+                        android:id="@+id/tvValue6"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
@@ -287,9 +292,10 @@
                         android:textSize="14sp" />
 
                     <TextView
+                        android:id="@+id/tv6"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/tv_car_environmental"
+                        android:layout_below="@id/tvValue6"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="5dp"
                         android:text="环保标准"
@@ -301,6 +307,34 @@
             </LinearLayout>
 
             <View
+                android:layout_width="345dp"
+                android:layout_height="1dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:background="@color/divider_color" />
+
+            <LinearLayout
+                android:id="@+id/llConfigs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:layout_marginTop="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="20dp"
+                    android:text="亮点配置"
+                    android:textColor="#3a3a3a"
+                    android:textSize="15sp" />
+
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/configLine"
                 android:layout_width="345dp"
                 android:layout_height="1dp"
                 android:layout_gravity="center_horizontal"
