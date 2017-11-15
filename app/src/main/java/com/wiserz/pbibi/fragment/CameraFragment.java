@@ -1,8 +1,12 @@
 package com.wiserz.pbibi.fragment;
 
+import android.Manifest;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
@@ -10,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.wiserz.pbibi.activity.BaseActivity;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.adapter.SelectedPhotoAdapter;
@@ -40,8 +45,11 @@ public class CameraFragment extends BaseFragment implements View.OnTouchListener
     private ArrayList<File> mSelectedPhotos;
     private SelectPhotoFragment mSelectPhotoFragment;
 
-    public BaseFragment setParentFragment(SelectPhotoFragment selectPhotoFragment){
-        mSelectPhotoFragment=selectPhotoFragment;
+    private static final String CAMERA_PERMISSION = Manifest.permission.CAMERA;
+    private static final int EXTERNAL_STORAGE_REQ_CODE = 10;//权限请求码
+
+    public BaseFragment setParentFragment(SelectPhotoFragment selectPhotoFragment) {
+        mSelectPhotoFragment = selectPhotoFragment;
         return this;
     }
 
@@ -56,6 +64,7 @@ public class CameraFragment extends BaseFragment implements View.OnTouchListener
 //            mSelectedPhotos=(ArrayList<File>) DataManager.getInstance().getObject();
 //        }
         DataManager.getInstance().setObject(null);
+        requestPermission();
     }
 
     @Override
@@ -97,17 +106,14 @@ public class CameraFragment extends BaseFragment implements View.OnTouchListener
     @Override
     public void onResume() {
         super.onResume();
-        mCameraManager = CameraManager.getInstance(getActivity());
-        mCameraManager.setCameraDirection(CameraManager.CameraDirection.CAMERA_BACK);
-        initCameraLayout();
-        mUsingCamera = false;
-        if(DataManager.getInstance().getObject()!=null && DataManager.getInstance().getData1()!=null){
-            String newPath=(String)DataManager.getInstance().getObject();
-            int index=(int) DataManager.getInstance().getData1();
-            getSelectedPhotos().set(index,new File(newPath));
+        requestPermission();
+        if (DataManager.getInstance().getObject() != null && DataManager.getInstance().getData1() != null) {
+            String newPath = (String) DataManager.getInstance().getObject();
+            int index = (int) DataManager.getInstance().getData1();
+            getSelectedPhotos().set(index, new File(newPath));
             getSelectedPhotoAdapter().notifyDataSetChanged();
-        }else if(DataManager.getInstance().getData2()!=null){
-            int index=(int) DataManager.getInstance().getData2();
+        } else if (DataManager.getInstance().getData2() != null) {
+            int index = (int) DataManager.getInstance().getData2();
             getSelectedPhotos().remove(index);
             getSelectedPhotoAdapter().notifyDataSetChanged();
         }
@@ -132,6 +138,40 @@ public class CameraFragment extends BaseFragment implements View.OnTouchListener
         mUsingCamera = false;
         mCameraContainer = null;
         showView();
+    }
+
+    private void requestPermission() {
+
+        if (ContextCompat.checkSelfPermission(getActivity(), CAMERA_PERMISSION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{CAMERA_PERMISSION}, EXTERNAL_STORAGE_REQ_CODE);
+        } else {
+            startCamera();
+        }
+    }
+
+    private void startCamera() {
+        mCameraManager = CameraManager.getInstance(getActivity());
+        mCameraManager.setCameraDirection(CameraManager.CameraDirection.CAMERA_BACK);
+        initCameraLayout();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case EXTERNAL_STORAGE_REQ_CODE: {
+                if (grantResults.length > 0) {
+                    for (int result : grantResults) {
+                        if (result == PackageManager.PERMISSION_GRANTED) {
+                            startCamera();
+                            return;
+                        }
+                    }
+                }
+            }
+            default:
+                break;
+        }
     }
 
 
@@ -199,7 +239,7 @@ public class CameraFragment extends BaseFragment implements View.OnTouchListener
                 getActivity().finish();
                 break;
             case R.id.btnTakePhoto:
-                if (mUsingCamera || getSelectedPhotos().size()+mSelectPhotoFragment.getCurrentPhotoNum() == 6) {
+                if (mUsingCamera || getSelectedPhotos().size() + mSelectPhotoFragment.getCurrentPhotoNum() == 6) {
                     return;
                 }
                 mUsingCamera = true;
@@ -212,7 +252,7 @@ public class CameraFragment extends BaseFragment implements View.OnTouchListener
                                 if (bmp != null) {
                                     String path = CommonUtil.saveJpeg(bmp, getActivity());
                                     bmp.recycle();
-                                    if(mSelectPhotoFragment.getCurrentPhotoNum()==-1){
+                                    if (mSelectPhotoFragment.getCurrentPhotoNum() == -1) {
                                         DataManager.getInstance().setData3(path);
                                         goBack();
                                         return;
