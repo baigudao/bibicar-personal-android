@@ -98,7 +98,6 @@ public class HallRecyclerViewAdapter extends RecyclerView.Adapter implements Bas
                     ((BaseActivity) mContext).gotoPager(AllTopicFragment.class, null);
                 }
             });
-
             ArrayList<TopicInfoBean> topicInfoBeanArrayList = getJoinTopicData(jsonObjectData);
             if (EmptyUtils.isNotEmpty(topicInfoBeanArrayList) && topicInfoBeanArrayList.size() != 0) {
                 BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, topicInfoBeanArrayList, MY_TOPIC_DATA_TYPE);
@@ -121,7 +120,7 @@ public class HallRecyclerViewAdapter extends RecyclerView.Adapter implements Bas
 
     @Override
     public int getItemCount() {
-        return 3;
+        return CommonUtil.isHadLogin() ? 3 : 2;
     }
 
     @Override
@@ -131,7 +130,7 @@ public class HallRecyclerViewAdapter extends RecyclerView.Adapter implements Bas
                 currentType = RECOMMEND_TOPIC;
                 break;
             case MY_TOPIC:
-                currentType = MY_TOPIC;
+                currentType = CommonUtil.isHadLogin() ? MY_TOPIC : HOT_WEEK;
                 break;
             case HOT_WEEK:
                 currentType = HOT_WEEK;
@@ -205,6 +204,7 @@ public class HallRecyclerViewAdapter extends RecyclerView.Adapter implements Bas
             tv_check_all = (TextView) itemView.findViewById(R.id.tv_check_all);
             recyclerView = (RecyclerView) itemView.findViewById(R.id.recyclerView);
         }
+
     }
 
     private class HotWeekViewHolder extends RecyclerView.ViewHolder {

@@ -111,6 +111,13 @@ public class HallFragment extends BaseFragment implements OnRefreshListener, OnL
                 });
     }
 
+    public void onResume(){
+        super.onResume();
+        if(hallRecyclerViewAdapter!=null){
+            hallRecyclerViewAdapter.notifyDataSetChanged();
+        }
+    }
+
     @Override
     public void onRefresh(RefreshLayout refreshlayout) {
         mPage = 0;

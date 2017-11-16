@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.baidu.location.BDAbstractLocationListener;
@@ -40,6 +42,7 @@ import com.wiserz.pbibi.util.Constant;
 import com.wiserz.pbibi.util.DataManager;
 import com.wiserz.pbibi.view.MorePopupWindow;
 import com.wiserz.pbibi.view.RangeSeekBar;
+import com.wiserz.pbibi.view.SelectStartEndView;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -66,6 +69,9 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
     private LinearLayout ll_select;
     private LinearLayout ll_sort;
     private LinearLayout ll_price;
+    private LinearLayout ll_filter;
+    private LinearLayout ll_brand;
+
 
     private RecyclerView recyclerView;
     private int mPage;
@@ -73,12 +79,12 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
     private String order_id;
     private String min_price;
     private String max_price;
-    private String brand_id;
-    private String series_id;
     private String min_mileage;
     private String max_mileage;
     private String min_board_time;
     private String max_board_time;
+
+
 
     private SmartRefreshLayout smartRefreshLayout;
     private BaseRecyclerViewAdapter baseRecyclerViewAdapter;
@@ -86,6 +92,14 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
 
     private int flag;
     private int price_id;
+    private int new_or_old;
+    private int car_source;
+    private int car_vr;
+    private int brand_id;
+    private int series_id;
+
+    private String brand_name;
+    private String series_name;
 
     private static final int CAR_LIST_FOR_CAR_CENTER = 100;
 
@@ -121,6 +135,10 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
         ll_sort.setOnClickListener(this);
         ll_price = (LinearLayout) view.findViewById(R.id.ll_price);
         ll_price.setOnClickListener(this);
+        ll_filter=(LinearLayout) view.findViewById(R.id.ll_filter);
+        ll_filter.setOnClickListener(this);
+        ll_brand=(LinearLayout) view.findViewById(R.id.ll_brand);
+        ll_brand.setOnClickListener(this);
 
         view.findViewById(R.id.tvSearch).setOnClickListener(this);
 
@@ -161,11 +179,63 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                 View car_price_view = View.inflate(mContext, R.layout.item_car_price, null);
                 carSelectPopupWindow(car_price_view);
                 break;
+            case R.id.ll_filter:
+                flag = 2;
+                resetHeaderView();
+                View car_filter_view = View.inflate(mContext, R.layout.item_filter_view, null);
+                carSelectPopupWindow(car_filter_view);
+                break;
+            case R.id.ll_brand:
+                gotoPager(SelectCarBrandFragment.class, null);
+                break;
             case R.id.tvSearch:
                 gotoPager(SearchFragment.class, null);
                 break;
             default:
                 break;
+        }
+    }
+
+    public void onResume(){
+        super.onResume();
+        Object data1 = DataManager.getInstance().getData1();
+        Object data2 = DataManager.getInstance().getData2();
+        Object data3 = DataManager.getInstance().getData3();
+        Object data4 = DataManager.getInstance().getData4();
+        Object data5 = DataManager.getInstance().getData5();
+        Object data6 = DataManager.getInstance().getData6();
+        if (EmptyUtils.isNotEmpty(data1)
+                && EmptyUtils.isNotEmpty(data2)
+                && EmptyUtils.isNotEmpty(data3)
+                && EmptyUtils.isNotEmpty(data4)
+                && EmptyUtils.isNotEmpty(data5)
+                && EmptyUtils.isNotEmpty(data6)) {
+            if (data1 instanceof Integer && data2 instanceof String
+                    && data3 instanceof Integer && data4 instanceof String
+                    && data5 instanceof Integer && data6 instanceof String) {
+                brand_id =(int)data1;
+                brand_name = (String) data2;
+                series_id = (int)data3;
+                series_name = (String) data4;
+
+                TextView tvBrand=(TextView)getView().findViewById(R.id.tvBrand);
+                if (TextUtils.isEmpty(brand_name)) {
+                    tvBrand.setText("全部品牌");
+                }else{
+                    String text=brand_name;
+                    if (TextUtils.isEmpty(series_name)) {
+                        text = text.substring(0, 2) + "..." + series_name.substring(series_name.length() - 2);
+                    }
+                    tvBrand.setText(text);
+                }
+            }
+            getCarListDataFromNet();
+            DataManager.getInstance().setData1(null);
+            DataManager.getInstance().setData2(null);
+            DataManager.getInstance().setData3(null);
+            DataManager.getInstance().setData4(null);
+            DataManager.getInstance().setData5(null);
+            DataManager.getInstance().setData6(null);
         }
     }
 
@@ -180,13 +250,17 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                     ((TextView) getView().findViewById(R.id.tv_price)).setTextColor(getResources().getColor(R.color.main_color));
                     ((ImageView) getView().findViewById(R.id.iv_arrow_price)).setImageResource(R.drawable.v2_ewer3x);
                     break;
+                case 2:
+                    ((TextView) getView().findViewById(R.id.tv_filter)).setTextColor(getResources().getColor(R.color.main_color));
+                    ((ImageView) getView().findViewById(R.id.iv_arrow_filter)).setImageResource(R.drawable.v2_ewer3x);
+                    break;
                 default:
                     break;
             }
         }
     }
 
-    private void carSelectPopupWindow(View view) {
+    private void carSelectPopupWindow(final View view) {
         final PopupWindow popupWindow = new PopupWindow(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         //外部是否可以点击
         popupWindow.setBackgroundDrawable(new BitmapDrawable());
@@ -272,12 +346,12 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                 final TextView tv4 = (TextView) view.findViewById(R.id.tv4);
                 final TextView tv5 = (TextView) view.findViewById(R.id.tv5);
                 final TextView tv6 = (TextView) view.findViewById(R.id.tv6);
-                resetPriceTextView(tv0, tv1, tv2, tv3, tv4, tv5, tv6);
+                resetTextView(price_id,tv0, tv1, tv2, tv3, tv4, tv5, tv6);
                 tv0.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         price_id = 0;
-                        resetPriceTextView(tv0, tv1, tv2, tv3, tv4, tv5, tv6);
+                        resetTextView(price_id,tv0, tv1, tv2, tv3, tv4, tv5, tv6);
                         min_price = "0";
                         max_price = "";
                     }
@@ -286,7 +360,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                     @Override
                     public void onClick(View view) {
                         price_id = 1;
-                        resetPriceTextView(tv0, tv1, tv2, tv3, tv4, tv5, tv6);
+                        resetTextView(price_id,tv0, tv1, tv2, tv3, tv4, tv5, tv6);
                         min_price = "0";
                         max_price = "15";
                     }
@@ -295,7 +369,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                     @Override
                     public void onClick(View view) {
                         price_id = 2;
-                        resetPriceTextView(tv0, tv1, tv2, tv3, tv4, tv5, tv6);
+                        resetTextView(price_id,tv0, tv1, tv2, tv3, tv4, tv5, tv6);
                         min_price = "15";
                         max_price = "30";
                     }
@@ -304,7 +378,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                     @Override
                     public void onClick(View view) {
                         price_id = 3;
-                        resetPriceTextView(tv0, tv1, tv2, tv3, tv4, tv5, tv6);
+                        resetTextView(price_id,tv0, tv1, tv2, tv3, tv4, tv5, tv6);
                         min_price = "30";
                         max_price = "50";
                     }
@@ -313,7 +387,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                     @Override
                     public void onClick(View view) {
                         price_id = 4;
-                        resetPriceTextView(tv0, tv1, tv2, tv3, tv4, tv5, tv6);
+                        resetTextView(price_id,tv0, tv1, tv2, tv3, tv4, tv5, tv6);
                         min_price = "50";
                         max_price = "100";
                     }
@@ -322,7 +396,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                     @Override
                     public void onClick(View view) {
                         price_id = 5;
-                        resetPriceTextView(tv0, tv1, tv2, tv3, tv4, tv5, tv6);
+                        resetTextView(price_id,tv0, tv1, tv2, tv3, tv4, tv5, tv6);
                         min_price = "100";
                         max_price = "200";
                     }
@@ -334,7 +408,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                     @Override
                     public void onRangeSeekBarValuesChanged(RangeSeekBar<?> bar, Integer minValue, Integer maxValue) {
                         price_id = -1;
-                        resetPriceTextView(tv0, tv1, tv2, tv3, tv4, tv5, tv6);
+                        resetTextView(price_id,tv0, tv1, tv2, tv3, tv4, tv5, tv6);
                         min_price = String.valueOf(minValue);
                         max_price = maxValue > 200 ? "" : String.valueOf(maxValue);
                     }
@@ -343,12 +417,123 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                     @Override
                     public void onClick(View view) {
                         price_id = 6;
-                        resetPriceTextView(tv0, tv1, tv2, tv3, tv4, tv5, tv6);
+                        resetTextView(price_id,tv0, tv1, tv2, tv3, tv4, tv5, tv6);
                         min_price = "200";
                         max_price = "";
                     }
                 });
                 btn_sure.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mPage = 0;
+                        getCarListDataFromNet();
+                        popupWindow.dismiss();
+                    }
+                });
+                break;
+            case 2:
+                final TextView tvOldOrNewNoLimit = (TextView) view.findViewById(R.id.tvOldOrNewNoLimit);
+                final TextView tvOnlyNew = (TextView) view.findViewById(R.id.tvOnlyNew);
+                final TextView tvOnlySecondHand = (TextView) view.findViewById(R.id.tvOnlySecondHand);
+                tvOldOrNewNoLimit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        new_or_old=0;
+                        resetTextView(new_or_old,tvOldOrNewNoLimit, tvOnlyNew, tvOnlySecondHand);
+                        showViewByNewOld(view,true);
+                    }
+                });
+                tvOnlyNew.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        new_or_old=1;
+                        resetTextView(new_or_old,tvOldOrNewNoLimit, tvOnlyNew, tvOnlySecondHand);
+                        showViewByNewOld(view,false);
+                        ((ScrollView) view).scrollTo(0,0);
+                    }
+                });
+
+                tvOnlySecondHand.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        new_or_old=2;
+                        resetTextView(new_or_old,tvOldOrNewNoLimit, tvOnlyNew, tvOnlySecondHand);
+                        showViewByNewOld(view,true);
+                    }
+                });
+                resetTextView(new_or_old,tvOldOrNewNoLimit, tvOnlyNew, tvOnlySecondHand);
+                showViewByNewOld(view,new_or_old!=1);
+
+                final TextView tvSourceNoLimit = (TextView) view.findViewById(R.id.tvSourceNoLimit);
+                final TextView tvProfileSource = (TextView) view.findViewById(R.id.tvProfileSource);
+                final TextView tvShopSource = (TextView) view.findViewById(R.id.tvShopSource);
+                tvSourceNoLimit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        car_source=0;
+                        resetTextView(car_source,tvSourceNoLimit, tvProfileSource, tvShopSource);
+                    }
+                });
+
+                tvProfileSource.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        car_source=1;
+                        resetTextView(car_source,tvSourceNoLimit, tvProfileSource, tvShopSource);
+                    }
+                });
+
+                tvShopSource.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        car_source=2;
+                        resetTextView(car_source,tvSourceNoLimit, tvProfileSource, tvShopSource);
+                    }
+                });
+                resetTextView(car_source,tvSourceNoLimit, tvProfileSource, tvShopSource);
+
+                final TextView tvVRNoLimit = (TextView) view.findViewById(R.id.tvVRNoLimit);
+                final TextView tvOnlyVR = (TextView) view.findViewById(R.id.tvOnlyVR);
+                tvVRNoLimit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        car_vr=0;
+                        resetTextView(car_vr,tvVRNoLimit, tvOnlyVR);
+                    }
+                });
+
+                tvOnlyVR.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        car_vr=1;
+                        resetTextView(car_vr,tvVRNoLimit, tvOnlyVR);
+                    }
+                });
+                resetTextView(car_vr,tvVRNoLimit, tvOnlyVR);
+
+                RangeSeekBar<Integer> distanceBar = (RangeSeekBar<Integer>) view.findViewById(R.id.distanceBar);
+                distanceBar.setMaxLastText(12, getResources().getString(R.string.no_limit));
+                distanceBar.setMaxMinSpace(1);
+                distanceBar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener<Integer>() {
+                    @Override
+                    public void onRangeSeekBarValuesChanged(RangeSeekBar<?> bar, Integer minValue, Integer maxValue) {
+                        min_mileage = String.valueOf(minValue);
+                        max_mileage = maxValue > 12 ? "" : String.valueOf(maxValue);
+                    }
+                });
+
+                RangeSeekBar<Integer> ageBar = (RangeSeekBar<Integer>) view.findViewById(R.id.ageBar);
+                ageBar.setMaxLastText(8, getResources().getString(R.string.no_limit));
+                ageBar.setMaxMinSpace(1);
+                ageBar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener<Integer>() {
+                    @Override
+                    public void onRangeSeekBarValuesChanged(RangeSeekBar<?> bar, Integer minValue, Integer maxValue) {
+                        min_board_time = String.valueOf(minValue);
+                        max_board_time = maxValue > 8 ? "" : String.valueOf(maxValue);
+                    }
+                });
+
+                view.findViewById(R.id.btnOk).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         mPage = 0;
@@ -374,6 +559,10 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                             ((TextView) getView().findViewById(R.id.tv_price)).setTextColor(getResources().getColor(R.color.main_text_color));
                             ((ImageView) getView().findViewById(R.id.iv_arrow_price)).setImageResource(R.drawable.v2_expand3x);
                             break;
+                        case 2:
+                            ((TextView) getView().findViewById(R.id.tv_filter)).setTextColor(getResources().getColor(R.color.main_text_color));
+                            ((ImageView) getView().findViewById(R.id.iv_arrow_filter)).setImageResource(R.drawable.v2_expand3x);
+                            break;
                         default:
                             break;
                     }
@@ -382,61 +571,38 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
         });
     }
 
-    private void resetPriceTextView(TextView tv0, TextView tv1, TextView tv2, TextView tv3, TextView tv4, TextView tv5, TextView tv6) {
+    private void showViewByNewOld(View view,boolean isShow) {
+        if (isShow) {
+            view.findViewById(R.id.tvSource).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.llSource).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.llDistance).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.distanceBar).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.llAge).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.ageBar).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.fillView).setVisibility(View.GONE);
+        } else {
+            view.findViewById(R.id.tvSource).setVisibility(View.GONE);
+            view.findViewById(R.id.llSource).setVisibility(View.GONE);
+            view.findViewById(R.id.llDistance).setVisibility(View.GONE);
+            view.findViewById(R.id.distanceBar).setVisibility(View.GONE);
+            view.findViewById(R.id.llAge).setVisibility(View.GONE);
+            view.findViewById(R.id.ageBar).setVisibility(View.GONE);
+            view.findViewById(R.id.fillView).setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void resetTextView(int selectId,TextView... textViews) {
         int fromColor = getResources().getColor(R.color.third_text_color);
-        GradientDrawable background0 = (GradientDrawable) tv0.getBackground();
-        background0.setStroke(SizeUtils.dp2px(1), fromColor);
-        GradientDrawable background1 = (GradientDrawable) tv1.getBackground();
-        background1.setStroke(SizeUtils.dp2px(1), fromColor);
-        GradientDrawable background2 = (GradientDrawable) tv2.getBackground();
-        background2.setStroke(SizeUtils.dp2px(1), fromColor);
-        GradientDrawable background3 = (GradientDrawable) tv3.getBackground();
-        background3.setStroke(SizeUtils.dp2px(1), fromColor);
-        GradientDrawable background4 = (GradientDrawable) tv4.getBackground();
-        background4.setStroke(SizeUtils.dp2px(1), fromColor);
-        GradientDrawable background5 = (GradientDrawable) tv5.getBackground();
-        background5.setStroke(SizeUtils.dp2px(1), fromColor);
-        GradientDrawable background6 = (GradientDrawable) tv6.getBackground();
-        background6.setStroke(SizeUtils.dp2px(1), fromColor);
-        tv0.setTextColor(getResources().getColor(R.color.main_text_color));
-        tv1.setTextColor(getResources().getColor(R.color.main_text_color));
-        tv2.setTextColor(getResources().getColor(R.color.main_text_color));
-        tv3.setTextColor(getResources().getColor(R.color.main_text_color));
-        tv4.setTextColor(getResources().getColor(R.color.main_text_color));
-        tv5.setTextColor(getResources().getColor(R.color.main_text_color));
-        tv6.setTextColor(getResources().getColor(R.color.main_text_color));
-        int color = getResources().getColor(R.color.main_color);
-        switch (price_id) {
-            case 0:
-                tv0.setTextColor(color);
-                background0.setStroke(SizeUtils.dp2px(1), color);
-                break;
-            case 1:
-                tv1.setTextColor(color);
-                background1.setStroke(SizeUtils.dp2px(1), color);
-                break;
-            case 2:
-                tv2.setTextColor(color);
-                background2.setStroke(SizeUtils.dp2px(1), color);
-                break;
-            case 3:
-                tv3.setTextColor(color);
-                background3.setStroke(SizeUtils.dp2px(1), color);
-                break;
-            case 4:
-                tv4.setTextColor(color);
-                background4.setStroke(SizeUtils.dp2px(1), color);
-                break;
-            case 5:
-                tv5.setTextColor(color);
-                background5.setStroke(SizeUtils.dp2px(1), color);
-                break;
-            case 6:
-                tv6.setTextColor(color);
-                background6.setStroke(SizeUtils.dp2px(1), color);
-                break;
-            default:
-                break;
+        for(TextView tv:textViews){
+            GradientDrawable background = (GradientDrawable) tv.getBackground();
+            background.setStroke(SizeUtils.dp2px(1), fromColor);
+            tv.setTextColor(getResources().getColor(R.color.main_text_color));
+        }
+        if(selectId>=0) {
+            int color = getResources().getColor(R.color.main_color);
+            textViews[selectId].setTextColor(color);
+            GradientDrawable background = (GradientDrawable) textViews[selectId].getBackground();
+            background.setStroke(SizeUtils.dp2px(1), color);
         }
     }
 
@@ -469,18 +635,20 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                 .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
                 .addParams(Constant.KEY_WORD, "")//关键字
                 .addParams(Constant.ORDER_ID, order_id == null ? "" : order_id)//排序id
-                .addParams(Constant.BRAND_ID, brand_id == null ? "" : brand_id)//车品牌id
-                .addParams(Constant.SERIES_ID, series_id == null ? "" : series_id)//车系列id
+                .addParams(Constant.BRAND_ID, brand_id == 0 ? "" : String.valueOf(brand_id))//车品牌id
+                .addParams(Constant.SERIES_ID, series_id == 0 ? "" : String.valueOf(series_id))//车系列id
                 .addParams(Constant.PAGE, String.valueOf(mPage))
+                .addParams(Constant.MIN_PRICE, min_price == null ? "" : min_price)//最低价格
+                .addParams(Constant.MAX_PRICE, max_price == null ? "" : max_price)//最高价格
                 .addParams(Constant.MIN_PRICE, min_price == null ? "" : min_price)//最低价格
                 .addParams(Constant.MAX_PRICE, max_price == null ? "" : max_price)//最高价格
                 .addParams(Constant.MIN_MILEAGE, min_mileage == null ? "" : min_mileage)//最低里程
                 .addParams(Constant.MAX_MILEAGE, max_mileage == null ? "" : max_mileage)//最高里程
                 .addParams(Constant.MIN_BOARD_TIME, min_board_time == null ? "" : min_board_time)//最短上牌时间
                 .addParams(Constant.MAX_BOARD_TIME, max_board_time == null ? "" : max_board_time)//最长上牌时间
-                .addParams(Constant.HAS_VR, "")//是否有VR看车功能  1:是
-                .addParams(Constant.OLD, "")//是否新车二手车 1:新车 2 二手车
-                .addParams(Constant.SOURCE, "")//车辆来源 1:个人 2 商家
+                .addParams(Constant.HAS_VR, car_vr==0?"":String.valueOf(car_vr))//是否有VR看车功能  1:是
+                .addParams(Constant.OLD, new_or_old==0?"":String.valueOf(new_or_old))//是否新车二手车 1:新车 2 二手车
+                .addParams(Constant.SOURCE, car_source==0?"":String.valueOf(car_source))//车辆来源 1:个人 2 商家
                 .build()
                 .execute(new StringCallback() {
                     @Override

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_color"
@@ -8,9 +8,10 @@
     <include layout="@layout/title_bar" />
 
     <RelativeLayout
+        android:id="@+id/rl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="61dp">
 
         <View
             android:id="@+id/centerView"
@@ -66,12 +67,14 @@
         android:id="@+id/topLine2"
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_below="@id/rl"
         android:background="@color/divider_color" />
 
     <RelativeLayout
         android:id="@+id/rlWarning"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/topLine2"
         android:layout_marginTop="10dp">
 
         <TextView
@@ -98,10 +101,25 @@
 
     </RelativeLayout>
 
+    <Button
+        android:id="@+id/btn_post_second_car"
+        android:layout_width="300dp"
+        android:layout_height="45dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/btn_background_selector"
+        android:text="发布车辆"
+        android:textColor="@drawable/btn_text_background_selector"
+        android:textSize="16sp" />
+
     <com.wiserz.pbibi.view.MyScrollView
         android:id="@+id/scrollBasicMsg"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:layout_above="@id/btn_post_second_car"
+        android:layout_below="@id/rlWarning"
+        android:paddingBottom="40dp">
 
         <LinearLayout
             android:id="@+id/llBasicMsg"
@@ -652,51 +670,25 @@
                     android:textColorHint="@color/third_text_color"
                     android:textSize="14sp" />
             </LinearLayout>
-
-            <Button
-                android:id="@+id/btn_post_second_car"
-                android:layout_width="300dp"
-                android:layout_height="45dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="30dp"
-                android:layout_marginTop="50dp"
-                android:background="@drawable/btn_background_selector"
-                android:text="发布车辆"
-                android:textColor="@drawable/btn_text_background_selector"
-                android:textSize="16sp" />
         </LinearLayout>
     </com.wiserz.pbibi.view.MyScrollView>
 
     <com.wiserz.pbibi.view.MyScrollView
         android:id="@+id/scrollDetailMsg"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:layout_above="@id/btn_post_second_car"
+        android:layout_below="@id/rlWarning"
+        android:visibility="gone"
+        android:paddingBottom="40dp">
 
         <LinearLayout
+            android:id="@+id/llDetailMsg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/llDetailMsg"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/btn_post_second_car_2"
-                android:layout_width="300dp"
-                android:layout_height="45dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="30dp"
-                android:layout_marginTop="50dp"
-                android:background="@drawable/btn_background_selector"
-                android:text="发布车辆"
-                android:textColor="@drawable/btn_text_background_selector"
-                android:textSize="16sp" />
         </LinearLayout>
     </com.wiserz.pbibi.view.MyScrollView>
 
-</LinearLayout>
+</RelativeLayout>

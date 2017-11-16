@@ -11,10 +11,10 @@
         android:text="Esp系統"
         android:textColor="@color/main_text_color"
         android:background="@drawable/back_config_not_selected"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
+        android:paddingLeft="13dp"
+        android:paddingRight="13dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
         android:textSize="12sp" />
 
     <TextView
@@ -24,11 +24,11 @@
         android:text="GPS導航"
         android:textColor="@color/main_text_color"
         android:background="@drawable/back_config_not_selected"
-        android:layout_marginLeft="18dp"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
+        android:layout_marginLeft="15dp"
+        android:paddingLeft="13dp"
+        android:paddingRight="13dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
         android:textSize="12sp" />
 
     <TextView
@@ -38,11 +38,11 @@
         android:text="座椅加熱"
         android:textColor="@color/main_text_color"
         android:background="@drawable/back_config_not_selected"
-        android:layout_marginLeft="18dp"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
+        android:layout_marginLeft="15dp"
+        android:paddingLeft="13dp"
+        android:paddingRight="13dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
         android:textSize="12sp" />
 
 </LinearLayout>

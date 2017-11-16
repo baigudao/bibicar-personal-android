@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.net.Uri;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +29,7 @@ import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.activity.BaseActivity;
 import com.wiserz.pbibi.bean.CarConfiguration;
 import com.wiserz.pbibi.bean.CityBean;
+import com.wiserz.pbibi.bean.LoginBean;
 import com.wiserz.pbibi.bean.ProvinceBean;
 import com.wiserz.pbibi.util.CommonUtil;
 import com.wiserz.pbibi.util.Constant;
@@ -130,7 +132,6 @@ public class PostSecondHandCarFragment extends BaseFragment {
         ((TextView) view.findViewById(R.id.tv_title)).setText("上传二手车");
 
         view.findViewById(R.id.btn_post_second_car).setOnClickListener(this);
-        view.findViewById(R.id.btn_post_second_car_2).setOnClickListener(this);
         view.findViewById(R.id.rl_choose_car_color).setOnClickListener(this);
         view.findViewById(R.id.rl_first_post_license).setOnClickListener(this);
         view.findViewById(R.id.rl_choose_car_type).setOnClickListener(this);
@@ -153,6 +154,11 @@ public class PostSecondHandCarFragment extends BaseFragment {
         iv_add_car_vin.setOnClickListener(this);
         iv_image_vin = (ImageView) view.findViewById(R.id.iv_image_vin);
         iv_image_vin.setOnClickListener(this);
+
+        LoginBean.UserInfoBean userInfoBean = DataManager.getInstance().getUserInfo();
+        if(userInfoBean!=null){
+            et_input_phone_num.setText(TextUtils.isEmpty(userInfoBean.getMobile())?"":userInfoBean.getMobile());
+        }
 
         mProvinceBeenList = new ArrayList<>();
         uploadManager = new UploadManager();
@@ -350,13 +356,16 @@ public class PostSecondHandCarFragment extends BaseFragment {
             getUploadPhotos().set(index, new File(newPath));
             DataManager.getInstance().setObject(null);
             DataManager.getInstance().setData1(null);
+            resetCarPhotosView();
         } else if (DataManager.getInstance().getData8() != null) {
             int index = (int) DataManager.getInstance().getData8();
             getUploadPhotos().remove(index);
             DataManager.getInstance().setData8(null);
+            resetCarPhotosView();
         } else if (DataManager.getInstance().getObject() != null) {
             getUploadPhotos().addAll((ArrayList<File>) DataManager.getInstance().getObject());
             DataManager.getInstance().setObject(null);
+            resetCarPhotosView();
         } else if (DataManager.getInstance().getData9() != null) {
             File file_vin = new File((String) DataManager.getInstance().getData9());
             ll_image_vin.setVisibility(View.GONE);
@@ -370,7 +379,7 @@ public class PostSecondHandCarFragment extends BaseFragment {
         }
 
 
-        resetCarPhotosView();
+
     }
 
     private void resetCarPhotosView() {
@@ -475,7 +484,6 @@ public class PostSecondHandCarFragment extends BaseFragment {
             case R.id.iv_back:
                 goBack();
                 break;
-            case R.id.btn_post_second_car_2:
             case R.id.btn_post_second_car:
                 publishSecondCar();
                 break;

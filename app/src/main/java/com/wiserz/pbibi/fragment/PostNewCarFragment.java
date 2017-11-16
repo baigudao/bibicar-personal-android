@@ -2,6 +2,7 @@ package com.wiserz.pbibi.fragment;
 
 import android.content.res.Resources;
 import android.net.Uri;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import com.wiserz.pbibi.BaseApplication;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.activity.BaseActivity;
 import com.wiserz.pbibi.bean.CarConfiguration;
+import com.wiserz.pbibi.bean.LoginBean;
 import com.wiserz.pbibi.util.CommonUtil;
 import com.wiserz.pbibi.util.Constant;
 import com.wiserz.pbibi.util.DataManager;
@@ -75,7 +77,6 @@ public class PostNewCarFragment extends BaseFragment {
         ((TextView) view.findViewById(R.id.tv_title)).setText("上传新车");
         view.findViewById(R.id.topLine).setVisibility(View.GONE);
         view.findViewById(R.id.btn_post_new_car).setOnClickListener(this);
-        view.findViewById(R.id.btn_post_new_car_2).setOnClickListener(this);
         view.findViewById(R.id.rl_choose_car_color).setOnClickListener(this);
         view.findViewById(R.id.rl_choose_car_type).setOnClickListener(this);
         view.findViewById(R.id.tvCloseWarning).setOnClickListener(this);
@@ -87,6 +88,11 @@ public class PostNewCarFragment extends BaseFragment {
 
         mColor = 0;
         resetColorView(mColor);
+
+        LoginBean.UserInfoBean userInfoBean = DataManager.getInstance().getUserInfo();
+        if(userInfoBean!=null){
+            ((EditText) view.findViewById(R.id.et_input_phone_num)).setText(TextUtils.isEmpty(userInfoBean.getMobile())?"":userInfoBean.getMobile());
+        }
 
         getTokenFromNet();
         getCarExtraInfo();
@@ -299,7 +305,6 @@ public class PostNewCarFragment extends BaseFragment {
                 getView().findViewById(R.id.scrollBasicMsg).setVisibility(View.GONE);
                 getView().findViewById(R.id.scrollDetailMsg).setVisibility(View.VISIBLE);
                 break;
-            case R.id.btn_post_new_car_2:
             case R.id.btn_post_new_car:
                 publishNewCar();
                 break;
@@ -325,15 +330,18 @@ public class PostNewCarFragment extends BaseFragment {
             getUploadPhotos().set(index, new File(newPath));
             DataManager.getInstance().setObject(null);
             DataManager.getInstance().setData1(null);
+            resetCarPhotosView();
         } else if (DataManager.getInstance().getData8() != null) {
             int index = (int) DataManager.getInstance().getData8();
             getUploadPhotos().remove(index);
             DataManager.getInstance().setData8(null);
+            resetCarPhotosView();
         } else if (DataManager.getInstance().getObject() != null) {
             getUploadPhotos().addAll((ArrayList<File>) DataManager.getInstance().getObject());
             DataManager.getInstance().setObject(null);
+            resetCarPhotosView();
         }
-        resetCarPhotosView();
+
     }
 
     private void resetCarPhotosView() {
