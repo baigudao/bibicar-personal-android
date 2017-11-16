@@ -23,6 +23,7 @@ import com.wiserz.pbibi.adapter.MediaFileAdapter;
 import com.wiserz.pbibi.adapter.SelectedPhotoAdapter;
 import com.wiserz.pbibi.adapter.ShowMediasAdapter;
 import com.wiserz.pbibi.util.CommonUtil;
+import com.wiserz.pbibi.util.Constant;
 import com.wiserz.pbibi.util.DataManager;
 import com.wiserz.pbibi.util.GBExecutionPool;
 
@@ -336,7 +337,7 @@ public class AlbumFragment extends BaseFragment {
                     mMediasAdapter.notifyDataSetChanged();
                     return;
                 }
-                if (mSelectPhotoFragment.getSelectedPhotos().size() + mSelectPhotoFragment.getCurrentPhotoNum() == 6) {
+                if (mSelectPhotoFragment.getSelectedPhotos().size() + mSelectPhotoFragment.getCurrentPhotoNum() == Constant.MAX_UPLOAD_PHOTO_NUM) {
                     return;
                 }
 

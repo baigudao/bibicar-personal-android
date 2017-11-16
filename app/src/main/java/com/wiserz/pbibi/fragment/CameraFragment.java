@@ -22,6 +22,7 @@ import com.wiserz.pbibi.hardwrare.CameraManager;
 import com.wiserz.pbibi.hardwrare.OnCameraListener;
 import com.wiserz.pbibi.hardwrare.SensorControler;
 import com.wiserz.pbibi.util.CommonUtil;
+import com.wiserz.pbibi.util.Constant;
 import com.wiserz.pbibi.util.DataManager;
 import com.wiserz.pbibi.view.SquareCameraContainer;
 
@@ -234,7 +235,7 @@ public class CameraFragment extends BaseFragment implements View.OnTouchListener
                 getActivity().finish();
                 break;
             case R.id.btnTakePhoto:
-                if (mUsingCamera || mSelectPhotoFragment.getSelectedPhotos().size() + mSelectPhotoFragment.getCurrentPhotoNum() == 6) {
+                if (mUsingCamera || mSelectPhotoFragment.getSelectedPhotos().size() + mSelectPhotoFragment.getCurrentPhotoNum() == Constant.MAX_UPLOAD_PHOTO_NUM) {
                     return;
                 }
                 mUsingCamera = true;

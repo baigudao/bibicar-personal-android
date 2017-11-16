@@ -377,8 +377,8 @@ public class PostSecondHandCarFragment extends BaseFragment {
         LinearLayout llCarPhotos = (LinearLayout) getView().findViewById(R.id.llCarPhotos);
         llCarPhotos.removeAllViews();
         int size;
-        if (getUploadPhotos().size() == 6) {
-            size = 6;
+        if (getUploadPhotos().size() == Constant.MAX_UPLOAD_PHOTO_NUM) {
+            size = Constant.MAX_UPLOAD_PHOTO_NUM;
         } else {
             size = getUploadPhotos().size() + 1;
         }
