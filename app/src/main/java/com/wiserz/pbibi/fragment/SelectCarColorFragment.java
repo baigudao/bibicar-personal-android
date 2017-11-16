@@ -51,7 +51,7 @@ public class SelectCarColorFragment extends BaseFragment implements BaseRecycler
     protected void initData() {
         super.initData();
         ArrayList<String> strings = new ArrayList<>();
-        for (int i = 0; i < 14; i++) {
+        for (int i = 0; i < 15; i++) {
             strings.add("color" + i);
         }
         BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, strings, SELECT_CAR_COLOR_DATA_TYPE);

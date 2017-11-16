@@ -138,6 +138,7 @@ public class Constant {
     private static final String splashUrl = hostUrl + "app/getimg";//启动页
     private static final String userLoginUrl = hostUrl + "v3/user/login";//用户登录
     private static final String userCodeLoginUrl = hostUrl + "v3/user/loginbymobile";//用户登录
+    private static final String userQuicklogininUrl = hostUrl + "v4/user/quicklogin";
     private static final String newHomeUrl = hostUrl + "v3/theme/homepage";//首页
 
     private static final String userInfoUpdateUrl = hostUrl + "v3/User/updateAll";//用户资料更新
@@ -289,6 +290,11 @@ public class Constant {
     public static String getUserCodeLoginUrl() {
         return userCodeLoginUrl;
     }
+
+    public static String getUserQuicklogininUrl() {
+        return userQuicklogininUrl;
+    }
+
 
     public static String getOauthRegisterUrl() {
         return oauthRegisterUrl;

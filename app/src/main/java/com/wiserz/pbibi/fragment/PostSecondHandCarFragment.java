@@ -157,6 +157,9 @@ public class PostSecondHandCarFragment extends BaseFragment {
         mProvinceBeenList = new ArrayList<>();
         uploadManager = new UploadManager();
 
+        mColor=0;
+        resetColorView(mColor);
+
         getTokenFromNet();
         getCarExtraInfo();
         gotoPager(SelectPhotoFragment.class, null, true);
@@ -341,17 +344,21 @@ public class PostSecondHandCarFragment extends BaseFragment {
 
     public void onResume() {
         super.onResume();
-        if(DataManager.getInstance().getObject()!=null && DataManager.getInstance().getData1()!=null){
-            String newPath=(String)DataManager.getInstance().getObject();
-            int index=(int) DataManager.getInstance().getData1();
-            getUploadPhotos().set(index,new File(newPath));
-        }else if(DataManager.getInstance().getData2()!=null){
-            int index=(int) DataManager.getInstance().getData2();
+        if (DataManager.getInstance().getObject() != null && DataManager.getInstance().getData1() != null) {
+            String newPath = (String) DataManager.getInstance().getObject();
+            int index = (int) DataManager.getInstance().getData1();
+            getUploadPhotos().set(index, new File(newPath));
+            DataManager.getInstance().setObject(null);
+            DataManager.getInstance().setData1(null);
+        } else if (DataManager.getInstance().getData8() != null) {
+            int index = (int) DataManager.getInstance().getData8();
             getUploadPhotos().remove(index);
-        }else if(DataManager.getInstance().getObject()!=null) {
-            getUploadPhotos().addAll((ArrayList< File >)DataManager.getInstance().getObject());
-        }else if(DataManager.getInstance().getData3()!=null){
-            File file_vin = new File((String) DataManager.getInstance().getData3());
+            DataManager.getInstance().setData8(null);
+        } else if (DataManager.getInstance().getObject() != null) {
+            getUploadPhotos().addAll((ArrayList<File>) DataManager.getInstance().getObject());
+            DataManager.getInstance().setObject(null);
+        } else if (DataManager.getInstance().getData9() != null) {
+            File file_vin = new File((String) DataManager.getInstance().getData9());
             ll_image_vin.setVisibility(View.GONE);
             Glide.with(mContext)
                     .load(file_vin)
@@ -359,11 +366,10 @@ public class PostSecondHandCarFragment extends BaseFragment {
                     .error(R.drawable.default_bg_ratio_1)
                     .into(iv_image_vin);
             uploadVinImage(file_vin);
+            DataManager.getInstance().setData9(null);
         }
-        DataManager.getInstance().setObject(null);
-        DataManager.getInstance().setData1(null);
-        DataManager.getInstance().setData2(null);
-        DataManager.getInstance().setData3(null);
+
+
         resetCarPhotosView();
     }
 
@@ -525,7 +531,7 @@ public class PostSecondHandCarFragment extends BaseFragment {
             case R.id.iv_image_vin:
             case R.id.iv_add_car_vin:
                 DataManager.getInstance().setObject(-1);
-                gotoPager(SelectPhotoFragment.class,null,true);
+                gotoPager(SelectPhotoFragment.class, null, true);
                 break;
             default:
                 break;
@@ -653,7 +659,7 @@ public class PostSecondHandCarFragment extends BaseFragment {
 
     private void resetColorView(int color) {
         Resources res = getResources();
-        String text = res.getString(res.getIdentifier("car_color_" + (color + 1), "string", getActivity().getPackageName()));
+        String text = res.getString(res.getIdentifier("car_color_" + color, "string", getActivity().getPackageName()));
         tv_car_color.setText(text);
     }
 
@@ -792,6 +798,7 @@ public class PostSecondHandCarFragment extends BaseFragment {
                     uploadManager.put(photoPath, UUID.randomUUID().toString() + "_" + String.valueOf(file_type), upload_token, new UpCompletionHandler() {
                         @Override
                         public void complete(String key, ResponseInfo info, JSONObject response) {
+                            Log.e("aaaaaaaaaa", "response: " + response.toString());
                             if (info.isOK()) {
                                 //上传成功
                                 int status = response.optInt("status");
@@ -841,7 +848,6 @@ public class PostSecondHandCarFragment extends BaseFragment {
                     carInfoIds += ",";
                 }
             }
-            Log.e("aaaaaaaaa", "carInfoIds: " + carInfoIds + ", " + this.broadPlace);
 
             OkHttpUtils.post()
                     .url(Constant.getPublishSecondCarUrl())

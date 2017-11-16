@@ -9,6 +9,7 @@ import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.util.DataManager;
 import com.wiserz.pbibi.view.CustomViewPager;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -19,6 +20,14 @@ public class SelectPhotoFragment extends BaseFragment {
     private ArrayList<BaseFragment> mFragmentList;
 
     private int mCurrentPhotoNum;  //现有多少张照片，当为-1时表示VIN照片
+    private ArrayList<File> mSelectedPhotos;
+
+    public ArrayList<File> getSelectedPhotos() {
+        if (mSelectedPhotos == null) {
+            mSelectedPhotos = new ArrayList<>();
+        }
+        return mSelectedPhotos;
+    }
 
     @Override
     protected int getLayoutId() {
@@ -39,6 +48,10 @@ public class SelectPhotoFragment extends BaseFragment {
 
     public int getCurrentPhotoNum() {
         return mCurrentPhotoNum;
+    }
+
+    public int getCurrentItem() {
+        return ((CustomViewPager) getView().findViewById(R.id.viewpager)).getCurrentItem();
     }
 
     private void initViewPager() {
@@ -100,7 +113,7 @@ public class SelectPhotoFragment extends BaseFragment {
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.tvLeft:
                 ((CustomViewPager) getView().findViewById(R.id.viewpager)).setCurrentItem(0);
                 break;

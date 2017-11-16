@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:background="@color/background_color">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="15dp"
+        android:gravity="center_vertical"
+        android:text="厂家指导价"
+        android:textColor="@color/main_text_color"
+        android:textSize="14sp" />
+
+
+</RelativeLayout>

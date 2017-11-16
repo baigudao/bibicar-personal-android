@@ -1,12 +1,19 @@
 package com.wiserz.pbibi.fragment;
 
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.EmptyUtils;
 import com.wiserz.pbibi.R;
+import com.wiserz.pbibi.bean.CarConfiguration;
 import com.wiserz.pbibi.bean.CarInfoBean;
 import com.wiserz.pbibi.util.DataManager;
+
+import java.util.ArrayList;
 
 /**
  * Created by jackie on 2017/8/14 22:55.
@@ -96,28 +103,56 @@ public class ConcreteParameterFragment extends BaseFragment {
 
     private void showData() {
         CarInfoBean.ModelDetailBean modelDetailBean = carInfoBean.getModel_detail();
-        if (EmptyUtils.isNotEmpty(modelDetailBean)) {
-            tv_price.setText(EmptyUtils.isEmpty(modelDetailBean.getCarReferPrice()) ? " " : modelDetailBean.getCarReferPrice());
-            tv_guarantee.setText(EmptyUtils.isEmpty(modelDetailBean.getCar_RepairPolicy()) ? " " : modelDetailBean.getCar_RepairPolicy());
-            tv_output.setText(EmptyUtils.isEmpty(modelDetailBean.getEngine_ExhaustForFloat()) ? " " : modelDetailBean.getEngine_ExhaustForFloat());
-            tv_oil.setText(EmptyUtils.isEmpty(modelDetailBean.getPerf_ZongHeYouHao()) ? " " : modelDetailBean.getPerf_ZongHeYouHao());
-            tv_100_accelerate_time.setText(EmptyUtils.isEmpty(modelDetailBean.getPerf_AccelerateTime()) ? " " : modelDetailBean.getPerf_AccelerateTime());
-            tv_car_top_speed.setText(EmptyUtils.isEmpty(modelDetailBean.getPerf_MaxSpeed()) ? " " : modelDetailBean.getPerf_MaxSpeed());
-            tv_car_take_num.setText(EmptyUtils.isEmpty(modelDetailBean.getPerf_SeatNum()) ? " " : modelDetailBean.getPerf_SeatNum());
-            tv_car_drive_style.setText(EmptyUtils.isEmpty(modelDetailBean.getPerf_DriveType()) ? " " : modelDetailBean.getPerf_DriveType());
-            tv_car_engine_type.setText(EmptyUtils.isEmpty(modelDetailBean.getEngine_Type()) ? " " : modelDetailBean.getEngine_Type());
-            tv_car_engine_position.setText(EmptyUtils.isEmpty(modelDetailBean.getEngine_Location()) ? " " : modelDetailBean.getEngine_Location());
-            tv_car_enter_gas_type.setText(EmptyUtils.isEmpty(modelDetailBean.getEngine_InhaleType()) ? " " : modelDetailBean.getEngine_InhaleType());
-            tv_car_most_engine.setText(EmptyUtils.isEmpty(modelDetailBean.getEngine_horsepower()) ? " " : modelDetailBean.getEngine_horsepower());
-            tv_car_most_distance.setText(EmptyUtils.isEmpty(modelDetailBean.getEngine_MaxNJ()) ? " " : modelDetailBean.getEngine_MaxNJ());
-            tv_car_environment_standard.setText(EmptyUtils.isEmpty(modelDetailBean.getEngine_EnvirStandard()) ? " " : modelDetailBean.getEngine_EnvirStandard());
-            tv_car_vol.setText(EmptyUtils.isEmpty(modelDetailBean.getOutSet_Width()) ? " " : modelDetailBean.getOutSet_Width());
-            tv_car_ground_distance.setText(EmptyUtils.isEmpty(modelDetailBean.getOutSet_MinGapFromEarth()) ? " " : modelDetailBean.getOutSet_MinGapFromEarth());
-            tv_car_distance.setText(EmptyUtils.isEmpty(modelDetailBean.getOutSet_WheelBase()) ? " " : modelDetailBean.getOutSet_WheelBase());
-            tv_car_box_vol.setText(EmptyUtils.isEmpty(modelDetailBean.getOil_FuelCapacity()) ? " " : modelDetailBean.getOil_FuelCapacity());
-            tv_car_gas_style.setText(EmptyUtils.isEmpty(modelDetailBean.getOil_FuelType()) ? " " : modelDetailBean.getOil_FuelType());
-            tv_car_oil_style.setText(EmptyUtils.isEmpty(modelDetailBean.getOil_SupplyType()) ? " " : modelDetailBean.getOil_SupplyType());
+        ArrayList<CarConfiguration.Configuration> carExtraInfo = carInfoBean.getCar_extra_info();
+        LinearLayout llExtra = (LinearLayout) getView().findViewById(R.id.llExtra);
+        llExtra.removeAllViews();
+        if (carExtraInfo != null && !carExtraInfo.isEmpty()) {
+            getView().findViewById(R.id.rlExtraName).setVisibility(View.VISIBLE);
+            llExtra.setVisibility(View.VISIBLE);
+            int size = carExtraInfo.size();
+            LayoutInflater inflater = LayoutInflater.from(getActivity());
+            RelativeLayout view;
+            for (int i = 0; i < size; ++i) {
+                view = (RelativeLayout) inflater.inflate(R.layout.item_extra_info, null);
+                view.setBackgroundColor(getResources().getColor(i % 2 == 0 ? R.color.background_color : R.color.pure_white_color));
+                ((TextView) view.getChildAt(0)).setText(carExtraInfo.get(i).getName());
+                llExtra.addView(view);
+            }
+            if (size % 2 == 0) {
+                getView().findViewById(R.id.rlExtraBasicName).setBackgroundColor(getResources().getColor(R.color.background_color));
+                LinearLayout llBasic = (LinearLayout) getView().findViewById(R.id.llBasic);
+                size = llBasic.getChildCount();
+                for (int i = 0; i < size; ++i) {
+                    llBasic.getChildAt(i).setBackgroundColor(getResources().getColor(i % 2 == 1 ? R.color.background_color : R.color.pure_white_color));
+                }
+            }
+        } else {
+            getView().findViewById(R.id.rlExtraName).setVisibility(View.GONE);
+            llExtra.setVisibility(View.GONE);
         }
-        tv_auto.setText(EmptyUtils.isEmpty(carInfoBean.getGearbox()) ? " " : carInfoBean.getGearbox());
+
+        if (EmptyUtils.isNotEmpty(modelDetailBean)) {
+            tv_price.setText(EmptyUtils.isEmpty(modelDetailBean.getCarReferPrice()) ? "****" : modelDetailBean.getCarReferPrice());
+            tv_guarantee.setText(EmptyUtils.isEmpty(modelDetailBean.getCar_RepairPolicy()) ? "***" : modelDetailBean.getCar_RepairPolicy());
+            tv_output.setText(EmptyUtils.isEmpty(modelDetailBean.getEngine_ExhaustForFloat()) ? "****" : modelDetailBean.getEngine_ExhaustForFloat());
+            tv_oil.setText(EmptyUtils.isEmpty(modelDetailBean.getPerf_ZongHeYouHao()) ? "****" : modelDetailBean.getPerf_ZongHeYouHao());
+            tv_100_accelerate_time.setText(EmptyUtils.isEmpty(modelDetailBean.getPerf_AccelerateTime()) ? "****" : modelDetailBean.getPerf_AccelerateTime());
+            tv_car_top_speed.setText(EmptyUtils.isEmpty(modelDetailBean.getPerf_MaxSpeed()) ? "****" : modelDetailBean.getPerf_MaxSpeed());
+            tv_car_take_num.setText(EmptyUtils.isEmpty(modelDetailBean.getPerf_SeatNum()) ? "****" : modelDetailBean.getPerf_SeatNum());
+            tv_car_drive_style.setText(EmptyUtils.isEmpty(modelDetailBean.getPerf_DriveType()) ? "****" : modelDetailBean.getPerf_DriveType());
+            tv_car_engine_type.setText(EmptyUtils.isEmpty(modelDetailBean.getEngine_Type()) ? "****" : modelDetailBean.getEngine_Type());
+            tv_car_engine_position.setText(EmptyUtils.isEmpty(modelDetailBean.getEngine_Location()) ? "****" : modelDetailBean.getEngine_Location());
+            tv_car_enter_gas_type.setText(EmptyUtils.isEmpty(modelDetailBean.getEngine_InhaleType()) ? "****" : modelDetailBean.getEngine_InhaleType());
+            tv_car_most_engine.setText(EmptyUtils.isEmpty(modelDetailBean.getEngine_horsepower()) ? "****" : modelDetailBean.getEngine_horsepower());
+            tv_car_most_distance.setText(EmptyUtils.isEmpty(modelDetailBean.getEngine_MaxNJ()) ? "****" : modelDetailBean.getEngine_MaxNJ());
+            tv_car_environment_standard.setText(EmptyUtils.isEmpty(modelDetailBean.getEngine_EnvirStandard()) ? "****" : modelDetailBean.getEngine_EnvirStandard());
+            tv_car_vol.setText(EmptyUtils.isEmpty(modelDetailBean.getOutSet_Width()) ? "****" : modelDetailBean.getOutSet_Width());
+            tv_car_ground_distance.setText(EmptyUtils.isEmpty(modelDetailBean.getOutSet_MinGapFromEarth()) ? "****" : modelDetailBean.getOutSet_MinGapFromEarth());
+            tv_car_distance.setText(EmptyUtils.isEmpty(modelDetailBean.getOutSet_WheelBase()) ? "****" : modelDetailBean.getOutSet_WheelBase());
+            tv_car_box_vol.setText(EmptyUtils.isEmpty(modelDetailBean.getOil_FuelCapacity()) ? "****" : modelDetailBean.getOil_FuelCapacity());
+            tv_car_gas_style.setText(EmptyUtils.isEmpty(modelDetailBean.getOil_FuelType()) ? "****" : modelDetailBean.getOil_FuelType());
+            tv_car_oil_style.setText(EmptyUtils.isEmpty(modelDetailBean.getOil_SupplyType()) ? "****" : modelDetailBean.getOil_SupplyType());
+        }
+        tv_auto.setText(EmptyUtils.isEmpty(carInfoBean.getGearbox()) ? "****" : carInfoBean.getGearbox());
     }
 }

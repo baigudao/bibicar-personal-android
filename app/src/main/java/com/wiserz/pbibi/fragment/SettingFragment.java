@@ -47,7 +47,7 @@ public class SettingFragment extends BaseFragment {
         settings_cache_size = (TextView) view.findViewById(R.id.settings_cache_size);
 
         view.findViewById(R.id.rl_binding_phone).setOnClickListener(this);
-        view.findViewById(R.id.rl_modify_pwd).setOnClickListener(this);
+//        view.findViewById(R.id.rl_modify_pwd).setOnClickListener(this);
         view.findViewById(R.id.rl_clear_cache).setOnClickListener(this);
         view.findViewById(R.id.rl_about_us).setOnClickListener(this);
         view.findViewById(R.id.rl_give_grade).setOnClickListener(this);
@@ -63,9 +63,9 @@ public class SettingFragment extends BaseFragment {
             case R.id.rl_binding_phone:
                 gotoPager(BindingPhoneFragment.class, null);
                 break;
-            case R.id.rl_modify_pwd:
-                gotoPager(ForgetPasswordFragment.class, null);
-                break;
+//            case R.id.rl_modify_pwd:
+//                gotoPager(ForgetPasswordFragment.class, null);
+//                break;
             case R.id.rl_clear_cache:
                 showDeleteCacheDialog();
                 break;

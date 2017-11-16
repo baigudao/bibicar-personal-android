@@ -71,7 +71,7 @@ public class RegisterAndLoginActivity extends BaseActivity implements View.OnCli
         btn_register.setOnClickListener(this);
         btn_register.setVisibility(View.VISIBLE);
         SPUtils.getInstance().put(Constant.IS_USER_LOGIN, false);
-        tv_get_verfication_code=(TextView) findViewById(R.id.tv_get_verfication_code);
+        tv_get_verfication_code = (TextView) findViewById(R.id.tv_get_verfication_code);
         et_account_login = (EditText) findViewById(R.id.et_account_login);
         et_account_login.addTextChangedListener(new TextChangedListener());
         et_verfication_code_login = (EditText) findViewById(R.id.et_verfication_code_login);
@@ -102,7 +102,7 @@ public class RegisterAndLoginActivity extends BaseActivity implements View.OnCli
                 gotoPager(UserProtocolFragment.class, null);
                 break;
             case R.id.tv_get_verfication_code:
-             //   gotoPager(ForgetPasswordFragment.class, null);
+                //   gotoPager(ForgetPasswordFragment.class, null);
                 getCode();
                 break;
             case R.id.image_btn_weixin_login:
@@ -116,7 +116,7 @@ public class RegisterAndLoginActivity extends BaseActivity implements View.OnCli
         }
     }
 
-    private void getCode(){
+    private void getCode() {
         String mobile = getAccount();
         if (TextUtils.isEmpty(mobile)) {
             Toast.makeText(this, getString(R.string.please_input_phone_number), Toast.LENGTH_SHORT).show();
@@ -130,6 +130,7 @@ public class RegisterAndLoginActivity extends BaseActivity implements View.OnCli
         mTimer = new Timer();
         initTimerTask();
         mTimer.schedule(mTask, 1000, 1000);
+        tv_get_verfication_code.setEnabled(false);
         OkHttpUtils.post()
                 .url(Constant.getVerificationCodeUrl())
                 .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
@@ -143,7 +144,7 @@ public class RegisterAndLoginActivity extends BaseActivity implements View.OnCli
 
                     @Override
                     public void onResponse(String response, int id) {
-                        Log.e("aaaaaaaaa","response: "+response);
+                        Log.e("aaaaaaaaa", "response: " + response);
                         JSONObject jsonObject = null;
                         try {
                             jsonObject = new JSONObject(response);
@@ -173,11 +174,15 @@ public class RegisterAndLoginActivity extends BaseActivity implements View.OnCli
                         --mTotalTime;
                         tv_get_verfication_code.setText(String.valueOf(mTotalTime));
                         if (mTotalTime <= 0) {
+                            tv_get_verfication_code.setEnabled(true);
                             mTimer.cancel();
-                            mTimer=null;
+                            mTimer = null;
                             tv_get_verfication_code.setText(getString(R.string.get_code));
                             tv_get_verfication_code.setBackgroundDrawable(null);
                             tv_get_verfication_code.setTextColor(getResources().getColor(R.color.btn_no_enable_color));
+                            boolean user = et_account_login.getText().length() == 11;
+                            tv_get_verfication_code.setEnabled(user);
+                            tv_get_verfication_code.setTextColor(getResources().getColor(user ? R.color.main_color : R.color.btn_no_enable_color));
                         } else {
                             tv_get_verfication_code.setTextColor(Color.WHITE);
                             tv_get_verfication_code.setBackgroundDrawable(getResources().getDrawable(R.drawable.my_verification_code_shape));//倒计时时候的背景
@@ -192,7 +197,7 @@ public class RegisterAndLoginActivity extends BaseActivity implements View.OnCli
         final String account = getAccount();
         final String verficationCode = getVerficationCode();
         OkHttpUtils.post()
-                .url(Constant.getUserCodeLoginUrl())
+                .url(Constant.getUserQuicklogininUrl())
                 .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
                 .addParams(Constant.MOBILE, account)
                 .addParams(Constant.CODE, verficationCode)
@@ -241,12 +246,12 @@ public class RegisterAndLoginActivity extends BaseActivity implements View.OnCli
                 });
     }
 
-    public void onDestroy(){
+    public void onDestroy() {
         super.onDestroy();
-        if(mTimer!=null){
+        if (mTimer != null) {
             mTimer.cancel();
         }
-        mTimer=null;
+        mTimer = null;
     }
 
     /**
@@ -366,8 +371,12 @@ public class RegisterAndLoginActivity extends BaseActivity implements View.OnCli
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            boolean user = et_account_login.getText().length() > 0;
-            boolean pwd = et_verfication_code_login.getText().length() > 0;
+            boolean user = et_account_login.getText().length() == 11;
+            if (mTotalTime <= 0) {
+                tv_get_verfication_code.setEnabled(user);
+                tv_get_verfication_code.setTextColor(getResources().getColor(user ? R.color.main_color : R.color.btn_no_enable_color));
+            }
+            boolean pwd = et_verfication_code_login.getText().length() == 4;
             if (user & pwd) {
                 btn_login.setEnabled(true);
             } else {

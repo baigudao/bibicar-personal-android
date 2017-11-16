@@ -74,6 +74,7 @@ import com.wiserz.pbibi.fragment.VideoDetailFragment;
 import com.wiserz.pbibi.util.CommonUtil;
 import com.wiserz.pbibi.util.Constant;
 import com.wiserz.pbibi.util.DataManager;
+import com.wiserz.pbibi.view.CircleColorView;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -92,6 +93,7 @@ import io.rong.imlib.model.UserInfo;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 import okhttp3.Call;
 
+import static com.wiserz.pbibi.R.id.ivColor;
 import static com.wiserz.pbibi.R.id.tvCarColor;
 
 /**
@@ -527,8 +529,8 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                     holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if(!CommonUtil.isHadLogin()) {
-                                ((BaseActivity)mContext).gotoPager(RegisterAndLoginActivity.class, null);
+                            if (!CommonUtil.isHadLogin()) {
+                                ((BaseActivity) mContext).gotoPager(RegisterAndLoginActivity.class, null);
                                 return;
                             }
                             Bundle bundle = new Bundle();
@@ -754,7 +756,7 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                     holder.iv_item1.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if(!CommonUtil.isHadLogin()) {
+                            if (!CommonUtil.isHadLogin()) {
                                 ((BaseActivity) mContext).gotoPager(RegisterAndLoginActivity.class, null);
                                 return;
                             }
@@ -773,7 +775,7 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                     holder.tv_item1.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if(!CommonUtil.isHadLogin()) {
+                            if (!CommonUtil.isHadLogin()) {
                                 ((BaseActivity) mContext).gotoPager(RegisterAndLoginActivity.class, null);
                                 return;
                             }
@@ -955,7 +957,7 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                     holder.iv_item1.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if(!CommonUtil.isHadLogin()) {
+                            if (!CommonUtil.isHadLogin()) {
                                 ((BaseActivity) mContext).gotoPager(RegisterAndLoginActivity.class, null);
                                 return;
                             }
@@ -974,7 +976,7 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                     holder.tv_item1.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if(!CommonUtil.isHadLogin()) {
+                            if (!CommonUtil.isHadLogin()) {
                                 ((BaseActivity) mContext).gotoPager(RegisterAndLoginActivity.class, null);
                                 return;
                             }
@@ -1250,7 +1252,7 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                             holder.iv_item1.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    if(!CommonUtil.isHadLogin()) {
+                                    if (!CommonUtil.isHadLogin()) {
                                         ((BaseActivity) mContext).gotoPager(RegisterAndLoginActivity.class, null);
                                         return;
                                     }
@@ -1263,7 +1265,7 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                             holder.tv_item1.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    if(!CommonUtil.isHadLogin()) {
+                                    if (!CommonUtil.isHadLogin()) {
                                         ((BaseActivity) mContext).gotoPager(RegisterAndLoginActivity.class, null);
                                         return;
                                     }
@@ -1283,7 +1285,7 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                         holder.iv_item6.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                if(!CommonUtil.isHadLogin()) {
+                                if (!CommonUtil.isHadLogin()) {
                                     ((BaseActivity) mContext).gotoPager(RegisterAndLoginActivity.class, null);
                                     return;
                                 }
@@ -1502,7 +1504,7 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                     holder.iv_item2.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if(!CommonUtil.isHadLogin()) {
+                            if (!CommonUtil.isHadLogin()) {
                                 ((BaseActivity) mContext).gotoPager(RegisterAndLoginActivity.class, null);
                                 return;
                             }
@@ -1536,7 +1538,7 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                     holder.iv_item4.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if(!CommonUtil.isHadLogin()) {
+                            if (!CommonUtil.isHadLogin()) {
                                 ((BaseActivity) mContext).gotoPager(RegisterAndLoginActivity.class, null);
                                 return;
                             }
@@ -1630,7 +1632,7 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                     holder.iv_item5.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if(!CommonUtil.isHadLogin()) {
+                            if (!CommonUtil.isHadLogin()) {
                                 ((BaseActivity) mContext).gotoPager(RegisterAndLoginActivity.class, null);
                                 return;
                             }
@@ -1731,19 +1733,19 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
             }
         } else if (dataType == SELECT_CAR_COLOR_DATA_TYPE) {
             Resources resources = mContext.getResources();
-            String text = resources.getString(resources.getIdentifier("car_color_" + (position + 1), "string", mContext.getPackageName()));
-            int color = resources.getColor(resources.getIdentifier("car_color_" + (position + 1), "color", mContext.getPackageName()));
-
-            GradientDrawable background = (GradientDrawable) holder.tv_item1.getBackground();
-
-            if (position == 6 || position == 13) {
-                holder.tv_item1.setTextColor(resources.getColor(R.color.seventh_background_color));
-                background.setColor(Color.TRANSPARENT);
-                background.setStroke(SizeUtils.dp2px(1), resources.getColor(R.color.seventh_background_color));
+            String text = resources.getString(resources.getIdentifier("car_color_" + position, "string", mContext.getPackageName()));
+            if (position == 0) {
+                holder.circleColorView.setVisibility(View.GONE);
+                holder.iv_item1.setVisibility(View.VISIBLE);
+                holder.iv_item1.setImageResource(R.drawable.unkonw_color);
+            } else if (position == 14) {
+                holder.circleColorView.setVisibility(View.GONE);
+                holder.iv_item1.setVisibility(View.VISIBLE);
+                holder.iv_item1.setImageResource(R.drawable.much_colors);
             } else {
-                holder.tv_item1.setTextColor(Color.WHITE);
-                background.setColor(color);
-                background.setStroke(SizeUtils.dp2px(1), color);
+                holder.circleColorView.setVisibility(View.VISIBLE);
+                holder.iv_item1.setVisibility(View.GONE);
+                holder.circleColorView.setColor(resources.getColor(resources.getIdentifier("car_color_" + position, "color", mContext.getPackageName())));
             }
             holder.tv_item1.setText(text);
         } else if (dataType == RECOMMEND_USER_DATA_TYPE) {
@@ -1765,7 +1767,7 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                         holder.iv_item2.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                if(!CommonUtil.isHadLogin()) {
+                                if (!CommonUtil.isHadLogin()) {
                                     ((BaseActivity) mContext).gotoPager(RegisterAndLoginActivity.class, null);
                                     return;
                                 }
@@ -1934,7 +1936,7 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                     holder.tv_item1.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if(friendshipBean.getUser_id()==SPUtils.getInstance().getInt(Constant.USER_ID)){
+                            if (friendshipBean.getUser_id() == SPUtils.getInstance().getInt(Constant.USER_ID)) {
                                 return;
                             }
                             RongIM.getInstance().startConversation(mContext, Conversation.ConversationType.PRIVATE,
@@ -2114,6 +2116,8 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
         private TextView tv_item6;
         private TextView tv_item7;
         private TextView tv_item8;
+
+        private CircleColorView circleColorView;
 
         private RecyclerView recyclerView;
 
@@ -2610,6 +2614,8 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                 });
             } else if (dataType == SELECT_CAR_COLOR_DATA_TYPE) {
                 tv_item1 = (TextView) itemView.findViewById(tvCarColor);
+                circleColorView = (CircleColorView) itemView.findViewById(R.id.circleColorView);
+                iv_item1 = (ImageView) itemView.findViewById(R.id.ivColor);
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override

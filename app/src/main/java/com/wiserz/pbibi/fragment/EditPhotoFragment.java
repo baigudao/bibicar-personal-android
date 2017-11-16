@@ -200,7 +200,7 @@ public class EditPhotoFragment extends BaseFragment {
                 goBack();
                 break;
             case R.id.ivDelete:
-                DataManager.getInstance().setData2(mEditIndex);
+                DataManager.getInstance().setData8(mEditIndex);
                 new File(mPhotoPath).delete();
                 goBack();
                 break;

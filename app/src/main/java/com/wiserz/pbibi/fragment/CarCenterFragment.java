@@ -39,6 +39,7 @@ import com.wiserz.pbibi.util.CommonUtil;
 import com.wiserz.pbibi.util.Constant;
 import com.wiserz.pbibi.util.DataManager;
 import com.wiserz.pbibi.view.MorePopupWindow;
+import com.wiserz.pbibi.view.RangeSeekBar;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -142,7 +143,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                 //                gotoPager(LoanPlanFragment.class,null);//贷款方案
 
                 //                gotoPager(ConcreteParameterFragment.class, null);//具体参数
-                if(!CommonUtil.isHadLogin()) {
+                if (!CommonUtil.isHadLogin()) {
                     gotoPager(RegisterAndLoginActivity.class, null);
                     return;
                 }
@@ -324,6 +325,18 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                         resetPriceTextView(tv0, tv1, tv2, tv3, tv4, tv5, tv6);
                         min_price = "100";
                         max_price = "200";
+                    }
+                });
+                RangeSeekBar<Integer> priceBar = (RangeSeekBar<Integer>) view.findViewById(R.id.priceBar);
+                priceBar.setMaxLastText(200, getResources().getString(R.string.no_limit));
+                priceBar.setMaxMinSpace(1);
+                priceBar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener<Integer>() {
+                    @Override
+                    public void onRangeSeekBarValuesChanged(RangeSeekBar<?> bar, Integer minValue, Integer maxValue) {
+                        price_id = -1;
+                        resetPriceTextView(tv0, tv1, tv2, tv3, tv4, tv5, tv6);
+                        min_price = String.valueOf(minValue);
+                        max_price = maxValue > 200 ? "" : String.valueOf(maxValue);
                     }
                 });
                 tv6.setOnClickListener(new View.OnClickListener() {

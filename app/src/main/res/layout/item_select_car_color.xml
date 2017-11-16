@@ -1,20 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:background="@color/background_color"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/background_color"
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tvCarColor"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
-        android:background="@drawable/round_rect_btn"
-        android:gravity="center"
-        android:textColor="@color/pure_white_color"
-        android:textSize="16sp"/>
+        android:background="@drawable/back_select_color"
+        android:gravity="center_horizontal">
+
+        <com.wiserz.pbibi.view.CircleColorView
+            android:id="@+id/circleColorView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true" />
+
+        <ImageView
+            android:id="@+id/ivColor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/circleColorView"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tvCarColor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/ivColor"
+            android:paddingLeft="5dp"
+            android:textColor="@color/color_3A3A3A"
+            android:textSize="13sp" />
+    </RelativeLayout>
 
 </LinearLayout>

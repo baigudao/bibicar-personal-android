@@ -76,7 +76,7 @@
 
     <!-- ShareByAppClient标识是否使用微博客户端分享，默认是false -->
     <SinaWeibo AppKey="1080678018" AppSecret="d549b7a960b5c38b4da9ce2a8f06d16f" Enable="true" Id="3"
-        RedirectUrl="http://120.25.62.110/third/callback" ShareByAppClient="true" SortId="3" />
+        RedirectUrl="http://api.bibicar.cn/third/callback" ShareByAppClient="true" SortId="3" />
 
     <!--微信收藏-->
     <WechatFavorite AppId="wx8bac6dd603d47d15" AppSecret="dcc4740804b9c5b19686cb4b1fd5eb8e"

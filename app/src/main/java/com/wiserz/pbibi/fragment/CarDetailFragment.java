@@ -534,12 +534,12 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
             });
 
             if (carInfoBean.getCar_type() == 0) {
-                ((TextView) getView().findViewById(R.id.tvValue1)).setText(EmptyUtils.isEmpty(carInfoBean.getModel_detail().getCarReferPrice()) ? " " : carInfoBean.getModel_detail().getCarReferPrice());
-                ((TextView) getView().findViewById(R.id.tvValue2)).setText(EmptyUtils.isEmpty(carInfoBean.getModel_detail().getEngine_ExhaustForFloat()) ? " " : carInfoBean.getModel_detail().getEngine_ExhaustForFloat());
-                ((TextView) getView().findViewById(R.id.tvValue3)).setText(EmptyUtils.isEmpty(carInfoBean.getModel_detail().getPerf_AccelerateTime()) ? " " : carInfoBean.getModel_detail().getPerf_AccelerateTime());
-                ((TextView) getView().findViewById(R.id.tvValue4)).setText(EmptyUtils.isEmpty(carInfoBean.getGearbox()) ? " " : carInfoBean.getGearbox());
-                ((TextView) getView().findViewById(R.id.tvValue5)).setText(EmptyUtils.isEmpty(carInfoBean.getModel_detail().getPerf_DriveType()) ? " " : carInfoBean.getModel_detail().getPerf_DriveType());
-                ((TextView) getView().findViewById(R.id.tvValue6)).setText(EmptyUtils.isEmpty(carInfoBean.getModel_detail().getEngine_EnvirStandard()) ? " " : carInfoBean.getModel_detail().getEngine_EnvirStandard());
+                ((TextView) getView().findViewById(R.id.tvValue1)).setText(EmptyUtils.isEmpty(carInfoBean.getModel_detail().getCarReferPrice()) ? "****" : carInfoBean.getModel_detail().getCarReferPrice());
+                ((TextView) getView().findViewById(R.id.tvValue2)).setText(EmptyUtils.isEmpty(carInfoBean.getModel_detail().getEngine_ExhaustForFloat()) ? "****" : carInfoBean.getModel_detail().getEngine_ExhaustForFloat());
+                ((TextView) getView().findViewById(R.id.tvValue3)).setText(EmptyUtils.isEmpty(carInfoBean.getModel_detail().getPerf_AccelerateTime()) ? "****" : carInfoBean.getModel_detail().getPerf_AccelerateTime());
+                ((TextView) getView().findViewById(R.id.tvValue4)).setText(EmptyUtils.isEmpty(carInfoBean.getGearbox()) ? "****" : carInfoBean.getGearbox());
+                ((TextView) getView().findViewById(R.id.tvValue5)).setText(EmptyUtils.isEmpty(carInfoBean.getModel_detail().getPerf_DriveType()) ? "****" : carInfoBean.getModel_detail().getPerf_DriveType());
+                ((TextView) getView().findViewById(R.id.tvValue6)).setText(EmptyUtils.isEmpty(carInfoBean.getModel_detail().getEngine_EnvirStandard()) ? "****" : carInfoBean.getModel_detail().getEngine_EnvirStandard());
 
                 ((TextView) getView().findViewById(R.id.tv1)).setText("厂商指导价");
                 ((TextView) getView().findViewById(R.id.tv2)).setText("排量");
@@ -548,12 +548,12 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
                 ((TextView) getView().findViewById(R.id.tv5)).setText("驱动方式");
                 ((TextView) getView().findViewById(R.id.tv6)).setText("环保标准");
             } else {
-                ((TextView) getView().findViewById(R.id.tvValue1)).setText(EmptyUtils.isEmpty(carInfoBean.getMileage()) ? " " : carInfoBean.getMileage() + "万公里");
-                ((TextView) getView().findViewById(R.id.tvValue2)).setText(EmptyUtils.isEmpty(carInfoBean.getBoard_time()) ? " " : carInfoBean.getBoard_time() + "年");
-                ((TextView) getView().findViewById(R.id.tvValue3)).setText(EmptyUtils.isEmpty(carInfoBean.getBoard_address()) ? " " : carInfoBean.getBoard_address());
-                ((TextView) getView().findViewById(R.id.tvValue4)).setText(EmptyUtils.isEmpty(carInfoBean.getModel_detail().getPerf_AccelerateTime()) ? " " : carInfoBean.getModel_detail().getPerf_AccelerateTime());
-                ((TextView) getView().findViewById(R.id.tvValue5)).setText(EmptyUtils.isEmpty(carInfoBean.getModel_detail().getEngine_ExhaustForFloat()) ? " " : carInfoBean.getModel_detail().getEngine_ExhaustForFloat());
-                ((TextView) getView().findViewById(R.id.tvValue6)).setText(EmptyUtils.isEmpty(carInfoBean.getModel_detail().getEngine_EnvirStandard()) ? " " : carInfoBean.getModel_detail().getEngine_EnvirStandard());
+                ((TextView) getView().findViewById(R.id.tvValue1)).setText(EmptyUtils.isEmpty(carInfoBean.getMileage()) ? "****" : carInfoBean.getMileage() + "万公里");
+                ((TextView) getView().findViewById(R.id.tvValue2)).setText(EmptyUtils.isEmpty(carInfoBean.getBoard_time()) ? "****" : carInfoBean.getBoard_time() + "年");
+                ((TextView) getView().findViewById(R.id.tvValue3)).setText(EmptyUtils.isEmpty(carInfoBean.getBoard_address()) ? "****" : carInfoBean.getBoard_address());
+                ((TextView) getView().findViewById(R.id.tvValue4)).setText(EmptyUtils.isEmpty(carInfoBean.getModel_detail().getPerf_AccelerateTime()) ? "****" : carInfoBean.getModel_detail().getPerf_AccelerateTime());
+                ((TextView) getView().findViewById(R.id.tvValue5)).setText(EmptyUtils.isEmpty(carInfoBean.getModel_detail().getEngine_ExhaustForFloat()) ? "****" : carInfoBean.getModel_detail().getEngine_ExhaustForFloat());
+                ((TextView) getView().findViewById(R.id.tvValue6)).setText(EmptyUtils.isEmpty(carInfoBean.getModel_detail().getEngine_EnvirStandard()) ? "****" : carInfoBean.getModel_detail().getEngine_EnvirStandard());
 
             }
             if (EmptyUtils.isNotEmpty(carInfoBean.getUser_info()) && EmptyUtils.isNotEmpty(carInfoBean.getUser_info().getProfile())) {

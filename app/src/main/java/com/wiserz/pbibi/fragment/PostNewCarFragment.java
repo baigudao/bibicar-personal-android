@@ -61,7 +61,7 @@ public class PostNewCarFragment extends BaseFragment {
     private ArrayList<File> mUploadPhotos;
     private String upload_token;
     private ArrayList<CarConfiguration> mCarConfigurationList;
-    private ArrayList<String> mSelectedConfig=new ArrayList<>();
+    private ArrayList<String> mSelectedConfig = new ArrayList<>();
 
     @Override
     protected int getLayoutId() {
@@ -85,9 +85,12 @@ public class PostNewCarFragment extends BaseFragment {
         tv_car_type = (TextView) view.findViewById(R.id.tv_car_type);
         tvCarColor = (TextView) view.findViewById(R.id.tvCarColor);
 
+        mColor = 0;
+        resetColorView(mColor);
+
         getTokenFromNet();
         getCarExtraInfo();
-        gotoPager(SelectPhotoFragment.class,null,true);
+        gotoPager(SelectPhotoFragment.class, null, true);
     }
 
     private ArrayList<File> getUploadPhotos() {
@@ -149,7 +152,7 @@ public class PostNewCarFragment extends BaseFragment {
                             int status = jsonObject.optInt("status");
                             JSONArray jsonObjectData = jsonObject.optJSONArray("data");
                             if (status == 1) {
-                                mCarConfigurationList=getCarConfigurations(jsonObjectData);
+                                mCarConfigurationList = getCarConfigurations(jsonObjectData);
                                 resetCarConfigurations(mCarConfigurationList);
                             } else {
                                 String code = jsonObject.optString("code");
@@ -163,96 +166,96 @@ public class PostNewCarFragment extends BaseFragment {
                 });
     }
 
-    private void resetCarConfigurations(ArrayList<CarConfiguration> list){
-        LinearLayout llDetailMsg=(LinearLayout)getView().findViewById(R.id.llDetailMsg);
+    private void resetCarConfigurations(ArrayList<CarConfiguration> list) {
+        LinearLayout llDetailMsg = (LinearLayout) getView().findViewById(R.id.llDetailMsg);
         llDetailMsg.removeAllViews();
         mSelectedConfig.clear();
-        if(list==null || list.isEmpty()){
+        if (list == null || list.isEmpty()) {
             return;
         }
-        LayoutInflater layoutInflater=LayoutInflater.from(getActivity());
+        LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
         LinearLayout layout;
         ArrayList<CarConfiguration.Configuration> itemList;
-        for(CarConfiguration config:list){
-            layout=(LinearLayout) layoutInflater.inflate(R.layout.item_car_configuration,null);
+        for (CarConfiguration config : list) {
+            layout = (LinearLayout) layoutInflater.inflate(R.layout.item_car_configuration, null);
             llDetailMsg.addView(layout);
             ((TextView) layout.findViewById(R.id.tvConfigName)).setText(config.getType_name());
-            itemList=config.getList();
-            int itemCount=itemList.size();
-            int rowCount=3;
-            int typeId=config.getType_id();
-            if(typeId==3 || typeId==4 || typeId==5){
-                rowCount=2;
+            itemList = config.getList();
+            int itemCount = itemList.size();
+            int rowCount = 3;
+            int typeId = config.getType_id();
+            if (typeId == 3 || typeId == 4 || typeId == 5) {
+                rowCount = 2;
             }
-            int row=itemCount%rowCount==0?itemCount/rowCount:itemCount/rowCount+1;
+            int row = itemCount % rowCount == 0 ? itemCount / rowCount : itemCount / rowCount + 1;
             LinearLayout itemLayout;
-            TextView tvName1,tvName2,tvName3;
-            for(int j=0;j<row;++j){
-                itemLayout=(LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.item_configuration_detail,null);
+            TextView tvName1, tvName2, tvName3;
+            for (int j = 0; j < row; ++j) {
+                itemLayout = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.item_configuration_detail, null);
                 ((LinearLayout) layout.findViewById(R.id.llDetails)).addView(itemLayout);
-                tvName1=((TextView) itemLayout.findViewById(R.id.tvName1));
-                tvName2=((TextView) itemLayout.findViewById(R.id.tvName2));
-                tvName3=((TextView) itemLayout.findViewById(R.id.tvName3));
-                if(j*rowCount<itemCount){
-                    tvName1.setText(itemList.get(j*rowCount).getName());
-                    tvName1.setTag(R.id.tag,itemList.get(j*rowCount).getId());
+                tvName1 = ((TextView) itemLayout.findViewById(R.id.tvName1));
+                tvName2 = ((TextView) itemLayout.findViewById(R.id.tvName2));
+                tvName3 = ((TextView) itemLayout.findViewById(R.id.tvName3));
+                if (j * rowCount < itemCount) {
+                    tvName1.setText(itemList.get(j * rowCount).getName());
+                    tvName1.setTag(R.id.tag, itemList.get(j * rowCount).getId());
                     tvName1.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            String id=String.valueOf(view.getTag(R.id.tag));
-                            if(mSelectedConfig.contains(id)){
+                            String id = String.valueOf(view.getTag(R.id.tag));
+                            if (mSelectedConfig.contains(id)) {
                                 mSelectedConfig.remove(id);
                                 view.setBackgroundResource(R.drawable.back_config_not_selected);
-                                ((TextView)view).setTextColor(getResources().getColor(R.color.main_text_color));
-                            }else{
+                                ((TextView) view).setTextColor(getResources().getColor(R.color.main_text_color));
+                            } else {
                                 mSelectedConfig.add(id);
                                 view.setBackgroundResource(R.drawable.back_config_selected);
-                                ((TextView)view).setTextColor(getResources().getColor(R.color.main_color));
+                                ((TextView) view).setTextColor(getResources().getColor(R.color.main_color));
                             }
                         }
                     });
-                }else{
+                } else {
                     tvName1.setVisibility(View.GONE);
                 }
-                if(j*rowCount+1<itemCount){
-                    tvName2.setText(itemList.get(j*rowCount+1).getName());
-                    tvName2.setTag(R.id.tag,itemList.get(j*rowCount).getId());
+                if (j * rowCount + 1 < itemCount) {
+                    tvName2.setText(itemList.get(j * rowCount + 1).getName());
+                    tvName2.setTag(R.id.tag, itemList.get(j * rowCount).getId());
                     tvName2.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            String id=String.valueOf(view.getTag(R.id.tag));
-                            if(mSelectedConfig.contains(id)){
+                            String id = String.valueOf(view.getTag(R.id.tag));
+                            if (mSelectedConfig.contains(id)) {
                                 mSelectedConfig.remove(id);
                                 view.setBackgroundResource(R.drawable.back_config_not_selected);
-                                ((TextView)view).setTextColor(getResources().getColor(R.color.main_text_color));
-                            }else{
+                                ((TextView) view).setTextColor(getResources().getColor(R.color.main_text_color));
+                            } else {
                                 mSelectedConfig.add(id);
                                 view.setBackgroundResource(R.drawable.back_config_selected);
-                                ((TextView)view).setTextColor(getResources().getColor(R.color.main_color));
+                                ((TextView) view).setTextColor(getResources().getColor(R.color.main_color));
                             }
                         }
                     });
-                }else{
+                } else {
                     tvName2.setVisibility(View.GONE);
                 }
-                if(rowCount==2){
+                if (rowCount == 2) {
                     tvName3.setVisibility(View.GONE);
-                }else {
+                } else {
                     if (j * rowCount + 2 < itemCount) {
                         tvName3.setText(itemList.get(j * rowCount + 2).getName());
-                        tvName3.setTag(R.id.tag,itemList.get(j * rowCount + 2).getId());
+                        tvName3.setTag(R.id.tag, itemList.get(j * rowCount + 2).getId());
                         tvName3.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                String id=String.valueOf(view.getTag(R.id.tag));
-                                if(mSelectedConfig.contains(id)){
+                                String id = String.valueOf(view.getTag(R.id.tag));
+                                if (mSelectedConfig.contains(id)) {
                                     mSelectedConfig.remove(id);
                                     view.setBackgroundResource(R.drawable.back_config_not_selected);
-                                    ((TextView)view).setTextColor(getResources().getColor(R.color.main_text_color));
-                                }else{
+                                    ((TextView) view).setTextColor(getResources().getColor(R.color.main_text_color));
+                                } else {
                                     mSelectedConfig.add(id);
                                     view.setBackgroundResource(R.drawable.back_config_selected);
-                                    ((TextView)view).setTextColor(getResources().getColor(R.color.main_color));
+                                    ((TextView) view).setTextColor(getResources().getColor(R.color.main_color));
                                 }
                             }
                         });
@@ -269,7 +272,8 @@ public class PostNewCarFragment extends BaseFragment {
         if (array == null) {
             return new ArrayList<>();
         } else {
-            return  new Gson().fromJson(array.toString(), new TypeToken<ArrayList<CarConfiguration>>() {}.getType());
+            return new Gson().fromJson(array.toString(), new TypeToken<ArrayList<CarConfiguration>>() {
+            }.getType());
         }
     }
 
@@ -280,16 +284,16 @@ public class PostNewCarFragment extends BaseFragment {
                 goBack();
                 break;
             case R.id.tvBasicMsg:
-                ((TextView)getView().findViewById(R.id.tvBasicMsg)).setTextColor(getResources().getColor(R.color.main_text_color));
-                ((TextView)getView().findViewById(R.id.tvDetailMsg)).setTextColor(getResources().getColor(R.color.second_text_color));
+                ((TextView) getView().findViewById(R.id.tvBasicMsg)).setTextColor(getResources().getColor(R.color.main_text_color));
+                ((TextView) getView().findViewById(R.id.tvDetailMsg)).setTextColor(getResources().getColor(R.color.second_text_color));
                 getView().findViewById(R.id.line1).setVisibility(View.VISIBLE);
                 getView().findViewById(R.id.line2).setVisibility(View.GONE);
                 getView().findViewById(R.id.scrollBasicMsg).setVisibility(View.VISIBLE);
                 getView().findViewById(R.id.scrollDetailMsg).setVisibility(View.GONE);
                 break;
             case R.id.tvDetailMsg:
-                ((TextView)getView().findViewById(R.id.tvBasicMsg)).setTextColor(getResources().getColor(R.color.second_text_color));
-                ((TextView)getView().findViewById(R.id.tvDetailMsg)).setTextColor(getResources().getColor(R.color.main_text_color));
+                ((TextView) getView().findViewById(R.id.tvBasicMsg)).setTextColor(getResources().getColor(R.color.second_text_color));
+                ((TextView) getView().findViewById(R.id.tvDetailMsg)).setTextColor(getResources().getColor(R.color.main_text_color));
                 getView().findViewById(R.id.line1).setVisibility(View.GONE);
                 getView().findViewById(R.id.line2).setVisibility(View.VISIBLE);
                 getView().findViewById(R.id.scrollBasicMsg).setVisibility(View.GONE);
@@ -315,40 +319,41 @@ public class PostNewCarFragment extends BaseFragment {
 
     public void onResume() {
         super.onResume();
-        if(DataManager.getInstance().getObject()!=null && DataManager.getInstance().getData1()!=null){
-            String newPath=(String)DataManager.getInstance().getObject();
-            int index=(int) DataManager.getInstance().getData1();
-            getUploadPhotos().set(index,new File(newPath));
-        }else if(DataManager.getInstance().getData2()!=null){
-            int index=(int) DataManager.getInstance().getData2();
+        if (DataManager.getInstance().getObject() != null && DataManager.getInstance().getData1() != null) {
+            String newPath = (String) DataManager.getInstance().getObject();
+            int index = (int) DataManager.getInstance().getData1();
+            getUploadPhotos().set(index, new File(newPath));
+            DataManager.getInstance().setObject(null);
+            DataManager.getInstance().setData1(null);
+        } else if (DataManager.getInstance().getData8() != null) {
+            int index = (int) DataManager.getInstance().getData8();
             getUploadPhotos().remove(index);
-        }else if(DataManager.getInstance().getObject()!=null) {
-            getUploadPhotos().addAll((ArrayList< File >)DataManager.getInstance().getObject());
+            DataManager.getInstance().setData8(null);
+        } else if (DataManager.getInstance().getObject() != null) {
+            getUploadPhotos().addAll((ArrayList<File>) DataManager.getInstance().getObject());
+            DataManager.getInstance().setObject(null);
         }
-        DataManager.getInstance().setObject(null);
-        DataManager.getInstance().setData1(null);
-        DataManager.getInstance().setData2(null);
         resetCarPhotosView();
     }
 
-    private void resetCarPhotosView(){
+    private void resetCarPhotosView() {
         LinearLayout llCarPhotos = (LinearLayout) getView().findViewById(R.id.llCarPhotos);
         llCarPhotos.removeAllViews();
         int size;
-        if(getUploadPhotos().size()==6){
-            size=6;
-        }else{
-            size=getUploadPhotos().size()+1;
+        if (getUploadPhotos().size() == 6) {
+            size = 6;
+        } else {
+            size = getUploadPhotos().size() + 1;
         }
-        int row=(size%3==0)?size/3:size/3+1;
+        int row = (size % 3 == 0) ? size / 3 : size / 3 + 1;
         LinearLayout itemView;
-        for(int i=0;i<row;++i){
-            itemView= (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.item_car_photo,null);
+        for (int i = 0; i < row; ++i) {
+            itemView = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.item_car_photo, null);
             llCarPhotos.addView(itemView);
-            int index=i*3;
-            setPhoto((ViewGroup) itemView.getChildAt(0),index<getUploadPhotos().size()?getUploadPhotos().get(index):null,index,index==size-1);
-            setPhoto((ViewGroup) itemView.getChildAt(1),index+1<getUploadPhotos().size()?getUploadPhotos().get(index+1):null,index+1,index+1==size-1);
-            setPhoto((ViewGroup) itemView.getChildAt(2),index+2<getUploadPhotos().size()?getUploadPhotos().get(index+2):null,index+2,index+2==size-1);
+            int index = i * 3;
+            setPhoto((ViewGroup) itemView.getChildAt(0), index < getUploadPhotos().size() ? getUploadPhotos().get(index) : null, index, index == size - 1);
+            setPhoto((ViewGroup) itemView.getChildAt(1), index + 1 < getUploadPhotos().size() ? getUploadPhotos().get(index + 1) : null, index + 1, index + 1 == size - 1);
+            setPhoto((ViewGroup) itemView.getChildAt(2), index + 2 < getUploadPhotos().size() ? getUploadPhotos().get(index + 2) : null, index + 2, index + 2 == size - 1);
         }
     }
 
@@ -364,7 +369,7 @@ public class PostNewCarFragment extends BaseFragment {
                 @Override
                 public void onClick(View view) {
                     int pos = (int) view.getTag(R.id.tag);
-                    if(pos<getUploadPhotos().size()){
+                    if (pos < getUploadPhotos().size()) {
                         DataManager.getInstance().setObject(getUploadPhotos().get(pos).getAbsolutePath());
                         DataManager.getInstance().setData1(pos);
                         DataManager.getInstance().setData2(getUploadPhotos().size());
@@ -453,7 +458,7 @@ public class PostNewCarFragment extends BaseFragment {
 
     private void resetColorView(int color) {
         Resources res = getResources();
-        String text = res.getString(res.getIdentifier("car_color_" + (color + 1), "string", getActivity().getPackageName()));
+        String text = res.getString(res.getIdentifier("car_color_" + color, "string", getActivity().getPackageName()));
         tvCarColor.setText(text);
     }
 
@@ -495,7 +500,7 @@ public class PostNewCarFragment extends BaseFragment {
     private void publishNewCar() {
         String profile = getInputProfile();
         String phone_num = getInputPhoneNum();
- //       String place = getInputPlace();
+        //       String place = getInputPlace();
         String name = getInputName();
         String car_price = getInputPrice();
 
@@ -553,7 +558,7 @@ public class PostNewCarFragment extends BaseFragment {
                     uploadManager.put(photoPath, UUID.randomUUID().toString() + "_" + String.valueOf(file_type), upload_token, new UpCompletionHandler() {
                         @Override
                         public void complete(String key, ResponseInfo info, JSONObject response) {
-                            Log.e("aaaaaaaaa1","response: "+response.toString());
+                            Log.e("aaaaaaaaa1", "response: " + response.toString());
                             if (info.isOK()) {
                                 //上传成功
                                 int status = response.optInt("status");
@@ -593,12 +598,12 @@ public class PostNewCarFragment extends BaseFragment {
             String phone_num = getInputPhoneNum();
             String name = getInputName();
             String car_price = getInputPrice();
-            String carInfoIds="";
-            int size=mSelectedConfig.size();
-            for(int i=0;i<size;++i){
-                carInfoIds+=mSelectedConfig.get(i);
-                if(i<size-1){
-                    carInfoIds+=",";
+            String carInfoIds = "";
+            int size = mSelectedConfig.size();
+            for (int i = 0; i < size; ++i) {
+                carInfoIds += mSelectedConfig.get(i);
+                if (i < size - 1) {
+                    carInfoIds += ",";
                 }
             }
             OkHttpUtils.post()
@@ -629,8 +634,8 @@ public class PostNewCarFragment extends BaseFragment {
                     .addParams(Constant.MAINTAIN, String.valueOf(0))
                     .addParams(Constant.BOARD_TIME, "")
                     .addParams(Constant.MILEAGE, String.valueOf(0.000000))
-                    .addParams(Constant.BOARD_ADDRESS,"")
-                    .addParams(Constant.CAR_INFO_IDS,carInfoIds)
+                    .addParams(Constant.BOARD_ADDRESS, "")
+                    .addParams(Constant.CAR_INFO_IDS, carInfoIds)
                     .addParams(Constant.CAR_ID, "")
                     .build()
                     .execute(new StringCallback() {

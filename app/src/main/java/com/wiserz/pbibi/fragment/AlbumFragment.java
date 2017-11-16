@@ -58,7 +58,6 @@ public class AlbumFragment extends BaseFragment {
     private MediaFileAdapter mMediaFileAdapter;
 
     private SelectedPhotoAdapter mSelectedPhotoAdapter;
-    private ArrayList<File> mSelectedPhotos;
     private ArrayList<MediaInfo> mSelectedMediaInfos;
 
     private SelectPhotoFragment mSelectPhotoFragment;
@@ -117,13 +116,6 @@ public class AlbumFragment extends BaseFragment {
         return mSelectedPhotoAdapter;
     }
 
-    private ArrayList<File> getSelectedPhotos() {
-        if (mSelectedPhotos == null) {
-            mSelectedPhotos = new ArrayList<>();
-        }
-        return mSelectedPhotos;
-    }
-
     private ArrayList<MediaInfo> getSelectedMediaInfos() {
         if (mSelectedMediaInfos == null) {
             mSelectedMediaInfos = new ArrayList<>();
@@ -132,11 +124,11 @@ public class AlbumFragment extends BaseFragment {
     }
 
     private void showView() {
-        if (getSelectedPhotos().size() > 0) {
+        if (mSelectPhotoFragment.getSelectedPhotos().size() > 0) {
             getView().findViewById(R.id.selectPhotoView).setVisibility(View.VISIBLE);
             mSelectPhotoFragment.setViewPagerCanScroll(false);
             getView().findViewById(R.id.tvOk).setVisibility(View.VISIBLE);
-            ((TextView) getView().findViewById(R.id.tvOk)).setText(getString(R.string.make_sure) + " (" + getSelectedPhotos().size() + ")");
+            ((TextView) getView().findViewById(R.id.tvOk)).setText(getString(R.string.make_sure) + " (" + mSelectPhotoFragment.getSelectedPhotos().size() + ")");
         } else {
             getView().findViewById(R.id.selectPhotoView).setVisibility(View.GONE);
             mSelectPhotoFragment.setViewPagerCanScroll(true);
@@ -191,26 +183,29 @@ public class AlbumFragment extends BaseFragment {
                 }
             });
         }
-        if (DataManager.getInstance().getObject() != null && DataManager.getInstance().getData1() != null) {
-            String newPath = (String) DataManager.getInstance().getObject();
-            int index = (int) DataManager.getInstance().getData1();
-            getSelectedPhotos().set(index, new File(newPath));
-            getSelectedPhotoAdapter().notifyDataSetChanged();
-        } else if (DataManager.getInstance().getData2() != null) {
-            int index = (int) DataManager.getInstance().getData2();
-            getSelectedPhotos().remove(index);
-            getSelectedPhotoAdapter().notifyDataSetChanged();
-            MediaInfo mediaInfo = getSelectedMediaInfos().remove(index);
-            mediaInfo.isSelected = false;
-            for (MediaInfo info : getSelectedMediaInfos()) {
-                info.index = (index++);
+        if (mSelectPhotoFragment.getCurrentItem() == 1) {
+            if (DataManager.getInstance().getObject() != null && DataManager.getInstance().getData1() != null) {
+                String newPath = (String) DataManager.getInstance().getObject();
+                int index = (int) DataManager.getInstance().getData1();
+                mSelectPhotoFragment.getSelectedPhotos().set(index, new File(newPath));
+                getSelectedPhotoAdapter().notifyDataSetChanged();
+            } else if (DataManager.getInstance().getData8() != null) {
+                int index = (int) DataManager.getInstance().getData8();
+                mSelectPhotoFragment.getSelectedPhotos().remove(index);
+                getSelectedPhotoAdapter().notifyDataSetChanged();
+                MediaInfo mediaInfo = getSelectedMediaInfos().remove(index);
+                mediaInfo.isSelected = false;
+                for (MediaInfo info : getSelectedMediaInfos()) {
+                    info.index = (index++);
+                }
+                mMediasAdapter.notifyDataSetChanged();
             }
-            mMediasAdapter.notifyDataSetChanged();
+            DataManager.getInstance().setObject(null);
+            DataManager.getInstance().setData1(null);
+            DataManager.getInstance().setData8(null);
         }
         showView();
-        DataManager.getInstance().setObject(null);
-        DataManager.getInstance().setData1(null);
-        DataManager.getInstance().setData2(null);
+
     }
 
     private void getAlbumMedias() {
@@ -331,7 +326,7 @@ public class AlbumFragment extends BaseFragment {
                 final MediaInfo info = (MediaInfo) iv.getTag(R.id.tag);
                 if (info != null && info.isSelected) {
                     info.isSelected = false;
-                    getSelectedPhotos().remove(info.index);
+                    mSelectPhotoFragment.getSelectedPhotos().remove(info.index);
                     getSelectedPhotoAdapter().notifyDataSetChanged();
                     getSelectedMediaInfos().remove(info);
                     int index = 0;
@@ -341,7 +336,7 @@ public class AlbumFragment extends BaseFragment {
                     mMediasAdapter.notifyDataSetChanged();
                     return;
                 }
-                if (getSelectedPhotos().size() + mSelectPhotoFragment.getCurrentPhotoNum() == 6) {
+                if (mSelectPhotoFragment.getSelectedPhotos().size() + mSelectPhotoFragment.getCurrentPhotoNum() == 6) {
                     return;
                 }
 
@@ -354,16 +349,16 @@ public class AlbumFragment extends BaseFragment {
                     }
                     String path = CommonUtil.saveJpeg(bmp, getActivity());
                     bmp.recycle();
-                    if(mSelectPhotoFragment.getCurrentPhotoNum()==-1){
-                        DataManager.getInstance().setData3(path);
+                    if (mSelectPhotoFragment.getCurrentPhotoNum() == -1) {
+                        DataManager.getInstance().setData9(path);
                         goBack();
                         return;
                     }
                     getView().findViewById(R.id.selectPhotoView).setVisibility(View.VISIBLE);
-                    getSelectedPhotos().add(new File(path));
-                    getSelectedPhotoAdapter().setDataList(getSelectedPhotos());
+                    mSelectPhotoFragment.getSelectedPhotos().add(new File(path));
+                    getSelectedPhotoAdapter().setDataList(mSelectPhotoFragment.getSelectedPhotos());
                     info.isSelected = true;
-                    info.index = getSelectedPhotos().size() - 1;
+                    info.index = mSelectPhotoFragment.getSelectedPhotos().size() - 1;
                     getSelectedMediaInfos().add(info);
                     mMediasAdapter.notifyDataSetChanged();
                     showView();
@@ -456,7 +451,7 @@ public class AlbumFragment extends BaseFragment {
                 goBack();
                 break;
             case R.id.tvOk:
-                DataManager.getInstance().setObject(getSelectedPhotos());
+                DataManager.getInstance().setObject(mSelectPhotoFragment.getSelectedPhotos());
                 getActivity().finish();
                 break;
         }

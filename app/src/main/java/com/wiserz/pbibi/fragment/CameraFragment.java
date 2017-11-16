@@ -42,7 +42,7 @@ public class CameraFragment extends BaseFragment implements View.OnTouchListener
     private boolean mUsingCamera;
 
     private SelectedPhotoAdapter mSelectedPhotoAdapter;
-    private ArrayList<File> mSelectedPhotos;
+
     private SelectPhotoFragment mSelectPhotoFragment;
 
     private static final String CAMERA_PERMISSION = Manifest.permission.CAMERA;
@@ -64,7 +64,6 @@ public class CameraFragment extends BaseFragment implements View.OnTouchListener
 //            mSelectedPhotos=(ArrayList<File>) DataManager.getInstance().getObject();
 //        }
         DataManager.getInstance().setObject(null);
-        requestPermission();
     }
 
     @Override
@@ -79,7 +78,8 @@ public class CameraFragment extends BaseFragment implements View.OnTouchListener
         linearLayoutManagerHorizontal.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(linearLayoutManagerHorizontal);
         recyclerView.setAdapter(getSelectedPhotoAdapter());
-        getSelectedPhotoAdapter().setDataList(getSelectedPhotos());
+        getSelectedPhotoAdapter().setDataList(mSelectPhotoFragment.getSelectedPhotos());
+        requestPermission();
     }
 
     private SelectedPhotoAdapter getSelectedPhotoAdapter() {
@@ -95,31 +95,26 @@ public class CameraFragment extends BaseFragment implements View.OnTouchListener
         return mSelectedPhotoAdapter;
     }
 
-    private ArrayList<File> getSelectedPhotos() {
-        if (mSelectedPhotos == null) {
-            mSelectedPhotos = new ArrayList<>();
-        }
-        return mSelectedPhotos;
-    }
-
 
     @Override
     public void onResume() {
         super.onResume();
         requestPermission();
-        if (DataManager.getInstance().getObject() != null && DataManager.getInstance().getData1() != null) {
-            String newPath = (String) DataManager.getInstance().getObject();
-            int index = (int) DataManager.getInstance().getData1();
-            getSelectedPhotos().set(index, new File(newPath));
-            getSelectedPhotoAdapter().notifyDataSetChanged();
-        } else if (DataManager.getInstance().getData2() != null) {
-            int index = (int) DataManager.getInstance().getData2();
-            getSelectedPhotos().remove(index);
-            getSelectedPhotoAdapter().notifyDataSetChanged();
+        if (mSelectPhotoFragment.getCurrentItem() == 0) {
+            if (DataManager.getInstance().getObject() != null && DataManager.getInstance().getData1() != null) {
+                String newPath = (String) DataManager.getInstance().getObject();
+                int index = (int) DataManager.getInstance().getData1();
+                mSelectPhotoFragment.getSelectedPhotos().set(index, new File(newPath));
+                getSelectedPhotoAdapter().notifyDataSetChanged();
+            } else if (DataManager.getInstance().getData8() != null) {
+                int index = (int) DataManager.getInstance().getData8();
+                mSelectPhotoFragment.getSelectedPhotos().remove(index);
+                getSelectedPhotoAdapter().notifyDataSetChanged();
+            }
+            DataManager.getInstance().setObject(null);
+            DataManager.getInstance().setData1(null);
+            DataManager.getInstance().setData8(null);
         }
-        DataManager.getInstance().setObject(null);
-        DataManager.getInstance().setData1(null);
-        DataManager.getInstance().setData2(null);
     }
 
     @Override
@@ -239,7 +234,7 @@ public class CameraFragment extends BaseFragment implements View.OnTouchListener
                 getActivity().finish();
                 break;
             case R.id.btnTakePhoto:
-                if (mUsingCamera || getSelectedPhotos().size() + mSelectPhotoFragment.getCurrentPhotoNum() == 6) {
+                if (mUsingCamera || mSelectPhotoFragment.getSelectedPhotos().size() + mSelectPhotoFragment.getCurrentPhotoNum() == 6) {
                     return;
                 }
                 mUsingCamera = true;
@@ -253,13 +248,13 @@ public class CameraFragment extends BaseFragment implements View.OnTouchListener
                                     String path = CommonUtil.saveJpeg(bmp, getActivity());
                                     bmp.recycle();
                                     if (mSelectPhotoFragment.getCurrentPhotoNum() == -1) {
-                                        DataManager.getInstance().setData3(path);
+                                        DataManager.getInstance().setData9(path);
                                         goBack();
                                         return;
                                     }
                                     getView().findViewById(R.id.selectPhotoView).setVisibility(View.VISIBLE);
-                                    getSelectedPhotos().add(new File(path));
-                                    getSelectedPhotoAdapter().setDataList(getSelectedPhotos());
+                                    mSelectPhotoFragment.getSelectedPhotos().add(new File(path));
+                                    getSelectedPhotoAdapter().setDataList(mSelectPhotoFragment.getSelectedPhotos());
                                     showView();
                                 }
                                 SensorControler.getInstance().unlockFocus();
@@ -276,7 +271,7 @@ public class CameraFragment extends BaseFragment implements View.OnTouchListener
                 }
                 break;
             case R.id.tvNext:
-                DataManager.getInstance().setObject(getSelectedPhotos());
+                DataManager.getInstance().setObject(mSelectPhotoFragment.getSelectedPhotos());
                 getActivity().finish();
                 break;
 
@@ -284,10 +279,10 @@ public class CameraFragment extends BaseFragment implements View.OnTouchListener
     }
 
     private void showView() {
-        if (getSelectedPhotos().size() > 0) {
+        if (mSelectPhotoFragment.getSelectedPhotos().size() > 0) {
             getView().findViewById(R.id.selectPhotoView).setVisibility(View.VISIBLE);
             getView().findViewById(R.id.tvPhotoNum).setVisibility(View.VISIBLE);
-            ((TextView) getView().findViewById(R.id.tvPhotoNum)).setText(String.valueOf(getSelectedPhotos().size()));
+            ((TextView) getView().findViewById(R.id.tvPhotoNum)).setText(String.valueOf(mSelectPhotoFragment.getSelectedPhotos().size()));
             getView().findViewById(R.id.tvNext).setVisibility(View.VISIBLE);
             mSelectPhotoFragment.setViewPagerCanScroll(false);
         } else {

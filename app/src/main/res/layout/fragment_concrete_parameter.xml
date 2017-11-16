@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/pure_white_color"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/pure_white_color"
+    android:orientation="vertical">
 
-    <include layout="@layout/title_bar"/>
+    <include layout="@layout/title_bar" />
 
     <com.wiserz.pbibi.view.MyScrollView
         android:layout_width="match_parent"
@@ -17,36 +17,7 @@
             android:orientation="vertical">
 
             <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginTop="20dp"
-                android:background="@color/background_color">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="15dp"
-                    android:text="厂家指导价"
-                    android:textColor="@color/main_text_color"
-                    android:textSize="14sp"/>
-
-                <TextView
-                    android:id="@+id/tv_price"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="15dp"
-                    android:text="84.40万"
-                    android:textColor="@color/second_text_color"
-                    android:textSize="14sp"/>
-
-            </RelativeLayout>
-
-            <RelativeLayout
+                android:id="@+id/rlExtraName"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginLeft="15dp"
@@ -58,53 +29,26 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="15dp"
-                    android:text="保修政策"
+                    android:text="亮点配置"
                     android:textColor="@color/main_text_color"
-                    android:textSize="14sp"/>
-
-                <TextView
-                    android:id="@+id/tv_guarantee"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="15dp"
-                    android:text="三年或10万公里"
-                    android:textColor="@color/second_text_color"
-                    android:textSize="14sp"/>
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
 
             </RelativeLayout>
 
-            <RelativeLayout
+            <LinearLayout
+                android:id="@+id/llExtra"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:background="@color/background_color">
+                android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="15dp"
-                    android:text="排量"
-                    android:textColor="@color/main_text_color"
-                    android:textSize="14sp"/>
+            </LinearLayout>
 
-                <TextView
-                    android:id="@+id/tv_output"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="15dp"
-                    android:text="3.6L"
-                    android:textColor="@color/second_text_color"
-                    android:textSize="14sp"/>
-
-            </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/rlExtraBasicName"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginLeft="15dp"
@@ -116,516 +60,629 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="15dp"
-                    android:text="变速箱"
+                    android:text="基本配置"
                     android:textColor="@color/main_text_color"
-                    android:textSize="14sp"/>
-
-                <TextView
-                    android:id="@+id/tv_auto"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="15dp"
-                    android:text="手自一体"
-                    android:textColor="@color/second_text_color"
-                    android:textSize="14sp"/>
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
 
             </RelativeLayout>
 
-            <RelativeLayout
+            <LinearLayout
+                android:id="@+id/llBasic"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:background="@color/background_color">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
                     android:layout_marginLeft="15dp"
-                    android:text="综合工况油耗"
-                    android:textColor="@color/main_text_color"
-                    android:textSize="14sp"/>
-
-                <TextView
-                    android:id="@+id/tv_oil"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
-                    android:text="10.9L"
-                    android:textColor="@color/second_text_color"
-                    android:textSize="14sp"/>
+                    android:background="@color/background_color">
 
-            </RelativeLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="15dp"
+                        android:text="厂家指导价"
+                        android:textColor="@color/main_text_color"
+                        android:textSize="14sp" />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:background="@color/pure_white_color">
+                    <TextView
+                        android:id="@+id/tv_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="15dp"
+                        android:text="84.40万"
+                        android:textColor="@color/second_text_color"
+                        android:textSize="14sp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
                     android:layout_marginLeft="15dp"
-                    android:text="官方100公里加速时间"
-                    android:textColor="@color/main_text_color"
-                    android:textSize="14sp"/>
-
-                <TextView
-                    android:id="@+id/tv_100_accelerate_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
-                    android:text="5s"
-                    android:textColor="@color/second_text_color"
-                    android:textSize="14sp"/>
+                    android:background="@color/pure_white_color">
 
-            </RelativeLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="15dp"
+                        android:text="保修政策"
+                        android:textColor="@color/main_text_color"
+                        android:textSize="14sp" />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:background="@color/background_color">
+                    <TextView
+                        android:id="@+id/tv_guarantee"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="15dp"
+                        android:text="三年或10万公里"
+                        android:textColor="@color/second_text_color"
+                        android:textSize="14sp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
                     android:layout_marginLeft="15dp"
-                    android:text="最高车速"
-                    android:textColor="@color/main_text_color"
-                    android:textSize="14sp"/>
-
-                <TextView
-                    android:id="@+id/tv_car_top_speed"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
-                    android:text="100"
-                    android:textColor="@color/second_text_color"
-                    android:textSize="14sp"/>
+                    android:background="@color/background_color">
 
-            </RelativeLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="15dp"
+                        android:text="排量"
+                        android:textColor="@color/main_text_color"
+                        android:textSize="14sp" />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:background="@color/pure_white_color">
+                    <TextView
+                        android:id="@+id/tv_output"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="15dp"
+                        android:text="3.6L"
+                        android:textColor="@color/second_text_color"
+                        android:textSize="14sp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
                     android:layout_marginLeft="15dp"
-                    android:text="乘员人数"
-                    android:textColor="@color/main_text_color"
-                    android:textSize="14sp"/>
-
-                <TextView
-                    android:id="@+id/tv_car_take_num"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
-                    android:text="4人"
-                    android:textColor="@color/second_text_color"
-                    android:textSize="14sp"/>
+                    android:background="@color/pure_white_color">
 
-            </RelativeLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="15dp"
+                        android:text="变速箱"
+                        android:textColor="@color/main_text_color"
+                        android:textSize="14sp" />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:background="@color/background_color">
+                    <TextView
+                        android:id="@+id/tv_auto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="15dp"
+                        android:text="手自一体"
+                        android:textColor="@color/second_text_color"
+                        android:textSize="14sp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
                     android:layout_marginLeft="15dp"
-                    android:text="驱动方式"
-                    android:textColor="@color/main_text_color"
-                    android:textSize="14sp"/>
-
-                <TextView
-                    android:id="@+id/tv_car_drive_style"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
-                    android:text="前轮驱动"
-                    android:textColor="@color/second_text_color"
-                    android:textSize="14sp"/>
+                    android:background="@color/background_color">
 
-            </RelativeLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="15dp"
+                        android:text="综合工况油耗"
+                        android:textColor="@color/main_text_color"
+                        android:textSize="14sp" />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:background="@color/pure_white_color">
+                    <TextView
+                        android:id="@+id/tv_oil"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="15dp"
+                        android:text="10.9L"
+                        android:textColor="@color/second_text_color"
+                        android:textSize="14sp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
                     android:layout_marginLeft="15dp"
-                    android:text="发动机型号"
-                    android:textColor="@color/main_text_color"
-                    android:textSize="14sp"/>
-
-                <TextView
-                    android:id="@+id/tv_car_engine_type"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
-                    android:text="xxx"
-                    android:textColor="@color/second_text_color"
-                    android:textSize="14sp"/>
+                    android:background="@color/pure_white_color">
 
-            </RelativeLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="15dp"
+                        android:text="官方100公里加速时间"
+                        android:textColor="@color/main_text_color"
+                        android:textSize="14sp" />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:background="@color/background_color">
+                    <TextView
+                        android:id="@+id/tv_100_accelerate_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="15dp"
+                        android:text="5s"
+                        android:textColor="@color/second_text_color"
+                        android:textSize="14sp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
                     android:layout_marginLeft="15dp"
-                    android:text="发动机位置"
-                    android:textColor="@color/main_text_color"
-                    android:textSize="14sp"/>
-
-                <TextView
-                    android:id="@+id/tv_car_engine_position"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
-                    android:text="前置"
-                    android:textColor="@color/second_text_color"
-                    android:textSize="14sp"/>
+                    android:background="@color/background_color">
 
-            </RelativeLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="15dp"
+                        android:text="最高车速"
+                        android:textColor="@color/main_text_color"
+                        android:textSize="14sp" />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:background="@color/pure_white_color">
+                    <TextView
+                        android:id="@+id/tv_car_top_speed"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="15dp"
+                        android:text="100"
+                        android:textColor="@color/second_text_color"
+                        android:textSize="14sp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
                     android:layout_marginLeft="15dp"
-                    android:text="进气形式"
-                    android:textColor="@color/main_text_color"
-                    android:textSize="14sp"/>
-
-                <TextView
-                    android:id="@+id/tv_car_enter_gas_type"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
-                    android:text="无"
-                    android:textColor="@color/second_text_color"
-                    android:textSize="14sp"/>
+                    android:background="@color/pure_white_color">
 
-            </RelativeLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="15dp"
+                        android:text="乘员人数"
+                        android:textColor="@color/main_text_color"
+                        android:textSize="14sp" />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:background="@color/background_color">
+                    <TextView
+                        android:id="@+id/tv_car_take_num"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="15dp"
+                        android:text="4人"
+                        android:textColor="@color/second_text_color"
+                        android:textSize="14sp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
                     android:layout_marginLeft="15dp"
-                    android:text="最大马力"
-                    android:textColor="@color/main_text_color"
-                    android:textSize="14sp"/>
-
-                <TextView
-                    android:id="@+id/tv_car_most_engine"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
-                    android:text="204Ps"
-                    android:textColor="@color/second_text_color"
-                    android:textSize="14sp"/>
+                    android:background="@color/background_color">
 
-            </RelativeLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="15dp"
+                        android:text="驱动方式"
+                        android:textColor="@color/main_text_color"
+                        android:textSize="14sp" />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:background="@color/pure_white_color">
+                    <TextView
+                        android:id="@+id/tv_car_drive_style"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="15dp"
+                        android:text="前轮驱动"
+                        android:textColor="@color/second_text_color"
+                        android:textSize="14sp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
                     android:layout_marginLeft="15dp"
-                    android:text="最大扭矩"
-                    android:textColor="@color/main_text_color"
-                    android:textSize="14sp"/>
-
-                <TextView
-                    android:id="@+id/tv_car_most_distance"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
-                    android:text="250 N.m"
-                    android:textColor="@color/second_text_color"
-                    android:textSize="14sp"/>
+                    android:background="@color/pure_white_color">
 
-            </RelativeLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="15dp"
+                        android:text="发动机型号"
+                        android:textColor="@color/main_text_color"
+                        android:textSize="14sp" />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:background="@color/background_color">
+                    <TextView
+                        android:id="@+id/tv_car_engine_type"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="15dp"
+                        android:text="xxx"
+                        android:textColor="@color/second_text_color"
+                        android:textSize="14sp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
                     android:layout_marginLeft="15dp"
-                    android:text="环保标准"
-                    android:textColor="@color/main_text_color"
-                    android:textSize="14sp"/>
-
-                <TextView
-                    android:id="@+id/tv_car_environment_standard"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
-                    android:text="国5"
-                    android:textColor="@color/second_text_color"
-                    android:textSize="14sp"/>
+                    android:background="@color/background_color">
 
-            </RelativeLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="15dp"
+                        android:text="发动机位置"
+                        android:textColor="@color/main_text_color"
+                        android:textSize="14sp" />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:background="@color/pure_white_color">
+                    <TextView
+                        android:id="@+id/tv_car_engine_position"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="15dp"
+                        android:text="前置"
+                        android:textColor="@color/second_text_color"
+                        android:textSize="14sp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
                     android:layout_marginLeft="15dp"
-                    android:text="车长x车宽x车高"
-                    android:textColor="@color/main_text_color"
-                    android:textSize="14sp"/>
-
-                <TextView
-                    android:id="@+id/tv_car_vol"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
-                    android:text="1821mm"
-                    android:textColor="@color/second_text_color"
-                    android:textSize="14sp"/>
+                    android:background="@color/pure_white_color">
 
-            </RelativeLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="15dp"
+                        android:text="进气形式"
+                        android:textColor="@color/main_text_color"
+                        android:textSize="14sp" />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:background="@color/background_color">
+                    <TextView
+                        android:id="@+id/tv_car_enter_gas_type"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="15dp"
+                        android:text="无"
+                        android:textColor="@color/second_text_color"
+                        android:textSize="14sp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
                     android:layout_marginLeft="15dp"
-                    android:text="最小离地间隙"
-                    android:textColor="@color/main_text_color"
-                    android:textSize="14sp"/>
-
-                <TextView
-                    android:id="@+id/tv_car_ground_distance"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
-                    android:text="55"
-                    android:textColor="@color/second_text_color"
-                    android:textSize="14sp"/>
+                    android:background="@color/background_color">
 
-            </RelativeLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="15dp"
+                        android:text="最大马力"
+                        android:textColor="@color/main_text_color"
+                        android:textSize="14sp" />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:background="@color/pure_white_color">
+                    <TextView
+                        android:id="@+id/tv_car_most_engine"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="15dp"
+                        android:text="204Ps"
+                        android:textColor="@color/second_text_color"
+                        android:textSize="14sp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
                     android:layout_marginLeft="15dp"
-                    android:text="轴距"
-                    android:textColor="@color/main_text_color"
-                    android:textSize="14sp"/>
-
-                <TextView
-                    android:id="@+id/tv_car_distance"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
-                    android:text="1821mm"
-                    android:textColor="@color/second_text_color"
-                    android:textSize="14sp"/>
+                    android:background="@color/pure_white_color">
 
-            </RelativeLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="15dp"
+                        android:text="最大扭矩"
+                        android:textColor="@color/main_text_color"
+                        android:textSize="14sp" />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:background="@color/background_color">
+                    <TextView
+                        android:id="@+id/tv_car_most_distance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="15dp"
+                        android:text="250 N.m"
+                        android:textColor="@color/second_text_color"
+                        android:textSize="14sp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
                     android:layout_marginLeft="15dp"
-                    android:text="燃油箱容积"
-                    android:textColor="@color/main_text_color"
-                    android:textSize="14sp"/>
-
-                <TextView
-                    android:id="@+id/tv_car_box_vol"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
-                    android:text="55L"
-                    android:textColor="@color/second_text_color"
-                    android:textSize="14sp"/>
+                    android:background="@color/background_color">
 
-            </RelativeLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="15dp"
+                        android:text="环保标准"
+                        android:textColor="@color/main_text_color"
+                        android:textSize="14sp" />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:background="@color/pure_white_color">
+                    <TextView
+                        android:id="@+id/tv_car_environment_standard"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="15dp"
+                        android:text="国5"
+                        android:textColor="@color/second_text_color"
+                        android:textSize="14sp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
                     android:layout_marginLeft="15dp"
-                    android:text="燃油类型"
-                    android:textColor="@color/main_text_color"
-                    android:textSize="14sp"/>
-
-                <TextView
-                    android:id="@+id/tv_car_gas_style"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
-                    android:text="汽油"
-                    android:textColor="@color/second_text_color"
-                    android:textSize="14sp"/>
+                    android:background="@color/pure_white_color">
 
-            </RelativeLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="15dp"
+                        android:text="车长x车宽x车高"
+                        android:textColor="@color/main_text_color"
+                        android:textSize="14sp" />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginBottom="20dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:background="@color/background_color">
+                    <TextView
+                        android:id="@+id/tv_car_vol"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="15dp"
+                        android:text="1821mm"
+                        android:textColor="@color/second_text_color"
+                        android:textSize="14sp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
                     android:layout_marginLeft="15dp"
-                    android:text="供油方式"
-                    android:textColor="@color/main_text_color"
-                    android:textSize="14sp"/>
-
-                <TextView
-                    android:id="@+id/tv_car_oil_style"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
-                    android:text="直喷"
-                    android:textColor="@color/second_text_color"
-                    android:textSize="14sp"/>
+                    android:background="@color/background_color">
 
-            </RelativeLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="15dp"
+                        android:text="最小离地间隙"
+                        android:textColor="@color/main_text_color"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tv_car_ground_distance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="15dp"
+                        android:text="55"
+                        android:textColor="@color/second_text_color"
+                        android:textSize="14sp" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@color/pure_white_color">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="15dp"
+                        android:text="轴距"
+                        android:textColor="@color/main_text_color"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tv_car_distance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="15dp"
+                        android:text="1821mm"
+                        android:textColor="@color/second_text_color"
+                        android:textSize="14sp" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@color/background_color">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="15dp"
+                        android:text="燃油箱容积"
+                        android:textColor="@color/main_text_color"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tv_car_box_vol"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="15dp"
+                        android:text="55L"
+                        android:textColor="@color/second_text_color"
+                        android:textSize="14sp" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@color/pure_white_color">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="15dp"
+                        android:text="燃油类型"
+                        android:textColor="@color/main_text_color"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tv_car_gas_style"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="15dp"
+                        android:text="汽油"
+                        android:textColor="@color/second_text_color"
+                        android:textSize="14sp" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@color/background_color">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="15dp"
+                        android:text="供油方式"
+                        android:textColor="@color/main_text_color"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tv_car_oil_style"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="15dp"
+                        android:text="直喷"
+                        android:textColor="@color/second_text_color"
+                        android:textSize="14sp" />
+
+                </RelativeLayout>
+            </LinearLayout>
 
         </LinearLayout>
 

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="#55000000"
-              android:clickable="true"
-              android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#55000000"
+    android:clickable="true"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,17 +16,17 @@
         <View
             android:layout_width="0dp"
             android:layout_height="1dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1" />
 
         <View
             android:layout_width="345dp"
             android:layout_height="1dp"
-            android:background="@color/divider_color"/>
+            android:background="@color/divider_color" />
 
         <View
             android:layout_width="0dp"
             android:layout_height="1dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1" />
 
     </LinearLayout>
 
@@ -53,7 +54,7 @@
                 android:gravity="center"
                 android:text="全部价格"
                 android:textColor="@color/main_text_color"
-                android:textSize="14sp"/>
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/tv1"
@@ -67,7 +68,7 @@
                 android:gravity="center"
                 android:text="15万以下"
                 android:textColor="@color/main_text_color"
-                android:textSize="14sp"/>
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/tv2"
@@ -79,7 +80,7 @@
                 android:gravity="center"
                 android:text="15-30万"
                 android:textColor="@color/main_text_color"
-                android:textSize="14sp"/>
+                android:textSize="14sp" />
 
         </LinearLayout>
 
@@ -101,7 +102,7 @@
                 android:gravity="center"
                 android:text="30-50万"
                 android:textColor="@color/main_text_color"
-                android:textSize="14sp"/>
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/tv4"
@@ -115,7 +116,7 @@
                 android:gravity="center"
                 android:text="50-100万"
                 android:textColor="@color/main_text_color"
-                android:textSize="14sp"/>
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/tv5"
@@ -127,7 +128,7 @@
                 android:gravity="center"
                 android:text="100-200万"
                 android:textColor="@color/main_text_color"
-                android:textSize="14sp"/>
+                android:textSize="14sp" />
 
         </LinearLayout>
 
@@ -149,7 +150,7 @@
                 android:gravity="center"
                 android:text="200万以上"
                 android:textColor="@color/main_text_color"
-                android:textSize="14sp"/>
+                android:textSize="14sp" />
 
             <TextView
                 android:layout_width="0dp"
@@ -157,13 +158,13 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 android:layout_weight="1"
-                android:gravity="center"/>
+                android:gravity="center" />
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_weight="1"
-                android:gravity="center"/>
+                android:gravity="center" />
 
         </LinearLayout>
 
@@ -179,24 +180,35 @@
                 android:layout_height="wrap_content"
                 android:text="自定义价格"
                 android:textColor="@color/main_text_color"
-                android:textSize="15sp"/>
+                android:textSize="15sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="/万"
                 android:textColor="@color/second_text_color"
-                android:textSize="15dp"/>
+                android:textSize="15dp" />
 
         </LinearLayout>
 
-        <com.wiserz.pbibi.view.SelectStartEndView
+
+        <com.wiserz.pbibi.view.RangeSeekBar
+            android:id="@+id/priceBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="30dp"
+            app:absoluteMaxValue="250"
+            app:absoluteMinValue="0"  />
+
+   <!--     <com.wiserz.pbibi.view.SelectStartEndView
             android:id="@+id/selectPriceView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="40dp"
             android:layout_marginRight="40dp"
-            android:layout_marginTop="30dp"/>
+            android:layout_marginTop="30dp" />-->
 
         <Button
             android:id="@+id/btn_sure"
@@ -208,7 +220,7 @@
             android:background="@drawable/btn_background_selector"
             android:text="确定"
             android:textColor="@drawable/btn_text_background_selector"
-            android:textSize="16sp"/>
+            android:textSize="16sp" />
 
     </LinearLayout>
 
