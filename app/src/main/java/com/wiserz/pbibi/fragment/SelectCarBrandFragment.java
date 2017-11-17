@@ -3,6 +3,7 @@ package com.wiserz.pbibi.fragment;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -52,6 +53,8 @@ public class SelectCarBrandFragment extends BaseFragment implements BaseRecycler
 
     private static final int CAR_SERIES_DATA_TYPE = 40;
 
+    private String from_class;
+
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_select_car_brand;
@@ -59,6 +62,8 @@ public class SelectCarBrandFragment extends BaseFragment implements BaseRecycler
 
     @Override
     protected void initView(View view) {
+        from_class = getArguments().getString("fromClass", "");
+
         view.findViewById(R.id.iv_back).setOnClickListener(this);
         ((TextView) view.findViewById(R.id.tv_title)).setText("选择车系");
 
@@ -156,6 +161,14 @@ public class SelectCarBrandFragment extends BaseFragment implements BaseRecycler
                     }
                 }
                 Collections.sort(brandInfoBeanArrayList, new LetterComparator());
+                if (!TextUtils.isEmpty(from_class) && from_class.equals(CarCenterFragment.class.getName())) {
+                    BrandInfoBean brandInfoBean = new BrandInfoBean();
+                    brandInfoBean.setBrand_id(0);
+                    brandInfoBean.setBrand_name("不限");
+                    brandInfoBeanArrayList.add(0, brandInfoBean);
+                    brandInfoBean.setAbbre("#");
+                }
+
                 showDataForCarBrand(brandInfoBeanArrayList);
             }
         }
@@ -214,6 +227,12 @@ public class SelectCarBrandFragment extends BaseFragment implements BaseRecycler
                 //设置brand信息
                 DataManager.getInstance().setData1(brandInfoBean.getBrand_id());
                 DataManager.getInstance().setData2(brandInfoBean.getBrand_name());
+                if (brandInfoBean.getBrand_id() == 0) {
+                    DataManager.getInstance().setData3(0);
+                    DataManager.getInstance().setData4("不限");
+                    goBack();
+                    return;
+                }
                 showSelectSeriesView(brandInfoBean);
             }
         } else if (data.getClass().getSimpleName().equals("CarSeriesBean")) {
@@ -224,6 +243,10 @@ public class SelectCarBrandFragment extends BaseFragment implements BaseRecycler
                 //设置series信息
                 DataManager.getInstance().setData3(carSeriesBean.getSeries_id());
                 DataManager.getInstance().setData4(carSeriesBean.getSeries_name());
+                if (!TextUtils.isEmpty(from_class) && from_class.equals(CarCenterFragment.class.getName())) {
+                    goBack();
+                    return;
+                }
                 if (EmptyUtils.isNotEmpty(series_id)) {
                     Bundle bundle = new Bundle();
                     bundle.putInt(Constant.SERIES_ID, series_id);
@@ -284,6 +307,12 @@ public class SelectCarBrandFragment extends BaseFragment implements BaseRecycler
                 ArrayList<CarSeriesBean> carSeriesBeanArrayList = gson.fromJson(jsonArray.toString(), new TypeToken<ArrayList<CarSeriesBean>>() {
                 }.getType());
 
+                if (!TextUtils.isEmpty(from_class) && from_class.equals(CarCenterFragment.class.getName())) {
+                    CarSeriesBean carSeriesBean = new CarSeriesBean();
+                    carSeriesBean.setSeries_id(0);
+                    carSeriesBean.setSeries_name("不限");
+                    carSeriesBeanArrayList.add(0, carSeriesBean);
+                }
                 if (EmptyUtils.isNotEmpty(carSeriesBeanArrayList) && carSeriesBeanArrayList.size() != 0) {
                     BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, carSeriesBeanArrayList, CAR_SERIES_DATA_TYPE);
                     recyclerViewCarSeries.setAdapter(baseRecyclerViewAdapter);
