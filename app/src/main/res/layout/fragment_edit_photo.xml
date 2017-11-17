@@ -181,7 +181,7 @@
                 android:layout_height="30dp"
                 android:layout_marginLeft="8dp"
                 android:scaleType="centerInside"
-                android:src="@drawable/white_back" />
+                android:src="@drawable/undo" />
         </LinearLayout>
 
         <View
