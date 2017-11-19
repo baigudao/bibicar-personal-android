@@ -1,14 +1,20 @@
 package com.wiserz.pbibi.fragment;
 
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.net.Uri;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -89,6 +95,8 @@ public class PostSecondHandCarFragment extends BaseFragment {
 
     private ArrayList<ProvinceBean> mProvinceBeenList;
 
+    ArrayList<View> viewList=new ArrayList<>();
+
     private String firstPostLicenseTime;
     private String broadPlace;
 
@@ -120,6 +128,8 @@ public class PostSecondHandCarFragment extends BaseFragment {
         return mUploadPhotos;
     }
 
+    private int mYear,mMonth,mDay;
+
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_post_second_hand_car;
@@ -127,48 +137,138 @@ public class PostSecondHandCarFragment extends BaseFragment {
 
     @Override
     protected void initView(View view) {
-        DataManager.getInstance().setObject(null);
         view.findViewById(R.id.iv_back).setOnClickListener(this);
+        view.findViewById(R.id.topLine).setVisibility(View.GONE);
         ((TextView) view.findViewById(R.id.tv_title)).setText("上传二手车");
 
+        view.findViewById(R.id.rlSelectDate).setOnClickListener(this);
+        mYear=Calendar.getInstance().get(Calendar.YEAR);
+        mMonth= Calendar.getInstance().get(Calendar.MONTH);
+        mDay=Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+        ((DatePicker) view.findViewById(R.id.datePicker)).init(mYear,
+                mMonth,
+                mDay, new DatePicker.OnDateChangedListener() {
+                    @Override
+                    public void onDateChanged(DatePicker datePicker, int year, int month, int day) {
+                        mYear=year;
+                        mMonth=month;
+                        mDay=day;
+                    }
+                });
+
+        view.findViewById(R.id.tvCancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getView().findViewById(R.id.rlSelectDate).setVisibility(View.GONE);
+            }
+        });
+        view.findViewById(R.id.tvSure).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int month=mMonth+1;
+                String choose_time = mYear + "-" + (month < 10 ? (0 + "" + String.valueOf(month)) : String.valueOf(month)) + "-" + (mDay < 10 ? (0 + "" + String.valueOf(mDay)) : String.valueOf(mDay));
+                ((TextView) getView().findViewById(R.id.tv_first_post_license)).setText(choose_time);
+                ((TextView) getView().findViewById(R.id.tv_first_post_license)).setTextColor(getResources().getColor(R.color.main_text_color));
+                setFirstPostLicenseTime(choose_time);
+                getView().findViewById(R.id.rlSelectDate).setVisibility(View.GONE);
+            }
+        });
+
+        ViewPager viewPager=(ViewPager) view.findViewById(R.id.customViewPager);
+        LayoutInflater inflater=LayoutInflater.from(getActivity());
+        viewList.add(inflater.inflate(R.layout.item_post_second_handle_car_basic_msg,null));
+        viewList.add(inflater.inflate(R.layout.item_post_car_detail_msg,null));
+
+        viewPager.setAdapter(new PagerAdapter() {
+            @Override
+            public int getCount() {
+                // TODO Auto-generated method stub
+                return viewList.size();
+            }
+
+            @Override
+            public boolean isViewFromObject(View arg0, Object arg1) {
+                // TODO Auto-generated method stub
+                return arg0==arg1;
+            }
+
+            @Override
+            public Object instantiateItem(ViewGroup container, int position) {
+                // 添加一个 页卡
+
+                container.addView(viewList.get(position));
+
+                return viewList.get(position);
+            }
+
+            @Override
+            public void destroyItem(ViewGroup container, int position, Object object) {
+                // 删除
+                container.removeView(viewList.get(position));
+            }
+        });
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if(position==0){
+                    getView().findViewById(R.id.tvBasicMsg).performClick();
+                }else{
+                    getView().findViewById(R.id.tvDetailMsg).performClick();
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
         view.findViewById(R.id.btn_post_second_car).setOnClickListener(this);
-        view.findViewById(R.id.rl_choose_car_color).setOnClickListener(this);
-        view.findViewById(R.id.rl_first_post_license).setOnClickListener(this);
-        view.findViewById(R.id.rl_choose_car_type).setOnClickListener(this);
-        view.findViewById(R.id.rl_choose_brand_place).setOnClickListener(this);
-        ll_image_vin = (LinearLayout) view.findViewById(R.id.ll_image_vin);
-        tv_car_color = (TextView) view.findViewById(R.id.tv_car_color);
-        tv_car_type = (TextView) view.findViewById(R.id.tv_car_type);
+        viewList.get(0).findViewById(R.id.rl_choose_car_color).setOnClickListener(this);
+        viewList.get(0).findViewById(R.id.rl_first_post_license).setOnClickListener(this);
+        viewList.get(0).findViewById(R.id.rl_choose_car_type).setOnClickListener(this);
+        viewList.get(0).findViewById(R.id.rl_choose_brand_place).setOnClickListener(this);
+        ll_image_vin = (LinearLayout) viewList.get(0).findViewById(R.id.ll_image_vin);
+        tv_car_color = (TextView) viewList.get(0).findViewById(R.id.tv_car_color);
+        tv_car_type = (TextView) viewList.get(0).findViewById(R.id.tv_car_type);
 
         view.findViewById(R.id.tvCloseWarning).setOnClickListener(this);
         view.findViewById(R.id.tvDetailMsg).setOnClickListener(this);
         view.findViewById(R.id.tvBasicMsg).setOnClickListener(this);
 
-        et_input_profile = (EditText) view.findViewById(R.id.et_input_profile);
-        et_input_phone_num = (EditText) view.findViewById(R.id.et_input_phone_num);
-        et_input_name = (EditText) view.findViewById(R.id.et_input_name);
-        et_input_price = (EditText) view.findViewById(R.id.et_input_price);
-        et_input_vin_no = (EditText) view.findViewById(R.id.et_input_vin_no);
-        et_input_table_mileage = (EditText) view.findViewById(R.id.et_input_table_mileage);
-        ImageView iv_add_car_vin = (ImageView) view.findViewById(R.id.iv_add_car_vin);
+        et_input_profile = (EditText) viewList.get(0).findViewById(R.id.et_input_profile);
+        et_input_phone_num = (EditText) viewList.get(0).findViewById(R.id.et_input_phone_num);
+        et_input_name = (EditText) viewList.get(0).findViewById(R.id.et_input_name);
+        et_input_price = (EditText) viewList.get(0).findViewById(R.id.et_input_price);
+        et_input_vin_no = (EditText) viewList.get(0).findViewById(R.id.et_input_vin_no);
+        et_input_table_mileage = (EditText) viewList.get(0).findViewById(R.id.et_input_table_mileage);
+        ImageView iv_add_car_vin = (ImageView) viewList.get(0).findViewById(R.id.iv_add_car_vin);
         iv_add_car_vin.setOnClickListener(this);
-        iv_image_vin = (ImageView) view.findViewById(R.id.iv_image_vin);
+        iv_image_vin = (ImageView) viewList.get(0).findViewById(R.id.iv_image_vin);
         iv_image_vin.setOnClickListener(this);
 
         LoginBean.UserInfoBean userInfoBean = DataManager.getInstance().getUserInfo();
         if(userInfoBean!=null){
             et_input_phone_num.setText(TextUtils.isEmpty(userInfoBean.getMobile())?"":userInfoBean.getMobile());
+            et_input_name.setText(TextUtils.isEmpty(userInfoBean.getProfile().getNickname())?"":userInfoBean.getProfile().getNickname());
         }
 
         mProvinceBeenList = new ArrayList<>();
         uploadManager = new UploadManager();
 
-        mColor=0;
-        resetColorView(mColor);
+        mColor=-1;
 
         getTokenFromNet();
         getCarExtraInfo();
-        gotoPager(SelectPhotoFragment.class, null, true);
+//        gotoPager(SelectPhotoFragment.class, null, true);
+
+  //      resetCarPhotosView();
     }
 
     private void getCarExtraInfo() {
@@ -195,7 +295,7 @@ public class PostSecondHandCarFragment extends BaseFragment {
                             } else {
                                 String code = jsonObject.optString("code");
                                 String msg = jsonObject.optString("msg");
-                                ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                ToastUtils.showShort("" + msg);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -214,7 +314,7 @@ public class PostSecondHandCarFragment extends BaseFragment {
     }
 
     private void resetCarConfigurations(ArrayList<CarConfiguration> list) {
-        LinearLayout llDetailMsg = (LinearLayout) getView().findViewById(R.id.llDetailMsg);
+        LinearLayout llDetailMsg = (LinearLayout) viewList.get(1).findViewById(R.id.llDetailMsg);
         llDetailMsg.removeAllViews();
         mSelectedConfig.clear();
         if (list == null || list.isEmpty()) {
@@ -229,23 +329,21 @@ public class PostSecondHandCarFragment extends BaseFragment {
             ((TextView) layout.findViewById(R.id.tvConfigName)).setText(config.getType_name());
             itemList = config.getList();
             int itemCount = itemList.size();
-            int rowCount = 3;
-            int typeId = config.getType_id();
-            if (typeId == 3 || typeId == 4 || typeId == 5) {
-                rowCount = 2;
-            }
-            int row = itemCount % rowCount == 0 ? itemCount / rowCount : itemCount / rowCount + 1;
             LinearLayout itemLayout;
             TextView tvName1, tvName2, tvName3;
-            for (int j = 0; j < row; ++j) {
+            int index=0;
+            int charCount;
+            for (int j = 0; j < Integer.MAX_VALUE; ++j) {
+                charCount=0;
                 itemLayout = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.item_configuration_detail, null);
                 ((LinearLayout) layout.findViewById(R.id.llDetails)).addView(itemLayout);
                 tvName1 = ((TextView) itemLayout.findViewById(R.id.tvName1));
                 tvName2 = ((TextView) itemLayout.findViewById(R.id.tvName2));
                 tvName3 = ((TextView) itemLayout.findViewById(R.id.tvName3));
-                if (j * rowCount < itemCount) {
-                    tvName1.setText(itemList.get(j * rowCount).getName());
-                    tvName1.setTag(R.id.tag, itemList.get(j * rowCount).getId());
+                if (index < itemCount) {
+                    charCount+=itemList.get(index).getName().length();
+                    tvName1.setText(itemList.get(index).getName());
+                    tvName1.setTag(R.id.tag, itemList.get(index).getId());
                     tvName1.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -263,10 +361,15 @@ public class PostSecondHandCarFragment extends BaseFragment {
                     });
                 } else {
                     tvName1.setVisibility(View.GONE);
+                    tvName2.setVisibility(View.GONE);
+                    tvName3.setVisibility(View.GONE);
+                    break;
                 }
-                if (j * rowCount + 1 < itemCount) {
-                    tvName2.setText(itemList.get(j * rowCount + 1).getName());
-                    tvName2.setTag(R.id.tag, itemList.get(j * rowCount).getId());
+                ++index;
+                if (index < itemCount) {
+                    charCount+=itemList.get(index).getName().length();
+                    tvName2.setText(itemList.get(index).getName());
+                    tvName2.setTag(R.id.tag, itemList.get(index).getId());
                     tvName2.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -284,35 +387,39 @@ public class PostSecondHandCarFragment extends BaseFragment {
                     });
                 } else {
                     tvName2.setVisibility(View.GONE);
-                }
-                if (rowCount == 2) {
                     tvName3.setVisibility(View.GONE);
-                } else {
-                    if (j * rowCount + 2 < itemCount) {
-                        tvName3.setText(itemList.get(j * rowCount + 2).getName());
-                        tvName3.setTag(R.id.tag, itemList.get(j * rowCount + 2).getId());
-                        tvName3.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                String id = String.valueOf(view.getTag(R.id.tag));
-                                if (mSelectedConfig.contains(id)) {
-                                    mSelectedConfig.remove(id);
-                                    view.setBackgroundResource(R.drawable.back_config_not_selected);
-                                    ((TextView) view).setTextColor(getResources().getColor(R.color.main_text_color));
-                                } else {
-                                    mSelectedConfig.add(id);
-                                    view.setBackgroundResource(R.drawable.back_config_selected);
-                                    ((TextView) view).setTextColor(getResources().getColor(R.color.main_color));
-                                }
-                            }
-                        });
-                    } else {
-                        tvName3.setVisibility(View.GONE);
-                    }
+                    break;
                 }
+                ++index;
+                if (index < itemCount) {
+                    if(charCount+itemList.get(index).getName().length()>18){
+                        tvName3.setVisibility(View.GONE);
+                        continue;
+                    }
+                    tvName3.setText(itemList.get(index).getName());
+                    tvName3.setTag(R.id.tag, itemList.get(index).getId());
+                    tvName3.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            String id = String.valueOf(view.getTag(R.id.tag));
+                            if (mSelectedConfig.contains(id)) {
+                                mSelectedConfig.remove(id);
+                                view.setBackgroundResource(R.drawable.back_config_not_selected);
+                                ((TextView) view).setTextColor(getResources().getColor(R.color.main_text_color));
+                            } else {
+                                mSelectedConfig.add(id);
+                                view.setBackgroundResource(R.drawable.back_config_selected);
+                                ((TextView) view).setTextColor(getResources().getColor(R.color.main_color));
+                            }
+                        }
+                    });
+                } else {
+                    tvName3.setVisibility(View.GONE);
+                    break;
+                }
+                ++index;
             }
         }
-
     }
 
     private void getTokenFromNet() {
@@ -339,7 +446,7 @@ public class PostSecondHandCarFragment extends BaseFragment {
                             } else {
                                 String code = jsonObject.optString("code");
                                 String msg = jsonObjectData.optString("msg");
-                                ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                ToastUtils.showShort("" + msg);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -383,7 +490,7 @@ public class PostSecondHandCarFragment extends BaseFragment {
     }
 
     private void resetCarPhotosView() {
-        LinearLayout llCarPhotos = (LinearLayout) getView().findViewById(R.id.llCarPhotos);
+        LinearLayout llCarPhotos = (LinearLayout) viewList.get(0).findViewById(R.id.llCarPhotos);
         llCarPhotos.removeAllViews();
         int size;
         if (getUploadPhotos().size() == Constant.MAX_UPLOAD_PHOTO_NUM) {
@@ -484,24 +591,25 @@ public class PostSecondHandCarFragment extends BaseFragment {
             case R.id.iv_back:
                 goBack();
                 break;
+            case R.id.rlSelectDate:
+                getView().findViewById(R.id.rlSelectDate).setVisibility(View.GONE);
+                break;
             case R.id.btn_post_second_car:
                 publishSecondCar();
                 break;
             case R.id.tvBasicMsg:
+                ((ViewPager) getView().findViewById(R.id.customViewPager)).setCurrentItem(0);
                 ((TextView) getView().findViewById(R.id.tvBasicMsg)).setTextColor(getResources().getColor(R.color.main_text_color));
                 ((TextView) getView().findViewById(R.id.tvDetailMsg)).setTextColor(getResources().getColor(R.color.second_text_color));
                 getView().findViewById(R.id.line1).setVisibility(View.VISIBLE);
                 getView().findViewById(R.id.line2).setVisibility(View.GONE);
-                getView().findViewById(R.id.scrollBasicMsg).setVisibility(View.VISIBLE);
-                getView().findViewById(R.id.scrollDetailMsg).setVisibility(View.GONE);
                 break;
             case R.id.tvDetailMsg:
+                ((ViewPager) getView().findViewById(R.id.customViewPager)).setCurrentItem(1);
                 ((TextView) getView().findViewById(R.id.tvBasicMsg)).setTextColor(getResources().getColor(R.color.second_text_color));
                 ((TextView) getView().findViewById(R.id.tvDetailMsg)).setTextColor(getResources().getColor(R.color.main_text_color));
                 getView().findViewById(R.id.line1).setVisibility(View.GONE);
                 getView().findViewById(R.id.line2).setVisibility(View.VISIBLE);
-                getView().findViewById(R.id.scrollBasicMsg).setVisibility(View.GONE);
-                getView().findViewById(R.id.scrollDetailMsg).setVisibility(View.VISIBLE);
                 break;
             case R.id.tvCloseWarning:
                 getView().findViewById(R.id.rlWarning).setVisibility(View.GONE);
@@ -510,9 +618,10 @@ public class PostSecondHandCarFragment extends BaseFragment {
                 gotoPager(SelectCarColorFragment.class, null);
                 break;
             case R.id.rl_first_post_license:
-                showWheelView((TextView) getView().findViewById(R.id.tv_first_post_license), WheelViewPopupWindow.WHEEL_VIEW_WINDOW_TYPE.TYPE_DATA);
+            //    showWheelView((TextView) getView().findViewById(R.id.tv_first_post_license), WheelViewPopupWindow.WHEEL_VIEW_WINDOW_TYPE.TYPE_DATA);
+                getView().findViewById(R.id.rlSelectDate).bringToFront();
+                getView().findViewById(R.id.rlSelectDate).setVisibility(View.VISIBLE);
                 break;
-
             case R.id.rl_choose_brand_place:
                 if (CommonUtil.isListNullOrEmpty(mProvinceBeenList)) {
                     getProvinceList();
@@ -524,7 +633,8 @@ public class PostSecondHandCarFragment extends BaseFragment {
                         ProvinceBean mSelectProvince = (ProvinceBean) value1;
                         CityBean mSelectCity = (CityBean) value2;
                         if (EmptyUtils.isNotEmpty(mSelectProvince) && EmptyUtils.isNotEmpty(mSelectCity) && getView() != null) {
-                            ((TextView) getView().findViewById(R.id.tv_brand_place)).setText(mSelectCity.getCity_name());
+                            ((TextView) viewList.get(0).findViewById(R.id.tv_brand_place)).setText(mSelectCity.getCity_name());
+                            ((TextView) viewList.get(0).findViewById(R.id.tv_brand_place)).setTextColor(getResources().getColor(R.color.main_text_color));
                             setBroadPlace(mSelectCity.getCity_name());
                         }
                     }
@@ -557,6 +667,7 @@ public class PostSecondHandCarFragment extends BaseFragment {
                     int day = index3 + 1;
                     String choose_time = year + "-" + (month < 10 ? (0 + "" + String.valueOf(month)) : String.valueOf(month)) + "-" + (day < 10 ? (0 + "" + String.valueOf(day)) : String.valueOf(day));
                     tvSelect.setText(choose_time);
+                    tvSelect.setTextColor(getResources().getColor(R.color.main_text_color));
                     setFirstPostLicenseTime(choose_time);
                 }
             }
@@ -605,7 +716,7 @@ public class PostSecondHandCarFragment extends BaseFragment {
                             } else {
                                 String code = jsonObject.optString("code");
                                 String msg = jsonObjectData.optString("msg");
-                                ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                ToastUtils.showShort("" + msg);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -663,12 +774,16 @@ public class PostSecondHandCarFragment extends BaseFragment {
 
     private void resetCarModelView(String brand_name, String series_name, String model_name) {
         tv_car_type.setText(brand_name + " " + series_name + " " + model_name);
+        tv_car_type.setTextColor(getResources().getColor(R.color.main_text_color));
     }
 
     private void resetColorView(int color) {
-        Resources res = getResources();
-        String text = res.getString(res.getIdentifier("car_color_" + color, "string", getActivity().getPackageName()));
-        tv_car_color.setText(text);
+        if(color>=0) {
+            Resources res = getResources();
+            String text = res.getString(res.getIdentifier("car_color_" + color, "string", getActivity().getPackageName()));
+            tv_car_color.setText(text+">");
+            tv_car_color.setTextColor(getResources().getColor(R.color.main_text_color));
+        }
     }
 
     private void uploadVinImage(final File file_vin) {
@@ -705,7 +820,7 @@ public class PostSecondHandCarFragment extends BaseFragment {
                                                 } else {
                                                     String code = response.optString("code");
                                                     String msg = jsonObjectData.optString("msg");
-                                                    ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                                    ToastUtils.showShort("" + msg);
                                                 }
                                             } else {
                                                 getActivity().runOnUiThread(new Runnable() {
@@ -720,7 +835,7 @@ public class PostSecondHandCarFragment extends BaseFragment {
                                 } else {
                                     String code = jsonObject.optString("code");
                                     String msg = jsonObjectData.optString("msg");
-                                    ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                    ToastUtils.showShort("" + msg);
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -822,7 +937,7 @@ public class PostSecondHandCarFragment extends BaseFragment {
                                 } else {
                                     String code = response.optString("code");
                                     String msg = jsonObjectData.optString("msg");
-                                    ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                    ToastUtils.showShort("" + msg);
                                 }
                             } else {
                                 getActivity().runOnUiThread(new Runnable() {
@@ -863,7 +978,7 @@ public class PostSecondHandCarFragment extends BaseFragment {
                     .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
                     .addParams(Constant.FILES_TYPE, mPhotoTypes.toString())
                     .addParams(Constant.FILES_ID, mPhotoFile.toString())
-                    .addParams(Constant.CAR_COLOR, String.valueOf(mColor))//车辆颜色
+                    .addParams(Constant.CAR_COLOR, mColor<0?"0":String.valueOf(mColor))//车辆颜色
                     .addParams(Constant.CAR_INTRO, profile)
                     .addParams(Constant.PRICE, car_price)
                     .addParams(Constant.CONTACT_NAME, name)
@@ -905,12 +1020,32 @@ public class PostSecondHandCarFragment extends BaseFragment {
                                 int status = jsonObject.optInt("status");
                                 JSONObject jsonObjectData = jsonObject.optJSONObject("data");
                                 if (status == 1) {
-                                    ToastUtils.showShort("上传二手车成功！");
-                                    goBack();
+                                    String text;
+                                    LoginBean.UserInfoBean userInfoBean = DataManager.getInstance().getUserInfo();
+                                    if (userInfoBean != null && userInfoBean.getProfile().getType()==2) {
+                                        text="等待审核中";
+                                    }else{
+                                        text="发布成功";
+                                    }
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                    AlertDialog alertDialog = builder.setMessage(text)
+                                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialogInterface, int i) {
+                                                    dialogInterface.dismiss();
+                                                }
+                                            }).create();
+                                    alertDialog.show();
+                                    alertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                        @Override
+                                        public void onDismiss(DialogInterface dialogInterface) {
+                                            goBack();
+                                        }
+                                    });
                                 } else {
                                     String code = jsonObject.optString("code");
                                     String msg = jsonObjectData.optString("msg");
-                                    ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                    ToastUtils.showShort("" + msg);
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();

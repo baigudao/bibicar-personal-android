@@ -85,7 +85,7 @@ public class MyDreamCarFragment extends BaseFragment {
                                 handlerDreamCarData(jsonArray);
                             } else {
                                 String code = jsonObject.optString("code");
-                                ToastUtils.showShort("请求数据失败,请检查网络:" + code);
+                                ToastUtils.showShort(""+code);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

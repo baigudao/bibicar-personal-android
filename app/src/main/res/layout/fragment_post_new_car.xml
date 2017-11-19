@@ -74,13 +74,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/topLine2"
-        android:layout_marginTop="10dp">
+        android:background="#10ff5d5d"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp">
+
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
             android:drawableLeft="@drawable/laba"
+            android:layout_centerHorizontal="true"
             android:drawablePadding="15dp"
             android:gravity="center"
             android:text="@string/message_detail"
@@ -102,354 +105,20 @@
 
     <Button
         android:id="@+id/btn_post_new_car"
-        android:layout_width="300dp"
+        android:layout_width="match_parent"
         android:layout_height="45dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="30dp"
-        android:background="@drawable/btn_background_selector"
+        android:background="@color/main_color"
         android:text="发布车辆"
         android:textColor="@drawable/btn_text_background_selector"
         android:textSize="16sp" />
 
-    <com.wiserz.pbibi.view.MyScrollView
-        android:id="@+id/scrollBasicMsg"
+    <com.wiserz.pbibi.view.CustomViewPager
+        android:id="@+id/customViewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/btn_post_new_car"
-        android:layout_below="@id/rlWarning"
-        android:paddingBottom="40dp">
-
-        <LinearLayout
-            android:id="@+id/llBasicMsg"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="25dp"
-                android:text="车辆照片"
-                android:textColor="@color/main_text_color"
-                android:textSize="15sp"
-                android:textStyle="bold" />
-
-            <LinearLayout
-                android:id="@+id/llCarPhotos"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:orientation="vertical"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp">
-
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="25dp"
-                android:text="车辆信息"
-                android:textColor="@color/main_text_color"
-                android:textSize="15sp"
-                android:textStyle="bold" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="20dp"
-                android:background="@color/divider_color" />
-
-            <RelativeLayout
-                android:id="@+id/rl_choose_car_type"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="@drawable/setting_background_selector"
-                android:clickable="true">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="15dp"
-                    android:text="*"
-                    android:textColor="@color/warning_color"
-                    android:textSize="15sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="28dp"
-                    android:text="车型"
-                    android:textColor="@color/main_text_color"
-                    android:textSize="15sp" />
-
-                <TextView
-                    android:id="@+id/tv_car_type"
-                    android:layout_width="250dp"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="15dp"
-                    android:ellipsize="end"
-                    android:gravity="right"
-                    android:maxLines="1"
-                    android:text="@string/not_seleted"
-                    android:textColor="@color/third_text_color"
-                    android:textSize="15sp" />
-
-            </RelativeLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/divider_color" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:clickable="true">
-
-                <!--      <TextView
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:layout_centerVertical="true"
-                          android:layout_marginLeft="15dp"
-                          android:text="*"
-                          android:textColor="@color/warning_color"
-                          android:textSize="15sp" />-->
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="15dp"
-                    android:text="车辆价格（万元）"
-                    android:textColor="@color/main_text_color"
-                    android:textSize="15sp" />
-
-                <EditText
-                    android:id="@+id/et_input_price"
-                    android:layout_width="100dp"
-                    android:layout_height="50dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="15dp"
-                    android:background="@null"
-                    android:gravity="center|right"
-                    android:hint="@string/not_write"
-                    android:inputType="numberDecimal"
-                    android:maxLength="9"
-                    android:maxLines="1"
-                    android:textColorHint="@color/third_text_color"
-                    android:textSize="15sp" />
-
-            </RelativeLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/divider_color" />
-
-            <RelativeLayout
-                android:id="@+id/rl_choose_car_color"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="@drawable/setting_background_selector"
-                android:clickable="true">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="15dp"
-                    android:text="车辆颜色"
-                    android:textColor="@color/main_text_color"
-                    android:textSize="15sp" />
-
-                <TextView
-                    android:id="@+id/tvCarColor"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="15dp"
-                    android:text="红色"
-                    android:textColor="@color/third_text_color"
-                    android:textSize="15sp" />
-
-            </RelativeLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="10dp"
-                android:background="@color/divider_color" />
-
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="25dp"
-                android:text="联系人信息"
-                android:textColor="@color/main_text_color"
-                android:textSize="15sp"
-                android:textStyle="bold" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="20dp"
-                android:background="@color/divider_color" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:clickable="true">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="15dp"
-                    android:text="*"
-                    android:textColor="@color/warning_color"
-                    android:textSize="15sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="28dp"
-                    android:text="联系人"
-                    android:textColor="@color/main_text_color"
-                    android:textSize="15sp" />
-
-                <EditText
-                    android:id="@+id/et_input_name"
-                    android:layout_width="250dp"
-                    android:layout_height="50dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="15dp"
-                    android:background="@null"
-                    android:gravity="center|right"
-                    android:hint="请填写联系人"
-                    android:inputType="text"
-                    android:maxLength="6"
-                    android:maxLines="1"
-                    android:textColorHint="@color/third_text_color"
-                    android:textSize="15sp" />
-
-            </RelativeLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/divider_color" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:clickable="true">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="15dp"
-                    android:text="*"
-                    android:textColor="@color/warning_color"
-                    android:textSize="15sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="28dp"
-                    android:text="联系电话"
-                    android:textColor="@color/main_text_color"
-                    android:textSize="15sp" />
-
-                <EditText
-                    android:id="@+id/et_input_phone_num"
-                    android:layout_width="200dp"
-                    android:layout_height="50dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="15dp"
-                    android:background="@null"
-                    android:gravity="center|right"
-                    android:hint="默认注册号码"
-                    android:inputType="phone"
-                    android:maxLength="11"
-                    android:maxLines="1"
-                    android:textColorHint="@color/third_text_color"
-                    android:textSize="15sp" />
-
-            </RelativeLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="10dp"
-                android:background="@color/divider_color" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="25dp"
-                android:text="车辆描述"
-                android:textColor="@color/main_text_color"
-                android:textSize="15sp"
-                android:textStyle="bold" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/border_comment_reply"
-                android:orientation="vertical">
-
-                <EditText
-                    android:id="@+id/et_input_profile"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:hint="向别人介绍一下你的爱车吧~"
-                    android:padding="12dp"
-                    android:textColor="@color/second_text_color"
-                    android:textColorHint="@color/third_text_color"
-                    android:textSize="14sp" />
-
-            </LinearLayout>
-        </LinearLayout>
-
-    </com.wiserz.pbibi.view.MyScrollView>
-
-    <com.wiserz.pbibi.view.MyScrollView
-        android:id="@+id/scrollDetailMsg"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/btn_post_new_car"
-        android:layout_below="@id/rlWarning"
-        android:paddingBottom="40dp"
-        android:visibility="gone">
-
-
-        <LinearLayout
-            android:id="@+id/llDetailMsg"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-        </LinearLayout>
-    </com.wiserz.pbibi.view.MyScrollView>
+        android:layout_below="@id/rlWarning"/>
 
 </RelativeLayout>

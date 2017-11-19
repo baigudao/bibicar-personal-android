@@ -8,6 +8,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.AdapterView;
@@ -16,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.activity.BaseActivity;
@@ -335,9 +337,12 @@ public class AlbumFragment extends BaseFragment {
                         mediaInfo.index = (index++);
                     }
                     mMediasAdapter.notifyDataSetChanged();
+                    showView();
                     return;
                 }
-                if (mSelectPhotoFragment.getSelectedPhotos().size() + mSelectPhotoFragment.getCurrentPhotoNum() == Constant.MAX_UPLOAD_PHOTO_NUM) {
+                int currentNum=mSelectPhotoFragment.getSelectedPhotos().size() + mSelectPhotoFragment.getCurrentPhotoNum();
+                if (currentNum == Constant.MAX_UPLOAD_PHOTO_NUM) {
+                    Toast.makeText(getActivity(),"最多可以上传"+(Constant.MAX_UPLOAD_PHOTO_NUM-mSelectPhotoFragment.getCurrentPhotoNum())+"张照片",Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -352,7 +357,7 @@ public class AlbumFragment extends BaseFragment {
                     bmp.recycle();
                     if (mSelectPhotoFragment.getCurrentPhotoNum() == -1) {
                         DataManager.getInstance().setData9(path);
-                        goBack();
+                        getActivity().finish();
                         return;
                     }
                     getView().findViewById(R.id.selectPhotoView).setVisibility(View.VISIBLE);
@@ -363,6 +368,9 @@ public class AlbumFragment extends BaseFragment {
                     getSelectedMediaInfos().add(info);
                     mMediasAdapter.notifyDataSetChanged();
                     showView();
+                    if (mSelectPhotoFragment.getSelectedPhotos().size() + mSelectPhotoFragment.getCurrentPhotoNum() == Constant.MAX_UPLOAD_PHOTO_NUM) {
+                        Toast.makeText(getActivity(),"最多可以上传"+(Constant.MAX_UPLOAD_PHOTO_NUM-mSelectPhotoFragment.getCurrentPhotoNum())+"张照片",Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -449,10 +457,13 @@ public class AlbumFragment extends BaseFragment {
                 getView().findViewById(R.id.list).setVisibility(View.GONE);
                 break;
             case R.id.btnBack:
-                goBack();
+                getActivity().finish();
                 break;
             case R.id.tvOk:
                 DataManager.getInstance().setObject(mSelectPhotoFragment.getSelectedPhotos());
+                if(!TextUtils.isEmpty(mSelectPhotoFragment.getFromClass())){
+                    gotoPager(mSelectPhotoFragment.isPostNewCar()?PostNewCarFragment.class:PostSecondHandCarFragment.class,null);
+                }
                 getActivity().finish();
                 break;
         }

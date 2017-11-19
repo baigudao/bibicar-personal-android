@@ -7,74 +7,115 @@
 
     <include layout="@layout/title_bar" />
 
-    <EditText
-        android:id="@+id/etPhone"
-        style="@style/RegisterEditTextTheme1"
-        android:layout_marginTop="44dp"
-        android:hint="@string/please_input_phone_number"
-        android:inputType="phone"
-        android:padding="10dp" />
-
-    <View style="@style/RegisterLineTheme1" />
-
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:padding="10dp">
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="55dp">
+
+        <TextView
+            android:id="@+id/tv_get_verfication_code"
+            android:layout_width="90dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:background="@null"
+            android:gravity="center"
+            android:text="@string/get_code"
+            android:textColor="@color/btn_no_enable_color"
+            android:textSize="16sp" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_alignBottom="@id/tv_get_verfication_code"
+            android:layout_alignTop="@id/tv_get_verfication_code"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@id/tv_get_verfication_code"
+            android:background="@color/btn_no_enable_color" />
 
         <EditText
-            android:id="@+id/get_verification_code"
-            android:layout_width="150dp"
+            android:id="@+id/et_account_login"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="19dp"
+            android:layout_marginRight="20dp"
+            android:layout_toLeftOf="@id/tv_get_verfication_code"
             android:background="@null"
-            android:hint="请输入验证码"
+            android:hint="@string/please_input_phone_number"
             android:inputType="phone"
             android:maxLength="11"
             android:maxLines="1"
-            android:textColorHint="#bbbbbb"
+            android:textColorHint="@color/btn_no_enable_color"
             android:textSize="16sp" />
-
-        <ImageView
-            android:layout_width="1dp"
-            android:layout_height="26dp"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="12dp"
-            android:layout_toLeftOf="@+id/btn_get_verification_code"
-            android:background="#a8a8a8" />
-
-        <Button
-            android:id="@+id/btn_get_verification_code"
-            android:layout_width="70dp"
-            android:layout_height="30dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="12dp"
-            android:background="@drawable/btn_enable_selector"
-            android:enabled="false"
-            android:gravity="center"
-            android:text="获取验证码"
-            android:textColor="@drawable/btn_text_background_selector"
-            android:textSize="12sp" />
 
     </RelativeLayout>
 
-    <View style="@style/RegisterLineTheme1" />
+    <View
+        android:layout_width="280dp"
+        android:layout_height="1dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp"
+        android:background="@color/divider_color" />
+
+    <EditText
+        android:id="@+id/et_verfication_code_login"
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="22dp"
+        android:background="@null"
+        android:hint="@string/please_input_verfication_code"
+        android:inputType="phone"
+        android:maxLength="4"
+        android:maxLines="1"
+        android:textColorHint="@color/btn_no_enable_color"
+        android:textSize="16sp" />
+
+    <View
+        android:layout_width="280dp"
+        android:layout_height="1dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp"
+        android:background="@color/divider_color" />
+
+    <LinearLayout
+        android:layout_width="280dp"
+        android:layout_height="17dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="点击绑定，即表示您同意"
+            android:textColor="#A2A2A2"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/btn_user_protocol"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:clickable="true"
+            android:text="用户协议"
+            android:textColor="@drawable/btn_text_user_protocol_selector"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
 
     <Button
-        android:id="@+id/tvNext"
-        android:layout_width="300dp"
+        android:id="@+id/btn_bind"
+        android:layout_width="280dp"
         android:layout_height="45dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="40dp"
         android:background="@drawable/btn_enable_selector"
         android:enabled="false"
-        android:gravity="center"
         android:text="绑定"
         android:textColor="@drawable/btn_text_background_selector"
         android:textSize="16sp" />
+
+
 
 </LinearLayout>

@@ -12,8 +12,17 @@ public class LoginBean extends BaseBean {
      * user_info : {"chat_token":"LN+OYZtcEtKv5hUnTlTOuf+JRJS5sthGyHSacCSG/XWMRMERMm0lCMNP+bq2l8TRmAShFuKUJDs=","created":1467128731,"mobile":"bibi06","profile":{"age":0,"avatar":"http://img.bibicar.cn/FqKNZJ3khFC9SHdJWTwQ7QYsVW3k","balance":0,"bibi_no":10454,"company":0,"constellation":"","gender":2,"nickname":"馨子","signature":"古月","type":1},"user_id":454,"username":"bibi_osvy0w"}
      */
 
+    private int is_bind_mobile;
     private String session_id;
     private UserInfoBean user_info;
+
+    public int getIs_bind_mobile() {
+        return is_bind_mobile;
+    }
+
+    public void setIs_bind_mobile(int is_bind_mobile) {
+        this.is_bind_mobile = is_bind_mobile;
+    }
 
     public String getSession_id() {
         return session_id;

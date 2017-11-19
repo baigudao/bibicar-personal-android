@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -210,7 +211,7 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
                                 } else {
                                     String code = jsonObject.optString("code");
                                     String msg = jsonObjectData.optString("msg");
-                                    ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                    ToastUtils.showShort("" + msg);
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -246,7 +247,7 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
                                 } else {
                                     String code = jsonObject.optString("code");
                                     String msg = jsonObjectData.optString("msg");
-                                    ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                    ToastUtils.showShort("" + msg);
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -296,7 +297,7 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
                             } else {
                                 String code = jsonObject.optString("code");
                                 String msg = jsonObjectData.optString("msg");
-                                ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                ToastUtils.showShort("" + msg);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -491,6 +492,7 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
                 if (EmptyUtils.isNotEmpty(mAllImageUrls) && mAllImageUrls.size() != 0) {
                     //自定义你的Holder，实现更多复杂的界面，不一定是图片翻页，其他任何控件翻页亦可。
                     //            convenientBanner.startTurning(5000);
+                    ((TextView)getView().findViewById(R.id.tvCarPhoneIndex)).setText("1/"+mAllImageUrls.size());
                     convenientBanner.setPages(new CBViewHolderCreator<LocalImageHolderView>() {
                         @Override
                         public LocalImageHolderView createHolder() {
@@ -508,6 +510,22 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
                                     gotoPager(AllImageFragment.class, null);
                                 }
                             });
+                    convenientBanner.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                        @Override
+                        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                        }
+
+                        @Override
+                        public void onPageSelected(int position) {
+                            ((TextView)getView().findViewById(R.id.tvCarPhoneIndex)).setText((position+1)+"/"+mAllImageUrls.size());
+                        }
+
+                        @Override
+                        public void onPageScrollStateChanged(int state) {
+
+                        }
+                    });
                     //设置翻页的效果，不需要翻页效果可用不设
                     //.setPageTransformer(Transformer.DefaultTransformer);    集成特效之后会有白屏现象，新版已经分离，如果要集成特效的例子可以看Demo的点击响应。
                     // convenientBanner.setManualPageable(false);//设置不能手动影响
@@ -611,31 +629,51 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
         llConfigs.setVisibility(View.VISIBLE);
         getView().findViewById(R.id.configLine).setVisibility(View.VISIBLE);
         int size = list.size();
-        int row = size % 3 == 0 ? size / 3 : size / 3 + 1;
+    //    int row = size % 3 == 0 ? size / 3 : size / 3 + 1;
         View itemView;
+        int rowCount;
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         TextView tvName1, tvName2, tvName3;
-        for (int i = 0; i < row; ++i) {
+        int index=0;
+        int charCount;
+        for (int i = 0; i<Integer.MAX_VALUE ; ++i) {
             itemView = inflater.inflate(R.layout.item_car_detail_configs, null);
             llConfigs.addView(itemView);
             tvName1 = ((TextView) itemView.findViewById(R.id.tvName1));
             tvName2 = ((TextView) itemView.findViewById(R.id.tvName2));
             tvName3 = ((TextView) itemView.findViewById(R.id.tvName3));
-            if (i * 3 < size) {
-                tvName1.setText(list.get(i * 3).getName());
+            charCount=0;
+            if (index< size) {
+                tvName1.setText(list.get(index).getName());
+                charCount+=list.get(index).getName().length();
             } else {
                 tvName1.setVisibility(View.GONE);
+                tvName2.setVisibility(View.GONE);
+                tvName3.setVisibility(View.GONE);
+                break;
             }
-            if (i * 3 + 1 < size) {
-                tvName2.setText(list.get(i * 3 + 1).getName());
+            ++index;
+            if (index < size) {
+                tvName2.setText(list.get(index).getName());
+                charCount+=list.get(index).getName().length();
             } else {
                 tvName2.setVisibility(View.GONE);
+                tvName3.setVisibility(View.GONE);
+                break;
             }
-            if (i * 3 + 2 < size) {
-                tvName3.setText(list.get(i * 3 + 2).getName());
+            ++index;
+            if (index< size) {
+                if(charCount+list.get(index).getName().length()>17){
+                    tvName3.setVisibility(View.GONE);
+                    itemView.findViewById(R.id.rl3).setVisibility(View.GONE);
+                    continue;
+                }
+                tvName3.setText(list.get(index).getName());
             } else {
                 tvName3.setVisibility(View.GONE);
+                break;
             }
+            ++index;
         }
 
     }

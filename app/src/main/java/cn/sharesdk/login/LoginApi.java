@@ -7,6 +7,10 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.widget.Toast;
 
+import com.mob.MobApplication;
+import com.mob.MobSDK;
+import com.tencent.mm.opensdk.utils.Log;
+
 import java.util.HashMap;
 
 import cn.sharesdk.framework.Platform;
@@ -47,17 +51,19 @@ public class LoginApi implements Handler.Callback {
         if (platform == null) {
             return;
         }
-
+        //初始化SDK
+        if(!(context instanceof MobApplication)){
+            MobSDK.init(context.getApplicationContext());
+        }
         //初始化SDK
         //        ShareSDK.initSDK(context);
         Platform plat = ShareSDK.getPlatform(platform);
         if (plat == null) {
             return;
         }
-
         if (plat.isAuthValid()) {
             plat.removeAccount(true);
-            return;
+            plat = ShareSDK.getPlatform(platform);
         }
 
         //使用SSO授权，通过客户单授权

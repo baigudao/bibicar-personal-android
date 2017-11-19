@@ -85,8 +85,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private void initFragment() {
         mBaseFragment = new ArrayList<>();
-        mBaseFragment.add(new RecommendFragment());//主页
         mBaseFragment.add(new CarCenterFragment());//车市
+        mBaseFragment.add(new RecommendFragment());//主页
         mBaseFragment.add(new CommunityFragment());//圈子
         mBaseFragment.add(new MessageFragment());//消息
         mBaseFragment.add(new MyFragment());//我的
@@ -155,10 +155,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.ll_home:
+            case R.id.ll_car_center:
                 position = 0;
                 break;
-            case R.id.ll_car_center:
+            case R.id.ll_home:
                 position = 1;
                 break;
             case R.id.rl_community:
@@ -194,13 +194,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         switch (position) {
             case 0:
                 resetTab();
-                iv_home.setImageResource(R.drawable.tab_home_c3x);
-                tv_home.setTextColor(getResources().getColor(R.color.main_text_color));
+                iv_car_center.setImageResource(R.drawable.tab_market_c3x);
+                tv_car_center.setTextColor(getResources().getColor(R.color.main_text_color));
+
                 break;
             case 1:
                 resetTab();
-                iv_car_center.setImageResource(R.drawable.tab_market_c3x);
-                tv_car_center.setTextColor(getResources().getColor(R.color.main_text_color));
+                iv_home.setImageResource(R.drawable.tab_home_c3x);
+                tv_home.setTextColor(getResources().getColor(R.color.main_text_color));
                 break;
             case 2:
                 resetTab();
@@ -228,6 +229,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         if ((position == 3 || position == 4) && !CommonUtil.isHadLogin()) {
             findViewById(R.id.ll_home).performClick();
         }
+        if(CommonUtil.isHadLogin()) {
+            if (mBaseFragment != null && !mBaseFragment.isEmpty()) {
+                ((MyFragment)mBaseFragment.get(4)).resetView();
+            }
+        }
+
         GBExecutionPool.getExecutor().execute(new Runnable() {
             @Override
             public void run() {

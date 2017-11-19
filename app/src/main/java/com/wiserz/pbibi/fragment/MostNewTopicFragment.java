@@ -93,7 +93,7 @@ public class MostNewTopicFragment extends BaseFragment implements BaseRecyclerVi
                             } else {
                                 String code = jsonObject.optString("code");
                                 String msg = jsonObjectData.optString("msg");
-                                ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                ToastUtils.showShort("" + msg);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

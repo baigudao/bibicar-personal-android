@@ -5,6 +5,7 @@ import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
@@ -16,6 +17,7 @@ import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.activity.BaseActivity;
 import com.wiserz.pbibi.activity.EmptyActivity;
 import com.wiserz.pbibi.activity.RegisterAndLoginActivity;
+import com.wiserz.pbibi.bean.LoginBean;
 import com.wiserz.pbibi.util.Constant;
 import com.wiserz.pbibi.util.DataManager;
 import com.wiserz.pbibi.util.GBExecutionPool;
@@ -46,12 +48,17 @@ public class SettingFragment extends BaseFragment {
 
         settings_cache_size = (TextView) view.findViewById(R.id.settings_cache_size);
 
-        view.findViewById(R.id.rl_binding_phone).setOnClickListener(this);
+//        view.findViewById(R.id.rl_binding_phone).setOnClickListener(this);
 //        view.findViewById(R.id.rl_modify_pwd).setOnClickListener(this);
         view.findViewById(R.id.rl_clear_cache).setOnClickListener(this);
         view.findViewById(R.id.rl_about_us).setOnClickListener(this);
         view.findViewById(R.id.rl_give_grade).setOnClickListener(this);
         view.findViewById(R.id.tvLogout).setOnClickListener(this);
+
+        LoginBean.UserInfoBean userInfoBean = DataManager.getInstance().getUserInfo();
+        if(userInfoBean!=null){
+            ((TextView)getView().findViewById(R.id.tv_binding_phone)).setText(TextUtils.isEmpty(userInfoBean.getMobile())?"":userInfoBean.getMobile());
+        }
     }
 
     @Override

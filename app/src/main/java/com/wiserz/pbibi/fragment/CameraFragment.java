@@ -9,11 +9,13 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.wiserz.pbibi.activity.BaseActivity;
 import com.wiserz.pbibi.R;
@@ -235,7 +237,12 @@ public class CameraFragment extends BaseFragment implements View.OnTouchListener
                 getActivity().finish();
                 break;
             case R.id.btnTakePhoto:
-                if (mUsingCamera || mSelectPhotoFragment.getSelectedPhotos().size() + mSelectPhotoFragment.getCurrentPhotoNum() == Constant.MAX_UPLOAD_PHOTO_NUM) {
+                if (mUsingCamera){
+                    return;
+                }
+                int currentNum=mSelectPhotoFragment.getSelectedPhotos().size() + mSelectPhotoFragment.getCurrentPhotoNum();
+                if (currentNum == Constant.MAX_UPLOAD_PHOTO_NUM) {
+                    Toast.makeText(getActivity(),"最多可以上传"+(Constant.MAX_UPLOAD_PHOTO_NUM-mSelectPhotoFragment.getCurrentPhotoNum())+"张照片",Toast.LENGTH_SHORT).show();
                     return;
                 }
                 mUsingCamera = true;
@@ -250,13 +257,17 @@ public class CameraFragment extends BaseFragment implements View.OnTouchListener
                                     bmp.recycle();
                                     if (mSelectPhotoFragment.getCurrentPhotoNum() == -1) {
                                         DataManager.getInstance().setData9(path);
-                                        goBack();
+                                        getActivity().finish();
                                         return;
                                     }
                                     getView().findViewById(R.id.selectPhotoView).setVisibility(View.VISIBLE);
                                     mSelectPhotoFragment.getSelectedPhotos().add(new File(path));
                                     getSelectedPhotoAdapter().setDataList(mSelectPhotoFragment.getSelectedPhotos());
                                     showView();
+                                    int currentNum=mSelectPhotoFragment.getSelectedPhotos().size() + mSelectPhotoFragment.getCurrentPhotoNum();
+                                    if (currentNum == Constant.MAX_UPLOAD_PHOTO_NUM) {
+                                        Toast.makeText(getActivity(),"最多可以上传"+(Constant.MAX_UPLOAD_PHOTO_NUM-mSelectPhotoFragment.getCurrentPhotoNum())+"张照片",Toast.LENGTH_SHORT).show();
+                                    }
                                 }
                                 SensorControler.getInstance().unlockFocus();
                                 mUsingCamera = false;
@@ -273,6 +284,9 @@ public class CameraFragment extends BaseFragment implements View.OnTouchListener
                 break;
             case R.id.tvNext:
                 DataManager.getInstance().setObject(mSelectPhotoFragment.getSelectedPhotos());
+                if(!TextUtils.isEmpty(mSelectPhotoFragment.getFromClass())){
+                    gotoPager(mSelectPhotoFragment.isPostNewCar()?PostNewCarFragment.class:PostSecondHandCarFragment.class,null);
+                }
                 getActivity().finish();
                 break;
 
@@ -287,6 +301,7 @@ public class CameraFragment extends BaseFragment implements View.OnTouchListener
             getView().findViewById(R.id.tvNext).setVisibility(View.VISIBLE);
             mSelectPhotoFragment.setViewPagerCanScroll(false);
         } else {
+
             getView().findViewById(R.id.selectPhotoView).setVisibility(View.GONE);
             getView().findViewById(R.id.tvPhotoNum).setVisibility(View.GONE);
             getView().findViewById(R.id.tvNext).setVisibility(View.GONE);

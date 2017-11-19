@@ -673,7 +673,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                             } else {
                                 String code = jsonObject.optString("code");
                                 String msg = jsonObjectData.optString("msg");
-                                ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                ToastUtils.showShort("" + msg);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -737,15 +737,21 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
             @Override
             public void onFirstBtnClicked() {
                 //上传新车
+                Bundle bundle=new Bundle();
+                bundle.putString("from_class",getClass().getName());
+                bundle.putBoolean("is_post_new_car",true);
                 DataManager.getInstance().setObject(null);
-                gotoPager(PostNewCarFragment.class, null);
+                gotoPager(SelectPhotoFragment.class, bundle,true);
             }
 
             @Override
             public void onSecondBtnClicked() {
                 //上传二手车
+                Bundle bundle=new Bundle();
+                bundle.putString("from_class",getClass().getName());
+                bundle.putBoolean("is_post_new_car",false);
                 DataManager.getInstance().setObject(null);
-                gotoPager(PostSecondHandCarFragment.class, null);
+                gotoPager(SelectPhotoFragment.class, bundle,true);
             }
 
             @Override

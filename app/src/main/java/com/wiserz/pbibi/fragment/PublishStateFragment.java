@@ -164,7 +164,7 @@ public class PublishStateFragment extends BaseFragment {
                             } else {
                                 String code = jsonObject.optString("code");
                                 String msg = jsonObjectData.optString("msg");
-                                ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                ToastUtils.showShort("" + msg);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -209,7 +209,7 @@ public class PublishStateFragment extends BaseFragment {
                                 } else {
                                     String code = response.optString("code");
                                     String msg = jsonObjectData.optString("msg");
-                                    ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                    ToastUtils.showShort("" + msg);
                                 }
                             } else {
                                 getActivity().runOnUiThread(new Runnable() {
@@ -260,7 +260,7 @@ public class PublishStateFragment extends BaseFragment {
                                 } else {
                                     String code = jsonObject.optString("code");
                                     String msg = jsonObjectData.optString("msg");
-                                    ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                    ToastUtils.showShort("" + msg);
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();

@@ -3,13 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
+    android:paddingLeft="13dp"
+    android:paddingRight="13dp"
     android:paddingBottom="20dp">
 
     <RelativeLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:layout_weight="1">
+        android:gravity="center_horizontal">
         <TextView
             android:id="@+id/tvName1"
             android:layout_width="wrap_content"
@@ -17,8 +18,8 @@
             android:layout_gravity="center_horizontal"
             android:background="@drawable/back_car_detail_config"
             android:gravity="center"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
+            android:paddingLeft="13dp"
+            android:paddingRight="13dp"
             android:text="Esp系統"
             android:textColor="@color/main_color"
             android:textSize="12sp" />
@@ -26,10 +27,10 @@
 
 
     <RelativeLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:layout_weight="1">
+        android:layout_marginLeft="13dp">
         <TextView
             android:id="@+id/tvName2"
             android:layout_width="wrap_content"
@@ -37,8 +38,8 @@
             android:layout_gravity="center_horizontal"
             android:background="@drawable/back_car_detail_config"
             android:gravity="center"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
+            android:paddingLeft="13dp"
+            android:paddingRight="13dp"
             android:text="GPS導航"
             android:textColor="@color/main_color"
             android:textSize="12sp" />
@@ -47,10 +48,11 @@
 
 
     <RelativeLayout
-        android:layout_width="match_parent"
+        android:id="@+id/rl3"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:layout_weight="1">
+        android:layout_marginLeft="13dp">
 
         <TextView
             android:id="@+id/tvName3"
@@ -58,8 +60,8 @@
             android:layout_height="30dp"
             android:background="@drawable/back_car_detail_config"
             android:gravity="center"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
+            android:paddingLeft="13dp"
+            android:paddingRight="13dp"
             android:text="座椅加熱"
             android:textColor="@color/main_color"
             android:textSize="12sp" />

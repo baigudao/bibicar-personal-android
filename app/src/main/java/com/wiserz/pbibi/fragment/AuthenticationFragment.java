@@ -140,7 +140,7 @@ public class AuthenticationFragment extends BaseFragment {
                             } else {
                                 String code = response.optString("code");
                                 String msg = jsonObjectData.optString("msg");
-                                ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                ToastUtils.showShort("" + msg);
                             }
                         } else {
                             ToastUtils.showShort("证件资料上传失败，请重新上传");
@@ -213,7 +213,7 @@ public class AuthenticationFragment extends BaseFragment {
                             } else {
                                 String code = jsonObject.optString("code");
                                 String msg = jsonObjectData.optString("msg");
-                                ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                ToastUtils.showShort("" + msg);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

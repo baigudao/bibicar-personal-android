@@ -13,9 +13,12 @@ import com.google.gson.Gson;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.tencent.mm.opensdk.utils.Log;
 import com.wiserz.pbibi.R;
+import com.wiserz.pbibi.bean.LoginBean;
 import com.wiserz.pbibi.bean.UserInfoBean;
 import com.wiserz.pbibi.util.Constant;
+import com.wiserz.pbibi.util.DataManager;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -59,6 +62,10 @@ public class MyFragment extends BaseFragment implements OnRefreshListener {
         smartRefreshLayout = (SmartRefreshLayout) view.findViewById(R.id.smartRefreshLayout);
         smartRefreshLayout.setEnableLoadmore(false);
         smartRefreshLayout.setOnRefreshListener(this);
+    }
+
+    public void onResume(){
+        super.onResume();
     }
 
     @Override
@@ -132,7 +139,7 @@ public class MyFragment extends BaseFragment implements OnRefreshListener {
                             } else {
                                 String code = jsonObject.optString("code");
                                 String msg = jsonObjectData.optString("msg");
-                                ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                ToastUtils.showShort("" + msg);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -141,11 +148,33 @@ public class MyFragment extends BaseFragment implements OnRefreshListener {
                 });
     }
 
+    public void resetView(){
+        LoginBean.UserInfoBean userInfoBean=DataManager.getInstance().getUserInfo();
+        if (EmptyUtils.isNotEmpty(userInfoBean) && getView() != null) {
+            if (EmptyUtils.isNotEmpty(userInfoBean.getProfile())) {
+                Log.e("aaaaaaaaaa",user_id+", "+SPUtils.getInstance().getInt(Constant.USER_ID));
+                if(user_id != SPUtils.getInstance().getInt(Constant.USER_ID)){
+                    user_id=SPUtils.getInstance().getInt(Constant.USER_ID);
+                    initData();
+                }
+                Glide.with(mContext)
+                        .load(userInfoBean.getProfile().getAvatar())
+                        .placeholder(R.drawable.user_photo)
+                        .error(R.drawable.user_photo)
+                        .into((ImageView) getView().findViewById(R.id.iv_circle_image));
+                ((TextView) getView().findViewById(R.id.tv_user_name)).setText(userInfoBean.getProfile().getNickname() == null ? "" : userInfoBean.getProfile().getNickname());
+                //关注 4 丨 粉丝 12 丨 BiBi号 13456
+                ((TextView) getView().findViewById(R.id.tv_num)).setText("关注 " + friend_num + " | " + "粉丝 " + fans_num + " | " + "BiBi号 " + userInfoBean.getProfile().getBibi_no());
+                ((TextView) getView().findViewById(R.id.tv_car_price)).setText("0.0");
+                ((TextView) getView().findViewById(R.id.tv_car_num)).setText("0");
+            }
+        }
+    }
+
     private void handlerDataForUserInfo(JSONObject jsonObjectUserInfo) {
         if (EmptyUtils.isNotEmpty(jsonObjectUserInfo)) {
             Gson gson = new Gson();
             UserInfoBean userInfoBean = gson.fromJson(jsonObjectUserInfo.toString(), UserInfoBean.class);
-
             if (EmptyUtils.isNotEmpty(userInfoBean) && getView() != null) {
                 if (EmptyUtils.isNotEmpty(userInfoBean.getProfile())) {
                     Glide.with(mContext)

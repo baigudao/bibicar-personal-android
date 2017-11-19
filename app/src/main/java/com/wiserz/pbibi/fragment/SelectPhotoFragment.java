@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.widget.TextView;
 
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.util.DataManager;
@@ -22,11 +23,22 @@ public class SelectPhotoFragment extends BaseFragment {
     private int mCurrentPhotoNum;  //现有多少张照片，当为-1时表示VIN照片
     private ArrayList<File> mSelectedPhotos;
 
+    private String from_class;
+    private boolean is_post_new_car;
+
     public ArrayList<File> getSelectedPhotos() {
         if (mSelectedPhotos == null) {
             mSelectedPhotos = new ArrayList<>();
         }
         return mSelectedPhotos;
+    }
+
+    public String getFromClass(){
+        return from_class;
+    }
+
+    public boolean isPostNewCar(){
+        return is_post_new_car;
     }
 
     @Override
@@ -36,6 +48,8 @@ public class SelectPhotoFragment extends BaseFragment {
 
     @Override
     protected void initView(View view) {
+        from_class=getArguments().getString("from_class","");
+        is_post_new_car=getArguments().getBoolean("is_post_new_car",false);
         view.findViewById(R.id.tvRight).setOnClickListener(this);
         view.findViewById(R.id.tvLeft).setOnClickListener(this);
         mCurrentPhotoNum = 0;
@@ -87,9 +101,11 @@ public class SelectPhotoFragment extends BaseFragment {
                 if (position == 0) {
                     getView().findViewById(R.id.tvLeft).setVisibility(View.INVISIBLE);
                     getView().findViewById(R.id.tvRight).setVisibility(View.VISIBLE);
+                    ((TextView) getView().findViewById(R.id.tvCenter)).setText(getString(R.string.camera));
                 } else {
                     getView().findViewById(R.id.tvLeft).setVisibility(View.VISIBLE);
                     getView().findViewById(R.id.tvRight).setVisibility(View.INVISIBLE);
+                    ((TextView) getView().findViewById(R.id.tvCenter)).setText(getString(R.string.album));
                 }
             }
 

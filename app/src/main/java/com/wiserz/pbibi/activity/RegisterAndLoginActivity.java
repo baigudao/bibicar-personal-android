@@ -12,9 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.blankj.utilcode.util.EmptyUtils;
-import com.blankj.utilcode.util.EncryptUtils;
 import com.blankj.utilcode.util.RegexUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
@@ -22,13 +20,13 @@ import com.google.gson.Gson;
 import com.wiserz.pbibi.BaseApplication;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.bean.LoginBean;
+import com.wiserz.pbibi.fragment.BindingPhoneFragment;
 import com.wiserz.pbibi.fragment.CompanyRegisterFragment;
-import com.wiserz.pbibi.fragment.ForgetPasswordFragment;
 import com.wiserz.pbibi.fragment.OauthRegisterFragment;
 import com.wiserz.pbibi.fragment.UserProtocolFragment;
-import com.wiserz.pbibi.fragment.WelcomeRegisterFragment;
 import com.wiserz.pbibi.util.Constant;
 import com.wiserz.pbibi.util.DataManager;
+import com.wiserz.pbibi.util.GBExecutionPool;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -41,6 +39,7 @@ import java.util.TimerTask;
 
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformDb;
+import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.login.LoginApi;
 import cn.sharesdk.login.OnLoginListener;
 import cn.sharesdk.login.UserInfo;
@@ -84,6 +83,24 @@ public class RegisterAndLoginActivity extends BaseActivity implements View.OnCli
 
         findViewById(R.id.image_btn_weixin_login).setOnClickListener(this);
         findViewById(R.id.image_btn_weibo_login).setOnClickListener(this);
+
+        GBExecutionPool.getExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                Platform plat = ShareSDK.getPlatform("Wechat");
+                if (plat != null) {
+                    if (plat.isAuthValid()) {
+                        plat.removeAccount(true);
+                    }
+                }
+                plat = ShareSDK.getPlatform("SinaWeibo");
+                if (plat != null) {
+                    if (plat.isAuthValid()) {
+                        plat.removeAccount(true);
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -155,7 +172,7 @@ public class RegisterAndLoginActivity extends BaseActivity implements View.OnCli
                             } else {
                                 String code = jsonObject.optString("code");
                                 String msg = jsonObjectData.optString("msg");
-                                ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                ToastUtils.showShort("" + msg);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -238,7 +255,7 @@ public class RegisterAndLoginActivity extends BaseActivity implements View.OnCli
                             } else {
                                 String code = jsonObject.optString("code");
                                 String msg = jsonObjectData.optString("msg");
-                                ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                ToastUtils.showShort("" + msg);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -316,6 +333,7 @@ public class RegisterAndLoginActivity extends BaseActivity implements View.OnCli
 
                     @Override
                     public void onResponse(String response, int id) {
+                        Log.e("aaaaaaaaaa","response: "+response.toString());
                         JSONObject jsonObject = null;
                         try {
                             jsonObject = new JSONObject(response);
@@ -324,21 +342,27 @@ public class RegisterAndLoginActivity extends BaseActivity implements View.OnCli
                             if (status == 1) {
                                 Gson gson = new Gson();
                                 LoginBean loginBean = gson.fromJson(jsonObjectData.toString(), LoginBean.class);
-                                //存储个人相关信息
-                                SPUtils.getInstance().put(Constant.SESSION_ID, loginBean.getSession_id());
-                                SPUtils.getInstance().put(Constant.ACCOUNT, loginBean.getUser_info().getMobile());
-                                SPUtils.getInstance().put(Constant.CHAT_TOKEN, loginBean.getUser_info().getChat_token());
-                                SPUtils.getInstance().put(Constant.USER_ID, loginBean.getUser_info().getUser_id());
-                                DataManager.getInstance().setUserInfo(loginBean.getUser_info());
+                                int is_bind_mobile=loginBean.getIs_bind_mobile();
+                                if(is_bind_mobile==1) {
+                                    //存储个人相关信息
+                                    SPUtils.getInstance().put(Constant.SESSION_ID, loginBean.getSession_id());
+                                    SPUtils.getInstance().put(Constant.ACCOUNT, loginBean.getUser_info().getMobile());
+                                    SPUtils.getInstance().put(Constant.CHAT_TOKEN, loginBean.getUser_info().getChat_token());
+                                    SPUtils.getInstance().put(Constant.USER_ID, loginBean.getUser_info().getUser_id());
+                                    DataManager.getInstance().setUserInfo(loginBean.getUser_info());
 
-                                if (EmptyUtils.isNotEmpty(SPUtils.getInstance().getString(Constant.SESSION_ID))) {
-                                    SPUtils.getInstance().put(Constant.IS_USER_LOGIN, true);
+                                    if (EmptyUtils.isNotEmpty(SPUtils.getInstance().getString(Constant.SESSION_ID))) {
+                                        SPUtils.getInstance().put(Constant.IS_USER_LOGIN, true);
+                                    }
+
+                                    startActivity(new Intent(RegisterAndLoginActivity.this, MainActivity.class));
+                                    RegisterAndLoginActivity.this.finish();
+                                    connect(SPUtils.getInstance().getString(Constant.CHAT_TOKEN));//建立与融云服务器的连接
+                                    ToastUtils.showShort(R.string.login_successful);
+                                }else{
+                                    DataManager.getInstance().setObject(loginBean);
+                                    gotoPager(BindingPhoneFragment.class,null);
                                 }
-
-                                startActivity(new Intent(RegisterAndLoginActivity.this, MainActivity.class));
-                                RegisterAndLoginActivity.this.finish();
-                                connect(SPUtils.getInstance().getString(Constant.CHAT_TOKEN));//建立与融云服务器的连接
-                                ToastUtils.showShort(R.string.login_successful);
                             } else {
                                 int code = jsonObject.optInt("code");
                                 if (code == 51008) {
@@ -347,7 +371,7 @@ public class RegisterAndLoginActivity extends BaseActivity implements View.OnCli
                                     return;
                                 }
                                 String msg = jsonObjectData.optString("msg");
-                                ToastUtils.showShort("请求数据失败,请检查网络:" + code + " - " + msg);
+                                ToastUtils.showShort("" + msg);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
