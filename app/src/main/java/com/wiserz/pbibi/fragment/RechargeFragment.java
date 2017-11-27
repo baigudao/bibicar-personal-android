@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
@@ -69,18 +70,30 @@ public class RechargeFragment extends BaseFragment {
                     if (TextUtils.equals(resultStatus, "9000")) {
                         // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
                         ToastUtils.showShort("支付成功");
-                        goBack();
-                        gotoPager(MyWalletFragment.class, null);
-                    } else {
+          //              goBack();
+         //               gotoPager(MyWalletFragment.class, null);
+                        Bundle bundle=new Bundle();
+                        bundle.putInt("pay_result",1);
+                        gotoPager(PayResultFragment.class,bundle);
+                    } else if(TextUtils.equals(resultStatus, "6001")){
+                        ToastUtils.showShort("取消支付");
+                    }
+                    else {
                         // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
                         ToastUtils.showShort("支付失败");
+                        Bundle bundle=new Bundle();
+                        bundle.putInt("pay_result",0);
+                        gotoPager(PayResultFragment.class,bundle);
                     }
                     break;
                 case SDK_PAY_FLAG_WEIXIN:
                     String result = (String) msg.obj;
                     if (result.equals("RESULT_OK")) {
-                        goBack();
-                        gotoPager(MyWalletFragment.class, null);
+//                        goBack();
+//                        gotoPager(MyWalletFragment.class, null);
+                        Bundle bundle=new Bundle();
+                        bundle.putInt("pay_result",1);
+                        gotoPager(PayResultFragment.class,bundle);
                     }
                     break;
                 default:

@@ -110,7 +110,7 @@ public class CustomConversationListFragment extends UriFragment implements Adapt
 
     private void initConversationList(List<Conversation> conversations) {
         String targetId;
-        for (int i = 3; i > 0; --i) {
+        for (int i = 4; i > 0; --i) {
             boolean isHad = false;
             targetId = String.valueOf(i);
             for (Conversation conversation : conversations) {

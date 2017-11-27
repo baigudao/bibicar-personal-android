@@ -1,12 +1,15 @@
 package com.wiserz.pbibi.view;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.util.CommonUtil;
 
 /**
@@ -20,6 +23,10 @@ public class CircleColorView extends View {
     public CircleColorView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         mRadius = CommonUtil.dip2px(context, 6);
+        if(attrs!=null){
+            TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.CircleColorView);
+            getPaint().setColor(ta.getColor(R.styleable.CircleColorView_circle_color_2, Color.RED));
+        }
     }
 
     public void setColor(int color) {

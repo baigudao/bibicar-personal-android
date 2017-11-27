@@ -64,6 +64,41 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/tv_sort_newest_publish"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/background_color"
+        android:clickable="true"
+        android:gravity="center_vertical"
+        android:paddingLeft="15dp"
+        android:text="最新发布"
+        android:textColor="@color/main_text_color"
+        android:textSize="14sp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/background_color"
+        android:orientation="horizontal">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"/>
+
+        <View
+            android:layout_width="345dp"
+            android:layout_height="1dp"
+            android:background="@color/divider_color"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+    <TextView
         android:id="@+id/tv_sort_most_low"
         android:layout_width="match_parent"
         android:layout_height="40dp"
@@ -74,6 +109,8 @@
         android:text="价格最低"
         android:textColor="@color/main_text_color"
         android:textSize="14sp"/>
+
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -107,41 +144,6 @@
         android:gravity="center_vertical"
         android:paddingLeft="15dp"
         android:text="价格最高"
-        android:textColor="@color/main_text_color"
-        android:textSize="14sp"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/background_color"
-        android:orientation="horizontal">
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_weight="1"/>
-
-        <View
-            android:layout_width="345dp"
-            android:layout_height="1dp"
-            android:background="@color/divider_color"/>
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_weight="1"/>
-
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/tv_sort_most_short"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="@color/background_color"
-        android:clickable="true"
-        android:gravity="center_vertical"
-        android:paddingLeft="15dp"
-        android:text="车程最短"
         android:textColor="@color/main_text_color"
         android:textSize="14sp"/>
 

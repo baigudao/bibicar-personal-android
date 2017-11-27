@@ -838,7 +838,7 @@
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_weight="1"
-            android:background="@color/main_color"
+            android:background="#e8c24c"
             android:text="电话联系"
             android:textColor="@color/pure_white_color"
             android:textSize="16sp"/>

@@ -600,6 +600,11 @@ public class ArticleDetailFragment extends BaseFragment implements BaseRecyclerV
             }
 
             @Override
+            public void onCreatQr() {
+
+            }
+
+            @Override
             public void onCancelBtnClicked() {
 
             }

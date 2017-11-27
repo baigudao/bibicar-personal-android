@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_color"
+    android:background="@color/divider_color"
     android:orientation="vertical">
 
     <include layout="@layout/title_bar" />
@@ -11,6 +11,7 @@
         android:id="@+id/rl_binding_phone"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:layout_marginTop="40dp"
         android:background="@drawable/setting_background_selector"
         android:clickable="true">
 
@@ -19,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
-            android:text="绑定手机号"
+            android:text="已绑定手机号"
             android:textColor="@color/main_text_color"
             android:textSize="14sp" />
 
@@ -39,45 +40,14 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
             android:layout_toLeftOf="@id/iv1"
-            android:text="133xxxxxxxx"
+            android:text="177****1455"
             android:textSize="14sp" />
 
     </RelativeLayout>
 
- <!--   <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/divider_color" />
-
-    <RelativeLayout
-        android:id="@+id/rl_modify_pwd"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@drawable/setting_background_selector"
-        android:clickable="true">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="15dp"
-            android:text="修改密码"
-            android:textColor="@color/main_text_color"
-            android:textSize="14sp" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="15dp"
-            android:src="@drawable/v3_topic_more3x" />
-
-    </RelativeLayout>-->
-
     <View
         android:layout_width="match_parent"
-        android:layout_height="10dp"
+        android:layout_height="1dp"
         android:background="@color/divider_color" />
 
     <!-- 清除缓存-->
@@ -110,12 +80,12 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="10dp"
+        android:layout_height="1dp"
         android:background="@color/divider_color" />
 
     <!--  关于BIBiCar-->
     <RelativeLayout
-        android:id="@+id/rl_about_us"
+        android:id="@+id/rl_share_to_friend"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@drawable/setting_background_selector"
@@ -126,7 +96,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
-            android:text="关于BiBiCar"
+            android:text="分享给朋友"
             android:textColor="@color/main_text_color"
             android:textSize="14sp" />
 
@@ -158,7 +128,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
-            android:text="给我们打个分吧"
+            android:text="给我们打个分"
             android:textColor="@color/main_text_color"
             android:textSize="14sp" />
 
@@ -177,10 +147,74 @@
         android:layout_height="10dp"
         android:background="@color/divider_color" />
 
+    <!--  关于BIBiCar-->
+    <RelativeLayout
+        android:id="@+id/rl_about_us"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/setting_background_selector"
+        android:clickable="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:text="关于我们"
+            android:textColor="@color/main_text_color"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:src="@drawable/v3_topic_more3x" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider_color" />
+
+    <!-- 给我们打个分吧-->
+    <RelativeLayout
+        android:id="@+id/rl_feedback"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/setting_background_selector"
+        android:clickable="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:text="意见反馈"
+            android:textColor="@color/main_text_color"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:src="@drawable/v3_topic_more3x" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider_color" />
     <TextView
         android:id="@+id/tvLogout"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:layout_marginTop="40dp"
         android:background="@drawable/setting_background_selector"
         android:clickable="true"
         android:gravity="center"

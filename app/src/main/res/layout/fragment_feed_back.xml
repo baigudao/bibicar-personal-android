@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/divider_color">
+
+    <include layout="@layout/title_bar" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="您的问题或建议"
+        android:textColor="#FF929292"
+        android:layout_marginTop="50dp"
+        android:layout_marginLeft="15dp"
+        android:textSize="14dp"
+        />
+
+    <EditText
+        android:id="@+id/etFeedback"
+        android:layout_width="match_parent"
+        android:layout_height="255dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:textColorHint="@color/third_text_color"
+        android:textColor="@color/main_text_color"
+        android:background="@color/pure_white_color"
+        android:gravity="left|top"
+        android:padding="18dp"
+        android:hint="请输入您的问题或建议"
+        android:textSize="14dp"
+        />
+
+    <TextView
+        android:id="@+id/tv_submit"
+        android:layout_width="280dp"
+        android:layout_height="45dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/back_btn_submit"
+        android:gravity="center"
+        android:text="提交"
+        android:textColor="@color/pure_white_color"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="客服热线: 0755-22223323"
+        android:textColor="@color/warning_color"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="40dp"
+        android:textSize="14sp"
+        />
+
+</LinearLayout>

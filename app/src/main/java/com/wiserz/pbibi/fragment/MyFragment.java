@@ -57,6 +57,7 @@ public class MyFragment extends BaseFragment implements OnRefreshListener {
         view.findViewById(R.id.rl_my_car_repertory).setOnClickListener(this);
         view.findViewById(R.id.rl_like).setOnClickListener(this);
         view.findViewById(R.id.rl_my_order).setOnClickListener(this);
+        view.findViewById(R.id.rl_search_history).setOnClickListener(this);
         view.findViewById(R.id.rl_car_service).setOnClickListener(this);
 
         smartRefreshLayout = (SmartRefreshLayout) view.findViewById(R.id.smartRefreshLayout);
@@ -96,6 +97,9 @@ public class MyFragment extends BaseFragment implements OnRefreshListener {
                 break;
             case R.id.rl_car_service:
                 gotoPager(CarServiceFragment.class, null);//汽车服务
+                break;
+            case R.id.rl_search_history:
+                gotoPager(SearchHistoryFragment.class, null);//汽车服务
                 break;
             default:
                 break;

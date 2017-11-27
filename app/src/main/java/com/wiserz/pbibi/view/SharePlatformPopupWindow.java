@@ -32,10 +32,12 @@ public class SharePlatformPopupWindow extends PopupWindow implements View.OnClic
 
         void onWechatMomentsClicked();
 
+        void onCreatQr();
+
         void onCancelBtnClicked();
     }
 
-    public SharePlatformPopupWindow(Context context, SharePlatformListener listener) {
+    public SharePlatformPopupWindow(Context context, SharePlatformListener listener,boolean isShowQr) {
         super(context);
         setContentView(LayoutInflater.from(context).inflate(R.layout.share_platform_popup_window, null));
         this.listener = listener;
@@ -87,6 +89,15 @@ public class SharePlatformPopupWindow extends PopupWindow implements View.OnClic
                 return false;
             }
         });
+
+        if(isShowQr){
+            getContentView().findViewById(R.id.llQr).setVisibility(View.VISIBLE);
+            getContentView().findViewById(R.id.llQr).setOnClickListener(this);
+        }
+    }
+
+    public SharePlatformPopupWindow(Context context, SharePlatformListener listener) {
+        this(context,listener,false);
     }
 
 
@@ -158,6 +169,11 @@ public class SharePlatformPopupWindow extends PopupWindow implements View.OnClic
             case R.id.llWechatMoments:
                 if (listener != null) {
                     listener.onWechatMomentsClicked();
+                }
+                break;
+            case R.id.llQr:
+                if(listener!=null){
+                    listener.onCreatQr();
                 }
                 break;
             case R.id.btnCancel:

@@ -247,6 +247,11 @@ public class BannerFragment extends BaseFragment {
             }
 
             @Override
+            public void onCreatQr() {
+
+            }
+
+            @Override
             public void onCancelBtnClicked() {
 
             }

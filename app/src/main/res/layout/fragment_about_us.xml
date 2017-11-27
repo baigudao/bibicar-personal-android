@@ -10,21 +10,34 @@
         android:id="@+id/iv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:src="@drawable/logo_yellow" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="114dp"
+        android:src="@drawable/about_us_logo" />
 
     <TextView
-        android:id="@+id/tvVersion"
-        style="@style/AboutTextViewTheme2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@id/iv"
-        android:layout_marginTop="10dp"
-        android:text="2.2.1" />
+        android:layout_marginTop="40dp"
+        android:text="吡吡汽车科技(深圳)有限责任公司是深圳一家互联网公司，位于深圳南山区。目前运营软件BiBiCar，是以高端车友社交为主线，涵盖高端汽车自由交易买卖、汽车交易评估、汽车金融服务、汽车后市场买卖、活动赛事安排的高端车友社交服务平台。2016年1月，吡吡汽车由知名赛车手吴子峰先生在深圳成立，其核心团队在行业知名媒体《车达人》的基础上建立，拥有着丰富的行业资源与行业影响力。"
+        android:textColor="#FF929292"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:textSize="14sp"
+        />
 
     <TextView
         android:id="@+id/tvCopyRight"
         style="@style/AboutTextViewTheme2"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="15dp"
-        android:text="@string/copy_right" />
+        android:text="吡吡汽车版权所有" />
+
+    <TextView
+        android:id="@+id/tvVersion"
+        style="@style/AboutTextViewTheme2"
+        android:layout_above="@id/tvCopyRight"
+        android:layout_marginBottom="10dp"
+        android:text="2.2.1" />
 
 </RelativeLayout>

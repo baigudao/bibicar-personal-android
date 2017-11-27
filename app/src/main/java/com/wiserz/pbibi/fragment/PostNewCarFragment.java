@@ -219,7 +219,6 @@ public class PostNewCarFragment extends BaseFragment {
 
                     @Override
                     public void onResponse(String response, int id) {
-                        Log.e("aaaaaaaaaa","response: "+response);
                         JSONObject jsonObject = null;
                         try {
                             jsonObject = new JSONObject(response);

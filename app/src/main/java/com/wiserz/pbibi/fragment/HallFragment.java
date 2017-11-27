@@ -2,6 +2,7 @@ package com.wiserz.pbibi.fragment;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 
 import com.blankj.utilcode.util.SPUtils;
@@ -79,6 +80,7 @@ public class HallFragment extends BaseFragment implements OnRefreshListener, OnL
 
                     @Override
                     public void onResponse(String response, int id) {
+                        Log.e("aaaaaaaa","response: "+response);
                         JSONObject jsonObject = null;
                         try {
                             jsonObject = new JSONObject(response);

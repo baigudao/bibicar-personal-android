@@ -64,6 +64,10 @@
         <attr name="ratio" format="float"/>
     </declare-styleable>
 
+    <declare-styleable name="CircleColorView">
+        <attr name="circle_color_2" format="color"/>
+    </declare-styleable>
+
     <declare-styleable name="RangeSeekBar">
         <attr name="absoluteMinValue" format="integer|float"/>
         <attr name="absoluteMaxValue" format="integer|float"/>

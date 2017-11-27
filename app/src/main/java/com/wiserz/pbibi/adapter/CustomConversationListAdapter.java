@@ -73,7 +73,8 @@ public class CustomConversationListAdapter extends BaseAdapter<UIConversation> {
             uiConversation = getItem(i);
             if (uiConversation.getConversationTargetId().equals("1")
                     || uiConversation.getConversationTargetId().equals("2")
-                    || uiConversation.getConversationTargetId().equals("3")) {
+                    || uiConversation.getConversationTargetId().equals("3")
+                    || uiConversation.getConversationTargetId().equals("4")) {
                 remove(i);
                 topList.add(uiConversation);
             } else {
@@ -141,6 +142,9 @@ public class CustomConversationListAdapter extends BaseAdapter<UIConversation> {
                 } else if (data.getConversationTargetId().equals("3")) {
                     data.setUIConversationTitle(mContext.getString(R.string.like_me));
                     data.setUIConversationTime(0);
+                }else if (data.getConversationTargetId().equals("4")) {
+                    data.setUIConversationTitle("BIBI小管家");
+                    data.setUIConversationTime(0);
                 }
                 provider.bindView(view, position, data);
                 if (data.isTop()) {
@@ -167,7 +171,10 @@ public class CustomConversationListAdapter extends BaseAdapter<UIConversation> {
                             defaultId1 = R.drawable.pinglun_wo;
                         } else if (data.getConversationTargetId().equals("3")) {
                             defaultId1 = R.drawable.zan_wo;
-                        } else {
+                        } else if (data.getConversationTargetId().equals("4")) {
+                            defaultId1 = R.drawable.bibi_xiaoguanjia;
+                        }
+                        else {
                             defaultId1 = R.drawable.rc_default_portrait;
                         }
                     }

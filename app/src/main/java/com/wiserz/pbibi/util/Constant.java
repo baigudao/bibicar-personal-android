@@ -121,13 +121,14 @@ public class Constant {
     public static final String ADVERTISEMENT_IMAGE_SUCCESS = "advertisement_image_success";
     public static final String ADVERTISEMENT_IMAGE = "advertisement_image";
     public static final String ADVERTISEMENT_IMAGE_NUM = "advertisement_image_num";
+    public static final String DESCRIPTION = "description";
     public static final String HOST_IMAGE_URL = "http://img.bibicar.cn/";//http://img.bibicar.cn/Fja6zKmICAz6l6QCd7-Z0pC-bjt8
 
     public static final int MAX_UPLOAD_PHOTO_NUM = 9;
 
     //URL常量
-    private final static String hostUrl = "https://api.bibicar.cn/";//正式环境
-    //private static final String hostUrl = "https://testapi.bibicar.cn/";//测试环境
+    //private final static String hostUrl = "https://api.bibicar.cn/";//正式环境
+    private static final String hostUrl = "https://testapi.bibicar.cn/";//测试环境
 
     private static final String registerApp = hostUrl + "app/register";//App注册
     private static final String verificationCodeUrl = hostUrl + "v3/user/sendcode";//得到验证码
@@ -260,6 +261,8 @@ public class Constant {
     private static final String friendShipListUrl = hostUrl + "v3/friendship/list";//关注和粉丝列表
 
     private static final String mobileFriend = hostUrl + "v3/user/checkreport";
+
+    private final static String suggestUrl = hostUrl + "app/suggest";//意见反馈
 
     public static String getRegisterApp() {
         return registerApp;
@@ -648,6 +651,10 @@ public class Constant {
 
     public static String getMobileFriend() {
         return mobileFriend;
+    }
+
+    public static String getSuggestUrl() {
+        return suggestUrl;
     }
 
 }

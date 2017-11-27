@@ -368,6 +368,11 @@ public class MyHomePageFragment extends BaseFragment implements BaseRecyclerView
             }
 
             @Override
+            public void onCreatQr() {
+
+            }
+
+            @Override
             public void onCancelBtnClicked() {
 
             }

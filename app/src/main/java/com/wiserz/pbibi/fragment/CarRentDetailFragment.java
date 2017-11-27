@@ -306,6 +306,11 @@ public class CarRentDetailFragment extends BaseFragment implements BaseRecyclerV
             }
 
             @Override
+            public void onCreatQr() {
+
+            }
+
+            @Override
             public void onCancelBtnClicked() {
 
             }

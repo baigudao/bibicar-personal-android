@@ -42,9 +42,10 @@
 
             <LinearLayout
                 android:id="@+id/llWeChat"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
                 android:orientation="vertical">
 
                 <ImageView
@@ -66,12 +67,10 @@
 
             <LinearLayout
                 android:id="@+id/llWechatMoments"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="40dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
                 android:orientation="vertical">
 
                 <ImageView
@@ -94,12 +93,10 @@
 
             <LinearLayout
                 android:id="@+id/llSina"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="40dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
                 android:orientation="vertical">
 
                 <ImageView
@@ -114,6 +111,31 @@
                     android:layout_gravity="center"
                     android:paddingTop="5dp"
                     android:text="@string/ssdk_sinaweibo"
+                    android:textColor="@color/sixth_text_color"
+                    android:textSize="11sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llQr"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/share_qr" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:paddingTop="5dp"
+                    android:text="生成二维码"
                     android:textColor="@color/sixth_text_color"
                     android:textSize="11sp" />
             </LinearLayout>

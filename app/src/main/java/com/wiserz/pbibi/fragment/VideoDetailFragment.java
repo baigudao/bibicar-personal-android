@@ -651,6 +651,11 @@ public class VideoDetailFragment extends BaseFragment implements BaseRecyclerVie
             }
 
             @Override
+            public void onCreatQr() {
+
+            }
+
+            @Override
             public void onCancelBtnClicked() {
 
             }

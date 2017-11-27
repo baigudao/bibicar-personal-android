@@ -22,7 +22,7 @@ public class AboutUsFragment extends BaseFragment {
     @Override
     protected void initView(View view) {
         view.findViewById(R.id.iv_back).setOnClickListener(this);
-        ((TextView) view.findViewById(R.id.tv_title)).setText("关于BiBiCar");
+        ((TextView) view.findViewById(R.id.tv_title)).setText("关于我们");
         view.findViewById(R.id.btn_register).setVisibility(View.INVISIBLE);
 
         String versionName = CommonUtil.getVersionName(mContext);

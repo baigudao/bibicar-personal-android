@@ -5,6 +5,12 @@
               android:background="@color/background_color"
               android:orientation="vertical">
 
+    <View
+        android:id="@+id/topView"
+        android:layout_width="match_parent"
+        android:background="@color/half_transparent"
+        android:layout_height="0.5dp"/>
+
     <include
         android:id="@+id/car_center_top_bar"
         layout="@layout/car_center_top_bar"/>
@@ -33,7 +39,7 @@
                 android:id="@+id/tv_sort"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="排序"
+                android:text="默认排序"
                 android:textColor="@color/main_text_color"
                 android:textSize="14sp"/>
 

@@ -540,7 +540,7 @@ public class RangeSeekBar<T extends Number> extends ImageView {
         int offset = CommonUtil.dip2px(getContext(), TEXT_LATERAL_PADDING_IN_DP);
 
         String minText = String.valueOf(getSelectedMinValue());
-        String maxText = (Integer)getSelectedMaxValue() > (Integer) mValue ? mMaxLastText : String.valueOf(getSelectedMaxValue());
+        String maxText = "";//(Integer)getSelectedMaxValue() > (Integer) mValue ? mMaxLastText : String.valueOf(getSelectedMaxValue());
 //        if (!mSingleThumb) {
 //            int minValue = (Integer) getSelectedMinValue();
 //            int maxValue = (Integer) getSelectedMaxValue();

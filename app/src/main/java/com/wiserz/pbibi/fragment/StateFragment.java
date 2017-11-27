@@ -180,6 +180,11 @@ public class StateFragment extends BaseFragment implements BaseRecyclerViewAdapt
             }
 
             @Override
+            public void onCreatQr() {
+
+            }
+
+            @Override
             public void onCancelBtnClicked() {
 
             }

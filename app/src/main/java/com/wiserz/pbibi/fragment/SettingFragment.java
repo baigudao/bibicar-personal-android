@@ -18,6 +18,7 @@ import com.wiserz.pbibi.activity.BaseActivity;
 import com.wiserz.pbibi.activity.EmptyActivity;
 import com.wiserz.pbibi.activity.RegisterAndLoginActivity;
 import com.wiserz.pbibi.bean.LoginBean;
+import com.wiserz.pbibi.util.CommonUtil;
 import com.wiserz.pbibi.util.Constant;
 import com.wiserz.pbibi.util.DataManager;
 import com.wiserz.pbibi.util.GBExecutionPool;
@@ -51,14 +52,29 @@ public class SettingFragment extends BaseFragment {
 //        view.findViewById(R.id.rl_binding_phone).setOnClickListener(this);
 //        view.findViewById(R.id.rl_modify_pwd).setOnClickListener(this);
         view.findViewById(R.id.rl_clear_cache).setOnClickListener(this);
+        view.findViewById(R.id.rl_share_to_friend).setOnClickListener(this);
         view.findViewById(R.id.rl_about_us).setOnClickListener(this);
         view.findViewById(R.id.rl_give_grade).setOnClickListener(this);
+        view.findViewById(R.id.rl_feedback).setOnClickListener(this);
         view.findViewById(R.id.tvLogout).setOnClickListener(this);
 
         LoginBean.UserInfoBean userInfoBean = DataManager.getInstance().getUserInfo();
         if(userInfoBean!=null){
-            ((TextView)getView().findViewById(R.id.tv_binding_phone)).setText(TextUtils.isEmpty(userInfoBean.getMobile())?"":userInfoBean.getMobile());
+            if(!TextUtils.isEmpty(userInfoBean.getMobile())) {
+                String phone="";
+                for(int i=0;i<userInfoBean.getMobile().length();++i){
+                    if(i>2 && i<7){
+                        phone+="*";
+                    }else {
+                        phone+=userInfoBean.getMobile().charAt(i);
+                    }
+                }
+                ((TextView) getView().findViewById(R.id.tv_binding_phone)).setText(phone);
+            }else{
+                ((TextView) getView().findViewById(R.id.tv_binding_phone)).setText("");
+            }
         }
+        settings_cache_size.setText(CommonUtil.getCacheSize());
     }
 
     @Override
@@ -73,6 +89,11 @@ public class SettingFragment extends BaseFragment {
 //            case R.id.rl_modify_pwd:
 //                gotoPager(ForgetPasswordFragment.class, null);
 //                break;
+            case R.id.rl_share_to_friend:
+                break;
+            case R.id.rl_feedback:
+                gotoPager(FeedbackFragment.class,null);
+                break;
             case R.id.rl_clear_cache:
                 showDeleteCacheDialog();
                 break;
@@ -157,7 +178,7 @@ public class SettingFragment extends BaseFragment {
                                 ((BaseActivity) mContext).runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-//                                        settings_cache_size.setText(getCacheSize(mContext) + "MB");
+                                        settings_cache_size.setText("0MB");
                                     }
                                 });
                             }

@@ -471,6 +471,11 @@ public class OtherHomePageFragment extends BaseFragment implements BaseRecyclerV
             }
 
             @Override
+            public void onCreatQr() {
+
+            }
+
+            @Override
             public void onCancelBtnClicked() {
 
             }

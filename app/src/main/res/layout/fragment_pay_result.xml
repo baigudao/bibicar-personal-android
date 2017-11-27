@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/title_bar" />
+
+    <ImageView
+        android:id="@+id/ivResult"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="88dp"
+        android:src="@drawable/pay_successful"/>
+
+    <TextView
+        android:id="@+id/tvResult"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="支付成功！"
+        android:layout_marginTop="38dp"
+        android:layout_gravity="center_horizontal"
+        android:textColor="#FF3A3A3A"
+        android:textSize="17sp"
+        />
+
+    <TextView
+        android:id="@+id/tvResultDetail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="付款成功！可在我的钱包查看当前余额"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center_horizontal"
+        android:textColor="#FF929292"
+        android:textSize="14sp"
+        />
+
+    <TextView
+        android:id="@+id/tvSeeWallet"
+        android:layout_width="300dp"
+        android:layout_height="48dp"
+        android:text="查看钱包"
+        android:layout_marginTop="30dp"
+        android:textColor="#FF3A3A3A"
+        android:background="@drawable/back_see_wallet"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:textSize="16sp"
+        />
+
+</LinearLayout>

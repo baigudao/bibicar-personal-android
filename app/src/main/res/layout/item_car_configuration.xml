@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:text="车辆描述"
         android:paddingTop="20dp"
-        android:paddingLeft="15dp"
+        android:paddingLeft="10dp"
         android:textColor="@color/main_text_color"
         android:textSize="15sp"
         android:textStyle="bold"/>
@@ -18,15 +18,16 @@
         android:id="@+id/llDetails"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
+        android:layout_marginTop="20dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:orientation="vertical">
 
     </LinearLayout>
 
 
     <View
+        android:id="@+id/line"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/divider_color"/>
