@@ -19,7 +19,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.baidu.location.BDAbstractLocationListener;
@@ -36,7 +35,9 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.tencent.mm.opensdk.utils.Log;
 import com.wiserz.pbibi.BaseApplication;
+//import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.activity.RegisterAndLoginActivity;
 import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
@@ -47,7 +48,6 @@ import com.wiserz.pbibi.util.Constant;
 import com.wiserz.pbibi.util.DataManager;
 import com.wiserz.pbibi.view.MorePopupWindow;
 import com.wiserz.pbibi.view.RangeSeekBar;
-import com.wiserz.pbibi.view.SelectStartEndView;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -96,16 +96,23 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
 
     private int flag;
     private int price_id;
-    private int new_or_old;
-    private int car_source;
+    private String new_or_old="";
+    private String car_source="";
+    private ArrayList<String> car_levels=new ArrayList<>();
+    private ArrayList<String> seat_nums=new ArrayList<>();
+    private ArrayList<String> car_colors=new ArrayList<>();
+    private ArrayList<String> car_fueltypes=new ArrayList<>();
+    private ArrayList<String> extra_infos=new ArrayList<>();
+    private ArrayList<String> envirstandards=new ArrayList<>();
+    private String board_add="";
+    private String forward="";
+
     private int car_vr;
     private int brand_id;
     private int series_id;
 
     private String brand_name;
     private String series_name;
-
-    private ArrayList<String> mSelectedConfig = new ArrayList<>();
 
     private static final int CAR_LIST_FOR_CAR_CENTER = 100;
 
@@ -238,7 +245,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                     tvBrand.setText(text);
                 }
             }
-            getCarListDataFromNet();
+            getCarListDataFromNet(2);
             DataManager.getInstance().setData1(null);
             DataManager.getInstance().setData2(null);
             DataManager.getInstance().setData3(null);
@@ -274,8 +281,10 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
         popupWindow.setOutsideTouchable(true);
         if(flag<2) {
             popupWindow.showAsDropDown(ll_select);
+            popupWindow.setAnimationStyle(R.style.PopupWindowAnimation);
         }else{
             popupWindow.showAsDropDown(getView().findViewById(R.id.topView));
+            popupWindow.setAnimationStyle(R.style.PopupWindowAnimation2);
         }
 
         //对返回按键的捕获并处理
@@ -314,7 +323,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                         mPage = 0;
                         order_id = "0";
                         resetTextColor(tv_sort_default, tv_sort_most_low, tv_sort_most_top, tv_sort_newest_publish);
-                        getCarListDataFromNet();
+                        getCarListDataFromNet(2);
                         tv_sort.setText("默认排序");
                         popupWindow.dismiss();
                     }
@@ -325,7 +334,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                         mPage = 0;
                         order_id = "2";
                         resetTextColor(tv_sort_default, tv_sort_most_low, tv_sort_most_top, tv_sort_newest_publish);
-                        getCarListDataFromNet();
+                        getCarListDataFromNet(2);
                         tv_sort.setText("价格最低");
                         popupWindow.dismiss();
                     }
@@ -336,7 +345,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                         mPage = 0;
                         order_id = "3";
                         resetTextColor(tv_sort_default, tv_sort_most_low, tv_sort_most_top, tv_sort_newest_publish);
-                        getCarListDataFromNet();
+                        getCarListDataFromNet(2);
                         tv_sort.setText("价格最高");
                         popupWindow.dismiss();
                     }
@@ -347,7 +356,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                         mPage = 0;
                         order_id = "1";
                         resetTextColor(tv_sort_default, tv_sort_most_low, tv_sort_most_top, tv_sort_newest_publish);
-                        getCarListDataFromNet();
+                        getCarListDataFromNet(2);
                         tv_sort.setText("最新发布");
                         popupWindow.dismiss();
                     }
@@ -442,7 +451,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                     @Override
                     public void onClick(View view) {
                         mPage = 0;
-                        getCarListDataFromNet();
+                        getCarListDataFromNet(2);
                         popupWindow.dismiss();
                     }
                 });
@@ -453,7 +462,9 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                 LayoutInflater inflater=LayoutInflater.from(getActivity());
                 viewList.add(inflater.inflate(R.layout.layout_car_filter_1,null));
                 viewList.add(inflater.inflate(R.layout.item_post_car_detail_msg,null));
+                resetBasicMsg(viewList.get(0));
                 resetCarConfigurations(viewList.get(1), mCarConfigurationList);
+
                 viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                     @Override
                     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -637,6 +648,183 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
         });
     }
 
+    private void resetBasicMsg(View view){
+        LinearLayout llRoot=(LinearLayout) view.findViewById(R.id.llRoot);
+        int childCount=llRoot.getChildCount();
+        for(int i=0;i<childCount;++i){
+            if(i==6 || i==7 || i==8){
+                continue;
+            }
+            ViewGroup itemView=(ViewGroup) llRoot.getChildAt(i);
+            int count=itemView.getChildCount();
+            for(int j=1;j<count;++j){
+                ViewGroup itemView2=(ViewGroup) itemView.getChildAt(j);
+                int count2=itemView2.getChildCount();
+                for(int k=0;k<count2;++k) {
+                    ViewGroup itemView3=(ViewGroup) itemView2.getChildAt(k);
+                    itemView3.setTag(R.id.tag,i);
+                    itemView3.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            String tag=(String)view.getTag();
+                            int index=(int)view.getTag(R.id.tag);
+                            Log.e("aaaaaaaa","tag: "+tag);
+                            ViewGroup parent;
+                            switch (index){
+                                case 0:
+                                    if(new_or_old.equals(tag)){
+                                        new_or_old="";
+                                        view.setBackgroundResource(R.drawable.back_filter_car_btn_1);
+                                        ((TextView)((ViewGroup)view).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_text_color));
+                                    }else{
+                                        new_or_old=tag;
+                                        parent=(ViewGroup) view.getParent();
+                                        for(int i=0;i<parent.getChildCount();++i){
+                                            parent.getChildAt(i).setBackgroundResource(R.drawable.back_filter_car_btn_1);
+                                            ((TextView)((ViewGroup)parent.getChildAt(i)).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_text_color));
+                                        }
+                                        view.setBackgroundResource(R.drawable.back_filter_car_btn_2);
+                                        ((TextView)((ViewGroup)view).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_color));
+                                    }
+                                    break;
+                                case 1:
+                                    if(car_source.equals(tag)){
+                                        car_source="";
+                                        view.setBackgroundResource(R.drawable.back_filter_car_btn_1);
+                                        ((TextView)((ViewGroup)view).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_text_color));
+                                    }else{
+                                        car_source=tag;
+                                        parent=(ViewGroup) view.getParent();
+                                        for(int i=0;i<parent.getChildCount();++i){
+                                            parent.getChildAt(i).setBackgroundResource(R.drawable.back_filter_car_btn_1);
+                                            ((TextView)((ViewGroup)parent.getChildAt(i)).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_text_color));
+                                        }
+                                        view.setBackgroundResource(R.drawable.back_filter_car_btn_2);
+                                        ((TextView)((ViewGroup)view).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_color));
+                                    }
+                                    break;
+                                case 2:
+                                    ImageView ivCarLevel= (ImageView) ((ViewGroup)view).getChildAt(0);
+                                    if(car_levels.contains(tag)){
+                                        car_levels.remove(tag);
+                                        if(tag.equals("6")){
+                                            ivCarLevel.setImageResource(R.drawable.jiaoche_hei);
+                                        }else if(tag.equals("9")){
+                                            ivCarLevel.setImageResource(R.drawable.jiaoche_hei);
+                                        }else if(tag.equals("13")){
+                                            ivCarLevel.setImageResource(R.drawable.jiaoche_hei);
+                                        }else if(tag.equals("8")){
+                                            ivCarLevel.setImageResource(R.drawable.suv_hei);
+                                        }else if(tag.equals("11")){
+                                            ivCarLevel.setImageResource(R.drawable.pika_hei);
+                                        }else if(tag.equals("7")){
+                                            ivCarLevel.setImageResource(R.drawable.mpv_hei);
+                                        }
+                                        ((TextView)((ViewGroup)view).getChildAt(1)).setTextColor(getResources().getColor(R.color.main_text_color));
+                                    }else{
+                                        car_levels.add(tag);
+                                        if(tag.equals("6")){
+                                            ivCarLevel.setImageResource(R.drawable.jiaoche_huang);
+                                        }else if(tag.equals("9")){
+                                            ivCarLevel.setImageResource(R.drawable.jiaoche_huang);
+                                        }else if(tag.equals("13")){
+                                            ivCarLevel.setImageResource(R.drawable.jiaoche_huang);
+                                        }else if(tag.equals("8")){
+                                            ivCarLevel.setImageResource(R.drawable.suv_huang);
+                                        }else if(tag.equals("11")){
+                                            ivCarLevel.setImageResource(R.drawable.pika_huang);
+                                        }else if(tag.equals("7")){
+                                            ivCarLevel.setImageResource(R.drawable.mpv_huang);
+                                        }
+                                        ((TextView)((ViewGroup)view).getChildAt(1)).setTextColor(getResources().getColor(R.color.main_color));
+                                    }
+                                    break;
+                                case 3:
+                                    if(seat_nums.contains(tag)){
+                                        seat_nums.remove(tag);
+                                        view.setBackgroundResource(R.drawable.back_filter_car_btn_1);
+                                        ((TextView)((ViewGroup)view).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_text_color));
+                                    }else{
+                                        seat_nums.add(tag);
+                                        view.setBackgroundResource(R.drawable.back_filter_car_btn_2);
+                                        ((TextView)((ViewGroup)view).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_color));
+                                    }
+                                    break;
+                                case 4:
+                                    if(board_add.equals(tag)){
+                                        board_add="";
+                                        view.setBackgroundResource(R.drawable.back_filter_car_btn_1);
+                                        ((TextView)((ViewGroup)view).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_text_color));
+                                    }else{
+                                        board_add=tag;
+                                        parent=(ViewGroup) view.getParent();
+                                        for(int i=0;i<parent.getChildCount();++i){
+                                            parent.getChildAt(i).setBackgroundResource(R.drawable.back_filter_car_btn_1);
+                                            ((TextView)((ViewGroup)parent.getChildAt(i)).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_text_color));
+                                        }
+                                        view.setBackgroundResource(R.drawable.back_filter_car_btn_2);
+                                        ((TextView)((ViewGroup)view).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_color));
+                                    }
+                                    break;
+                                case 5:
+                                    if(car_colors.contains(tag)){
+                                        car_colors.remove(tag);
+                                        view.setBackgroundResource(R.drawable.back_filter_car_btn_1);
+                                        ((TextView)((ViewGroup)view).getChildAt(1)).setTextColor(getResources().getColor(R.color.main_text_color));
+                                    }else{
+                                        car_colors.add(tag);
+                                        view.setBackgroundResource(R.drawable.back_filter_car_btn_2);
+                                        ((TextView)((ViewGroup)view).getChildAt(1)).setTextColor(getResources().getColor(R.color.main_color));
+                                    }
+                                    break;
+                                case 9:
+                                    if(car_fueltypes.contains(tag)){
+                                        car_fueltypes.remove(tag);
+                                        view.setBackgroundResource(R.drawable.back_filter_car_btn_1);
+                                        ((TextView)((ViewGroup)view).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_text_color));
+                                    }else{
+                                        car_fueltypes.add(tag);
+                                        view.setBackgroundResource(R.drawable.back_filter_car_btn_2);
+                                        ((TextView)((ViewGroup)view).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_color));
+                                    }
+                                    break;
+                                case 10:
+                                    if(forward.equals(tag)){
+                                        forward="";
+                                        view.setBackgroundResource(R.drawable.back_filter_car_btn_1);
+                                        ((TextView)((ViewGroup)view).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_text_color));
+                                    }else{
+                                        forward=tag;
+                                        parent=(ViewGroup) view.getParent();
+                                        for(int i=0;i<parent.getChildCount();++i){
+                                            parent.getChildAt(i).setBackgroundResource(R.drawable.back_filter_car_btn_1);
+                                            ((TextView)((ViewGroup)parent.getChildAt(i)).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_text_color));
+                                        }
+                                        view.setBackgroundResource(R.drawable.back_filter_car_btn_2);
+                                        ((TextView)((ViewGroup)view).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_color));
+                                    }
+                                    break;
+                                case 11:
+                                    if(envirstandards.contains(tag)){
+                                        envirstandards.remove(tag);
+                                        view.setBackgroundResource(R.drawable.back_filter_car_btn_1);
+                                        ((TextView)((ViewGroup)view).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_text_color));
+                                    }else{
+                                        envirstandards.add(tag);
+                                        view.setBackgroundResource(R.drawable.back_filter_car_btn_2);
+                                        ((TextView)((ViewGroup)view).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_color));
+                                    }
+                                    break;
+                            }
+                            getCarListDataFromNet(1);
+                        }
+                    });
+                }
+            }
+        }
+    }
+
+
     private void getCarExtraInfo() {
         OkHttpUtils.post()
                 .url(Constant.getCarExtraInfoUrl())
@@ -714,15 +902,16 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                         @Override
                         public void onClick(View view) {
                             String id = String.valueOf(view.getTag(R.id.tag));
-                            if (mSelectedConfig.contains(id)) {
-                                mSelectedConfig.remove(id);
-                                view.setBackgroundResource(R.drawable.back_config_not_selected);
+                            if (extra_infos.contains(id)) {
+                                extra_infos.remove(id);
+                                view.setBackgroundResource(R.drawable.back_filter_car_btn_1);
                                 ((TextView) view).setTextColor(getResources().getColor(R.color.main_text_color));
                             } else {
-                                mSelectedConfig.add(id);
-                                view.setBackgroundResource(R.drawable.back_config_selected);
+                                extra_infos.add(id);
+                                view.setBackgroundResource(R.drawable.back_filter_car_btn_2);
                                 ((TextView) view).setTextColor(getResources().getColor(R.color.main_color));
                             }
+                            getCarListDataFromNet(1);
                         }
                     });
                 } else {
@@ -740,15 +929,16 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                         @Override
                         public void onClick(View view) {
                             String id = String.valueOf(view.getTag(R.id.tag));
-                            if (mSelectedConfig.contains(id)) {
-                                mSelectedConfig.remove(id);
-                                view.setBackgroundResource(R.drawable.back_config_not_selected);
+                            if (extra_infos.contains(id)) {
+                                extra_infos.remove(id);
+                                view.setBackgroundResource(R.drawable.back_filter_car_btn_1);
                                 ((TextView) view).setTextColor(getResources().getColor(R.color.main_text_color));
                             } else {
-                                mSelectedConfig.add(id);
-                                view.setBackgroundResource(R.drawable.back_config_selected);
+                                extra_infos.add(id);
+                                view.setBackgroundResource(R.drawable.back_filter_car_btn_2);
                                 ((TextView) view).setTextColor(getResources().getColor(R.color.main_color));
                             }
+                            getCarListDataFromNet(1);
                         }
                     });
                 } else {
@@ -768,15 +958,16 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                         @Override
                         public void onClick(View view) {
                             String id = String.valueOf(view.getTag(R.id.tag));
-                            if (mSelectedConfig.contains(id)) {
-                                mSelectedConfig.remove(id);
-                                view.setBackgroundResource(R.drawable.back_config_not_selected);
+                            if (extra_infos.contains(id)) {
+                                extra_infos.remove(id);
+                                view.setBackgroundResource(R.drawable.back_filter_car_btn_1);
                                 ((TextView) view).setTextColor(getResources().getColor(R.color.main_text_color));
                             } else {
-                                mSelectedConfig.add(id);
-                                view.setBackgroundResource(R.drawable.back_config_selected);
+                                extra_infos.add(id);
+                                view.setBackgroundResource(R.drawable.back_filter_car_btn_2);
                                 ((TextView) view).setTextColor(getResources().getColor(R.color.main_color));
                             }
+                            getCarListDataFromNet(1);
                         }
                     });
                 } else {
@@ -824,10 +1015,10 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
     @Override
     protected void initData() {
         super.initData();
-        getCarListDataFromNet();
+        getCarListDataFromNet(2);
     }
 
-    private void getCarListDataFromNet() {
+    private void getCarListDataFromNet(int searchType) {
         OkHttpUtils.post()
                 .url(Constant.getCarListUrl())
                 .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
@@ -846,8 +1037,17 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                 .addParams(Constant.MIN_BOARD_TIME, min_board_time == null ? "" : min_board_time)//最短上牌时间
                 .addParams(Constant.MAX_BOARD_TIME, max_board_time == null ? "" : max_board_time)//最长上牌时间
                 .addParams(Constant.HAS_VR, car_vr == 0 ? "" : String.valueOf(car_vr))//是否有VR看车功能  1:是
-                .addParams(Constant.OLD, new_or_old == 0 ? "" : String.valueOf(new_or_old))//是否新车二手车 1:新车 2 二手车
-                .addParams(Constant.SOURCE, car_source == 0 ? "" : String.valueOf(car_source))//车辆来源 1:个人 2 商家
+                .addParams(Constant.SEARCH_TYPE, String.valueOf(searchType))
+                .addParams(Constant.OLD, new_or_old)//是否新车二手车 1:新车 2 二手车
+                .addParams(Constant.SOURCE, car_source)//车辆来源 1:个人 2 商家
+                .addParams(Constant.CAR_LEVEL,getIdsByList(car_levels))
+                .addParams(Constant.SEAT_NUM,getIdsByList(seat_nums))
+                .addParams(Constant.FUELTYPE,getIdsByList(car_fueltypes))
+                .addParams(Constant.BOARD_ADD,board_add)
+                .addParams(Constant.CAR_COLOR,getIdsByList(car_colors))
+                .addParams(Constant.FORWARD,forward)
+                .addParams(Constant.ENVIRSTANDARD,getIdsByList(envirstandards))
+                .addParams(Constant.EXTRA_INFO,getIdsByList(extra_infos))
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -857,6 +1057,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
 
                     @Override
                     public void onResponse(String response, int id) {
+                        Log.e("aaaaaaaaa","response: "+response);
                         JSONObject jsonObject = null;
                         try {
                             jsonObject = new JSONObject(response);
@@ -885,6 +1086,20 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                         }
                     }
                 });
+    }
+
+    private String getIdsByList(ArrayList<String> list){
+        String ids="";
+        int size=list.size();
+        for(int i=0;i<size;++i){
+            if(i<size-1){
+                ids+=list.get(i)+",";
+            }else{
+                ids+=list.get(i);
+            }
+        }
+        Log.e("aaaaaaaaaaa","ids: "+ids);
+        return ids;
     }
 
     private void handlerCarListMoreData(JSONObject jsonObjectData) {
@@ -982,14 +1197,14 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
     public void onLoadmore(RefreshLayout refreshlayout) {
         ++mPage;
         refresh_or_load = 1;
-        getCarListDataFromNet();
+        getCarListDataFromNet(2);
     }
 
     @Override
     public void onRefresh(RefreshLayout refreshlayout) {
         mPage = 0;
         refresh_or_load = 0;
-        getCarListDataFromNet();
+        getCarListDataFromNet(2);
     }
 
     /**

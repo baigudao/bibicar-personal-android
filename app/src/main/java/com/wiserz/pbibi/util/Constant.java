@@ -86,12 +86,14 @@ public class Constant {
     public static final String MAX_BOARD_TIME = "max_board_time";
     public static final String HAS_VR = "has_vr";
     public static final String OLD = "old";
+    public static final String SEARCH_TYPE = "search_type";
     public static final String PHONE = "phone";
     public static final String AGE = "age";
     public static final String BIRTH = "birth";
     public static final String BRAND_NAME = "brand_name";
     public static final String DESC = "desc";
     public static final String SOURCE = "source";
+    public static final String CAR_LEVEL = "car_level";
     public static final String FEED_ID = "feed_id";
     public static final String IS_AUTH = "is_auth";//是否身份验证 1:是 2:否
     public static final String THEME = "theme";
@@ -99,6 +101,15 @@ public class Constant {
     public static final String TITLE = "title";
     public static final String MONEY = "money";
     public static final String CAR_COLOR = "car_color";
+    public static final String SEAT_NUM = "seat_num";
+    public static final String FORWARD = "forward";
+    public static final String BOARD_ADD = "board_add";
+    public static final String ENVIRSTANDARD = "envirstandard";
+    public static final String FUELTYPE = "fueltype";
+    public static final String EXTRA_INFO = "extra_info";
+    public static final String CITY_CODE = "city_code";
+    public static final String CITY_LAT = "city_lat";
+    public static final String CITY_LNG = "city_lng";
     public static final String AVATAR = "avatar";
     public static final String COMPANY_ID = "company_id";
     public static final String THEME_ID = "theme_id";
@@ -122,6 +133,9 @@ public class Constant {
     public static final String ADVERTISEMENT_IMAGE = "advertisement_image";
     public static final String ADVERTISEMENT_IMAGE_NUM = "advertisement_image_num";
     public static final String DESCRIPTION = "description";
+
+
+
     public static final String HOST_IMAGE_URL = "http://img.bibicar.cn/";//http://img.bibicar.cn/Fja6zKmICAz6l6QCd7-Z0pC-bjt8
 
     public static final int MAX_UPLOAD_PHOTO_NUM = 9;
