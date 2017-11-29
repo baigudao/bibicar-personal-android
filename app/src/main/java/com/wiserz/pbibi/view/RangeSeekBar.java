@@ -196,14 +196,16 @@ public class RangeSeekBar<T extends Number> extends ImageView {
 
     public void setMaxLastText(T value, String maxLastText) {
         mValue = value;
-        mSpaceValue=valueToNormalized(value);
+        mSpaceValue = valueToNormalized(value);
         mMaxLastText = maxLastText;
+
     }
 
     public void setRangeValues(T minValue, T maxValue) {
         this.absoluteMinValue = minValue;
         this.absoluteMaxValue = maxValue;
         setValuePrimAndNumberType();
+        invalidate();
     }
 
     @SuppressWarnings("unchecked")
@@ -481,6 +483,12 @@ public class RangeSeekBar<T extends Number> extends ImageView {
         setMeasuredDimension(width, height);
     }
 
+    public void reset() {
+        normalizedMinValue = 0.0;
+        normalizedMaxValue = 1.0;
+        invalidate();
+    }
+
     /**
      * Draws the widget on the given canvas.
      */
@@ -541,7 +549,7 @@ public class RangeSeekBar<T extends Number> extends ImageView {
 
         String minText = String.valueOf(getSelectedMinValue());
         String maxText = "";//(Integer)getSelectedMaxValue() > (Integer) mValue ? mMaxLastText : String.valueOf(getSelectedMaxValue());
-//        if (!mSingleThumb) {
+        if (!mSingleThumb) {
 //            int minValue = (Integer) getSelectedMinValue();
 //            int maxValue = (Integer) getSelectedMaxValue();
 //            if (maxValue - minValue < 4) {
@@ -551,12 +559,12 @@ public class RangeSeekBar<T extends Number> extends ImageView {
 //                    minValue = maxValue - 4;
 //                }
 //            }
-//            minText = String.valueOf(minValue);
-//            maxText = String.valueOf(maxValue);
-//        } else {
-//            minText = String.valueOf(getSelectedMinValue());
-//            maxText = String.valueOf(getSelectedMaxValue());
-//        }
+            minText = String.valueOf(getSelectedMinValue());
+            maxText = String.valueOf(getSelectedMaxValue());
+        } else {
+            minText = String.valueOf(getSelectedMinValue());
+            maxText = String.valueOf(getSelectedMaxValue());
+        }
 
 
         if (!TextUtils.isEmpty(mValueUnit)) {
@@ -569,14 +577,16 @@ public class RangeSeekBar<T extends Number> extends ImageView {
         if (!mSingleThumb) {
 
             canvas.drawText(minText,
-                    normalizedToScreen((Integer) absoluteMinValue) - minTextWidth * 0.5f,
+                    normalizedToScreen(absoluteMinValue.doubleValue()) - minTextWidth * 0.5f,
                     mDistanceToTop + mTextSize,
                     paint);
 
         }
-//        if (normalizedMaxValue == 1.0 && !TextUtils.isEmpty(mMaxLastText)) {
-//            maxText = maxText + mMaxLastText;
-//        }
+        if (!TextUtils.isEmpty(mMaxLastText)) {
+            if (normalizedMaxValue >= mSpaceValue) {
+                maxText = mMaxLastText;
+            }
+        }
         canvas.drawText(maxText,
                 normalizedToScreen(1) - maxTextWidth * 0.5f,
                 mDistanceToTop + mTextSize,

@@ -37,7 +37,6 @@ import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.tencent.mm.opensdk.utils.Log;
 import com.wiserz.pbibi.BaseApplication;
-//import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.activity.RegisterAndLoginActivity;
 import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
@@ -88,6 +87,8 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
     private String max_mileage;
     private String min_board_time;
     private String max_board_time;
+    private String min_pailiang;
+    private String max_pailiang;
 
     private ArrayList<CarConfiguration> mCarConfigurationList;
     private SmartRefreshLayout smartRefreshLayout;
@@ -96,16 +97,17 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
 
     private int flag;
     private int price_id;
-    private String new_or_old="";
-    private String car_source="";
-    private ArrayList<String> car_levels=new ArrayList<>();
-    private ArrayList<String> seat_nums=new ArrayList<>();
-    private ArrayList<String> car_colors=new ArrayList<>();
-    private ArrayList<String> car_fueltypes=new ArrayList<>();
-    private ArrayList<String> extra_infos=new ArrayList<>();
-    private ArrayList<String> envirstandards=new ArrayList<>();
-    private String board_add="";
-    private String forward="";
+    private String new_or_old = "";
+    private String car_source = "";
+    private ArrayList<String> car_levels = new ArrayList<>();
+    private ArrayList<String> seat_nums = new ArrayList<>();
+    private ArrayList<String> car_colors = new ArrayList<>();
+    private ArrayList<String> car_fueltypes = new ArrayList<>();
+    private ArrayList<String> extra_infos = new ArrayList<>();
+    private ArrayList<String> envirstandards = new ArrayList<>();
+
+    private String board_add = "";
+    private String forward = "";
 
     private int car_vr;
     private int brand_id;
@@ -113,6 +115,8 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
 
     private String brand_name;
     private String series_name;
+
+    private TextView tvTotalCar;
 
     private static final int CAR_LIST_FOR_CAR_CENTER = 100;
 
@@ -194,11 +198,12 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                 break;
             case R.id.ll_filter:
                 flag = 2;
-                if(mCarConfigurationList==null || mCarConfigurationList.isEmpty()){
+                if (mCarConfigurationList == null || mCarConfigurationList.isEmpty()) {
                     getCarExtraInfo();
                 }
                 resetHeaderView();
                 View car_filter_view = View.inflate(mContext, R.layout.item_filter_view, null);
+                tvTotalCar = (TextView) car_filter_view.findViewById(R.id.tvTotalCar);
                 carSelectPopupWindow(car_filter_view);
                 break;
             case R.id.ll_brand:
@@ -216,7 +221,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
 
     public void onResume() {
         super.onResume();
-        if(mCarConfigurationList==null || mCarConfigurationList.isEmpty()){
+        if (mCarConfigurationList == null || mCarConfigurationList.isEmpty()) {
             getCarExtraInfo();
         }
         Object data1 = DataManager.getInstance().getData1();
@@ -279,10 +284,10 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
         //外部是否可以点击
         popupWindow.setBackgroundDrawable(new BitmapDrawable());
         popupWindow.setOutsideTouchable(true);
-        if(flag<2) {
+        if (flag < 2) {
             popupWindow.showAsDropDown(ll_select);
             popupWindow.setAnimationStyle(R.style.PopupWindowAnimation);
-        }else{
+        } else {
             popupWindow.showAsDropDown(getView().findViewById(R.id.topView));
             popupWindow.setAnimationStyle(R.style.PopupWindowAnimation2);
         }
@@ -315,7 +320,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                 final TextView tv_sort_most_low = (TextView) view.findViewById(R.id.tv_sort_most_low);
                 final TextView tv_sort_most_top = (TextView) view.findViewById(R.id.tv_sort_most_top);
                 final TextView tv_sort_newest_publish = (TextView) view.findViewById(R.id.tv_sort_newest_publish);
-                final TextView tv_sort=(TextView) getView().findViewById(R.id.tv_sort);
+                final TextView tv_sort = (TextView) getView().findViewById(R.id.tv_sort);
                 resetTextColor(tv_sort_default, tv_sort_most_low, tv_sort_most_top, tv_sort_newest_publish);
                 tv_sort_default.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -457,13 +462,52 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                 });
                 break;
             case 2:
-                final ArrayList<View> viewList=new ArrayList<>();
-                ViewPager viewPager=(ViewPager) view.findViewById(R.id.customViewPager);
-                LayoutInflater inflater=LayoutInflater.from(getActivity());
-                viewList.add(inflater.inflate(R.layout.layout_car_filter_1,null));
-                viewList.add(inflater.inflate(R.layout.item_post_car_detail_msg,null));
+                getCarListDataFromNet(1);
+                final ArrayList<View> viewList = new ArrayList<>();
+                final ViewPager viewPager = (ViewPager) view.findViewById(R.id.customViewPager);
+                LayoutInflater inflater = LayoutInflater.from(getActivity());
+                viewList.add(inflater.inflate(R.layout.layout_car_filter_1, null));
+                viewList.add(inflater.inflate(R.layout.item_post_car_detail_msg, null));
                 resetBasicMsg(viewList.get(0));
                 resetCarConfigurations(viewList.get(1), mCarConfigurationList);
+
+                view.findViewById(R.id.rl).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                });
+
+                view.findViewById(R.id.tvReset).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        getCarListDataFromNet(1);
+                        resetBasicMsg(viewList.get(0));
+                        resetCarConfigurations(viewList.get(1), mCarConfigurationList);
+                    }
+                });
+
+                view.findViewById(R.id.tvBasicMsg).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        viewPager.setCurrentItem(0);
+                        ((TextView) view.findViewById(R.id.tvBasicMsg)).setTextColor(getResources().getColor(R.color.main_color));
+                        view.findViewById(R.id.line1).setVisibility(View.VISIBLE);
+                        ((TextView) view.findViewById(R.id.tvDetailMsg)).setTextColor(getResources().getColor(R.color.main_text_color));
+                        view.findViewById(R.id.line2).setVisibility(View.GONE);
+                    }
+                });
+
+                view.findViewById(R.id.tvDetailMsg).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        viewPager.setCurrentItem(1);
+                        ((TextView) view.findViewById(R.id.tvBasicMsg)).setTextColor(getResources().getColor(R.color.main_text_color));
+                        view.findViewById(R.id.line1).setVisibility(View.GONE);
+                        ((TextView) view.findViewById(R.id.tvDetailMsg)).setTextColor(getResources().getColor(R.color.main_color));
+                        view.findViewById(R.id.line2).setVisibility(View.VISIBLE);
+                    }
+                });
 
                 viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                     @Override
@@ -473,7 +517,11 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
 
                     @Override
                     public void onPageSelected(int position) {
-
+                        if (position == 0) {
+                            view.findViewById(R.id.tvBasicMsg).performClick();
+                        } else {
+                            view.findViewById(R.id.tvDetailMsg).performClick();
+                        }
                     }
 
                     @Override
@@ -493,7 +541,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                     @Override
                     public boolean isViewFromObject(View arg0, Object arg1) {
                         // TODO Auto-generated method stub
-                        return arg0==arg1;
+                        return arg0 == arg1;
                     }
 
                     @Override
@@ -508,117 +556,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                         container.removeView(viewList.get(position));
                     }
                 });
-//            case 2:
-//                final TextView tvOldOrNewNoLimit = (TextView) view.findViewById(R.id.tvOldOrNewNoLimit);
-//                final TextView tvOnlyNew = (TextView) view.findViewById(R.id.tvOnlyNew);
-//                final TextView tvOnlySecondHand = (TextView) view.findViewById(R.id.tvOnlySecondHand);
-//                tvOldOrNewNoLimit.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        new_or_old = 0;
-//                        resetTextView(new_or_old, tvOldOrNewNoLimit, tvOnlyNew, tvOnlySecondHand);
-//                        showViewByNewOld(view, true);
-//                    }
-//                });
-//                tvOnlyNew.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        new_or_old = 1;
-//                        resetTextView(new_or_old, tvOldOrNewNoLimit, tvOnlyNew, tvOnlySecondHand);
-//                        showViewByNewOld(view, false);
-//                        ((ScrollView) view).scrollTo(0, 0);
-//                    }
-//                });
-//
-//                tvOnlySecondHand.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        new_or_old = 2;
-//                        resetTextView(new_or_old, tvOldOrNewNoLimit, tvOnlyNew, tvOnlySecondHand);
-//                        showViewByNewOld(view, true);
-//                    }
-//                });
-//                resetTextView(new_or_old, tvOldOrNewNoLimit, tvOnlyNew, tvOnlySecondHand);
-//                showViewByNewOld(view, new_or_old != 1);
-//
-//                final TextView tvSourceNoLimit = (TextView) view.findViewById(R.id.tvSourceNoLimit);
-//                final TextView tvProfileSource = (TextView) view.findViewById(R.id.tvProfileSource);
-//                final TextView tvShopSource = (TextView) view.findViewById(R.id.tvShopSource);
-//                tvSourceNoLimit.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        car_source = 0;
-//                        resetTextView(car_source, tvSourceNoLimit, tvProfileSource, tvShopSource);
-//                    }
-//                });
-//
-//                tvProfileSource.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        car_source = 1;
-//                        resetTextView(car_source, tvSourceNoLimit, tvProfileSource, tvShopSource);
-//                    }
-//                });
-//
-//                tvShopSource.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        car_source = 2;
-//                        resetTextView(car_source, tvSourceNoLimit, tvProfileSource, tvShopSource);
-//                    }
-//                });
-//                resetTextView(car_source, tvSourceNoLimit, tvProfileSource, tvShopSource);
-//
-//                final TextView tvVRNoLimit = (TextView) view.findViewById(R.id.tvVRNoLimit);
-//                final TextView tvOnlyVR = (TextView) view.findViewById(R.id.tvOnlyVR);
-//                tvVRNoLimit.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        car_vr = 0;
-//                        resetTextView(car_vr, tvVRNoLimit, tvOnlyVR);
-//                    }
-//                });
-//
-//                tvOnlyVR.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        car_vr = 1;
-//                        resetTextView(car_vr, tvVRNoLimit, tvOnlyVR);
-//                    }
-//                });
-//                resetTextView(car_vr, tvVRNoLimit, tvOnlyVR);
-//
-//                RangeSeekBar<Integer> distanceBar = (RangeSeekBar<Integer>) view.findViewById(R.id.distanceBar);
-//                distanceBar.setMaxLastText(12, getResources().getString(R.string.no_limit));
-//                distanceBar.setMaxMinSpace(1);
-//                distanceBar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener<Integer>() {
-//                    @Override
-//                    public void onRangeSeekBarValuesChanged(RangeSeekBar<?> bar, Integer minValue, Integer maxValue) {
-//                        min_mileage = String.valueOf(minValue);
-//                        max_mileage = maxValue > 12 ? "" : String.valueOf(maxValue);
-//                    }
-//                });
-//
-//                RangeSeekBar<Integer> ageBar = (RangeSeekBar<Integer>) view.findViewById(R.id.ageBar);
-//                ageBar.setMaxLastText(8, getResources().getString(R.string.no_limit));
-//                ageBar.setMaxMinSpace(1);
-//                ageBar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener<Integer>() {
-//                    @Override
-//                    public void onRangeSeekBarValuesChanged(RangeSeekBar<?> bar, Integer minValue, Integer maxValue) {
-//                        min_board_time = String.valueOf(minValue);
-//                        max_board_time = maxValue > 8 ? "" : String.valueOf(maxValue);
-//                    }
-//                });
-//
-//                view.findViewById(R.id.btnOk).setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        mPage = 0;
-//                        getCarListDataFromNet();
-//                        popupWindow.dismiss();
-//                    }
-//                });
-//                break;
+                break;
             default:
                 break;
         }
@@ -626,6 +564,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
         popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
+                tvTotalCar = null;
                 if (getView() != null) {
                     switch (flag) {
                         case 0:
@@ -648,171 +587,332 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
         });
     }
 
-    private void resetBasicMsg(View view){
-        LinearLayout llRoot=(LinearLayout) view.findViewById(R.id.llRoot);
-        int childCount=llRoot.getChildCount();
-        for(int i=0;i<childCount;++i){
-            if(i==6 || i==7 || i==8){
+    private void resetBasicMsg(View view) {
+        new_or_old = "";
+        car_source = "";
+        car_levels.clear();
+        seat_nums.clear();
+        car_colors.clear();
+        car_fueltypes.clear();
+        envirstandards.clear();
+        board_add = "";
+        forward = "";
+        min_pailiang = "";
+        max_pailiang = "";
+
+        final LinearLayout llRoot = (LinearLayout) view.findViewById(R.id.llRoot);
+        int childCount = llRoot.getChildCount();
+        for (int i = 0; i < childCount; ++i) {
+            if (i == 6) {
+                RangeSeekBar<Integer> distanceBar = (RangeSeekBar<Integer>) view.findViewById(R.id.distanceBar);
+                distanceBar.setMaxLastText(12, getResources().getString(R.string.no_limit));
+                distanceBar.setMaxMinSpace(1);
+                distanceBar.reset();
+                distanceBar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener<Integer>() {
+                    @Override
+                    public void onRangeSeekBarValuesChanged(RangeSeekBar<?> bar, Integer minValue, Integer maxValue) {
+                        min_mileage = String.valueOf(minValue);
+                        max_mileage = maxValue > 12 ? "" : String.valueOf(maxValue);
+                    }
+                });
+                continue;
+            } else if (i == 7) {
+                RangeSeekBar<Integer> ageBar = (RangeSeekBar<Integer>) view.findViewById(R.id.ageBar);
+                ageBar.setMaxLastText(8, getResources().getString(R.string.no_limit));
+                ageBar.setMaxMinSpace(1);
+                ageBar.reset();
+                ageBar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener<Integer>() {
+                    @Override
+                    public void onRangeSeekBarValuesChanged(RangeSeekBar<?> bar, Integer minValue, Integer maxValue) {
+                        min_board_time = String.valueOf(minValue);
+                        max_board_time = maxValue > 8 ? "" : String.valueOf(maxValue);
+                    }
+                });
+                continue;
+            } else if (i == 8) {
+                RangeSeekBar<Integer> pailiangBar = (RangeSeekBar<Integer>) view.findViewById(R.id.pailiangBar);
+                pailiangBar.setMaxLastText(5, getResources().getString(R.string.no_limit));
+                pailiangBar.setMaxMinSpace(1);
+                pailiangBar.reset();
+                pailiangBar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener<Integer>() {
+                    @Override
+                    public void onRangeSeekBarValuesChanged(RangeSeekBar<?> bar, Integer minValue, Integer maxValue) {
+                        min_pailiang = String.valueOf(minValue);
+                        max_pailiang = maxValue > 4.0 ? "" : String.valueOf(maxValue);
+                    }
+                });
                 continue;
             }
-            ViewGroup itemView=(ViewGroup) llRoot.getChildAt(i);
-            int count=itemView.getChildCount();
-            for(int j=1;j<count;++j){
-                ViewGroup itemView2=(ViewGroup) itemView.getChildAt(j);
-                int count2=itemView2.getChildCount();
-                for(int k=0;k<count2;++k) {
-                    ViewGroup itemView3=(ViewGroup) itemView2.getChildAt(k);
-                    itemView3.setTag(R.id.tag,i);
+            ViewGroup itemView = (ViewGroup) llRoot.getChildAt(i);
+            int count = itemView.getChildCount();
+            if (i == 2 || i == 3 || i == 5 || i == 9 || i == 11) {
+                ViewGroup viewGroup = (ViewGroup) itemView.getChildAt(0);
+                ((ImageView) viewGroup.getChildAt(1)).setImageResource(R.drawable.v2_expand3x);
+                ((TextView) viewGroup.getChildAt(2)).setText("全部");
+                ((TextView) viewGroup.getChildAt(2)).setTextColor(getResources().getColor(R.color.second_text_color));
+                viewGroup.setTag(0);
+                viewGroup.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int tag = (int) v.getTag();
+                        ViewGroup viewGroup = (ViewGroup) v;
+                        ViewGroup parent = (ViewGroup) v.getParent();
+                        int childCount = parent.getChildCount();
+                        if (tag == 1) {
+                            v.setTag(0);
+                            ((ImageView) viewGroup.getChildAt(1)).setImageResource(R.drawable.v2_expand3x);
+                            ((TextView) viewGroup.getChildAt(2)).setTextColor(getResources().getColor(R.color.second_text_color));
+                            for (int i = 2; i < childCount; ++i) {
+                                parent.getChildAt(i).setVisibility(View.GONE);
+                            }
+                        } else {
+                            v.setTag(1);
+                            ((ImageView) viewGroup.getChildAt(1)).setImageResource(R.drawable.v2_ewer3x);
+                            ((TextView) viewGroup.getChildAt(2)).setTextColor(getResources().getColor(R.color.main_color));
+                            for (int i = 2; i < childCount; ++i) {
+                                parent.getChildAt(i).setVisibility(View.VISIBLE);
+                            }
+                        }
+
+
+                    }
+                });
+            }
+            for (int j = 1; j < count; ++j) {
+                ViewGroup itemView2 = (ViewGroup) itemView.getChildAt(j);
+                if (j > 1) {
+                    itemView2.setVisibility(View.GONE);
+                }
+                int count2 = itemView2.getChildCount();
+                for (int k = 0; k < count2; ++k) {
+                    ViewGroup itemView3 = (ViewGroup) itemView2.getChildAt(k);
+                    itemView3.setTag(R.id.tag, i);
+                    switch (i) {
+                        case 0:
+                        case 1:
+                        case 3:
+                        case 4:
+                        case 5:
+                        case 9:
+                        case 10:
+                        case 11:
+                            itemView3.setBackgroundResource(R.drawable.back_filter_car_btn_1);
+                            ((TextView) itemView3.getChildAt(i == 5 ? 1 : 0)).setTextColor(getResources().getColor(R.color.main_text_color));
+                            break;
+                        case 2:
+                            ImageView ivCarLevel = (ImageView) itemView3.getChildAt(0);
+                            String tag = (String) itemView3.getTag();
+                            if (tag.equals("6")) {
+                                ivCarLevel.setImageResource(R.drawable.jiaoche_hei);
+                            } else if (tag.equals("9")) {
+                                ivCarLevel.setImageResource(R.drawable.paoche_hei);
+                            } else if (tag.equals("13")) {
+                                ivCarLevel.setImageResource(R.drawable.changpeng_hei);
+                            } else if (tag.equals("8")) {
+                                ivCarLevel.setImageResource(R.drawable.suv_hei);
+                            } else if (tag.equals("11")) {
+                                ivCarLevel.setImageResource(R.drawable.pika_hei);
+                            } else if (tag.equals("7")) {
+                                ivCarLevel.setImageResource(R.drawable.mpv_hei);
+                            }
+                            ((TextView) itemView3.getChildAt(1)).setTextColor(getResources().getColor(R.color.main_text_color));
+                            break;
+                    }
                     itemView3.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            String tag=(String)view.getTag();
-                            int index=(int)view.getTag(R.id.tag);
-                            Log.e("aaaaaaaa","tag: "+tag);
+                            String tag = (String) view.getTag();
+                            int index = (int) view.getTag(R.id.tag);
                             ViewGroup parent;
-                            switch (index){
+                            switch (index) {
                                 case 0:
-                                    if(new_or_old.equals(tag)){
-                                        new_or_old="";
+                                    if (new_or_old.equals(tag)) {
+                                        new_or_old = "";
                                         view.setBackgroundResource(R.drawable.back_filter_car_btn_1);
-                                        ((TextView)((ViewGroup)view).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_text_color));
-                                    }else{
-                                        new_or_old=tag;
-                                        parent=(ViewGroup) view.getParent();
-                                        for(int i=0;i<parent.getChildCount();++i){
+                                        ((TextView) ((ViewGroup) view).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_text_color));
+                                    } else {
+                                        new_or_old = tag;
+                                        parent = (ViewGroup) view.getParent();
+                                        for (int i = 0; i < parent.getChildCount(); ++i) {
                                             parent.getChildAt(i).setBackgroundResource(R.drawable.back_filter_car_btn_1);
-                                            ((TextView)((ViewGroup)parent.getChildAt(i)).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_text_color));
+                                            ((TextView) ((ViewGroup) parent.getChildAt(i)).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_text_color));
                                         }
                                         view.setBackgroundResource(R.drawable.back_filter_car_btn_2);
-                                        ((TextView)((ViewGroup)view).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_color));
+                                        ((TextView) ((ViewGroup) view).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_color));
                                     }
+                                    llRoot.getChildAt(6).setVisibility(new_or_old.equals("2") ? View.GONE : View.VISIBLE);
                                     break;
                                 case 1:
-                                    if(car_source.equals(tag)){
-                                        car_source="";
+                                    if (car_source.equals(tag)) {
+                                        car_source = "";
                                         view.setBackgroundResource(R.drawable.back_filter_car_btn_1);
-                                        ((TextView)((ViewGroup)view).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_text_color));
-                                    }else{
-                                        car_source=tag;
-                                        parent=(ViewGroup) view.getParent();
-                                        for(int i=0;i<parent.getChildCount();++i){
+                                        ((TextView) ((ViewGroup) view).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_text_color));
+                                    } else {
+                                        car_source = tag;
+                                        parent = (ViewGroup) view.getParent();
+                                        for (int i = 0; i < parent.getChildCount(); ++i) {
                                             parent.getChildAt(i).setBackgroundResource(R.drawable.back_filter_car_btn_1);
-                                            ((TextView)((ViewGroup)parent.getChildAt(i)).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_text_color));
+                                            ((TextView) ((ViewGroup) parent.getChildAt(i)).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_text_color));
                                         }
                                         view.setBackgroundResource(R.drawable.back_filter_car_btn_2);
-                                        ((TextView)((ViewGroup)view).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_color));
+                                        ((TextView) ((ViewGroup) view).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_color));
                                     }
                                     break;
                                 case 2:
-                                    ImageView ivCarLevel= (ImageView) ((ViewGroup)view).getChildAt(0);
-                                    if(car_levels.contains(tag)){
-                                        car_levels.remove(tag);
-                                        if(tag.equals("6")){
+                                    ImageView ivCarLevel = (ImageView) ((ViewGroup) view).getChildAt(0);
+                                    TextView tvName = (TextView) ((ViewGroup) view).getChildAt(1);
+                                    String text = tag + "_" + tvName.getText().toString();
+                                    if (car_levels.contains(text)) {
+                                        car_levels.remove(text);
+                                        if (tag.equals("6")) {
                                             ivCarLevel.setImageResource(R.drawable.jiaoche_hei);
-                                        }else if(tag.equals("9")){
-                                            ivCarLevel.setImageResource(R.drawable.jiaoche_hei);
-                                        }else if(tag.equals("13")){
-                                            ivCarLevel.setImageResource(R.drawable.jiaoche_hei);
-                                        }else if(tag.equals("8")){
+                                        } else if (tag.equals("9")) {
+                                            ivCarLevel.setImageResource(R.drawable.paoche_hei);
+                                        } else if (tag.equals("13")) {
+                                            ivCarLevel.setImageResource(R.drawable.changpeng_hei);
+                                        } else if (tag.equals("8")) {
                                             ivCarLevel.setImageResource(R.drawable.suv_hei);
-                                        }else if(tag.equals("11")){
+                                        } else if (tag.equals("11")) {
                                             ivCarLevel.setImageResource(R.drawable.pika_hei);
-                                        }else if(tag.equals("7")){
+                                        } else if (tag.equals("7")) {
                                             ivCarLevel.setImageResource(R.drawable.mpv_hei);
                                         }
-                                        ((TextView)((ViewGroup)view).getChildAt(1)).setTextColor(getResources().getColor(R.color.main_text_color));
-                                    }else{
-                                        car_levels.add(tag);
-                                        if(tag.equals("6")){
+                                        tvName.setTextColor(getResources().getColor(R.color.main_text_color));
+                                    } else {
+                                        car_levels.add(text);
+                                        if (tag.equals("6")) {
                                             ivCarLevel.setImageResource(R.drawable.jiaoche_huang);
-                                        }else if(tag.equals("9")){
-                                            ivCarLevel.setImageResource(R.drawable.jiaoche_huang);
-                                        }else if(tag.equals("13")){
-                                            ivCarLevel.setImageResource(R.drawable.jiaoche_huang);
-                                        }else if(tag.equals("8")){
+                                        } else if (tag.equals("9")) {
+                                            ivCarLevel.setImageResource(R.drawable.paoche_huang);
+                                        } else if (tag.equals("13")) {
+                                            ivCarLevel.setImageResource(R.drawable.changpeng_huang);
+                                        } else if (tag.equals("8")) {
                                             ivCarLevel.setImageResource(R.drawable.suv_huang);
-                                        }else if(tag.equals("11")){
+                                        } else if (tag.equals("11")) {
                                             ivCarLevel.setImageResource(R.drawable.pika_huang);
-                                        }else if(tag.equals("7")){
+                                        } else if (tag.equals("7")) {
                                             ivCarLevel.setImageResource(R.drawable.mpv_huang);
                                         }
-                                        ((TextView)((ViewGroup)view).getChildAt(1)).setTextColor(getResources().getColor(R.color.main_color));
+                                        tvName.setTextColor(getResources().getColor(R.color.main_color));
+                                    }
+                                    TextView tv = (TextView) ((ViewGroup) ((ViewGroup) llRoot.getChildAt(index)).getChildAt(0)).getChildAt(2);
+                                    int size = car_levels.size();
+                                    if (size == 0 || size == 6) {
+                                        tv.setText("全部");
+                                    } else {
+                                        tv.setText(getNamesByList(car_levels));
                                     }
                                     break;
                                 case 3:
-                                    if(seat_nums.contains(tag)){
-                                        seat_nums.remove(tag);
+                                    tvName = (TextView) ((ViewGroup) view).getChildAt(0);
+                                    text = tag + "_" + tvName.getText().toString();
+                                    if (seat_nums.contains(text)) {
+                                        seat_nums.remove(text);
                                         view.setBackgroundResource(R.drawable.back_filter_car_btn_1);
-                                        ((TextView)((ViewGroup)view).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_text_color));
-                                    }else{
-                                        seat_nums.add(tag);
+                                        tvName.setTextColor(getResources().getColor(R.color.main_text_color));
+                                    } else {
+                                        seat_nums.add(text);
                                         view.setBackgroundResource(R.drawable.back_filter_car_btn_2);
-                                        ((TextView)((ViewGroup)view).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_color));
+                                        tvName.setTextColor(getResources().getColor(R.color.main_color));
+                                    }
+                                    tv = (TextView) ((ViewGroup) ((ViewGroup) llRoot.getChildAt(index)).getChildAt(0)).getChildAt(2);
+                                    size = seat_nums.size();
+                                    if (size == 0 || size == 5) {
+                                        tv.setText("全部");
+                                    } else {
+                                        tv.setText(getNamesByList(seat_nums));
                                     }
                                     break;
                                 case 4:
-                                    if(board_add.equals(tag)){
-                                        board_add="";
+                                    if (board_add.equals(tag)) {
+                                        board_add = "";
                                         view.setBackgroundResource(R.drawable.back_filter_car_btn_1);
-                                        ((TextView)((ViewGroup)view).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_text_color));
-                                    }else{
-                                        board_add=tag;
-                                        parent=(ViewGroup) view.getParent();
-                                        for(int i=0;i<parent.getChildCount();++i){
+                                        ((TextView) ((ViewGroup) view).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_text_color));
+                                    } else {
+                                        board_add = tag;
+                                        parent = (ViewGroup) view.getParent();
+                                        for (int i = 0; i < parent.getChildCount(); ++i) {
                                             parent.getChildAt(i).setBackgroundResource(R.drawable.back_filter_car_btn_1);
-                                            ((TextView)((ViewGroup)parent.getChildAt(i)).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_text_color));
+                                            ((TextView) ((ViewGroup) parent.getChildAt(i)).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_text_color));
                                         }
                                         view.setBackgroundResource(R.drawable.back_filter_car_btn_2);
-                                        ((TextView)((ViewGroup)view).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_color));
+                                        ((TextView) ((ViewGroup) view).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_color));
                                     }
                                     break;
                                 case 5:
-                                    if(car_colors.contains(tag)){
-                                        car_colors.remove(tag);
+                                    tvName = (TextView) ((ViewGroup) view).getChildAt(1);
+                                    text = tag + "_" + tvName.getText().toString();
+                                    if (car_colors.contains(text)) {
+                                        car_colors.remove(text);
                                         view.setBackgroundResource(R.drawable.back_filter_car_btn_1);
-                                        ((TextView)((ViewGroup)view).getChildAt(1)).setTextColor(getResources().getColor(R.color.main_text_color));
-                                    }else{
-                                        car_colors.add(tag);
+                                        tvName.setTextColor(getResources().getColor(R.color.main_text_color));
+                                    } else {
+                                        car_colors.add(text);
                                         view.setBackgroundResource(R.drawable.back_filter_car_btn_2);
-                                        ((TextView)((ViewGroup)view).getChildAt(1)).setTextColor(getResources().getColor(R.color.main_color));
+                                        tvName.setTextColor(getResources().getColor(R.color.main_color));
+                                    }
+                                    tv = (TextView) ((ViewGroup) ((ViewGroup) llRoot.getChildAt(index)).getChildAt(0)).getChildAt(2);
+                                    size = car_colors.size();
+                                    if (size == 0 || size == 14) {
+                                        tv.setText("全部");
+                                    } else {
+                                        tv.setText(getNamesByList(car_colors));
                                     }
                                     break;
                                 case 9:
-                                    if(car_fueltypes.contains(tag)){
-                                        car_fueltypes.remove(tag);
+                                    tvName = (TextView) ((ViewGroup) view).getChildAt(0);
+                                    text = tag + "_" + tvName.getText().toString();
+                                    if (car_fueltypes.contains(text)) {
+                                        car_fueltypes.remove(text);
                                         view.setBackgroundResource(R.drawable.back_filter_car_btn_1);
-                                        ((TextView)((ViewGroup)view).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_text_color));
-                                    }else{
-                                        car_fueltypes.add(tag);
+                                        tvName.setTextColor(getResources().getColor(R.color.main_text_color));
+                                    } else {
+                                        car_fueltypes.add(text);
                                         view.setBackgroundResource(R.drawable.back_filter_car_btn_2);
-                                        ((TextView)((ViewGroup)view).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_color));
+                                        tvName.setTextColor(getResources().getColor(R.color.main_color));
+                                    }
+                                    tv = (TextView) ((ViewGroup) ((ViewGroup) llRoot.getChildAt(index)).getChildAt(0)).getChildAt(2);
+                                    size = car_fueltypes.size();
+                                    if (size == 0 || size == 4) {
+                                        tv.setText("全部");
+                                    } else {
+                                        tv.setText(getNamesByList(car_fueltypes));
                                     }
                                     break;
                                 case 10:
-                                    if(forward.equals(tag)){
-                                        forward="";
+                                    if (forward.equals(tag)) {
+                                        forward = "";
                                         view.setBackgroundResource(R.drawable.back_filter_car_btn_1);
-                                        ((TextView)((ViewGroup)view).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_text_color));
-                                    }else{
-                                        forward=tag;
-                                        parent=(ViewGroup) view.getParent();
-                                        for(int i=0;i<parent.getChildCount();++i){
+                                        ((TextView) ((ViewGroup) view).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_text_color));
+                                    } else {
+                                        forward = tag;
+                                        parent = (ViewGroup) view.getParent();
+                                        for (int i = 0; i < parent.getChildCount(); ++i) {
                                             parent.getChildAt(i).setBackgroundResource(R.drawable.back_filter_car_btn_1);
-                                            ((TextView)((ViewGroup)parent.getChildAt(i)).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_text_color));
+                                            ((TextView) ((ViewGroup) parent.getChildAt(i)).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_text_color));
                                         }
                                         view.setBackgroundResource(R.drawable.back_filter_car_btn_2);
-                                        ((TextView)((ViewGroup)view).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_color));
+                                        ((TextView) ((ViewGroup) view).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_color));
                                     }
                                     break;
                                 case 11:
-                                    if(envirstandards.contains(tag)){
-                                        envirstandards.remove(tag);
+                                    tvName = (TextView) ((ViewGroup) view).getChildAt(0);
+                                    text = tag + "_" + tvName.getText().toString();
+                                    if (envirstandards.contains(text)) {
+                                        envirstandards.remove(text);
                                         view.setBackgroundResource(R.drawable.back_filter_car_btn_1);
-                                        ((TextView)((ViewGroup)view).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_text_color));
-                                    }else{
-                                        envirstandards.add(tag);
+                                        tvName.setTextColor(getResources().getColor(R.color.main_text_color));
+                                    } else {
+                                        envirstandards.add(text);
                                         view.setBackgroundResource(R.drawable.back_filter_car_btn_2);
-                                        ((TextView)((ViewGroup)view).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_color));
+                                        tvName.setTextColor(getResources().getColor(R.color.main_color));
+                                    }
+                                    tv = (TextView) ((ViewGroup) ((ViewGroup) llRoot.getChildAt(index)).getChildAt(0)).getChildAt(2);
+                                    size = envirstandards.size();
+                                    if (size == 0 || size == 4) {
+                                        tv.setText("全部");
+                                    } else {
+                                        tv.setText(getNamesByList(envirstandards));
                                     }
                                     break;
                             }
@@ -866,7 +966,8 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
         }
     }
 
-    private void resetCarConfigurations(View view,ArrayList<CarConfiguration> list) {
+    private void resetCarConfigurations(View view, ArrayList<CarConfiguration> list) {
+        extra_infos.clear();
         LinearLayout llDetailMsg = (LinearLayout) view.findViewById(R.id.llDetailMsg);
         llDetailMsg.removeAllViews();
 
@@ -880,37 +981,71 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
             layout = (LinearLayout) layoutInflater.inflate(R.layout.item_car_configuration, null);
             layout.findViewById(R.id.line).setVisibility(View.GONE);
             llDetailMsg.addView(layout);
-            ((TextView) layout.findViewById(R.id.tvConfigName)).setText(config.getType_name());
+            final ViewGroup itemView1 = (ViewGroup) layout.getChildAt(0);
+            ((TextView) itemView1.getChildAt(0)).setText(config.getType_name());
+            itemView1.getChildAt(1).setVisibility(View.VISIBLE);
+            itemView1.getChildAt(2).setVisibility(View.VISIBLE);
+            itemView1.setTag(0);
+            itemView1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int tag = (int) itemView1.getTag();
+                    ViewGroup viewGroup = (ViewGroup) (((ViewGroup) v.getParent().getParent())).getChildAt(1);
+                    int childCount = viewGroup.getChildCount();
+                    if (tag == 1) {
+                        itemView1.setTag(0);
+                        for (int i = 1; i < childCount; ++i) {
+                            viewGroup.getChildAt(i).setVisibility(View.GONE);
+                        }
+                        ((ImageView) ((ViewGroup) v).getChildAt(1)).setImageResource(R.drawable.v2_expand3x);
+                        ((TextView) ((ViewGroup) v).getChildAt(2)).setTextColor(getResources().getColor(R.color.second_text_color));
+                    } else {
+                        itemView1.setTag(1);
+                        for (int i = 1; i < childCount; ++i) {
+                            viewGroup.getChildAt(i).setVisibility(View.GONE);
+                        }
+                        ((ImageView) ((ViewGroup) v).getChildAt(1)).setImageResource(R.drawable.v2_ewer3x);
+                        ((TextView) ((ViewGroup) v).getChildAt(2)).setTextColor(getResources().getColor(R.color.main_color));
+                    }
+                }
+            });
             itemList = config.getList();
             int itemCount = itemList.size();
             LinearLayout itemLayout;
             TextView tvName1, tvName2, tvName3;
-            int index=0;
+            int index = 0;
             int charCount;
             for (int j = 0; j < Integer.MAX_VALUE; ++j) {
-                charCount=0;
+                charCount = 0;
                 itemLayout = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.item_configuration_detail, null);
+                if (j > 0) {
+                    itemLayout.setVisibility(View.GONE);
+                }
                 ((LinearLayout) layout.findViewById(R.id.llDetails)).addView(itemLayout);
                 tvName1 = ((TextView) itemLayout.findViewById(R.id.tvName1));
                 tvName2 = ((TextView) itemLayout.findViewById(R.id.tvName2));
                 tvName3 = ((TextView) itemLayout.findViewById(R.id.tvName3));
                 if (index < itemCount) {
-                    charCount+=itemList.get(index).getName().length();
+                    charCount += itemList.get(index).getName().length();
                     tvName1.setText(itemList.get(index).getName());
-                    tvName1.setTag(R.id.tag, itemList.get(index).getId());
+                    tvName1.setTag(R.id.tag, itemList.get(index));
                     tvName1.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            String id = String.valueOf(view.getTag(R.id.tag));
-                            if (extra_infos.contains(id)) {
-                                extra_infos.remove(id);
+                            CarConfiguration.Configuration con = (CarConfiguration.Configuration) view.getTag(R.id.tag);
+                            String text = con.getId() + "_" + con.getName();
+                            if (extra_infos.contains(text)) {
+                                extra_infos.remove(text);
                                 view.setBackgroundResource(R.drawable.back_filter_car_btn_1);
                                 ((TextView) view).setTextColor(getResources().getColor(R.color.main_text_color));
                             } else {
-                                extra_infos.add(id);
+                                extra_infos.add(text);
                                 view.setBackgroundResource(R.drawable.back_filter_car_btn_2);
                                 ((TextView) view).setTextColor(getResources().getColor(R.color.main_color));
                             }
+                            ViewGroup parent = (ViewGroup) view.getParent().getParent().getParent();
+                            ViewGroup itemView1 = (ViewGroup) parent.getChildAt(0);
+                            ((TextView) itemView1.getChildAt(2)).setText(getNamesByList(extra_infos));
                             getCarListDataFromNet(1);
                         }
                     });
@@ -922,22 +1057,26 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                 }
                 ++index;
                 if (index < itemCount) {
-                    charCount+=itemList.get(index).getName().length();
+                    charCount += itemList.get(index).getName().length();
                     tvName2.setText(itemList.get(index).getName());
-                    tvName2.setTag(R.id.tag, itemList.get(index).getId());
+                    tvName2.setTag(R.id.tag, itemList.get(index));
                     tvName2.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            String id = String.valueOf(view.getTag(R.id.tag));
-                            if (extra_infos.contains(id)) {
-                                extra_infos.remove(id);
+                            CarConfiguration.Configuration con = (CarConfiguration.Configuration) view.getTag(R.id.tag);
+                            String text = con.getId() + "_" + con.getName();
+                            if (extra_infos.contains(text)) {
+                                extra_infos.remove(text);
                                 view.setBackgroundResource(R.drawable.back_filter_car_btn_1);
                                 ((TextView) view).setTextColor(getResources().getColor(R.color.main_text_color));
                             } else {
-                                extra_infos.add(id);
+                                extra_infos.add(text);
                                 view.setBackgroundResource(R.drawable.back_filter_car_btn_2);
                                 ((TextView) view).setTextColor(getResources().getColor(R.color.main_color));
                             }
+                            ViewGroup parent = (ViewGroup) view.getParent().getParent().getParent();
+                            ViewGroup itemView1 = (ViewGroup) parent.getChildAt(0);
+                            ((TextView) itemView1.getChildAt(2)).setText(getNamesByList(extra_infos));
                             getCarListDataFromNet(1);
                         }
                     });
@@ -948,25 +1087,29 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                 }
                 ++index;
                 if (index < itemCount) {
-                    if(charCount+itemList.get(index).getName().length()>16){
+                    if (charCount + itemList.get(index).getName().length() > 16) {
                         tvName3.setVisibility(View.GONE);
                         continue;
                     }
                     tvName3.setText(itemList.get(index).getName());
-                    tvName3.setTag(R.id.tag, itemList.get(index).getId());
+                    tvName3.setTag(R.id.tag, itemList.get(index));
                     tvName3.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            String id = String.valueOf(view.getTag(R.id.tag));
-                            if (extra_infos.contains(id)) {
-                                extra_infos.remove(id);
+                            CarConfiguration.Configuration con = (CarConfiguration.Configuration) view.getTag(R.id.tag);
+                            String text = con.getId() + "_" + con.getName();
+                            if (extra_infos.contains(text)) {
+                                extra_infos.remove(text);
                                 view.setBackgroundResource(R.drawable.back_filter_car_btn_1);
                                 ((TextView) view).setTextColor(getResources().getColor(R.color.main_text_color));
                             } else {
-                                extra_infos.add(id);
+                                extra_infos.add(text);
                                 view.setBackgroundResource(R.drawable.back_filter_car_btn_2);
                                 ((TextView) view).setTextColor(getResources().getColor(R.color.main_color));
                             }
+                            ViewGroup parent = (ViewGroup) view.getParent().getParent().getParent();
+                            ViewGroup itemView1 = (ViewGroup) parent.getChildAt(0);
+                            ((TextView) itemView1.getChildAt(2)).setText(getNamesByList(extra_infos));
                             getCarListDataFromNet(1);
                         }
                     });
@@ -1018,12 +1161,12 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
         getCarListDataFromNet(2);
     }
 
-    private void getCarListDataFromNet(int searchType) {
+    private void getCarListDataFromNet(final int searchType) {
         OkHttpUtils.post()
                 .url(Constant.getCarListUrl())
                 .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
                 .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
-                .addParams(Constant.KEY_WORD, "")//关键字
+                //     .addParams(Constant.KEY_WORD, "")//关键字
                 .addParams(Constant.ORDER_ID, order_id == null ? "" : order_id)//排序id
                 .addParams(Constant.BRAND_ID, brand_id == 0 ? "" : String.valueOf(brand_id))//车品牌id
                 .addParams(Constant.SERIES_ID, series_id == 0 ? "" : String.valueOf(series_id))//车系列id
@@ -1036,18 +1179,20 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                 .addParams(Constant.MAX_MILEAGE, max_mileage == null ? "" : max_mileage)//最高里程
                 .addParams(Constant.MIN_BOARD_TIME, min_board_time == null ? "" : min_board_time)//最短上牌时间
                 .addParams(Constant.MAX_BOARD_TIME, max_board_time == null ? "" : max_board_time)//最长上牌时间
+                .addParams(Constant.MIN_FORFLOAT, min_pailiang == null ? "" : min_pailiang)//最短上牌时间
+                .addParams(Constant.MAX_FORFLOAT, max_pailiang == null ? "" : max_pailiang)//最长上牌时间
                 .addParams(Constant.HAS_VR, car_vr == 0 ? "" : String.valueOf(car_vr))//是否有VR看车功能  1:是
                 .addParams(Constant.SEARCH_TYPE, String.valueOf(searchType))
                 .addParams(Constant.OLD, new_or_old)//是否新车二手车 1:新车 2 二手车
                 .addParams(Constant.SOURCE, car_source)//车辆来源 1:个人 2 商家
-                .addParams(Constant.CAR_LEVEL,getIdsByList(car_levels))
-                .addParams(Constant.SEAT_NUM,getIdsByList(seat_nums))
-                .addParams(Constant.FUELTYPE,getIdsByList(car_fueltypes))
-                .addParams(Constant.BOARD_ADD,board_add)
-                .addParams(Constant.CAR_COLOR,getIdsByList(car_colors))
-                .addParams(Constant.FORWARD,forward)
-                .addParams(Constant.ENVIRSTANDARD,getIdsByList(envirstandards))
-                .addParams(Constant.EXTRA_INFO,getIdsByList(extra_infos))
+                .addParams(Constant.CAR_LEVEL, getIdsByList(car_levels))
+                .addParams(Constant.SEAT_NUM, getIdsByList(seat_nums))
+                .addParams(Constant.FUELTYPE, getIdsByList(car_fueltypes))
+                .addParams(Constant.BOARD_ADD, board_add)
+                .addParams(Constant.CAR_COLOR, getIdsByList(car_colors))
+                .addParams(Constant.FORWARD, forward)
+                .addParams(Constant.ENVIRSTANDARD, getIdsByList(envirstandards))
+                .addParams(Constant.EXTRA_INFO, getIdsByList(extra_infos))
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -1057,24 +1202,28 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
 
                     @Override
                     public void onResponse(String response, int id) {
-                        Log.e("aaaaaaaaa","response: "+response);
+                        Log.e("aaaaaaaaa", "response: " + response);
                         JSONObject jsonObject = null;
                         try {
                             jsonObject = new JSONObject(response);
                             int status = jsonObject.optInt("status");
                             JSONObject jsonObjectData = jsonObject.optJSONObject("data");
                             if (status == 1) {
-                                switch (refresh_or_load) {
-                                    case 0:
-                                        smartRefreshLayout.finishRefresh();
-                                        handlerCarListData(jsonObjectData);
-                                        break;
-                                    case 1:
-                                        smartRefreshLayout.finishLoadmore();
-                                        handlerCarListMoreData(jsonObjectData);
-                                        break;
-                                    default:
-                                        break;
+                                if (searchType == 2) {
+                                    switch (refresh_or_load) {
+                                        case 0:
+                                            smartRefreshLayout.finishRefresh();
+                                            handlerCarListData(jsonObjectData);
+                                            break;
+                                        case 1:
+                                            smartRefreshLayout.finishLoadmore();
+                                            handlerCarListMoreData(jsonObjectData);
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                } else {
+                                    setTotalCar(jsonObjectData.optInt("total"));
                                 }
                             } else {
                                 String code = jsonObject.optString("code");
@@ -1088,17 +1237,35 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                 });
     }
 
-    private String getIdsByList(ArrayList<String> list){
-        String ids="";
-        int size=list.size();
-        for(int i=0;i<size;++i){
-            if(i<size-1){
-                ids+=list.get(i)+",";
-            }else{
-                ids+=list.get(i);
+    private void setTotalCar(int total) {
+        if (getView() != null && tvTotalCar != null) {
+            tvTotalCar.setText("共" + total + "辆车符合条件");
+        }
+    }
+
+    private String getIdsByList(ArrayList<String> list) {
+        String ids = "";
+        int size = list.size();
+        for (int i = 0; i < size; ++i) {
+            if (i < size - 1) {
+                ids += list.get(i).split("_")[0] + ",";
+            } else {
+                ids += list.get(i).split("_")[0];
             }
         }
-        Log.e("aaaaaaaaaaa","ids: "+ids);
+        return ids;
+    }
+
+    private String getNamesByList(ArrayList<String> list) {
+        String ids = "";
+        int size = list.size();
+        for (int i = 0; i < size; ++i) {
+            if (i < size - 1) {
+                ids += list.get(i).split("_")[1] + ",";
+            } else {
+                ids += list.get(i).split("_")[1];
+            }
+        }
         return ids;
     }
 
@@ -1157,21 +1324,21 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
             @Override
             public void onFirstBtnClicked() {
                 //上传新车
-                Bundle bundle=new Bundle();
-                bundle.putString("from_class",getClass().getName());
-                bundle.putBoolean("is_post_new_car",true);
+                Bundle bundle = new Bundle();
+                bundle.putString("from_class", getClass().getName());
+                bundle.putBoolean("is_post_new_car", true);
                 DataManager.getInstance().setObject(null);
-                gotoPager(SelectPhotoFragment.class, bundle,true);
+                gotoPager(SelectPhotoFragment.class, bundle, true);
             }
 
             @Override
             public void onSecondBtnClicked() {
                 //上传二手车
-                Bundle bundle=new Bundle();
-                bundle.putString("from_class",getClass().getName());
-                bundle.putBoolean("is_post_new_car",false);
+                Bundle bundle = new Bundle();
+                bundle.putString("from_class", getClass().getName());
+                bundle.putBoolean("is_post_new_car", false);
                 DataManager.getInstance().setObject(null);
-                gotoPager(SelectPhotoFragment.class, bundle,true);
+                gotoPager(SelectPhotoFragment.class, bundle, true);
             }
 
             @Override

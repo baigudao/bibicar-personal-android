@@ -84,6 +84,8 @@ public class Constant {
     public static final String MAX_MILEAGE = "max_mileage";
     public static final String MIN_BOARD_TIME = "min_board_time";
     public static final String MAX_BOARD_TIME = "max_board_time";
+    public static final String MIN_FORFLOAT = "min_forfloat";
+    public static final String MAX_FORFLOAT = "max_forfloat";
     public static final String HAS_VR = "has_vr";
     public static final String OLD = "old";
     public static final String SEARCH_TYPE = "search_type";
@@ -135,7 +137,6 @@ public class Constant {
     public static final String DESCRIPTION = "description";
 
 
-
     public static final String HOST_IMAGE_URL = "http://img.bibicar.cn/";//http://img.bibicar.cn/Fja6zKmICAz6l6QCd7-Z0pC-bjt8
 
     public static final int MAX_UPLOAD_PHOTO_NUM = 9;
@@ -168,7 +169,7 @@ public class Constant {
 
     private final static String uploadTokenUrl = hostUrl + "app/uploadtoken";//上传文件的Token
 
-    private final static String carListUrl = hostUrl + "v4/car/list";//车辆列表
+    private final static String carListUrl = hostUrl + "v4/car/newlist";//车辆列表
     private final static String carDetailUrl = hostUrl + "v4/car/index";//车辆详情  v4接口
 
     private final static String videoListUrl = hostUrl + "v3/Video/list";//视频列表
