@@ -61,6 +61,13 @@
                     android:orientation="horizontal"
                     android:tag="1">
 
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingRight="5dp"
+                        android:visibility="gone"
+                        android:src="@drawable/check"/>
+
                     <TextView
                         android:id="@+id/tvOnlyNew"
                         android:layout_width="wrap_content"
@@ -80,6 +87,13 @@
                     android:gravity="center"
                     android:orientation="horizontal"
                     android:tag="2">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingRight="5dp"
+                        android:visibility="gone"
+                        android:src="@drawable/check"/>
 
                     <TextView
                         android:id="@+id/tvOnlySecondHand"
@@ -139,6 +153,13 @@
                     android:orientation="horizontal"
                     android:tag="1">
 
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingRight="5dp"
+                        android:visibility="gone"
+                        android:src="@drawable/check"/>
+
                     <TextView
                         android:id="@+id/tvProfileSource"
                         android:layout_width="wrap_content"
@@ -158,6 +179,13 @@
                     android:gravity="center"
                     android:orientation="horizontal"
                     android:tag="2">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingRight="5dp"
+                        android:visibility="gone"
+                        android:src="@drawable/check"/>
 
                     <TextView
                         android:id="@+id/tvShop"
@@ -445,6 +473,13 @@
                     android:gravity="center"
                     android:orientation="horizontal">
 
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingRight="5dp"
+                        android:visibility="gone"
+                        android:src="@drawable/check"/>
+
                     <TextView
                         android:id="@+id/tvTwoSeat"
                         android:layout_width="wrap_content"
@@ -465,6 +500,13 @@
                     android:orientation="horizontal"
                     android:tag="4">
 
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingRight="5dp"
+                        android:visibility="gone"
+                        android:src="@drawable/check"/>
+
                     <TextView
                         android:id="@+id/tvFourSeat"
                         android:layout_width="wrap_content"
@@ -484,6 +526,13 @@
                     android:gravity="center"
                     android:orientation="horizontal"
                     android:tag="5">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingRight="5dp"
+                        android:visibility="gone"
+                        android:src="@drawable/check"/>
 
                     <TextView
                         android:id="@+id/tvFiveSeat"
@@ -513,6 +562,13 @@
                     android:orientation="horizontal"
                     android:tag="6">
 
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingRight="5dp"
+                        android:visibility="gone"
+                        android:src="@drawable/check"/>
+
                     <TextView
                         android:id="@+id/tvSixSeat"
                         android:layout_width="wrap_content"
@@ -532,6 +588,13 @@
                     android:gravity="center"
                     android:orientation="horizontal"
                     android:tag="7">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingRight="5dp"
+                        android:visibility="gone"
+                        android:src="@drawable/check"/>
 
                     <TextView
                         android:id="@+id/tvSevenSeat"
@@ -591,6 +654,13 @@
                     android:orientation="horizontal"
                     android:tag="1">
 
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingRight="5dp"
+                        android:visibility="gone"
+                        android:src="@drawable/check"/>
+
                     <TextView
                         android:id="@+id/tvPendi"
                         android:layout_width="wrap_content"
@@ -610,6 +680,13 @@
                     android:gravity="center"
                     android:orientation="horizontal"
                     android:tag="2">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingRight="5dp"
+                        android:visibility="gone"
+                        android:src="@drawable/check"/>
 
                     <TextView
                         android:id="@+id/tvWaidi"
@@ -1264,6 +1341,13 @@
                     android:orientation="horizontal"
                     android:tag="1">
 
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingRight="5dp"
+                        android:visibility="gone"
+                        android:src="@drawable/check"/>
+
                     <TextView
                         android:id="@+id/tvQiyou"
                         android:layout_width="wrap_content"
@@ -1284,6 +1368,13 @@
                     android:orientation="horizontal"
                     android:tag="2">
 
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingRight="5dp"
+                        android:visibility="gone"
+                        android:src="@drawable/check"/>
+
                     <TextView
                         android:id="@+id/tvCaiyou"
                         android:layout_width="wrap_content"
@@ -1303,6 +1394,13 @@
                     android:gravity="center"
                     android:orientation="horizontal"
                     android:tag="3">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingRight="5dp"
+                        android:visibility="gone"
+                        android:src="@drawable/check"/>
 
                     <TextView
                         android:id="@+id/tvYoudian"
@@ -1331,6 +1429,13 @@
                     android:gravity="center"
                     android:orientation="horizontal"
                     android:tag="4">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingRight="5dp"
+                        android:visibility="gone"
+                        android:src="@drawable/check"/>
 
                     <TextView
                         android:id="@+id/tvDianDong"
@@ -1391,6 +1496,13 @@
                     android:orientation="horizontal"
                     android:tag="1">
 
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingRight="5dp"
+                        android:visibility="gone"
+                        android:src="@drawable/check"/>
+
                     <TextView
                         android:id="@+id/tvShouDong"
                         android:layout_width="wrap_content"
@@ -1410,6 +1522,13 @@
                     android:gravity="center"
                     android:orientation="horizontal"
                     android:tag="2">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingRight="5dp"
+                        android:visibility="gone"
+                        android:src="@drawable/check"/>
 
                     <TextView
                         android:id="@+id/tvZidong"
@@ -1479,6 +1598,13 @@
                     android:orientation="horizontal"
                     android:tag="5">
 
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingRight="5dp"
+                        android:visibility="gone"
+                        android:src="@drawable/check"/>
+
                     <TextView
                         android:id="@+id/tvGuo5"
                         android:layout_width="wrap_content"
@@ -1499,6 +1625,13 @@
                     android:orientation="horizontal"
                     android:tag="2">
 
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingRight="5dp"
+                        android:visibility="gone"
+                        android:src="@drawable/check"/>
+
                     <TextView
                         android:id="@+id/tvGuo4"
                         android:layout_width="wrap_content"
@@ -1518,6 +1651,13 @@
                     android:gravity="center"
                     android:orientation="horizontal"
                     android:tag="3">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingRight="5dp"
+                        android:visibility="gone"
+                        android:src="@drawable/check"/>
 
                     <TextView
                         android:id="@+id/tvGuo3"
@@ -1546,6 +1686,13 @@
                     android:gravity="center"
                     android:orientation="horizontal"
                     android:tag="2">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingRight="5dp"
+                        android:visibility="gone"
+                        android:src="@drawable/check"/>
 
                     <TextView
                         android:id="@+id/tvGuo2"

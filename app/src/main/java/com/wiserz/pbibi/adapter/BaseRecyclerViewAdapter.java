@@ -207,6 +207,11 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
      * @param dataList
      */
     public void addDatas(List<T> dataList) {
+        this.mList = dataList;
+        notifyDataSetChanged();
+    }
+
+    public void setDatas(List<T> dataList) {
         if (mList == null) {
             mList = new ArrayList<>();
         }
@@ -653,7 +658,7 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                             .error(R.drawable.default_bg_ratio_1)
                             .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
                             .into(holder.iv_item1);
-                    holder.tv_item1.setText(carInfoBean.getBrand_info().getBrand_name() + " " + carInfoBean.getSeries_info().getSeries_name() + " " + carInfoBean.getModel_info().getModel_name());
+                    holder.tv_item1.setText(carInfoBean.getCar_name());
                     holder.tv_item2.setText(carInfoBean.getModel_info().getModel_year() + "年/排量" + carInfoBean.getModel_detail().getEngine_ExhaustForFloat());
                     holder.tv_item3.setText(mContext.getString(R.string._wan, String.format(Locale.CHINA, "%.2f", carInfoBean.getPrice())));
                 }
@@ -2345,7 +2350,7 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                     public void onClick(View v) {
                         if (mOnItemClickListener != null) {
                             int position = getLayoutPosition();
-                            mOnItemClickListener.onItemClick(mList.get(position), position);
+                            mOnItemClickListener.onItemClick(mList.get(position-1), position-1);
                         }
                     }
                 });

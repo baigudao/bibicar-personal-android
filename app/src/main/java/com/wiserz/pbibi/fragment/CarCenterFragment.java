@@ -40,6 +40,7 @@ import com.wiserz.pbibi.BaseApplication;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.activity.RegisterAndLoginActivity;
 import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
+import com.wiserz.pbibi.adapter.HeaderAndFooterWrapper;
 import com.wiserz.pbibi.bean.CarConfiguration;
 import com.wiserz.pbibi.bean.CarInfoBean;
 import com.wiserz.pbibi.util.CommonUtil;
@@ -55,6 +56,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.TreeMap;
 
 import okhttp3.Call;
 
@@ -81,30 +84,35 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
     private int mPage;
 
     private String order_id;
-    private String min_price;
-    private String max_price;
-    private String min_mileage;
+
+    private int price_id,temp_price_id;
+    private String min_price="0",temp_min_price;
+    private String max_price,temp_max_price;
+
+
+    private String min_mileage="0";
     private String max_mileage;
-    private String min_board_time;
+    private String min_board_time="0";
     private String max_board_time;
-    private String min_pailiang;
+    private String min_pailiang="0";
     private String max_pailiang;
 
     private ArrayList<CarConfiguration> mCarConfigurationList;
     private SmartRefreshLayout smartRefreshLayout;
+    private HeaderAndFooterWrapper mHeaderAndFooterWrapper;
     private BaseRecyclerViewAdapter baseRecyclerViewAdapter;
     private int refresh_or_load;//0或1
 
     private int flag;
-    private int price_id;
     private String new_or_old = "";
     private String car_source = "";
     private ArrayList<String> car_levels = new ArrayList<>();
     private ArrayList<String> seat_nums = new ArrayList<>();
     private ArrayList<String> car_colors = new ArrayList<>();
     private ArrayList<String> car_fueltypes = new ArrayList<>();
-    private ArrayList<String> extra_infos = new ArrayList<>();
     private ArrayList<String> envirstandards = new ArrayList<>();
+
+    private TreeMap<Integer, ArrayList<String>> extra_infos = new TreeMap<>();
 
     private String board_add = "";
     private String forward = "";
@@ -162,6 +170,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
         smartRefreshLayout = (SmartRefreshLayout) view.findViewById(R.id.smartRefreshLayout);
         smartRefreshLayout.setOnRefreshListener(this);
         smartRefreshLayout.setOnLoadmoreListener(this);
+
         refresh_or_load = 0;
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
@@ -171,13 +180,14 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
         price_id = 0;
     }
 
+//    private void addTopLayout(){
+//        smartRefreshLayout.addView();
+//    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ivRight:
-                //                gotoPager(LoanPlanFragment.class,null);//贷款方案
-
-                //                gotoPager(ConcreteParameterFragment.class, null);//具体参数
                 if (!CommonUtil.isHadLogin()) {
                     gotoPager(RegisterAndLoginActivity.class, null);
                     return;
@@ -250,6 +260,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                     tvBrand.setText(text);
                 }
             }
+            mPage = 0;
             getCarListDataFromNet(2);
             DataManager.getInstance().setData1(null);
             DataManager.getInstance().setData2(null);
@@ -376,85 +387,109 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                 final TextView tv4 = (TextView) view.findViewById(R.id.tv4);
                 final TextView tv5 = (TextView) view.findViewById(R.id.tv5);
                 final TextView tv6 = (TextView) view.findViewById(R.id.tv6);
+                temp_price_id=price_id;
+                temp_min_price=min_price;
+                temp_max_price=max_price;
                 resetTextView(price_id, tv0, tv1, tv2, tv3, tv4, tv5, tv6);
+
+                final RangeSeekBar<Integer> priceBar = (RangeSeekBar<Integer>) view.findViewById(R.id.priceBar);
+                priceBar.setMaxLastText(200, getResources().getString(R.string.no_limit));
+                priceBar.setMaxMinSpace(1);
+                priceBar.setSelectedMinValue(TextUtils.isEmpty(temp_min_price)?0:Integer.parseInt(temp_min_price));
+                priceBar.setSelectedMaxValue(TextUtils.isEmpty(temp_max_price)?250:Integer.parseInt(temp_max_price));
+                priceBar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener<Integer>() {
+                    @Override
+                    public void onRangeSeekBarValuesChanged(RangeSeekBar<?> bar, Integer minValue, Integer maxValue) {
+                        temp_price_id = -1;
+                        resetTextView(temp_price_id, tv0, tv1, tv2, tv3, tv4, tv5, tv6);
+                        temp_min_price = String.valueOf(minValue);
+                        temp_max_price = maxValue > 200 ? "" : String.valueOf(maxValue);
+                    }
+                });
                 tv0.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        price_id = 0;
-                        resetTextView(price_id, tv0, tv1, tv2, tv3, tv4, tv5, tv6);
-                        min_price = "0";
-                        max_price = "";
+                        temp_price_id = 0;
+                        resetTextView(temp_price_id, tv0, tv1, tv2, tv3, tv4, tv5, tv6);
+                        temp_min_price = "0";
+                        temp_max_price = "";
+                        priceBar.setSelectedMinValue(0);
+                        priceBar.setSelectedMaxValue(250);
                     }
                 });
                 tv1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        price_id = 1;
-                        resetTextView(price_id, tv0, tv1, tv2, tv3, tv4, tv5, tv6);
-                        min_price = "0";
-                        max_price = "15";
+                        temp_price_id = 1;
+                        resetTextView(temp_price_id, tv0, tv1, tv2, tv3, tv4, tv5, tv6);
+                        temp_min_price = "0";
+                        temp_max_price = "15";
+                        priceBar.setSelectedMinValue(0);
+                        priceBar.setSelectedMaxValue(15);
                     }
                 });
                 tv2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        price_id = 2;
-                        resetTextView(price_id, tv0, tv1, tv2, tv3, tv4, tv5, tv6);
-                        min_price = "15";
-                        max_price = "30";
+                        temp_price_id = 2;
+                        resetTextView(temp_price_id, tv0, tv1, tv2, tv3, tv4, tv5, tv6);
+                        temp_min_price = "15";
+                        temp_max_price = "30";
+                        priceBar.setSelectedMinValue(15);
+                        priceBar.setSelectedMaxValue(30);
                     }
                 });
                 tv3.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        price_id = 3;
-                        resetTextView(price_id, tv0, tv1, tv2, tv3, tv4, tv5, tv6);
-                        min_price = "30";
-                        max_price = "50";
+                        temp_price_id = 3;
+                        resetTextView(temp_price_id, tv0, tv1, tv2, tv3, tv4, tv5, tv6);
+                        temp_min_price = "30";
+                        temp_max_price = "50";
+                        priceBar.setSelectedMinValue(30);
+                        priceBar.setSelectedMaxValue(50);
                     }
                 });
                 tv4.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        price_id = 4;
-                        resetTextView(price_id, tv0, tv1, tv2, tv3, tv4, tv5, tv6);
-                        min_price = "50";
-                        max_price = "100";
+                        temp_price_id = 4;
+                        resetTextView(temp_price_id, tv0, tv1, tv2, tv3, tv4, tv5, tv6);
+                        temp_min_price = "50";
+                        temp_max_price = "100";
+                        priceBar.setSelectedMinValue(50);
+                        priceBar.setSelectedMaxValue(100);
                     }
                 });
                 tv5.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        price_id = 5;
-                        resetTextView(price_id, tv0, tv1, tv2, tv3, tv4, tv5, tv6);
-                        min_price = "100";
-                        max_price = "200";
+                        temp_price_id = 5;
+                        resetTextView(temp_price_id, tv0, tv1, tv2, tv3, tv4, tv5, tv6);
+                        temp_min_price = "100";
+                        temp_max_price = "200";
+                        priceBar.setSelectedMinValue(100);
+                        priceBar.setSelectedMaxValue(200);
                     }
                 });
-                RangeSeekBar<Integer> priceBar = (RangeSeekBar<Integer>) view.findViewById(R.id.priceBar);
-                priceBar.setMaxLastText(200, getResources().getString(R.string.no_limit));
-                priceBar.setMaxMinSpace(1);
-                priceBar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener<Integer>() {
-                    @Override
-                    public void onRangeSeekBarValuesChanged(RangeSeekBar<?> bar, Integer minValue, Integer maxValue) {
-                        price_id = -1;
-                        resetTextView(price_id, tv0, tv1, tv2, tv3, tv4, tv5, tv6);
-                        min_price = String.valueOf(minValue);
-                        max_price = maxValue > 200 ? "" : String.valueOf(maxValue);
-                    }
-                });
+
                 tv6.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        price_id = 6;
-                        resetTextView(price_id, tv0, tv1, tv2, tv3, tv4, tv5, tv6);
-                        min_price = "200";
-                        max_price = "";
+                        temp_price_id = 6;
+                        resetTextView(temp_price_id, tv0, tv1, tv2, tv3, tv4, tv5, tv6);
+                        temp_min_price = "200";
+                        temp_max_price = "";
+                        priceBar.setSelectedMinValue(200);
+                        priceBar.setSelectedMaxValue(250);
                     }
                 });
                 btn_sure.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        price_id = temp_price_id;
+                        min_price=temp_min_price;
+                        max_price=temp_max_price;
                         mPage = 0;
                         getCarListDataFromNet(2);
                         popupWindow.dismiss();
@@ -462,7 +497,6 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                 });
                 break;
             case 2:
-                getCarListDataFromNet(1);
                 final ArrayList<View> viewList = new ArrayList<>();
                 final ViewPager viewPager = (ViewPager) view.findViewById(R.id.customViewPager);
                 LayoutInflater inflater = LayoutInflater.from(getActivity());
@@ -470,7 +504,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                 viewList.add(inflater.inflate(R.layout.item_post_car_detail_msg, null));
                 resetBasicMsg(viewList.get(0));
                 resetCarConfigurations(viewList.get(1), mCarConfigurationList);
-
+                getCarListDataFromNet(1);
                 view.findViewById(R.id.rl).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -486,6 +520,15 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                         resetCarConfigurations(viewList.get(1), mCarConfigurationList);
                     }
                 });
+                view.findViewById(R.id.tvTotalCar).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mPage = 0;
+                        getCarListDataFromNet(2);
+                        popupWindow.dismiss();
+                    }
+                });
+
 
                 view.findViewById(R.id.tvBasicMsg).setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -597,7 +640,11 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
         envirstandards.clear();
         board_add = "";
         forward = "";
-        min_pailiang = "";
+        min_mileage="0";
+        max_mileage="";
+        min_board_time="0";
+        max_board_time="";
+        min_pailiang = "0";
         max_pailiang = "";
 
         final LinearLayout llRoot = (LinearLayout) view.findViewById(R.id.llRoot);
@@ -631,7 +678,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                 continue;
             } else if (i == 8) {
                 RangeSeekBar<Integer> pailiangBar = (RangeSeekBar<Integer>) view.findViewById(R.id.pailiangBar);
-                pailiangBar.setMaxLastText(5, getResources().getString(R.string.no_limit));
+                pailiangBar.setMaxLastText(4, getResources().getString(R.string.no_limit));
                 pailiangBar.setMaxMinSpace(1);
                 pailiangBar.reset();
                 pailiangBar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener<Integer>() {
@@ -673,8 +720,6 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                                 parent.getChildAt(i).setVisibility(View.VISIBLE);
                             }
                         }
-
-
                     }
                 });
             }
@@ -697,7 +742,10 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                         case 10:
                         case 11:
                             itemView3.setBackgroundResource(R.drawable.back_filter_car_btn_1);
-                            ((TextView) itemView3.getChildAt(i == 5 ? 1 : 0)).setTextColor(getResources().getColor(R.color.main_text_color));
+                            if(i!=5){
+                                itemView3.getChildAt(0).setVisibility(View.GONE);
+                            }
+                            ((TextView) itemView3.getChildAt(1)).setTextColor(getResources().getColor(R.color.main_text_color));
                             break;
                         case 2:
                             ImageView ivCarLevel = (ImageView) itemView3.getChildAt(0);
@@ -729,16 +777,19 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                                     if (new_or_old.equals(tag)) {
                                         new_or_old = "";
                                         view.setBackgroundResource(R.drawable.back_filter_car_btn_1);
-                                        ((TextView) ((ViewGroup) view).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_text_color));
+                                        ((ViewGroup) view).getChildAt(0).setVisibility(View.GONE);
+                                        ((TextView) ((ViewGroup) view).getChildAt(1)).setTextColor(getResources().getColor(R.color.main_text_color));
                                     } else {
                                         new_or_old = tag;
                                         parent = (ViewGroup) view.getParent();
                                         for (int i = 0; i < parent.getChildCount(); ++i) {
                                             parent.getChildAt(i).setBackgroundResource(R.drawable.back_filter_car_btn_1);
-                                            ((TextView) ((ViewGroup) parent.getChildAt(i)).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_text_color));
+                                            ((ViewGroup) parent.getChildAt(i)).getChildAt(0).setVisibility(View.GONE);
+                                            ((TextView) ((ViewGroup) parent.getChildAt(i)).getChildAt(1)).setTextColor(getResources().getColor(R.color.main_text_color));
                                         }
                                         view.setBackgroundResource(R.drawable.back_filter_car_btn_2);
-                                        ((TextView) ((ViewGroup) view).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_color));
+                                        ((ViewGroup) view).getChildAt(0).setVisibility(View.VISIBLE);
+                                        ((TextView) ((ViewGroup) view).getChildAt(1)).setTextColor(getResources().getColor(R.color.main_color));
                                     }
                                     llRoot.getChildAt(6).setVisibility(new_or_old.equals("2") ? View.GONE : View.VISIBLE);
                                     break;
@@ -746,16 +797,19 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                                     if (car_source.equals(tag)) {
                                         car_source = "";
                                         view.setBackgroundResource(R.drawable.back_filter_car_btn_1);
-                                        ((TextView) ((ViewGroup) view).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_text_color));
+                                        ((ViewGroup) view).getChildAt(0).setVisibility(View.GONE);
+                                        ((TextView) ((ViewGroup) view).getChildAt(1)).setTextColor(getResources().getColor(R.color.main_text_color));
                                     } else {
                                         car_source = tag;
                                         parent = (ViewGroup) view.getParent();
                                         for (int i = 0; i < parent.getChildCount(); ++i) {
                                             parent.getChildAt(i).setBackgroundResource(R.drawable.back_filter_car_btn_1);
-                                            ((TextView) ((ViewGroup) parent.getChildAt(i)).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_text_color));
+                                            ((ViewGroup) parent.getChildAt(i)).getChildAt(0).setVisibility(View.GONE);
+                                            ((TextView) ((ViewGroup) parent.getChildAt(i)).getChildAt(1)).setTextColor(getResources().getColor(R.color.main_text_color));
                                         }
                                         view.setBackgroundResource(R.drawable.back_filter_car_btn_2);
-                                        ((TextView) ((ViewGroup) view).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_color));
+                                        ((ViewGroup) view).getChildAt(0).setVisibility(View.VISIBLE);
+                                        ((TextView) ((ViewGroup) view).getChildAt(1)).setTextColor(getResources().getColor(R.color.main_color));
                                     }
                                     break;
                                 case 2:
@@ -804,16 +858,19 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                                     }
                                     break;
                                 case 3:
-                                    tvName = (TextView) ((ViewGroup) view).getChildAt(0);
+                                    View ivCheck=((ViewGroup) view).getChildAt(0);
+                                    tvName = (TextView) ((ViewGroup) view).getChildAt(1);
                                     text = tag + "_" + tvName.getText().toString();
                                     if (seat_nums.contains(text)) {
                                         seat_nums.remove(text);
                                         view.setBackgroundResource(R.drawable.back_filter_car_btn_1);
                                         tvName.setTextColor(getResources().getColor(R.color.main_text_color));
+                                        ivCheck.setVisibility(View.GONE);
                                     } else {
                                         seat_nums.add(text);
                                         view.setBackgroundResource(R.drawable.back_filter_car_btn_2);
                                         tvName.setTextColor(getResources().getColor(R.color.main_color));
+                                        ivCheck.setVisibility(View.VISIBLE);
                                     }
                                     tv = (TextView) ((ViewGroup) ((ViewGroup) llRoot.getChildAt(index)).getChildAt(0)).getChildAt(2);
                                     size = seat_nums.size();
@@ -827,16 +884,19 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                                     if (board_add.equals(tag)) {
                                         board_add = "";
                                         view.setBackgroundResource(R.drawable.back_filter_car_btn_1);
-                                        ((TextView) ((ViewGroup) view).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_text_color));
+                                        ((ViewGroup) view).getChildAt(0).setVisibility(View.GONE);
+                                        ((TextView) ((ViewGroup) view).getChildAt(1)).setTextColor(getResources().getColor(R.color.main_text_color));
                                     } else {
                                         board_add = tag;
                                         parent = (ViewGroup) view.getParent();
                                         for (int i = 0; i < parent.getChildCount(); ++i) {
                                             parent.getChildAt(i).setBackgroundResource(R.drawable.back_filter_car_btn_1);
-                                            ((TextView) ((ViewGroup) parent.getChildAt(i)).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_text_color));
+                                            ((ViewGroup) parent.getChildAt(i)).getChildAt(0).setVisibility(View.GONE);
+                                            ((TextView) ((ViewGroup) parent.getChildAt(i)).getChildAt(1)).setTextColor(getResources().getColor(R.color.main_text_color));
                                         }
                                         view.setBackgroundResource(R.drawable.back_filter_car_btn_2);
-                                        ((TextView) ((ViewGroup) view).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_color));
+                                        ((ViewGroup) view).getChildAt(0).setVisibility(View.VISIBLE);
+                                        ((TextView) ((ViewGroup) view).getChildAt(1)).setTextColor(getResources().getColor(R.color.main_color));
                                     }
                                     break;
                                 case 5:
@@ -860,16 +920,19 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                                     }
                                     break;
                                 case 9:
-                                    tvName = (TextView) ((ViewGroup) view).getChildAt(0);
+                                    ivCheck=((ViewGroup) view).getChildAt(0);
+                                    tvName = (TextView) ((ViewGroup) view).getChildAt(1);
                                     text = tag + "_" + tvName.getText().toString();
                                     if (car_fueltypes.contains(text)) {
                                         car_fueltypes.remove(text);
                                         view.setBackgroundResource(R.drawable.back_filter_car_btn_1);
                                         tvName.setTextColor(getResources().getColor(R.color.main_text_color));
+                                        ivCheck.setVisibility(View.GONE);
                                     } else {
                                         car_fueltypes.add(text);
                                         view.setBackgroundResource(R.drawable.back_filter_car_btn_2);
                                         tvName.setTextColor(getResources().getColor(R.color.main_color));
+                                        ivCheck.setVisibility(View.VISIBLE);
                                     }
                                     tv = (TextView) ((ViewGroup) ((ViewGroup) llRoot.getChildAt(index)).getChildAt(0)).getChildAt(2);
                                     size = car_fueltypes.size();
@@ -883,29 +946,35 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                                     if (forward.equals(tag)) {
                                         forward = "";
                                         view.setBackgroundResource(R.drawable.back_filter_car_btn_1);
-                                        ((TextView) ((ViewGroup) view).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_text_color));
+                                        ((ViewGroup) view).getChildAt(0).setVisibility(View.GONE);
+                                        ((TextView) ((ViewGroup) view).getChildAt(1)).setTextColor(getResources().getColor(R.color.main_text_color));
                                     } else {
                                         forward = tag;
                                         parent = (ViewGroup) view.getParent();
                                         for (int i = 0; i < parent.getChildCount(); ++i) {
                                             parent.getChildAt(i).setBackgroundResource(R.drawable.back_filter_car_btn_1);
-                                            ((TextView) ((ViewGroup) parent.getChildAt(i)).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_text_color));
+                                            ((ViewGroup) parent.getChildAt(i)).getChildAt(0).setVisibility(View.GONE);
+                                            ((TextView) ((ViewGroup) parent.getChildAt(i)).getChildAt(1)).setTextColor(getResources().getColor(R.color.main_text_color));
                                         }
                                         view.setBackgroundResource(R.drawable.back_filter_car_btn_2);
-                                        ((TextView) ((ViewGroup) view).getChildAt(0)).setTextColor(getResources().getColor(R.color.main_color));
+                                        ((ViewGroup) view).getChildAt(0).setVisibility(View.VISIBLE);
+                                        ((TextView) ((ViewGroup) view).getChildAt(1)).setTextColor(getResources().getColor(R.color.main_color));
                                     }
                                     break;
                                 case 11:
-                                    tvName = (TextView) ((ViewGroup) view).getChildAt(0);
+                                    ivCheck=((ViewGroup) view).getChildAt(0);
+                                    tvName = (TextView) ((ViewGroup) view).getChildAt(1);
                                     text = tag + "_" + tvName.getText().toString();
                                     if (envirstandards.contains(text)) {
                                         envirstandards.remove(text);
                                         view.setBackgroundResource(R.drawable.back_filter_car_btn_1);
                                         tvName.setTextColor(getResources().getColor(R.color.main_text_color));
+                                        ivCheck.setVisibility(View.GONE);
                                     } else {
                                         envirstandards.add(text);
                                         view.setBackgroundResource(R.drawable.back_filter_car_btn_2);
                                         tvName.setTextColor(getResources().getColor(R.color.main_color));
+                                        ivCheck.setVisibility(View.VISIBLE);
                                     }
                                     tv = (TextView) ((ViewGroup) ((ViewGroup) llRoot.getChildAt(index)).getChildAt(0)).getChildAt(2);
                                     size = envirstandards.size();
@@ -1012,115 +1081,108 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
             itemList = config.getList();
             int itemCount = itemList.size();
             LinearLayout itemLayout;
-            TextView tvName1, tvName2, tvName3;
+            LinearLayout llName1, llName2, llName3;
             int index = 0;
             int charCount;
             for (int j = 0; j < Integer.MAX_VALUE; ++j) {
                 charCount = 0;
-                itemLayout = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.item_configuration_detail, null);
+                itemLayout = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.item_filter_configuration, null);
                 if (j > 0) {
                     itemLayout.setVisibility(View.GONE);
                 }
                 ((LinearLayout) layout.findViewById(R.id.llDetails)).addView(itemLayout);
-                tvName1 = ((TextView) itemLayout.findViewById(R.id.tvName1));
-                tvName2 = ((TextView) itemLayout.findViewById(R.id.tvName2));
-                tvName3 = ((TextView) itemLayout.findViewById(R.id.tvName3));
+                llName1 = (LinearLayout) itemLayout.getChildAt(0);
+                llName2 = (LinearLayout) itemLayout.getChildAt(1);
+                llName3 = (LinearLayout) itemLayout.getChildAt(2);
                 if (index < itemCount) {
                     charCount += itemList.get(index).getName().length();
-                    tvName1.setText(itemList.get(index).getName());
-                    tvName1.setTag(R.id.tag, itemList.get(index));
-                    tvName1.setOnClickListener(new View.OnClickListener() {
+                    ((TextView)llName1.getChildAt(1)).setText(itemList.get(index).getName());
+                    llName1.setTag(itemList.size());
+                    llName1.setTag(R.id.tag, itemList.get(index));
+                    llName1.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            CarConfiguration.Configuration con = (CarConfiguration.Configuration) view.getTag(R.id.tag);
-                            String text = con.getId() + "_" + con.getName();
-                            if (extra_infos.contains(text)) {
-                                extra_infos.remove(text);
-                                view.setBackgroundResource(R.drawable.back_filter_car_btn_1);
-                                ((TextView) view).setTextColor(getResources().getColor(R.color.main_text_color));
-                            } else {
-                                extra_infos.add(text);
-                                view.setBackgroundResource(R.drawable.back_filter_car_btn_2);
-                                ((TextView) view).setTextColor(getResources().getColor(R.color.main_color));
-                            }
-                            ViewGroup parent = (ViewGroup) view.getParent().getParent().getParent();
-                            ViewGroup itemView1 = (ViewGroup) parent.getChildAt(0);
-                            ((TextView) itemView1.getChildAt(2)).setText(getNamesByList(extra_infos));
-                            getCarListDataFromNet(1);
+                            onConfigClick(view);
                         }
                     });
                 } else {
-                    tvName1.setVisibility(View.GONE);
-                    tvName2.setVisibility(View.GONE);
-                    tvName3.setVisibility(View.GONE);
+                    llName1.setVisibility(View.GONE);
+                    llName2.setVisibility(View.GONE);
+                    llName3.setVisibility(View.GONE);
                     break;
                 }
                 ++index;
                 if (index < itemCount) {
                     charCount += itemList.get(index).getName().length();
-                    tvName2.setText(itemList.get(index).getName());
-                    tvName2.setTag(R.id.tag, itemList.get(index));
-                    tvName2.setOnClickListener(new View.OnClickListener() {
+                    ((TextView)llName2.getChildAt(1)).setText(itemList.get(index).getName());
+                    llName2.setTag(itemList.size());
+                    llName2.setTag(R.id.tag, itemList.get(index));
+                    llName2.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            CarConfiguration.Configuration con = (CarConfiguration.Configuration) view.getTag(R.id.tag);
-                            String text = con.getId() + "_" + con.getName();
-                            if (extra_infos.contains(text)) {
-                                extra_infos.remove(text);
-                                view.setBackgroundResource(R.drawable.back_filter_car_btn_1);
-                                ((TextView) view).setTextColor(getResources().getColor(R.color.main_text_color));
-                            } else {
-                                extra_infos.add(text);
-                                view.setBackgroundResource(R.drawable.back_filter_car_btn_2);
-                                ((TextView) view).setTextColor(getResources().getColor(R.color.main_color));
-                            }
-                            ViewGroup parent = (ViewGroup) view.getParent().getParent().getParent();
-                            ViewGroup itemView1 = (ViewGroup) parent.getChildAt(0);
-                            ((TextView) itemView1.getChildAt(2)).setText(getNamesByList(extra_infos));
-                            getCarListDataFromNet(1);
+                            onConfigClick(view);
                         }
                     });
                 } else {
-                    tvName2.setVisibility(View.GONE);
-                    tvName3.setVisibility(View.GONE);
+                    llName2.setVisibility(View.GONE);
+                    llName3.setVisibility(View.GONE);
                     break;
                 }
                 ++index;
                 if (index < itemCount) {
-                    if (charCount + itemList.get(index).getName().length() > 16) {
-                        tvName3.setVisibility(View.GONE);
+                    if (charCount + itemList.get(index).getName().length() > 14) {
+                        llName3.setVisibility(View.GONE);
                         continue;
                     }
-                    tvName3.setText(itemList.get(index).getName());
-                    tvName3.setTag(R.id.tag, itemList.get(index));
-                    tvName3.setOnClickListener(new View.OnClickListener() {
+                    ((TextView)llName3.getChildAt(1)).setText(itemList.get(index).getName());
+                    llName3.setTag(itemList.size());
+                    llName3.setTag(R.id.tag, itemList.get(index));
+                    llName3.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            CarConfiguration.Configuration con = (CarConfiguration.Configuration) view.getTag(R.id.tag);
-                            String text = con.getId() + "_" + con.getName();
-                            if (extra_infos.contains(text)) {
-                                extra_infos.remove(text);
-                                view.setBackgroundResource(R.drawable.back_filter_car_btn_1);
-                                ((TextView) view).setTextColor(getResources().getColor(R.color.main_text_color));
-                            } else {
-                                extra_infos.add(text);
-                                view.setBackgroundResource(R.drawable.back_filter_car_btn_2);
-                                ((TextView) view).setTextColor(getResources().getColor(R.color.main_color));
-                            }
-                            ViewGroup parent = (ViewGroup) view.getParent().getParent().getParent();
-                            ViewGroup itemView1 = (ViewGroup) parent.getChildAt(0);
-                            ((TextView) itemView1.getChildAt(2)).setText(getNamesByList(extra_infos));
-                            getCarListDataFromNet(1);
+                            onConfigClick(view);
                         }
                     });
                 } else {
-                    tvName3.setVisibility(View.GONE);
+                    llName3.setVisibility(View.GONE);
                     break;
                 }
                 ++index;
             }
         }
 
+    }
+
+    private void onConfigClick(View view) {
+        CarConfiguration.Configuration con = (CarConfiguration.Configuration) view.getTag(R.id.tag);
+        String text = con.getId() + "_" + con.getName();
+        View ivCheck=((ViewGroup) view).getChildAt(0);
+        TextView tv=(TextView) ((ViewGroup) view).getChildAt(1);
+        ArrayList<String> list = extra_infos.get(con.getType());
+        if (list == null) {
+            list = new ArrayList<>();
+            extra_infos.put(con.getType(), list);
+        }
+        if (list.contains(text)) {
+            list.remove(text);
+            view.setBackgroundResource(R.drawable.back_filter_car_btn_1);
+            tv.setTextColor(getResources().getColor(R.color.main_text_color));
+            ivCheck.setVisibility(View.GONE);
+        } else {
+            list.add(text);
+            view.setBackgroundResource(R.drawable.back_filter_car_btn_2);
+            tv.setTextColor(getResources().getColor(R.color.main_color));
+            ivCheck.setVisibility(View.VISIBLE);
+        }
+        ViewGroup parent = (ViewGroup) view.getParent().getParent().getParent();
+        ViewGroup itemView1 = (ViewGroup) parent.getChildAt(0);
+        int size=(int)view.getTag();
+        if(list.isEmpty() || list.size()==size){
+            ((TextView) itemView1.getChildAt(2)).setText("全部");
+        }else {
+            ((TextView) itemView1.getChildAt(2)).setText(getNamesByList(list));
+        }
+        getCarListDataFromNet(1);
     }
 
 
@@ -1256,6 +1318,25 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
         return ids;
     }
 
+    private String getIdsByList(TreeMap<Integer, ArrayList<String>> map) {
+        String ids = "";
+        Iterator<TreeMap.Entry<Integer, ArrayList<String>>> entries = map.entrySet().iterator();
+        while (entries.hasNext()) {
+            TreeMap.Entry<Integer, ArrayList<String>> entry = entries.next();
+            ArrayList<String> list = entry.getValue();
+            if (list != null && !list.isEmpty()) {
+                int size = list.size();
+                for (int i = 0; i < size; ++i) {
+                    ids += list.get(i).split("_")[0] + ",";
+                }
+            }
+        }
+        if (ids.length() > 0) {
+            ids = ids.substring(0, ids.length() - 1);
+        }
+        return ids;
+    }
+
     private String getNamesByList(ArrayList<String> list) {
         String ids = "";
         int size = list.size();
@@ -1274,6 +1355,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
             ArrayList<CarInfoBean> carInfoBeanArrayList = getCarListData(jsonObjectData);
             if (EmptyUtils.isNotEmpty(carInfoBeanArrayList) && carInfoBeanArrayList.size() != 0) {
                 baseRecyclerViewAdapter.addDatas(carInfoBeanArrayList);
+                mHeaderAndFooterWrapper.notifyDataSetChanged();
             } else {
                 ToastUtils.showShort("没有更多了");
             }
@@ -1282,13 +1364,338 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
 
     private void handlerCarListData(JSONObject jsonObjectData) {
         ArrayList<CarInfoBean> carInfoBeanArrayList = getCarListData(jsonObjectData);
-        if (EmptyUtils.isNotEmpty(carInfoBeanArrayList) && carInfoBeanArrayList.size() != 0) {
-            baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, carInfoBeanArrayList, CAR_LIST_FOR_CAR_CENTER);
-            recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
-            recyclerView.setAdapter(baseRecyclerViewAdapter);
-            baseRecyclerViewAdapter.setOnItemClickListener(this);
-        }
+        baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, carInfoBeanArrayList, CAR_LIST_FOR_CAR_CENTER);
+        mHeaderAndFooterWrapper = new HeaderAndFooterWrapper(baseRecyclerViewAdapter);
+        LinearLayout llTop=(LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.car_center_topview,null);
+        mHeaderAndFooterWrapper.addHeaderView(llTop);
+        recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
+        recyclerView.setAdapter(mHeaderAndFooterWrapper);
+        baseRecyclerViewAdapter.setOnItemClickListener(this);
+        resetFilterView(llTop);
     }
+
+    public class FilterCondition{
+        int type;
+        String text;
+        String tag;
+        int index;
+    }
+
+    private ArrayList<FilterCondition> getFilterConditions(){
+        ArrayList<FilterCondition> list=new ArrayList<>();
+        FilterCondition condition;
+        if(!min_price.equals("0") || !TextUtils.isEmpty(max_price)){
+            condition=new FilterCondition();
+            condition.type=1;
+            if(TextUtils.isEmpty(max_price)) {
+                condition.text = min_price + "万以上";
+            }else{
+                condition.text = min_price + "-"+max_price+"万";
+            }
+            list.add(condition);
+        }
+        if(!TextUtils.isEmpty(new_or_old)){
+            condition=new FilterCondition();
+            condition.type=2;
+            condition.text=new_or_old.equals("1")?"新车":"二手车";
+            list.add(condition);
+        }
+
+        if(!TextUtils.isEmpty(car_source)){
+            condition=new FilterCondition();
+            condition.type=3;
+            condition.text=car_source.equals("1")?"个人":"商家";
+            list.add(condition);
+        }
+
+        if(!car_levels.isEmpty()){
+            for(String str:car_levels) {
+                condition = new FilterCondition();
+                condition.type = 4;
+                String[] strs=str.split("_");
+                condition.tag=strs[0];
+                condition.text = strs[1];
+                list.add(condition);
+            }
+        }
+
+        if(!seat_nums.isEmpty()){
+            for(String str:seat_nums) {
+                condition = new FilterCondition();
+                condition.type = 5;
+                String[] strs=str.split("_");
+                condition.tag=strs[0];
+                condition.text = strs[1];
+                list.add(condition);
+            }
+        }
+
+        if(!TextUtils.isEmpty(board_add)){
+            condition=new FilterCondition();
+            condition.type=6;
+            condition.text=board_add.equals("1")?"本地牌照":"外地牌照";
+            list.add(condition);
+        }
+
+        if(!car_colors.isEmpty()){
+            for(String str:car_colors) {
+                condition = new FilterCondition();
+                condition.type = 7;
+                String[] strs=str.split("_");
+                condition.tag=strs[0];
+                condition.text = strs[1];
+                list.add(condition);
+            }
+        }
+
+        if(!min_mileage.equals("0") || !TextUtils.isEmpty(max_mileage)){
+            condition=new FilterCondition();
+            condition.type=8;
+            if(TextUtils.isEmpty(max_mileage)) {
+                condition.text = min_mileage + "万公里以上";
+            }else{
+                condition.text = min_mileage + "-"+max_mileage+"万公里";
+            }
+            list.add(condition);
+        }
+
+        if(!min_board_time.equals("0") || !TextUtils.isEmpty(max_board_time)){
+            condition=new FilterCondition();
+            condition.type=9;
+            if(TextUtils.isEmpty(max_board_time)) {
+                condition.text = min_board_time + "年以上";
+            }else{
+                condition.text = min_board_time + "-"+max_board_time+"年";
+            }
+            list.add(condition);
+        }
+
+        if(!min_pailiang.equals("0") || !TextUtils.isEmpty(max_pailiang)){
+            condition=new FilterCondition();
+            condition.type=10;
+            if(TextUtils.isEmpty(max_pailiang)) {
+                condition.text = min_pailiang + "L以上";
+            }else{
+                condition.text = min_pailiang + "-"+max_pailiang+"L";
+            }
+            list.add(condition);
+        }
+
+        if(!car_fueltypes.isEmpty()){
+            for(String str:car_fueltypes) {
+                condition = new FilterCondition();
+                condition.type = 11;
+                String[] strs=str.split("_");
+                condition.tag=strs[0];
+                condition.text = strs[1];
+                list.add(condition);
+            }
+        }
+
+        if(!TextUtils.isEmpty(forward)){
+            condition=new FilterCondition();
+            condition.type=12;
+            condition.text=board_add.equals("1")?"手动":"自动";
+            list.add(condition);
+        }
+
+        if(!envirstandards.isEmpty()){
+            for(String str:envirstandards) {
+                condition = new FilterCondition();
+                condition.type = 13;
+                String[] strs=str.split("_");
+                condition.tag=strs[0];
+                condition.text = strs[1];
+                list.add(condition);
+            }
+        }
+
+        Iterator<TreeMap.Entry<Integer, ArrayList<String>>> entries = extra_infos.entrySet().iterator();
+        while (entries.hasNext()) {
+            TreeMap.Entry<Integer, ArrayList<String>> entry = entries.next();
+            int key=entry.getKey();
+            ArrayList<String> infos = entry.getValue();
+            if (infos != null && !infos.isEmpty()) {
+                for(String str:infos) {
+                    condition = new FilterCondition();
+                    condition.type = 14;
+                    String[] strs=str.split("_");
+                    condition.tag=strs[0];
+                    condition.text = strs[1];
+                    condition.index=key;
+                    list.add(condition);
+                }
+            }
+        }
+
+        if(list.size()>0) {
+            condition = new FilterCondition();
+            condition.type = -1;
+            condition.text = "重置";
+            list.add(condition);
+        }
+        return list;
+    }
+
+    private void onFilterCondition(View view){
+        FilterCondition condition=(FilterCondition) view.getTag(R.id.tag);
+        switch (condition.type){
+            case -1:
+                price_id=-1;
+                min_price="0";
+                max_price="";
+                new_or_old = "";
+                car_source = "";
+                car_levels.clear();
+                seat_nums.clear();
+                car_colors.clear();
+                car_fueltypes.clear();
+                envirstandards.clear();
+                board_add = "";
+                forward = "";
+                min_mileage="0";
+                max_mileage="";
+                min_board_time="0";
+                max_board_time="";
+                min_pailiang = "0";
+                max_pailiang = "";
+                break;
+            case 1:
+                price_id=-1;
+                min_price="0";
+                max_price="";
+                break;
+            case 2:
+                new_or_old="";
+                break;
+            case 3:
+                car_source="";
+                break;
+            case 4:
+                car_levels.remove(condition.tag+"_"+condition.text);
+                break;
+            case 5:
+                seat_nums.remove(condition.tag+"_"+condition.text);
+                break;
+            case 6:
+                board_add="";
+                break;
+            case 7:
+                car_colors.remove(condition.tag+"_"+condition.text);
+                break;
+            case 8:
+                min_mileage="0";
+                max_mileage="";
+                break;
+            case 9:
+                min_board_time="0";
+                max_board_time="";
+                break;
+            case 10:
+                min_pailiang = "0";
+                max_pailiang = "";
+                break;
+            case 11:
+                car_fueltypes.remove(condition.tag+"_"+condition.text);
+                break;
+            case 12:
+                forward = "";
+                break;
+            case 13:
+                envirstandards.remove(condition.tag+"_"+condition.text);
+                break;
+            case 14:
+                ArrayList<String> list=extra_infos.get(condition.index);
+                list.remove(condition.tag+"_"+condition.text);
+                break;
+
+        }
+        getCarListDataFromNet(2);
+    }
+
+    private void resetFilterView(LinearLayout linearLayout){
+        if(mHeaderAndFooterWrapper==null){
+            return;
+        }
+        linearLayout.removeAllViews();
+
+        ArrayList<FilterCondition> list=getFilterConditions();
+        int itemCount=list.size();
+            LinearLayout itemLayout;
+            LinearLayout llName1, llName2, llName3;
+            int index = 0;
+            int charCount;
+            for (int j = 0; j < Integer.MAX_VALUE; ++j) {
+                charCount = 0;
+                itemLayout = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.item_filter_conditicion, null);
+                linearLayout.addView(itemLayout);
+                llName1 = (LinearLayout) itemLayout.getChildAt(0);
+                llName2 = (LinearLayout) itemLayout.getChildAt(1);
+                llName3 = (LinearLayout) itemLayout.getChildAt(2);
+                if (index < itemCount) {
+                    charCount += list.get(index).text.length();
+                    ((TextView)llName1.getChildAt(0)).setText(list.get(index).text);
+                    llName1.setTag(R.id.tag, list.get(index));
+                    llName1.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            onFilterCondition(view);
+                        }
+                    });
+                    if(index==itemCount-1){
+                        ((ImageView)llName1.getChildAt(1)).setImageResource(R.drawable.chongzhi);
+                    }
+                } else {
+                    llName1.setVisibility(View.GONE);
+                    llName2.setVisibility(View.GONE);
+                    llName3.setVisibility(View.GONE);
+                    break;
+                }
+                ++index;
+                if (index < itemCount) {
+                    charCount += list.get(index).text.length();
+                    ((TextView)llName2.getChildAt(0)).setText(list.get(index).text);
+                    llName2.setTag(R.id.tag, list.get(index));
+                    llName2.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            onFilterCondition(view);
+                        }
+                    });
+                    if(index==itemCount-1){
+                        ((ImageView)llName2.getChildAt(1)).setImageResource(R.drawable.chongzhi);
+                    }
+                } else {
+                    llName2.setVisibility(View.GONE);
+                    llName3.setVisibility(View.GONE);
+                    break;
+                }
+                ++index;
+                if (index < itemCount) {
+                    if (charCount + list.get(index).text.length() > 16) {
+                        llName3.setVisibility(View.GONE);
+                        continue;
+                    }
+                    ((TextView)llName3.getChildAt(0)).setText(list.get(index).text);
+                    if(index==itemCount-1){
+                        ((ImageView)llName3.getChildAt(1)).setImageResource(R.drawable.chongzhi);
+                    }
+                    llName3.setTag(R.id.tag, list.get(index));
+                    llName3.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            onFilterCondition(view);
+                        }
+                    });
+                } else {
+                    llName3.setVisibility(View.GONE);
+                    break;
+                }
+                ++index;
+            }
+    }
+
+
 
     private ArrayList<CarInfoBean> getCarListData(JSONObject jsonObjectData) {
         ArrayList<CarInfoBean> list = null;

@@ -583,7 +583,7 @@ public class RangeSeekBar<T extends Number> extends ImageView {
 
         }
         if (!TextUtils.isEmpty(mMaxLastText)) {
-            if (normalizedMaxValue >= mSpaceValue) {
+            if (normalizedMaxValue > mSpaceValue) {
                 maxText = mMaxLastText;
             }
         }
