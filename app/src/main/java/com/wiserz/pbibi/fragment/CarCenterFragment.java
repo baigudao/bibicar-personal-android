@@ -990,7 +990,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                 @Override
                 public void onClick(View v) {
                     int tag = (int) itemView1.getTag();
-                    ViewGroup viewGroup = (ViewGroup) (((ViewGroup) v.getParent().getParent())).getChildAt(1);
+                    ViewGroup viewGroup = (ViewGroup) (((ViewGroup) v.getParent())).getChildAt(1);
                     int childCount = viewGroup.getChildCount();
                     if (tag == 1) {
                         itemView1.setTag(0);
@@ -1002,7 +1002,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                     } else {
                         itemView1.setTag(1);
                         for (int i = 1; i < childCount; ++i) {
-                            viewGroup.getChildAt(i).setVisibility(View.GONE);
+                            viewGroup.getChildAt(i).setVisibility(View.VISIBLE);
                         }
                         ((ImageView) ((ViewGroup) v).getChildAt(1)).setImageResource(R.drawable.v2_ewer3x);
                         ((TextView) ((ViewGroup) v).getChildAt(2)).setTextColor(getResources().getColor(R.color.main_color));
