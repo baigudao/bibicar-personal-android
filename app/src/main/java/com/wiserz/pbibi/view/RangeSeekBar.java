@@ -39,6 +39,7 @@ import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.util.CommonUtil;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 
 /**
  * Widget that lets users select a minimum and maximum value on a given numerical range.
@@ -82,6 +83,8 @@ public class RangeSeekBar<T extends Number> extends ImageView {
     private Thumb pressedThumb = null;
     private boolean notifyWhileDragging = false;
     private OnRangeSeekBarChangeListener<T> listener;
+
+    private ArrayList<String> numberItemStr;
     /**
      * Default color of a {@link RangeSeekBar}, #FF33B5E5. This is also known as "Ice Cream Sandwich" blue.
      */
@@ -180,9 +183,9 @@ public class RangeSeekBar<T extends Number> extends ImageView {
 
         float lineHeight = CommonUtil.dip2px(context, LINE_HEIGHT_IN_DP);
         mRect = new RectF(padding,
-                mTextOffset + thumbHalfHeight - lineHeight / 2,
+                thumbHalfHeight - lineHeight / 2,
                 getWidth() - padding,
-                mTextOffset + thumbHalfHeight + lineHeight / 2);
+                thumbHalfHeight + lineHeight / 2);
 
         // make RangeSeekBar focusable. This solves focus handling issues in case EditText widgets are being used along with the RangeSeekBar within ScollViews.
         setFocusable(true);
@@ -206,6 +209,10 @@ public class RangeSeekBar<T extends Number> extends ImageView {
         this.absoluteMaxValue = maxValue;
         setValuePrimAndNumberType();
         invalidate();
+    }
+
+    public void setNumberItemStr(ArrayList<String> list) {
+        numberItemStr = list;
     }
 
     @SuppressWarnings("unchecked")
@@ -501,14 +508,6 @@ public class RangeSeekBar<T extends Number> extends ImageView {
         paint.setColor(BACKGROUND_COLOR);
         paint.setAntiAlias(true);
 
-        // draw min and max labels
-//        String minLabel = "Min";
-//        String maxLabel = "Max";
-//        float minMaxLabelSize = Math.max(paint.measureText(minLabel), paint.measureText(maxLabel));
-//        float minMaxHeight = mTextOffset + thumbHalfHeight + mTextSize / 3;
-//        canvas.drawText(minLabel, 0, minMaxHeight, paint);
-//        canvas.drawText(maxLabel, getWidth() - minMaxLabelSize, minMaxHeight, paint);
-//        padding = INITIAL_PADDING + minMaxLabelSize + thumbHalfWidth;
 
         padding = INITIAL_PADDING + thumbHalfWidth + CommonUtil.dip2px(getContext(), 5);
         // draw seek bar background line
@@ -519,11 +518,6 @@ public class RangeSeekBar<T extends Number> extends ImageView {
         boolean selectedValuesAreDefault = (getSelectedMinValue().equals(getAbsoluteMinValue()) &&
                 getSelectedMaxValue().equals(getAbsoluteMaxValue()));
 
-//        int colorToUseForButtonsAndHighlightedLine = selectedValuesAreDefault ?
-//                Color.GRAY :    // default values
-//                DEFAULT_COLOR; //non default, filter is active
-
-        // draw seek bar active range line
         mRect.left = normalizedToScreen(normalizedMinValue);
         mRect.right = normalizedToScreen(normalizedMaxValue);
 
@@ -540,57 +534,59 @@ public class RangeSeekBar<T extends Number> extends ImageView {
         drawThumb(normalizedToScreen(normalizedMaxValue), Thumb.MAX.equals(pressedThumb), canvas,
                 selectedValuesAreDefault);
 
-        // draw the text if sliders have moved from default edges
-        // if (!selectedValuesAreDefault) {
+
         paint.setTextSize(mTextSize);
         paint.setColor(TEXT_COLOR);
         // give text a bit more space here so it doesn't get cut off
         int offset = CommonUtil.dip2px(getContext(), TEXT_LATERAL_PADDING_IN_DP);
+//
+//        String minText = String.valueOf(getSelectedMinValue());
+//        String maxText = "";//(Integer)getSelectedMaxValue() > (Integer) mValue ? mMaxLastText : String.valueOf(getSelectedMaxValue());
+//        if (!mSingleThumb) {
+//            minText = String.valueOf(getSelectedMinValue());
+//            maxText = String.valueOf(getSelectedMaxValue());
+//        } else {
+//            minText = String.valueOf(getSelectedMinValue());
+//            maxText = String.valueOf(getSelectedMaxValue());
+//        }
+//
+//
+//        if (!TextUtils.isEmpty(mValueUnit)) {
+//            minText = String.format(mValueUnit, minText);
+//            maxText = String.format(mValueUnit, maxText);
+//        }
+//        float minTextWidth = paint.measureText(minText) + offset;
+//        float maxTextWidth = paint.measureText(maxText) + offset;
 
-        String minText = String.valueOf(getSelectedMinValue());
-        String maxText = "";//(Integer)getSelectedMaxValue() > (Integer) mValue ? mMaxLastText : String.valueOf(getSelectedMaxValue());
-        if (!mSingleThumb) {
-//            int minValue = (Integer) getSelectedMinValue();
-//            int maxValue = (Integer) getSelectedMaxValue();
-//            if (maxValue - minValue < 4) {
-//                if (minValue <= ((Integer) getAbsoluteMinValue() + 4)) {
-//                    maxValue = minValue + 4;
-//                } else {
-//                    minValue = maxValue - 4;
-//                }
+//        if (!mSingleThumb) {
+//
+//            canvas.drawText(minText,
+//                    normalizedToScreen(absoluteMinValue.doubleValue()) - minTextWidth * 0.5f,
+//                    mDistanceToTop + mTextSize + thumbImage.getHeight(),
+//                    paint);
+//
+//        }
+//        if (!TextUtils.isEmpty(mMaxLastText)) {
+//            if (normalizedMaxValue > mSpaceValue) {
+//                maxText = mMaxLastText;
 //            }
-            minText = String.valueOf(getSelectedMinValue());
-            maxText = String.valueOf(getSelectedMaxValue());
-        } else {
-            minText = String.valueOf(getSelectedMinValue());
-            maxText = String.valueOf(getSelectedMaxValue());
-        }
+//        }
+//        canvas.drawText(maxText,
+//                normalizedToScreen(1) - maxTextWidth * 0.5f,
+//                mDistanceToTop + mTextSize + thumbImage.getHeight(),
+//                paint);
 
-
-        if (!TextUtils.isEmpty(mValueUnit)) {
-            minText = String.format(mValueUnit, minText);
-            maxText = String.format(mValueUnit, maxText);
-        }
-        float minTextWidth = paint.measureText(minText) + offset;
-        float maxTextWidth = paint.measureText(maxText) + offset;
-
-        if (!mSingleThumb) {
-
-            canvas.drawText(minText,
-                    normalizedToScreen(absoluteMinValue.doubleValue()) - minTextWidth * 0.5f,
-                    mDistanceToTop + mTextSize,
-                    paint);
-
-        }
-        if (!TextUtils.isEmpty(mMaxLastText)) {
-            if (normalizedMaxValue > mSpaceValue) {
-                maxText = mMaxLastText;
+        if (numberItemStr != null && numberItemStr.size() > 1) {
+            int size = numberItemStr.size();
+            float textWidth;
+            for (int i = 0; i < size; ++i) {
+                textWidth = paint.measureText(numberItemStr.get(i)) + offset;
+                canvas.drawText(numberItemStr.get(i),
+                        normalizedToScreen(1.0 * i / (size - 1)) - textWidth * 0.5f,
+                        mDistanceToTop + mTextSize + thumbImage.getHeight(),
+                        paint);
             }
         }
-        canvas.drawText(maxText,
-                normalizedToScreen(1) - maxTextWidth * 0.5f,
-                mDistanceToTop + mTextSize,
-                paint);
     }
 
     /**
@@ -632,7 +628,7 @@ public class RangeSeekBar<T extends Number> extends ImageView {
         }
 
         canvas.drawBitmap(buttonToDraw, screenCoord - thumbHalfWidth,
-                mTextOffset,
+                0,
                 paint);
     }
 

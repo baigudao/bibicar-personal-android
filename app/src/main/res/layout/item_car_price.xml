@@ -173,6 +173,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="25dp"
+            android:paddingRight="15dp"
             android:orientation="horizontal">
 
             <TextView
@@ -187,7 +188,20 @@
                 android:layout_height="wrap_content"
                 android:text="/万"
                 android:textColor="@color/second_text_color"
-                android:textSize="15dp" />
+                android:textSize="15sp" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:id="@+id/tvPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textColor="@color/main_color"
+                android:text="不限"/>
 
         </LinearLayout>
 
@@ -196,8 +210,8 @@
             android:id="@+id/priceBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="40dp"
-            android:layout_marginRight="40dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             android:layout_marginTop="30dp"
             app:absoluteMaxValue="250"
             app:absoluteMinValue="0"  />

@@ -46,9 +46,10 @@
         android:textSize="16sp"/>
 
     <TextView
+        android:id="@+id/tv_phone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="客服热线: 0755-22223323"
+        android:text="客服热线: 0755-22233323"
         android:textColor="@color/warning_color"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="40dp"

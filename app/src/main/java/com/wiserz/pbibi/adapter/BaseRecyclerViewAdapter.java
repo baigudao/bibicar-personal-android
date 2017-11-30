@@ -17,6 +17,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -1244,6 +1245,50 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
             if (EmptyUtils.isNotEmpty(feedBeanArrayList)) {
                 final FeedBean feedBean = feedBeanArrayList.get(position);
 
+                if (feedBean.getLike_list() == null || feedBean.getLike_list().isEmpty()) {
+                    holder.view.setVisibility(View.GONE);
+                } else {
+                    holder.view.setVisibility(View.VISIBLE);
+                    holder.tv_item8.setText(String.valueOf(feedBean.getLike_list().size()));
+                    BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, feedBean.getLike_list(), LIKE_LIST_DATA_TYPE);
+                    holder.recyclerView2.setAdapter(baseRecyclerViewAdapter);
+                    holder.recyclerView2.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
+                    baseRecyclerViewAdapter.setOnItemClickListener(new OnItemClickListener() {
+                        @Override
+                        public void onItemClick(Object data, int position) {
+                            if (data.getClass().getSimpleName().equals("LikeListBean")) {
+                                if (!CommonUtil.isHadLogin()) {
+                                    ((BaseActivity) mContext).gotoPager(RegisterAndLoginActivity.class, null);
+                                    return;
+                                }
+                                LikeListBean likeListBean = (LikeListBean) data;
+                                if (EmptyUtils.isNotEmpty(likeListBean)) {
+                                    Bundle bundle = new Bundle();
+                                    bundle.putInt(Constant.USER_ID, likeListBean.getUser_id());
+                                    ((BaseActivity) mContext).gotoPager(OtherHomePageFragment.class, bundle);
+                                }
+                            }
+                        }
+                    });
+                }
+
+                if (feedBean.getComment_list() == null || feedBean.getComment_list().isEmpty()) {
+                    holder.view2.setVisibility(View.GONE);
+                } else {
+                    holder.view2.setVisibility(View.VISIBLE);
+                    holder.tv_item9.setText("查看全部" + feedBean.getComment_list().size() + "条评论");
+                    holder.tv_item10.setText(feedBean.getComment_list().get(0).getFrom_user_info().getProfile().getNickname()+": ");
+                    holder.tv_item11.setText(feedBean.getComment_list().get(0).getContent());
+                    if (feedBean.getComment_list().size() == 1) {
+                        ((ViewGroup) holder.view2).getChildAt(2).setVisibility(View.GONE);
+                    } else {
+                        ((ViewGroup) holder.view2).getChildAt(2).setVisibility(View.VISIBLE);
+                        holder.tv_item12.setText(feedBean.getComment_list().get(1).getFrom_user_info().getProfile().getNickname()+": ");
+                        holder.tv_item13.setText(feedBean.getComment_list().get(1).getContent());
+                    }
+                }
+
+
                 if (EmptyUtils.isNotEmpty(feedBean)) {
                     if (EmptyUtils.isNotEmpty(feedBean.getPost_user_info()) && EmptyUtils.isNotEmpty(feedBean.getPost_user_info().getProfile())) {
                         Glide.with(mContext)
@@ -2122,9 +2167,17 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
         private TextView tv_item7;
         private TextView tv_item8;
 
+        private TextView tv_item9;
+        private TextView tv_item10;
+        private TextView tv_item11;
+        private TextView tv_item12;
+        private TextView tv_item13;
+
         private CircleColorView circleColorView;
 
-        private RecyclerView recyclerView;
+        private RecyclerView recyclerView, recyclerView2;
+
+        private View view, view2;
 
         private LinearLayout linearLayout1;
         private LinearLayout linearLayout2;
@@ -2350,7 +2403,7 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                     public void onClick(View v) {
                         if (mOnItemClickListener != null) {
                             int position = getLayoutPosition();
-                            mOnItemClickListener.onItemClick(mList.get(position-1), position-1);
+                            mOnItemClickListener.onItemClick(mList.get(position - 1), position - 1);
                         }
                     }
                 });
@@ -2577,7 +2630,20 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                 linearLayout2 = (LinearLayout) itemView.findViewById(R.id.ll_image_2);
                 linearLayout3 = (LinearLayout) itemView.findViewById(R.id.ll_image_4);
 
+                view = itemView.findViewById(R.id.rl_zan_user);
+                view2 = itemView.findViewById(R.id.ll_comment);
+                tv_item8 = (TextView) itemView.findViewById(R.id.tv_zan_num);
+
+                tv_item9 = (TextView) itemView.findViewById(R.id.tv_comment_num);
+                tv_item10 = (TextView) itemView.findViewById(R.id.tv_name1);
+                tv_item11 = (TextView) itemView.findViewById(R.id.tv_comment1);
+                tv_item12 = (TextView) itemView.findViewById(R.id.tv_name2);
+                tv_item13 = (TextView) itemView.findViewById(R.id.tv_comment2);
+
+
                 recyclerView = (RecyclerView) itemView.findViewById(R.id.recyclerView);
+
+                recyclerView2 = (RecyclerView) itemView.findViewById(R.id.zan_recyclerView);
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override

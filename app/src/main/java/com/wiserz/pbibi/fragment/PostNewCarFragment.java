@@ -3,18 +3,21 @@ package com.wiserz.pbibi.fragment;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.res.Resources;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.EmptyUtils;
@@ -68,12 +71,14 @@ public class PostNewCarFragment extends BaseFragment {
 
     private int mColor;
 
+    private String car_level = "";
+
     private ArrayList<File> mUploadPhotos;
     private String upload_token;
     private ArrayList<CarConfiguration> mCarConfigurationList;
     private ArrayList<String> mSelectedConfig = new ArrayList<>();
 
-    ArrayList<View> viewList=new ArrayList<>();
+    ArrayList<View> viewList = new ArrayList<>();
 
     @Override
     protected int getLayoutId() {
@@ -87,10 +92,10 @@ public class PostNewCarFragment extends BaseFragment {
         view.findViewById(R.id.topLine).setVisibility(View.GONE);
         view.findViewById(R.id.btn_post_new_car).setOnClickListener(this);
 
-        ViewPager viewPager=(ViewPager) view.findViewById(R.id.customViewPager);
-        LayoutInflater inflater=LayoutInflater.from(getActivity());
-        viewList.add(inflater.inflate(R.layout.item_post_new_car_basic_msg,null));
-        viewList.add(inflater.inflate(R.layout.item_post_car_detail_msg,null));
+        ViewPager viewPager = (ViewPager) view.findViewById(R.id.customViewPager);
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        viewList.add(inflater.inflate(R.layout.item_post_new_car_basic_msg, null));
+        viewList.add(inflater.inflate(R.layout.item_post_car_detail_msg, null));
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -100,9 +105,9 @@ public class PostNewCarFragment extends BaseFragment {
 
             @Override
             public void onPageSelected(int position) {
-                if(position==0){
+                if (position == 0) {
                     getView().findViewById(R.id.tvBasicMsg).performClick();
-                }else{
+                } else {
                     getView().findViewById(R.id.tvDetailMsg).performClick();
                 }
             }
@@ -124,7 +129,7 @@ public class PostNewCarFragment extends BaseFragment {
             @Override
             public boolean isViewFromObject(View arg0, Object arg1) {
                 // TODO Auto-generated method stub
-                return arg0==arg1;
+                return arg0 == arg1;
             }
 
             @Override
@@ -141,9 +146,9 @@ public class PostNewCarFragment extends BaseFragment {
         });
 
 
-
         viewList.get(0).findViewById(R.id.rl_choose_car_color).setOnClickListener(this);
         viewList.get(0).findViewById(R.id.rl_choose_car_type).setOnClickListener(this);
+        viewList.get(0).findViewById(R.id.rl_choose_car_level).setOnClickListener(this);
         view.findViewById(R.id.tvCloseWarning).setOnClickListener(this);
         view.findViewById(R.id.tvDetailMsg).setOnClickListener(this);
         view.findViewById(R.id.tvBasicMsg).setOnClickListener(this);
@@ -161,9 +166,7 @@ public class PostNewCarFragment extends BaseFragment {
 
         getTokenFromNet();
         getCarExtraInfo();
-//        gotoPager(SelectPhotoFragment.class, null, true);
 
- //       resetCarPhotosView();
     }
 
     private ArrayList<File> getUploadPhotos() {
@@ -263,17 +266,17 @@ public class PostNewCarFragment extends BaseFragment {
 //            int row = itemCount % rowCount == 0 ? itemCount / rowCount : itemCount / rowCount + 1;
             LinearLayout itemLayout;
             TextView tvName1, tvName2, tvName3;
-            int index=0;
+            int index = 0;
             int charCount;
             for (int j = 0; j < Integer.MAX_VALUE; ++j) {
-                charCount=0;
+                charCount = 0;
                 itemLayout = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.item_configuration_detail, null);
                 ((LinearLayout) layout.findViewById(R.id.llDetails)).addView(itemLayout);
                 tvName1 = ((TextView) itemLayout.findViewById(R.id.tvName1));
                 tvName2 = ((TextView) itemLayout.findViewById(R.id.tvName2));
                 tvName3 = ((TextView) itemLayout.findViewById(R.id.tvName3));
                 if (index < itemCount) {
-                    charCount+=itemList.get(index).getName().length();
+                    charCount += itemList.get(index).getName().length();
                     tvName1.setText(itemList.get(index).getName());
                     tvName1.setTag(R.id.tag, itemList.get(index).getId());
                     tvName1.setOnClickListener(new View.OnClickListener() {
@@ -299,7 +302,7 @@ public class PostNewCarFragment extends BaseFragment {
                 }
                 ++index;
                 if (index < itemCount) {
-                    charCount+=itemList.get(index).getName().length();
+                    charCount += itemList.get(index).getName().length();
                     tvName2.setText(itemList.get(index).getName());
                     tvName2.setTag(R.id.tag, itemList.get(index).getId());
                     tvName2.setOnClickListener(new View.OnClickListener() {
@@ -324,7 +327,7 @@ public class PostNewCarFragment extends BaseFragment {
                 }
                 ++index;
                 if (index < itemCount) {
-                    if(charCount+itemList.get(index).getName().length()>18){
+                    if (charCount + itemList.get(index).getName().length() > 18) {
                         tvName3.setVisibility(View.GONE);
                         continue;
                     }
@@ -396,8 +399,57 @@ public class PostNewCarFragment extends BaseFragment {
             case R.id.rl_choose_car_color:
                 gotoPager(SelectCarColorFragment.class, null);
                 break;
+            case R.id.rl_choose_car_level:
+                carSelectPopupWindow(LayoutInflater.from(getActivity()).inflate(R.layout.layout_select_car_level, null));
+                break;
             default:
                 break;
+        }
+    }
+
+    private void carSelectPopupWindow(final View view) {
+        final PopupWindow popupWindow = new PopupWindow(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        //外部是否可以点击
+        popupWindow.setBackgroundDrawable(new BitmapDrawable());
+        popupWindow.setOutsideTouchable(true);
+
+        popupWindow.showAsDropDown(getView().findViewById(R.id.topView));
+        popupWindow.setAnimationStyle(R.style.PopupWindowAnimation2);
+
+        //对返回按键的捕获并处理
+        popupWindow.setFocusable(true);
+        view.setFocusableInTouchMode(true);
+        view.setFocusable(true);
+        view.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                if (i == KeyEvent.KEYCODE_BACK) {
+                    popupWindow.dismiss();
+                }
+                return false;
+            }
+        });
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+            }
+        });
+        LinearLayout llCarLevel = (LinearLayout) view.findViewById(R.id.llCarLevel);
+        int childCount = llCarLevel.getChildCount();
+        for (int i = 0; i < childCount; ++i) {
+            ViewGroup viewGroup = (ViewGroup) llCarLevel.getChildAt(i);
+            for (int j = 0; j < viewGroup.getChildCount(); ++j) {
+                viewGroup.getChildAt(j).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        car_level=(String)v.getTag();
+                        ((TextView)getView().findViewById(R.id.tv_car_level)).setTextColor(getResources().getColor(R.color.main_text_color));
+                        ((TextView)getView().findViewById(R.id.tv_car_level)).setText(((TextView)((ViewGroup) v).getChildAt(1)).getText().toString());
+                        popupWindow.dismiss();
+                    }
+                });
+            }
         }
     }
 
@@ -548,7 +600,7 @@ public class PostNewCarFragment extends BaseFragment {
         if (color >= 0) {
             Resources res = getResources();
             String text = res.getString(res.getIdentifier("car_color_" + color, "string", getActivity().getPackageName()));
-            tvCarColor.setText(text+">");
+            tvCarColor.setText(text + ">");
             tvCarColor.setTextColor(getResources().getColor(R.color.main_text_color));
         }
     }
@@ -597,6 +649,11 @@ public class PostNewCarFragment extends BaseFragment {
 
         if (EmptyUtils.isEmpty(model_id) || model_id == 0) {
             ToastUtils.showShort("请选择车型");
+            return;
+        }
+
+        if (TextUtils.isEmpty(car_level)) {
+            ToastUtils.showShort("请选择车辆级别");
             return;
         }
 
@@ -649,7 +706,6 @@ public class PostNewCarFragment extends BaseFragment {
                     uploadManager.put(photoPath, UUID.randomUUID().toString() + "_" + String.valueOf(file_type), upload_token, new UpCompletionHandler() {
                         @Override
                         public void complete(String key, ResponseInfo info, JSONObject response) {
-                            Log.e("aaaaaaaaa1", "response: " + response.toString());
                             if (info.isOK()) {
                                 //上传成功
                                 int status = response.optInt("status");
@@ -703,7 +759,7 @@ public class PostNewCarFragment extends BaseFragment {
                     .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
                     .addParams(Constant.FILES_TYPE, mPhotoTypes.toString())
                     .addParams(Constant.FILES_ID, mPhotoFile.toString())
-                    .addParams(Constant.CAR_COLOR, mColor<0?"0":String.valueOf(mColor))
+                    .addParams(Constant.CAR_COLOR, mColor < 0 ? "0" : String.valueOf(mColor))
                     .addParams(Constant.CAR_INTRO, profile)
                     .addParams(Constant.PRICE, car_price)
                     .addParams(Constant.CONTACT_NAME, name)
@@ -728,6 +784,7 @@ public class PostNewCarFragment extends BaseFragment {
                     .addParams(Constant.BOARD_ADDRESS, "")
                     .addParams(Constant.CAR_INFO_IDS, carInfoIds)
                     .addParams(Constant.CAR_ID, "")
+                    .addParams(Constant.CAR_LEVEL, car_level)
                     .build()
                     .execute(new StringCallback() {
                         @Override
@@ -745,10 +802,10 @@ public class PostNewCarFragment extends BaseFragment {
                                 if (status == 1) {
                                     String text;
                                     LoginBean.UserInfoBean userInfoBean = DataManager.getInstance().getUserInfo();
-                                    if (userInfoBean != null && userInfoBean.getProfile().getType()==2) {
-                                        text="等待审核中";
-                                    }else{
-                                        text="发布成功";
+                                    if (userInfoBean != null && userInfoBean.getProfile().getType() == 2) {
+                                        text = "等待审核中";
+                                    } else {
+                                        text = "发布成功";
                                     }
                                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                                     AlertDialog alertDialog = builder.setMessage(text)

@@ -2,6 +2,7 @@ package com.wiserz.pbibi.fragment;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 
 import com.blankj.utilcode.util.EmptyUtils;
@@ -141,6 +142,7 @@ public class PeccancyHistoryFragment extends BaseFragment implements BaseRecycle
     }
 
     private void handlerData(JSONObject jsonObjectData) {
+        boolean isHadData=false;
         if (EmptyUtils.isNotEmpty(jsonObjectData)) {
             JSONArray jsonArray = jsonObjectData.optJSONArray("list");
             if (EmptyUtils.isNotEmpty(jsonArray) && jsonArray.length() != 0) {
@@ -156,12 +158,19 @@ public class PeccancyHistoryFragment extends BaseFragment implements BaseRecycle
                 }
 
                 if (EmptyUtils.isNotEmpty(peccancyHistoryBeanArrayList) && peccancyHistoryBeanArrayList.size() != 0) {
+                    isHadData=true;
+                    getView().findViewById(R.id.llNoData).setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.VISIBLE);
                     baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, peccancyHistoryBeanArrayList, HPHM_DATA_TYPE);
                     recyclerView.setAdapter(baseRecyclerViewAdapter);
                     recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
                     baseRecyclerViewAdapter.setOnItemClickListener(this);
                 }
             }
+        }
+        if(!isHadData){
+            getView().findViewById(R.id.llNoData).setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
         }
     }
 

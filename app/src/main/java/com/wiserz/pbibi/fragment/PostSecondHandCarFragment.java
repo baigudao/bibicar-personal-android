@@ -6,11 +6,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +20,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.EmptyUtils;
@@ -92,6 +95,8 @@ public class PostSecondHandCarFragment extends BaseFragment {
     private int mColor;
     private int brand_id;
     private int series_id;
+
+    private String car_level = "";
 
     private ArrayList<ProvinceBean> mProvinceBeenList;
 
@@ -230,6 +235,7 @@ public class PostSecondHandCarFragment extends BaseFragment {
         });
 
         view.findViewById(R.id.btn_post_second_car).setOnClickListener(this);
+        viewList.get(0).findViewById(R.id.rl_choose_car_level).setOnClickListener(this);
         viewList.get(0).findViewById(R.id.rl_choose_car_color).setOnClickListener(this);
         viewList.get(0).findViewById(R.id.rl_first_post_license).setOnClickListener(this);
         viewList.get(0).findViewById(R.id.rl_choose_car_type).setOnClickListener(this);
@@ -651,8 +657,57 @@ public class PostSecondHandCarFragment extends BaseFragment {
                 DataManager.getInstance().setObject(-1);
                 gotoPager(SelectPhotoFragment.class, null, true);
                 break;
+            case R.id.rl_choose_car_level:
+                carSelectPopupWindow(LayoutInflater.from(getActivity()).inflate(R.layout.layout_select_car_level,null));
+                break;
             default:
                 break;
+        }
+    }
+
+    private void carSelectPopupWindow(final View view) {
+        final PopupWindow popupWindow = new PopupWindow(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        //外部是否可以点击
+        popupWindow.setBackgroundDrawable(new BitmapDrawable());
+        popupWindow.setOutsideTouchable(true);
+
+        popupWindow.showAsDropDown(getView().findViewById(R.id.topView));
+        popupWindow.setAnimationStyle(R.style.PopupWindowAnimation2);
+
+        //对返回按键的捕获并处理
+        popupWindow.setFocusable(true);
+        view.setFocusableInTouchMode(true);
+        view.setFocusable(true);
+        view.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                if (i == KeyEvent.KEYCODE_BACK) {
+                    popupWindow.dismiss();
+                }
+                return false;
+            }
+        });
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+            }
+        });
+        LinearLayout llCarLevel = (LinearLayout) view.findViewById(R.id.llCarLevel);
+        int childCount = llCarLevel.getChildCount();
+        for (int i = 0; i < childCount; ++i) {
+            ViewGroup viewGroup = (ViewGroup) llCarLevel.getChildAt(i);
+            for (int j = 0; j < viewGroup.getChildCount(); ++j) {
+                viewGroup.getChildAt(j).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        car_level=(String)v.getTag();
+                        ((TextView)getView().findViewById(R.id.tv_car_level)).setTextColor(getResources().getColor(R.color.main_text_color));
+                        ((TextView)getView().findViewById(R.id.tv_car_level)).setText(((TextView)((ViewGroup) v).getChildAt(1)).getText().toString());
+                        popupWindow.dismiss();
+                    }
+                });
+            }
         }
     }
 
@@ -857,6 +912,11 @@ public class PostSecondHandCarFragment extends BaseFragment {
             return;
         }
 
+        if (TextUtils.isEmpty(car_level)) {
+            ToastUtils.showShort("请选择车辆级别");
+            return;
+        }
+
         if (EmptyUtils.isEmpty(getBroadPlace())) {
             ToastUtils.showShort("请选择上牌地点");
             return;
@@ -921,7 +981,6 @@ public class PostSecondHandCarFragment extends BaseFragment {
                     uploadManager.put(photoPath, UUID.randomUUID().toString() + "_" + String.valueOf(file_type), upload_token, new UpCompletionHandler() {
                         @Override
                         public void complete(String key, ResponseInfo info, JSONObject response) {
-                            Log.e("aaaaaaaaaa", "response: " + response.toString());
                             if (info.isOK()) {
                                 //上传成功
                                 int status = response.optInt("status");
@@ -989,6 +1048,7 @@ public class PostSecondHandCarFragment extends BaseFragment {
                     .addParams(Constant.SERIES_ID, String.valueOf(series_id))//车系列id                  ooo(必填)
                     .addParams(Constant.MODEL_ID, String.valueOf(model_id))//车型id                      ooo(必填)
                     .addParams(Constant.CAR_TYPE, String.valueOf(1))
+                    .addParams(Constant.CAR_LEVEL, car_level)
                     .addParams(Constant.CAR_NO, "")//车牌号码
                     .addParams(Constant.ACTION, String.valueOf(1))//上传车类型
                     .addParams(Constant.IS_TRANSFER, String.valueOf(0))//是否过户

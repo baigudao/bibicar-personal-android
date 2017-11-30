@@ -99,7 +99,7 @@ public class MyFragment extends BaseFragment implements OnRefreshListener {
                 gotoPager(CarServiceFragment.class, null);//汽车服务
                 break;
             case R.id.rl_search_history:
-                gotoPager(SearchHistoryFragment.class, null);//汽车服务
+                gotoPager(CheckHistoryFragment.class, null);//汽车服务
                 break;
             default:
                 break;

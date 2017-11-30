@@ -135,6 +135,7 @@ public class GuaranteeHistoryFragment extends BaseFragment implements BaseRecycl
     }
 
     private void handlerData(JSONObject jsonObjectData) {
+        boolean isHadData=false;
         if (EmptyUtils.isNotEmpty(jsonObjectData)) {
             JSONArray jsonArray = jsonObjectData.optJSONArray("list");
             if (EmptyUtils.isNotEmpty(jsonArray) && jsonArray.length() != 0) {
@@ -142,12 +143,19 @@ public class GuaranteeHistoryFragment extends BaseFragment implements BaseRecycl
                 ArrayList<GuaranteeHistoryBean> guaranteeHistoryBeanArrayList = gson.fromJson(jsonArray.toString(), new TypeToken<ArrayList<GuaranteeHistoryBean>>() {
                 }.getType());
                 if (EmptyUtils.isNotEmpty(guaranteeHistoryBeanArrayList)) {
+                    isHadData=true;
+                    getView().findViewById(R.id.llNoData).setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.VISIBLE);
                     baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, guaranteeHistoryBeanArrayList, GUARANTEE_HISTORY_DATA_TYPE);
                     recyclerView.setAdapter(baseRecyclerViewAdapter);
                     recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
                     baseRecyclerViewAdapter.setOnItemClickListener(this);
                 }
             }
+        }
+        if(!isHadData){
+            getView().findViewById(R.id.llNoData).setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
         }
     }
 

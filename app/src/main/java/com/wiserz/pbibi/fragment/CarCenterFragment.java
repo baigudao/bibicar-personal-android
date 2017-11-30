@@ -85,23 +85,23 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
 
     private String order_id;
 
-    private int price_id,temp_price_id;
-    private String min_price="0",temp_min_price;
-    private String max_price,temp_max_price;
+    private int price_id, temp_price_id;
+    private String min_price = "0", temp_min_price;
+    private String max_price, temp_max_price;
 
 
-    private String min_mileage="0";
+    private String min_mileage = "0";
     private String max_mileage;
-    private String min_board_time="0";
+    private String min_board_time = "0";
     private String max_board_time;
-    private String min_pailiang="0";
+    private String min_pailiang = "0";
     private String max_pailiang;
 
     private ArrayList<CarConfiguration> mCarConfigurationList;
     private SmartRefreshLayout smartRefreshLayout;
     private HeaderAndFooterWrapper mHeaderAndFooterWrapper;
     private BaseRecyclerViewAdapter baseRecyclerViewAdapter;
-    private int refresh_or_load;//0或1
+    //   private int refresh_or_load;//0或1
 
     private int flag;
     private String new_or_old = "";
@@ -171,7 +171,6 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
         smartRefreshLayout.setOnRefreshListener(this);
         smartRefreshLayout.setOnLoadmoreListener(this);
 
-        refresh_or_load = 0;
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         mPage = 0;
@@ -387,16 +386,25 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                 final TextView tv4 = (TextView) view.findViewById(R.id.tv4);
                 final TextView tv5 = (TextView) view.findViewById(R.id.tv5);
                 final TextView tv6 = (TextView) view.findViewById(R.id.tv6);
-                temp_price_id=price_id;
-                temp_min_price=min_price;
-                temp_max_price=max_price;
+                final TextView tvPrice = (TextView) view.findViewById(R.id.tvPrice);
+                temp_price_id = price_id;
+                temp_min_price = min_price;
+                temp_max_price = max_price;
                 resetTextView(price_id, tv0, tv1, tv2, tv3, tv4, tv5, tv6);
-
+                resetPrice(tvPrice);
                 final RangeSeekBar<Integer> priceBar = (RangeSeekBar<Integer>) view.findViewById(R.id.priceBar);
                 priceBar.setMaxLastText(200, getResources().getString(R.string.no_limit));
                 priceBar.setMaxMinSpace(1);
-                priceBar.setSelectedMinValue(TextUtils.isEmpty(temp_min_price)?0:Integer.parseInt(temp_min_price));
-                priceBar.setSelectedMaxValue(TextUtils.isEmpty(temp_max_price)?250:Integer.parseInt(temp_max_price));
+                ArrayList<String> items = new ArrayList<>();
+                items.add("0");
+                items.add("50");
+                items.add("100");
+                items.add("150");
+                items.add("200");
+                items.add(getResources().getString(R.string.no_limit));
+                priceBar.setNumberItemStr(items);
+                priceBar.setSelectedMinValue(TextUtils.isEmpty(temp_min_price) ? 0 : Integer.parseInt(temp_min_price));
+                priceBar.setSelectedMaxValue(TextUtils.isEmpty(temp_max_price) ? 250 : Integer.parseInt(temp_max_price));
                 priceBar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener<Integer>() {
                     @Override
                     public void onRangeSeekBarValuesChanged(RangeSeekBar<?> bar, Integer minValue, Integer maxValue) {
@@ -404,6 +412,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                         resetTextView(temp_price_id, tv0, tv1, tv2, tv3, tv4, tv5, tv6);
                         temp_min_price = String.valueOf(minValue);
                         temp_max_price = maxValue > 200 ? "" : String.valueOf(maxValue);
+                        resetPrice(tvPrice);
                     }
                 });
                 tv0.setOnClickListener(new View.OnClickListener() {
@@ -415,6 +424,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                         temp_max_price = "";
                         priceBar.setSelectedMinValue(0);
                         priceBar.setSelectedMaxValue(250);
+                        resetPrice(tvPrice);
                     }
                 });
                 tv1.setOnClickListener(new View.OnClickListener() {
@@ -426,6 +436,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                         temp_max_price = "15";
                         priceBar.setSelectedMinValue(0);
                         priceBar.setSelectedMaxValue(15);
+                        resetPrice(tvPrice);
                     }
                 });
                 tv2.setOnClickListener(new View.OnClickListener() {
@@ -437,6 +448,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                         temp_max_price = "30";
                         priceBar.setSelectedMinValue(15);
                         priceBar.setSelectedMaxValue(30);
+                        resetPrice(tvPrice);
                     }
                 });
                 tv3.setOnClickListener(new View.OnClickListener() {
@@ -448,6 +460,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                         temp_max_price = "50";
                         priceBar.setSelectedMinValue(30);
                         priceBar.setSelectedMaxValue(50);
+                        resetPrice(tvPrice);
                     }
                 });
                 tv4.setOnClickListener(new View.OnClickListener() {
@@ -459,6 +472,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                         temp_max_price = "100";
                         priceBar.setSelectedMinValue(50);
                         priceBar.setSelectedMaxValue(100);
+                        resetPrice(tvPrice);
                     }
                 });
                 tv5.setOnClickListener(new View.OnClickListener() {
@@ -470,6 +484,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                         temp_max_price = "200";
                         priceBar.setSelectedMinValue(100);
                         priceBar.setSelectedMaxValue(200);
+                        resetPrice(tvPrice);
                     }
                 });
 
@@ -482,14 +497,15 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                         temp_max_price = "";
                         priceBar.setSelectedMinValue(200);
                         priceBar.setSelectedMaxValue(250);
+                        resetPrice(tvPrice);
                     }
                 });
                 btn_sure.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         price_id = temp_price_id;
-                        min_price=temp_min_price;
-                        max_price=temp_max_price;
+                        min_price = temp_min_price;
+                        max_price = temp_max_price;
                         mPage = 0;
                         getCarListDataFromNet(2);
                         popupWindow.dismiss();
@@ -630,6 +646,18 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
         });
     }
 
+    private void resetPrice(TextView tvPrice) {
+        if (!temp_min_price.equals("0") || !TextUtils.isEmpty(temp_max_price)) {
+            if (TextUtils.isEmpty(temp_max_price)) {
+                tvPrice.setText(temp_min_price + "万以上");
+            } else {
+                tvPrice.setText(temp_min_price + "-" + temp_max_price + "万");
+            }
+        } else {
+            tvPrice.setText("不限");
+        }
+    }
+
     private void resetBasicMsg(View view) {
         new_or_old = "";
         car_source = "";
@@ -640,10 +668,10 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
         envirstandards.clear();
         board_add = "";
         forward = "";
-        min_mileage="0";
-        max_mileage="";
-        min_board_time="0";
-        max_board_time="";
+        min_mileage = "0";
+        max_mileage = "";
+        min_board_time = "0";
+        max_board_time = "";
         min_pailiang = "0";
         max_pailiang = "";
 
@@ -651,41 +679,101 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
         int childCount = llRoot.getChildCount();
         for (int i = 0; i < childCount; ++i) {
             if (i == 6) {
+                final TextView tvDistanceNum = (TextView) view.findViewById(R.id.tvDistanceNum);
+                tvDistanceNum.setText(getResources().getString(R.string.no_limit));
                 RangeSeekBar<Integer> distanceBar = (RangeSeekBar<Integer>) view.findViewById(R.id.distanceBar);
                 distanceBar.setMaxLastText(12, getResources().getString(R.string.no_limit));
                 distanceBar.setMaxMinSpace(1);
+                ArrayList<String> items = new ArrayList<>();
+                items.add("0");
+                items.add("3");
+                items.add("6");
+                items.add("9");
+                items.add("12");
+                items.add(getResources().getString(R.string.no_limit));
+                distanceBar.setNumberItemStr(items);
                 distanceBar.reset();
                 distanceBar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener<Integer>() {
                     @Override
                     public void onRangeSeekBarValuesChanged(RangeSeekBar<?> bar, Integer minValue, Integer maxValue) {
                         min_mileage = String.valueOf(minValue);
                         max_mileage = maxValue > 12 ? "" : String.valueOf(maxValue);
+                        if (!min_mileage.equals("0") || !TextUtils.isEmpty(max_mileage)) {
+                            if (TextUtils.isEmpty(max_mileage)) {
+                                tvDistanceNum.setText(min_mileage + "万公里以上");
+                            } else {
+                                tvDistanceNum.setText(min_mileage + "-" + max_mileage + "万公里");
+                            }
+                        } else {
+                            tvDistanceNum.setText(getResources().getString(R.string.no_limit));
+                        }
+                        getCarListDataFromNet(1);
                     }
                 });
                 continue;
             } else if (i == 7) {
+                final TextView tvAgeNum = (TextView) view.findViewById(R.id.tvAgeNum);
+                tvAgeNum.setText(getResources().getString(R.string.no_limit));
                 RangeSeekBar<Integer> ageBar = (RangeSeekBar<Integer>) view.findViewById(R.id.ageBar);
                 ageBar.setMaxLastText(8, getResources().getString(R.string.no_limit));
                 ageBar.setMaxMinSpace(1);
                 ageBar.reset();
+                ArrayList<String> items = new ArrayList<>();
+                items.add("0");
+                items.add("2");
+                items.add("4");
+                items.add("6");
+                items.add("8");
+                items.add(getResources().getString(R.string.no_limit));
+                ageBar.setNumberItemStr(items);
                 ageBar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener<Integer>() {
                     @Override
                     public void onRangeSeekBarValuesChanged(RangeSeekBar<?> bar, Integer minValue, Integer maxValue) {
                         min_board_time = String.valueOf(minValue);
                         max_board_time = maxValue > 8 ? "" : String.valueOf(maxValue);
+                        if (!min_board_time.equals("0") || !TextUtils.isEmpty(max_board_time)) {
+                            if (TextUtils.isEmpty(max_board_time)) {
+                                tvAgeNum.setText(min_board_time + "年以上");
+                            } else {
+                                tvAgeNum.setText(min_board_time + "-" + max_board_time + "年");
+                            }
+                        } else {
+                            tvAgeNum.setText(getResources().getString(R.string.no_limit));
+                        }
+                        getCarListDataFromNet(1);
                     }
                 });
                 continue;
             } else if (i == 8) {
+                final TextView tvPailiangNum = (TextView) view.findViewById(R.id.tvPailiangNum);
+                tvPailiangNum.setText(getResources().getString(R.string.no_limit));
                 RangeSeekBar<Integer> pailiangBar = (RangeSeekBar<Integer>) view.findViewById(R.id.pailiangBar);
                 pailiangBar.setMaxLastText(4, getResources().getString(R.string.no_limit));
                 pailiangBar.setMaxMinSpace(1);
                 pailiangBar.reset();
+                ArrayList<String> items = new ArrayList<>();
+                items.add("0");
+                items.add("1");
+                items.add("2");
+                items.add("3");
+                items.add("4");
+                items.add(getResources().getString(R.string.no_limit));
+                pailiangBar.setNumberItemStr(items);
                 pailiangBar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener<Integer>() {
                     @Override
                     public void onRangeSeekBarValuesChanged(RangeSeekBar<?> bar, Integer minValue, Integer maxValue) {
                         min_pailiang = String.valueOf(minValue);
-                        max_pailiang = maxValue > 4.0 ? "" : String.valueOf(maxValue);
+                        max_pailiang = maxValue > 4 ? "" : String.valueOf(maxValue);
+                        if (!min_pailiang.equals("0") || !TextUtils.isEmpty(max_pailiang)) {
+                            if (TextUtils.isEmpty(max_pailiang)) {
+                                tvPailiangNum.setText(min_pailiang + "L以上");
+                            } else {
+                                tvPailiangNum.setText(min_pailiang + "-" + max_pailiang + "L");
+                            }
+                        } else {
+                            tvPailiangNum.setText(getResources().getString(R.string.no_limit));
+                        }
+                        getCarListDataFromNet(1);
                     }
                 });
                 continue;
@@ -697,7 +785,13 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                 ((ImageView) viewGroup.getChildAt(1)).setImageResource(R.drawable.v2_expand3x);
                 ((TextView) viewGroup.getChildAt(2)).setText("全部");
                 ((TextView) viewGroup.getChildAt(2)).setTextColor(getResources().getColor(R.color.second_text_color));
-                viewGroup.setTag(0);
+                if (i == 2) {
+                    viewGroup.setTag(1);
+                    ((ImageView) viewGroup.getChildAt(1)).setImageResource(R.drawable.v2_ewer3x);
+                    ((TextView) viewGroup.getChildAt(2)).setTextColor(getResources().getColor(R.color.main_color));
+                } else {
+                    viewGroup.setTag(0);
+                }
                 viewGroup.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -722,11 +816,16 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                         }
                     }
                 });
+
             }
             for (int j = 1; j < count; ++j) {
                 ViewGroup itemView2 = (ViewGroup) itemView.getChildAt(j);
-                if (j > 1) {
-                    itemView2.setVisibility(View.GONE);
+                if (i == 2) {
+                    itemView2.setVisibility(View.VISIBLE);
+                } else {
+                    if (j > 1) {
+                        itemView2.setVisibility(View.GONE);
+                    }
                 }
                 int count2 = itemView2.getChildCount();
                 for (int k = 0; k < count2; ++k) {
@@ -742,7 +841,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                         case 10:
                         case 11:
                             itemView3.setBackgroundResource(R.drawable.back_filter_car_btn_1);
-                            if(i!=5){
+                            if (i != 5) {
                                 itemView3.getChildAt(0).setVisibility(View.GONE);
                             }
                             ((TextView) itemView3.getChildAt(1)).setTextColor(getResources().getColor(R.color.main_text_color));
@@ -791,7 +890,13 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                                         ((ViewGroup) view).getChildAt(0).setVisibility(View.VISIBLE);
                                         ((TextView) ((ViewGroup) view).getChildAt(1)).setTextColor(getResources().getColor(R.color.main_color));
                                     }
-                                    llRoot.getChildAt(6).setVisibility(new_or_old.equals("2") ? View.GONE : View.VISIBLE);
+                                    if (new_or_old.equals("1")) {
+                                        llRoot.getChildAt(6).setVisibility(View.GONE);
+                                        llRoot.getChildAt(7).setVisibility(View.GONE);
+                                    } else {
+                                        llRoot.getChildAt(6).setVisibility(View.VISIBLE);
+                                        llRoot.getChildAt(7).setVisibility(View.VISIBLE);
+                                    }
                                     break;
                                 case 1:
                                     if (car_source.equals(tag)) {
@@ -858,7 +963,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                                     }
                                     break;
                                 case 3:
-                                    View ivCheck=((ViewGroup) view).getChildAt(0);
+                                    View ivCheck = ((ViewGroup) view).getChildAt(0);
                                     tvName = (TextView) ((ViewGroup) view).getChildAt(1);
                                     text = tag + "_" + tvName.getText().toString();
                                     if (seat_nums.contains(text)) {
@@ -920,7 +1025,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                                     }
                                     break;
                                 case 9:
-                                    ivCheck=((ViewGroup) view).getChildAt(0);
+                                    ivCheck = ((ViewGroup) view).getChildAt(0);
                                     tvName = (TextView) ((ViewGroup) view).getChildAt(1);
                                     text = tag + "_" + tvName.getText().toString();
                                     if (car_fueltypes.contains(text)) {
@@ -962,7 +1067,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                                     }
                                     break;
                                 case 11:
-                                    ivCheck=((ViewGroup) view).getChildAt(0);
+                                    ivCheck = ((ViewGroup) view).getChildAt(0);
                                     tvName = (TextView) ((ViewGroup) view).getChildAt(1);
                                     text = tag + "_" + tvName.getText().toString();
                                     if (envirstandards.contains(text)) {
@@ -1096,7 +1201,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                 llName3 = (LinearLayout) itemLayout.getChildAt(2);
                 if (index < itemCount) {
                     charCount += itemList.get(index).getName().length();
-                    ((TextView)llName1.getChildAt(1)).setText(itemList.get(index).getName());
+                    ((TextView) llName1.getChildAt(1)).setText(itemList.get(index).getName());
                     llName1.setTag(itemList.size());
                     llName1.setTag(R.id.tag, itemList.get(index));
                     llName1.setOnClickListener(new View.OnClickListener() {
@@ -1114,7 +1219,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                 ++index;
                 if (index < itemCount) {
                     charCount += itemList.get(index).getName().length();
-                    ((TextView)llName2.getChildAt(1)).setText(itemList.get(index).getName());
+                    ((TextView) llName2.getChildAt(1)).setText(itemList.get(index).getName());
                     llName2.setTag(itemList.size());
                     llName2.setTag(R.id.tag, itemList.get(index));
                     llName2.setOnClickListener(new View.OnClickListener() {
@@ -1134,7 +1239,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                         llName3.setVisibility(View.GONE);
                         continue;
                     }
-                    ((TextView)llName3.getChildAt(1)).setText(itemList.get(index).getName());
+                    ((TextView) llName3.getChildAt(1)).setText(itemList.get(index).getName());
                     llName3.setTag(itemList.size());
                     llName3.setTag(R.id.tag, itemList.get(index));
                     llName3.setOnClickListener(new View.OnClickListener() {
@@ -1156,8 +1261,8 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
     private void onConfigClick(View view) {
         CarConfiguration.Configuration con = (CarConfiguration.Configuration) view.getTag(R.id.tag);
         String text = con.getId() + "_" + con.getName();
-        View ivCheck=((ViewGroup) view).getChildAt(0);
-        TextView tv=(TextView) ((ViewGroup) view).getChildAt(1);
+        View ivCheck = ((ViewGroup) view).getChildAt(0);
+        TextView tv = (TextView) ((ViewGroup) view).getChildAt(1);
         ArrayList<String> list = extra_infos.get(con.getType());
         if (list == null) {
             list = new ArrayList<>();
@@ -1176,10 +1281,10 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
         }
         ViewGroup parent = (ViewGroup) view.getParent().getParent().getParent();
         ViewGroup itemView1 = (ViewGroup) parent.getChildAt(0);
-        int size=(int)view.getTag();
-        if(list.isEmpty() || list.size()==size){
+        int size = (int) view.getTag();
+        if (list.isEmpty() || list.size() == size) {
             ((TextView) itemView1.getChildAt(2)).setText("全部");
-        }else {
+        } else {
             ((TextView) itemView1.getChildAt(2)).setText(getNamesByList(list));
         }
         getCarListDataFromNet(1);
@@ -1220,6 +1325,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
     @Override
     protected void initData() {
         super.initData();
+        mPage = 0;
         getCarListDataFromNet(2);
     }
 
@@ -1272,17 +1378,12 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                             JSONObject jsonObjectData = jsonObject.optJSONObject("data");
                             if (status == 1) {
                                 if (searchType == 2) {
-                                    switch (refresh_or_load) {
-                                        case 0:
-                                            smartRefreshLayout.finishRefresh();
-                                            handlerCarListData(jsonObjectData);
-                                            break;
-                                        case 1:
-                                            smartRefreshLayout.finishLoadmore();
-                                            handlerCarListMoreData(jsonObjectData);
-                                            break;
-                                        default:
-                                            break;
+                                    if (mPage == 0) {
+                                        smartRefreshLayout.finishRefresh();
+                                        handlerCarListData(jsonObjectData);
+                                    } else {
+                                        smartRefreshLayout.finishLoadmore();
+                                        handlerCarListMoreData(jsonObjectData);
                                     }
                                 } else {
                                     setTotalCar(jsonObjectData.optInt("total"));
@@ -1301,7 +1402,11 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
 
     private void setTotalCar(int total) {
         if (getView() != null && tvTotalCar != null) {
-            tvTotalCar.setText("共" + total + "辆车符合条件");
+            if (total > 0) {
+                tvTotalCar.setText("共" + total + "辆车符合条件");
+            } else {
+                tvTotalCar.setText("找到0辆车,开启车辆定制");
+            }
         }
     }
 
@@ -1366,145 +1471,145 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
         ArrayList<CarInfoBean> carInfoBeanArrayList = getCarListData(jsonObjectData);
         baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, carInfoBeanArrayList, CAR_LIST_FOR_CAR_CENTER);
         mHeaderAndFooterWrapper = new HeaderAndFooterWrapper(baseRecyclerViewAdapter);
-        LinearLayout llTop=(LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.car_center_topview,null);
+        LinearLayout llTop = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.car_center_topview, null);
         mHeaderAndFooterWrapper.addHeaderView(llTop);
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(mHeaderAndFooterWrapper);
         baseRecyclerViewAdapter.setOnItemClickListener(this);
-        resetFilterView(llTop);
+        resetFilterView(llTop, carInfoBeanArrayList == null || carInfoBeanArrayList.isEmpty(), jsonObjectData.optString("custom_url"));
     }
 
-    public class FilterCondition{
+    public class FilterCondition {
         int type;
         String text;
         String tag;
         int index;
     }
 
-    private ArrayList<FilterCondition> getFilterConditions(){
-        ArrayList<FilterCondition> list=new ArrayList<>();
+    private ArrayList<FilterCondition> getFilterConditions() {
+        ArrayList<FilterCondition> list = new ArrayList<>();
         FilterCondition condition;
-        if(!min_price.equals("0") || !TextUtils.isEmpty(max_price)){
-            condition=new FilterCondition();
-            condition.type=1;
-            if(TextUtils.isEmpty(max_price)) {
+        if (!min_price.equals("0") || !TextUtils.isEmpty(max_price)) {
+            condition = new FilterCondition();
+            condition.type = 1;
+            if (TextUtils.isEmpty(max_price)) {
                 condition.text = min_price + "万以上";
-            }else{
-                condition.text = min_price + "-"+max_price+"万";
+            } else {
+                condition.text = min_price + "-" + max_price + "万";
             }
             list.add(condition);
         }
-        if(!TextUtils.isEmpty(new_or_old)){
-            condition=new FilterCondition();
-            condition.type=2;
-            condition.text=new_or_old.equals("1")?"新车":"二手车";
+        if (!TextUtils.isEmpty(new_or_old)) {
+            condition = new FilterCondition();
+            condition.type = 2;
+            condition.text = new_or_old.equals("1") ? "新车" : "二手车";
             list.add(condition);
         }
 
-        if(!TextUtils.isEmpty(car_source)){
-            condition=new FilterCondition();
-            condition.type=3;
-            condition.text=car_source.equals("1")?"个人":"商家";
+        if (!TextUtils.isEmpty(car_source)) {
+            condition = new FilterCondition();
+            condition.type = 3;
+            condition.text = car_source.equals("1") ? "个人" : "商家";
             list.add(condition);
         }
 
-        if(!car_levels.isEmpty()){
-            for(String str:car_levels) {
+        if (!car_levels.isEmpty()) {
+            for (String str : car_levels) {
                 condition = new FilterCondition();
                 condition.type = 4;
-                String[] strs=str.split("_");
-                condition.tag=strs[0];
+                String[] strs = str.split("_");
+                condition.tag = strs[0];
                 condition.text = strs[1];
                 list.add(condition);
             }
         }
 
-        if(!seat_nums.isEmpty()){
-            for(String str:seat_nums) {
+        if (!seat_nums.isEmpty()) {
+            for (String str : seat_nums) {
                 condition = new FilterCondition();
                 condition.type = 5;
-                String[] strs=str.split("_");
-                condition.tag=strs[0];
+                String[] strs = str.split("_");
+                condition.tag = strs[0];
                 condition.text = strs[1];
                 list.add(condition);
             }
         }
 
-        if(!TextUtils.isEmpty(board_add)){
-            condition=new FilterCondition();
-            condition.type=6;
-            condition.text=board_add.equals("1")?"本地牌照":"外地牌照";
+        if (!TextUtils.isEmpty(board_add)) {
+            condition = new FilterCondition();
+            condition.type = 6;
+            condition.text = board_add.equals("1") ? "本地牌照" : "外地牌照";
             list.add(condition);
         }
 
-        if(!car_colors.isEmpty()){
-            for(String str:car_colors) {
+        if (!car_colors.isEmpty()) {
+            for (String str : car_colors) {
                 condition = new FilterCondition();
                 condition.type = 7;
-                String[] strs=str.split("_");
-                condition.tag=strs[0];
+                String[] strs = str.split("_");
+                condition.tag = strs[0];
                 condition.text = strs[1];
                 list.add(condition);
             }
         }
 
-        if(!min_mileage.equals("0") || !TextUtils.isEmpty(max_mileage)){
-            condition=new FilterCondition();
-            condition.type=8;
-            if(TextUtils.isEmpty(max_mileage)) {
+        if (!min_mileage.equals("0") || !TextUtils.isEmpty(max_mileage)) {
+            condition = new FilterCondition();
+            condition.type = 8;
+            if (TextUtils.isEmpty(max_mileage)) {
                 condition.text = min_mileage + "万公里以上";
-            }else{
-                condition.text = min_mileage + "-"+max_mileage+"万公里";
+            } else {
+                condition.text = min_mileage + "-" + max_mileage + "万公里";
             }
             list.add(condition);
         }
 
-        if(!min_board_time.equals("0") || !TextUtils.isEmpty(max_board_time)){
-            condition=new FilterCondition();
-            condition.type=9;
-            if(TextUtils.isEmpty(max_board_time)) {
+        if (!min_board_time.equals("0") || !TextUtils.isEmpty(max_board_time)) {
+            condition = new FilterCondition();
+            condition.type = 9;
+            if (TextUtils.isEmpty(max_board_time)) {
                 condition.text = min_board_time + "年以上";
-            }else{
-                condition.text = min_board_time + "-"+max_board_time+"年";
+            } else {
+                condition.text = min_board_time + "-" + max_board_time + "年";
             }
             list.add(condition);
         }
 
-        if(!min_pailiang.equals("0") || !TextUtils.isEmpty(max_pailiang)){
-            condition=new FilterCondition();
-            condition.type=10;
-            if(TextUtils.isEmpty(max_pailiang)) {
+        if (!min_pailiang.equals("0") || !TextUtils.isEmpty(max_pailiang)) {
+            condition = new FilterCondition();
+            condition.type = 10;
+            if (TextUtils.isEmpty(max_pailiang)) {
                 condition.text = min_pailiang + "L以上";
-            }else{
-                condition.text = min_pailiang + "-"+max_pailiang+"L";
+            } else {
+                condition.text = min_pailiang + "-" + max_pailiang + "L";
             }
             list.add(condition);
         }
 
-        if(!car_fueltypes.isEmpty()){
-            for(String str:car_fueltypes) {
+        if (!car_fueltypes.isEmpty()) {
+            for (String str : car_fueltypes) {
                 condition = new FilterCondition();
                 condition.type = 11;
-                String[] strs=str.split("_");
-                condition.tag=strs[0];
+                String[] strs = str.split("_");
+                condition.tag = strs[0];
                 condition.text = strs[1];
                 list.add(condition);
             }
         }
 
-        if(!TextUtils.isEmpty(forward)){
-            condition=new FilterCondition();
-            condition.type=12;
-            condition.text=board_add.equals("1")?"手动":"自动";
+        if (!TextUtils.isEmpty(forward)) {
+            condition = new FilterCondition();
+            condition.type = 12;
+            condition.text = board_add.equals("1") ? "手动" : "自动";
             list.add(condition);
         }
 
-        if(!envirstandards.isEmpty()){
-            for(String str:envirstandards) {
+        if (!envirstandards.isEmpty()) {
+            for (String str : envirstandards) {
                 condition = new FilterCondition();
                 condition.type = 13;
-                String[] strs=str.split("_");
-                condition.tag=strs[0];
+                String[] strs = str.split("_");
+                condition.tag = strs[0];
                 condition.text = strs[1];
                 list.add(condition);
             }
@@ -1513,22 +1618,22 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
         Iterator<TreeMap.Entry<Integer, ArrayList<String>>> entries = extra_infos.entrySet().iterator();
         while (entries.hasNext()) {
             TreeMap.Entry<Integer, ArrayList<String>> entry = entries.next();
-            int key=entry.getKey();
+            int key = entry.getKey();
             ArrayList<String> infos = entry.getValue();
             if (infos != null && !infos.isEmpty()) {
-                for(String str:infos) {
+                for (String str : infos) {
                     condition = new FilterCondition();
                     condition.type = 14;
-                    String[] strs=str.split("_");
-                    condition.tag=strs[0];
+                    String[] strs = str.split("_");
+                    condition.tag = strs[0];
                     condition.text = strs[1];
-                    condition.index=key;
+                    condition.index = key;
                     list.add(condition);
                 }
             }
         }
 
-        if(list.size()>0) {
+        if (list.size() > 0) {
             condition = new FilterCondition();
             condition.type = -1;
             condition.text = "重置";
@@ -1537,13 +1642,13 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
         return list;
     }
 
-    private void onFilterCondition(View view){
-        FilterCondition condition=(FilterCondition) view.getTag(R.id.tag);
-        switch (condition.type){
+    private void onFilterCondition(View view) {
+        FilterCondition condition = (FilterCondition) view.getTag(R.id.tag);
+        switch (condition.type) {
             case -1:
-                price_id=-1;
-                min_price="0";
-                max_price="";
+                price_id = -1;
+                min_price = "0";
+                max_price = "";
                 new_or_old = "";
                 car_source = "";
                 car_levels.clear();
@@ -1551,150 +1656,166 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                 car_colors.clear();
                 car_fueltypes.clear();
                 envirstandards.clear();
+                extra_infos.clear();
                 board_add = "";
                 forward = "";
-                min_mileage="0";
-                max_mileage="";
-                min_board_time="0";
-                max_board_time="";
+                min_mileage = "0";
+                max_mileage = "";
+                min_board_time = "0";
+                max_board_time = "";
                 min_pailiang = "0";
                 max_pailiang = "";
                 break;
             case 1:
-                price_id=-1;
-                min_price="0";
-                max_price="";
+                price_id = -1;
+                min_price = "0";
+                max_price = "";
                 break;
             case 2:
-                new_or_old="";
+                new_or_old = "";
                 break;
             case 3:
-                car_source="";
+                car_source = "";
                 break;
             case 4:
-                car_levels.remove(condition.tag+"_"+condition.text);
+                car_levels.remove(condition.tag + "_" + condition.text);
                 break;
             case 5:
-                seat_nums.remove(condition.tag+"_"+condition.text);
+                seat_nums.remove(condition.tag + "_" + condition.text);
                 break;
             case 6:
-                board_add="";
+                board_add = "";
                 break;
             case 7:
-                car_colors.remove(condition.tag+"_"+condition.text);
+                car_colors.remove(condition.tag + "_" + condition.text);
                 break;
             case 8:
-                min_mileage="0";
-                max_mileage="";
+                min_mileage = "0";
+                max_mileage = "";
                 break;
             case 9:
-                min_board_time="0";
-                max_board_time="";
+                min_board_time = "0";
+                max_board_time = "";
                 break;
             case 10:
                 min_pailiang = "0";
                 max_pailiang = "";
                 break;
             case 11:
-                car_fueltypes.remove(condition.tag+"_"+condition.text);
+                car_fueltypes.remove(condition.tag + "_" + condition.text);
                 break;
             case 12:
                 forward = "";
                 break;
             case 13:
-                envirstandards.remove(condition.tag+"_"+condition.text);
+                envirstandards.remove(condition.tag + "_" + condition.text);
                 break;
             case 14:
-                ArrayList<String> list=extra_infos.get(condition.index);
-                list.remove(condition.tag+"_"+condition.text);
+                ArrayList<String> list = extra_infos.get(condition.index);
+                list.remove(condition.tag + "_" + condition.text);
                 break;
 
         }
+        mPage = 0;
         getCarListDataFromNet(2);
     }
 
-    private void resetFilterView(LinearLayout linearLayout){
-        if(mHeaderAndFooterWrapper==null){
+    private void resetFilterView(LinearLayout linearLayout, boolean isNoData, String dingzhiUrl) {
+        if (mHeaderAndFooterWrapper == null) {
             return;
         }
         linearLayout.removeAllViews();
 
-        ArrayList<FilterCondition> list=getFilterConditions();
-        int itemCount=list.size();
-            LinearLayout itemLayout;
-            LinearLayout llName1, llName2, llName3;
-            int index = 0;
-            int charCount;
-            for (int j = 0; j < Integer.MAX_VALUE; ++j) {
-                charCount = 0;
-                itemLayout = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.item_filter_conditicion, null);
-                linearLayout.addView(itemLayout);
-                llName1 = (LinearLayout) itemLayout.getChildAt(0);
-                llName2 = (LinearLayout) itemLayout.getChildAt(1);
-                llName3 = (LinearLayout) itemLayout.getChildAt(2);
-                if (index < itemCount) {
-                    charCount += list.get(index).text.length();
-                    ((TextView)llName1.getChildAt(0)).setText(list.get(index).text);
-                    llName1.setTag(R.id.tag, list.get(index));
-                    llName1.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            onFilterCondition(view);
-                        }
-                    });
-                    if(index==itemCount-1){
-                        ((ImageView)llName1.getChildAt(1)).setImageResource(R.drawable.chongzhi);
+        ArrayList<FilterCondition> list = getFilterConditions();
+        int itemCount = list.size();
+        LinearLayout itemLayout;
+        LinearLayout llName1, llName2, llName3;
+        int index = 0;
+        int charCount;
+        for (int j = 0; j < Integer.MAX_VALUE; ++j) {
+            charCount = 0;
+            itemLayout = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.item_filter_conditicion, null);
+            linearLayout.addView(itemLayout);
+            llName1 = (LinearLayout) itemLayout.getChildAt(0);
+            llName2 = (LinearLayout) itemLayout.getChildAt(1);
+            llName3 = (LinearLayout) itemLayout.getChildAt(2);
+            if (index < itemCount) {
+                charCount += list.get(index).text.length();
+                ((TextView) llName1.getChildAt(0)).setText(list.get(index).text);
+                llName1.setTag(R.id.tag, list.get(index));
+                llName1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        onFilterCondition(view);
                     }
-                } else {
-                    llName1.setVisibility(View.GONE);
-                    llName2.setVisibility(View.GONE);
-                    llName3.setVisibility(View.GONE);
-                    break;
+                });
+                if (index == itemCount - 1) {
+                    ((ImageView) llName1.getChildAt(1)).setImageResource(R.drawable.chongzhi);
                 }
-                ++index;
-                if (index < itemCount) {
-                    charCount += list.get(index).text.length();
-                    ((TextView)llName2.getChildAt(0)).setText(list.get(index).text);
-                    llName2.setTag(R.id.tag, list.get(index));
-                    llName2.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            onFilterCondition(view);
-                        }
-                    });
-                    if(index==itemCount-1){
-                        ((ImageView)llName2.getChildAt(1)).setImageResource(R.drawable.chongzhi);
-                    }
-                } else {
-                    llName2.setVisibility(View.GONE);
-                    llName3.setVisibility(View.GONE);
-                    break;
-                }
-                ++index;
-                if (index < itemCount) {
-                    if (charCount + list.get(index).text.length() > 16) {
-                        llName3.setVisibility(View.GONE);
-                        continue;
-                    }
-                    ((TextView)llName3.getChildAt(0)).setText(list.get(index).text);
-                    if(index==itemCount-1){
-                        ((ImageView)llName3.getChildAt(1)).setImageResource(R.drawable.chongzhi);
-                    }
-                    llName3.setTag(R.id.tag, list.get(index));
-                    llName3.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            onFilterCondition(view);
-                        }
-                    });
-                } else {
-                    llName3.setVisibility(View.GONE);
-                    break;
-                }
-                ++index;
+            } else {
+                llName1.setVisibility(View.GONE);
+                llName2.setVisibility(View.GONE);
+                llName3.setVisibility(View.GONE);
+                break;
             }
-    }
+            ++index;
+            if (index < itemCount) {
+                charCount += list.get(index).text.length();
+                ((TextView) llName2.getChildAt(0)).setText(list.get(index).text);
+                llName2.setTag(R.id.tag, list.get(index));
+                llName2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        onFilterCondition(view);
+                    }
+                });
+                if (index == itemCount - 1) {
+                    ((ImageView) llName2.getChildAt(1)).setImageResource(R.drawable.chongzhi);
+                }
+            } else {
+                llName2.setVisibility(View.GONE);
+                llName3.setVisibility(View.GONE);
+                break;
+            }
+            ++index;
+            if (index < itemCount) {
+                if (charCount + list.get(index).text.length() > 16) {
+                    llName3.setVisibility(View.GONE);
+                    continue;
+                }
+                ((TextView) llName3.getChildAt(0)).setText(list.get(index).text);
+                if (index == itemCount - 1) {
+                    ((ImageView) llName3.getChildAt(1)).setImageResource(R.drawable.chongzhi);
+                }
+                llName3.setTag(R.id.tag, list.get(index));
+                llName3.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        onFilterCondition(view);
+                    }
+                });
+            } else {
+                llName3.setVisibility(View.GONE);
+                break;
+            }
+            ++index;
+        }
 
+        if (isNoData) {
+            View noDataView = LayoutInflater.from(getActivity()).inflate(R.layout.layout_car_dingzhi, null);
+            linearLayout.addView(noDataView);
+            noDataView.findViewById(R.id.tvDingzhi).setTag(dingzhiUrl);
+            noDataView.findViewById(R.id.tvDingzhi).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String dingzhiUrl = (String) v.getTag();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("dingzhi_url", dingzhiUrl);
+                    gotoPager(CarDingzhiFragment.class, bundle);
+                }
+            });
+        }
+    }
 
 
     private ArrayList<CarInfoBean> getCarListData(JSONObject jsonObjectData) {
@@ -1770,14 +1891,12 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
     @Override
     public void onLoadmore(RefreshLayout refreshlayout) {
         ++mPage;
-        refresh_or_load = 1;
         getCarListDataFromNet(2);
     }
 
     @Override
     public void onRefresh(RefreshLayout refreshlayout) {
         mPage = 0;
-        refresh_or_load = 0;
         getCarListDataFromNet(2);
     }
 

@@ -811,7 +811,6 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
 
             @Override
             public void onCreatQr() {
-                Log.e("aaaaaaa","share_url: "+share_url);
                 if(!TextUtils.isEmpty(share_url)) {
                     Bitmap qrBitmap = generateBitmap(share_url, 400, 400);
                     CommonUtil.savePhotoToAppAlbum(qrBitmap,getActivity());

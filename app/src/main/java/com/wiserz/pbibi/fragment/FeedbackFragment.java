@@ -1,5 +1,9 @@
 package com.wiserz.pbibi.fragment;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
@@ -34,6 +38,7 @@ public class FeedbackFragment extends BaseFragment {
         view.findViewById(R.id.iv_back).setOnClickListener(this);
         ((TextView) view.findViewById(R.id.tv_title)).setText("意见反馈");
         view.findViewById(R.id.tv_submit).setOnClickListener(this);
+        view.findViewById(R.id.tv_phone).setOnClickListener(this);
     }
 
     @Override
@@ -41,6 +46,9 @@ public class FeedbackFragment extends BaseFragment {
         switch (view.getId()){
             case R.id.iv_back:
                 goBack();
+                break;
+            case R.id.tv_phone:
+                showCallPhoneDialog();
                 break;
             case R.id.tv_submit:
                 String feedBack=((EditText) getView().findViewById(R.id.etFeedback)).getText().toString();
@@ -51,6 +59,29 @@ public class FeedbackFragment extends BaseFragment {
                 submitFeedBack(feedBack);
                 break;
         }
+    }
+
+    private void showCallPhoneDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("客服电话");
+        builder.setMessage("0755-22233323");
+        builder.setPositiveButton(getString(R.string.call_phone), new DialogInterface.OnClickListener() { //设置确定按钮
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_CALL);
+                intent.setData(Uri.parse("tel:0755-22233323"));
+                startActivity(intent);
+            }
+        });
+        builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() { //设置取消按钮
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
     }
 
     private void submitFeedBack(String description){

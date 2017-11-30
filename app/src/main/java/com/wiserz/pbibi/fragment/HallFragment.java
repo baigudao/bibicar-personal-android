@@ -80,7 +80,6 @@ public class HallFragment extends BaseFragment implements OnRefreshListener, OnL
 
                     @Override
                     public void onResponse(String response, int id) {
-                        Log.e("aaaaaaaa","response: "+response);
                         JSONObject jsonObject = null;
                         try {
                             jsonObject = new JSONObject(response);

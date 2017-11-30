@@ -415,7 +415,24 @@ public class FeedBean extends BaseBean {
         }
 
         public static class FromUserInfoBean {
-            public static class ProfileBeanX {
+            private int user_id;
+            private PostUserInfoBean.ProfileBean profile;
+
+            public PostUserInfoBean.ProfileBean getProfile() {
+                return profile;
+            }
+
+            public void setProfile(PostUserInfoBean.ProfileBean profile) {
+                this.profile = profile;
+            }
+
+
+            public int getUser_id() {
+                return user_id;
+            }
+
+            public void setUser_id(int user_id) {
+                this.user_id = user_id;
             }
         }
 
@@ -505,57 +522,57 @@ public class FeedBean extends BaseBean {
         }
     }
 
-    public static class LikeListBean {
-        /**
-         * profile : {"avatar":"http://img.bibicar.cn/FkVVSJRd17tt2YR8lUQh19Z7-RlT","nickname":"松鼠"}
-         * user_id : 451
-         */
-
-        private ProfileBeanXX profile;
-        private int user_id;
-
-        public ProfileBeanXX getProfile() {
-            return profile;
-        }
-
-        public void setProfile(ProfileBeanXX profile) {
-            this.profile = profile;
-        }
-
-        public int getUser_id() {
-            return user_id;
-        }
-
-        public void setUser_id(int user_id) {
-            this.user_id = user_id;
-        }
-
-        public static class ProfileBeanXX {
-            /**
-             * avatar : http://img.bibicar.cn/FkVVSJRd17tt2YR8lUQh19Z7-RlT
-             * nickname : 松鼠
-             */
-
-            private String avatar;
-            private String nickname;
-
-            public String getAvatar() {
-                return avatar;
-            }
-
-            public void setAvatar(String avatar) {
-                this.avatar = avatar;
-            }
-
-            public String getNickname() {
-                return nickname;
-            }
-
-            public void setNickname(String nickname) {
-                this.nickname = nickname;
-            }
-        }
-    }
+//    public static class LikeListBean {
+//        /**
+//         * profile : {"avatar":"http://img.bibicar.cn/FkVVSJRd17tt2YR8lUQh19Z7-RlT","nickname":"松鼠"}
+//         * user_id : 451
+//         */
+//
+//        private ProfileBeanXX profile;
+//        private int user_id;
+//
+//        public ProfileBeanXX getProfile() {
+//            return profile;
+//        }
+//
+//        public void setProfile(ProfileBeanXX profile) {
+//            this.profile = profile;
+//        }
+//
+//        public int getUser_id() {
+//            return user_id;
+//        }
+//
+//        public void setUser_id(int user_id) {
+//            this.user_id = user_id;
+//        }
+//
+//        public static class ProfileBeanXX {
+//            /**
+//             * avatar : http://img.bibicar.cn/FkVVSJRd17tt2YR8lUQh19Z7-RlT
+//             * nickname : 松鼠
+//             */
+//
+//            private String avatar;
+//            private String nickname;
+//
+//            public String getAvatar() {
+//                return avatar;
+//            }
+//
+//            public void setAvatar(String avatar) {
+//                this.avatar = avatar;
+//            }
+//
+//            public String getNickname() {
+//                return nickname;
+//            }
+//
+//            public void setNickname(String nickname) {
+//                this.nickname = nickname;
+//            }
+//        }
+//    }
 
     public static class PostFilesBeanX {
         /**
