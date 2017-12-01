@@ -1065,6 +1065,9 @@ public class PostSecondHandCarFragment extends BaseFragment {
                     .addParams(Constant.CAR_ID, "")
                     .addParams(Constant.CHECK_EXPIRATION_TIME, "")//年检到期日期
                     .addParams(Constant.INSURANCE_DUE_TIME, "")//保险到期日期
+                    .addParams(Constant.CITY_CODE,SPUtils.getInstance().getString(Constant.CITY_CODE,""))
+                    .addParams(Constant.CITY_LAT,SPUtils.getInstance().getString(Constant.CITY_LAT,""))
+                    .addParams(Constant.CITY_LNG,SPUtils.getInstance().getString(Constant.CITY_LNG,""))
                     .build()
                     .execute(new StringCallback() {
                         @Override

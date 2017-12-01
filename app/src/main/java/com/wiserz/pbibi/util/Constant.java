@@ -95,6 +95,7 @@ public class Constant {
     public static final String BRAND_NAME = "brand_name";
     public static final String DESC = "desc";
     public static final String SOURCE = "source";
+    public static final String CAR_SOURCE = "car_source";
     public static final String CAR_LEVEL = "car_level";
     public static final String FEED_ID = "feed_id";
     public static final String IS_AUTH = "is_auth";//是否身份验证 1:是 2:否
@@ -142,8 +143,8 @@ public class Constant {
     public static final int MAX_UPLOAD_PHOTO_NUM = 9;
 
     //URL常量
-    //private final static String hostUrl = "https://api.bibicar.cn/";//正式环境
-    private static final String hostUrl = "https://testapi.bibicar.cn/";//测试环境
+    private final static String hostUrl = "https://api.bibicar.cn/";//正式环境
+    //private static final String hostUrl = "https://testapi.bibicar.cn/";//测试环境
 
     private static final String registerApp = hostUrl + "app/register";//App注册
     private static final String verificationCodeUrl = hostUrl + "v3/user/sendcode";//得到验证码

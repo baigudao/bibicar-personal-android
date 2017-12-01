@@ -660,7 +660,11 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                             .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
                             .into(holder.iv_item1);
                     holder.tv_item1.setText(carInfoBean.getCar_name());
-                    holder.tv_item2.setText(carInfoBean.getModel_info().getModel_year() + "年/排量" + carInfoBean.getModel_detail().getEngine_ExhaustForFloat());
+                    if(carInfoBean.getCar_type()==0){
+                        holder.tv_item2.setText("销量 :  "+carInfoBean.getSales_volume());
+                    }else {
+                        holder.tv_item2.setText(carInfoBean.getModel_info().getModel_year() + "/" + carInfoBean.getMileage() + "万公里");
+                    }
                     holder.tv_item3.setText(mContext.getString(R.string._wan, String.format(Locale.CHINA, "%.2f", carInfoBean.getPrice())));
                 }
             }

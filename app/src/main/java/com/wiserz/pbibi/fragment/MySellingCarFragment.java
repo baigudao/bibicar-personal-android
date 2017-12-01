@@ -3,6 +3,7 @@ package com.wiserz.pbibi.fragment;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 
@@ -83,6 +84,7 @@ public class MySellingCarFragment extends BaseFragment implements BaseRecyclerVi
                 .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
                 .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
                 .addParams(Constant.USER_ID, String.valueOf(user_id))
+                .addParams(Constant.TYPE, "4")
                 .addParams(Constant.PAGE, String.valueOf(mPage))
                 .build()
                 .execute(new StringCallback() {
@@ -93,6 +95,7 @@ public class MySellingCarFragment extends BaseFragment implements BaseRecyclerVi
 
                     @Override
                     public void onResponse(String response, int id) {
+                        Log.e("aaaaaaaaaa", "response: " + response);
                         JSONObject jsonObject = null;
                         try {
                             jsonObject = new JSONObject(response);
@@ -153,21 +156,21 @@ public class MySellingCarFragment extends BaseFragment implements BaseRecyclerVi
             @Override
             public void onFirstBtnClicked() {
                 //上传新车
-                Bundle bundle=new Bundle();
-                bundle.putString("from_class",getClass().getName());
-                bundle.putBoolean("is_post_new_car",true);
+                Bundle bundle = new Bundle();
+                bundle.putString("from_class", getClass().getName());
+                bundle.putBoolean("is_post_new_car", true);
                 DataManager.getInstance().setObject(null);
-                gotoPager(SelectPhotoFragment.class, bundle,true);
+                gotoPager(SelectPhotoFragment.class, bundle, true);
             }
 
             @Override
             public void onSecondBtnClicked() {
                 //上传二手车
-                Bundle bundle=new Bundle();
-                bundle.putString("from_class",getClass().getName());
-                bundle.putBoolean("is_post_new_car",false);
+                Bundle bundle = new Bundle();
+                bundle.putString("from_class", getClass().getName());
+                bundle.putBoolean("is_post_new_car", false);
                 DataManager.getInstance().setObject(null);
-                gotoPager(SelectPhotoFragment.class, bundle,true);
+                gotoPager(SelectPhotoFragment.class, bundle, true);
             }
 
             @Override

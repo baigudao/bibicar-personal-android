@@ -35,7 +35,6 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.tencent.mm.opensdk.utils.Log;
 import com.wiserz.pbibi.BaseApplication;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.activity.RegisterAndLoginActivity;
@@ -313,6 +312,21 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
             public boolean onKey(View view, int i, KeyEvent keyEvent) {
                 if (i == KeyEvent.KEYCODE_BACK) {
                     popupWindow.dismiss();
+                    new_or_old = "";
+                    car_source = "";
+                    car_levels.clear();
+                    seat_nums.clear();
+                    car_colors.clear();
+                    car_fueltypes.clear();
+                    envirstandards.clear();
+                    board_add = "";
+                    forward = "";
+                    min_mileage = "0";
+                    max_mileage = "";
+                    min_board_time = "0";
+                    max_board_time = "";
+                    min_pailiang = "0";
+                    max_pailiang = "";
                 }
                 return false;
             }
@@ -323,6 +337,21 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
             @Override
             public void onClick(View v) {
                 popupWindow.dismiss();
+                new_or_old = "";
+                car_source = "";
+                car_levels.clear();
+                seat_nums.clear();
+                car_colors.clear();
+                car_fueltypes.clear();
+                envirstandards.clear();
+                board_add = "";
+                forward = "";
+                min_mileage = "0";
+                max_mileage = "";
+                min_board_time = "0";
+                max_board_time = "";
+                min_pailiang = "0";
+                max_pailiang = "";
             }
         });
 
@@ -522,7 +551,6 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                 viewList.add(inflater.inflate(R.layout.item_post_car_detail_msg, null));
                 resetBasicMsg(viewList.get(0));
                 resetCarConfigurations(viewList.get(1), mCarConfigurationList);
-                getCarListDataFromNet(1);
                 view.findViewById(R.id.rl).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -676,6 +704,8 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
         max_board_time = "";
         min_pailiang = "0";
         max_pailiang = "";
+
+        getCarListDataFromNet(1);
 
         final LinearLayout llRoot = (LinearLayout) view.findViewById(R.id.llRoot);
         int childCount = llRoot.getChildCount();
@@ -1345,18 +1375,18 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                 .addParams(Constant.PAGE, String.valueOf(mPage))
                 .addParams(Constant.MIN_PRICE, min_price == null ? "" : min_price)//最低价格
                 .addParams(Constant.MAX_PRICE, max_price == null ? "" : max_price)//最高价格
-                .addParams(Constant.MIN_PRICE, min_price == null ? "" : min_price)//最低价格
-                .addParams(Constant.MAX_PRICE, max_price == null ? "" : max_price)//最高价格
+//                .addParams(Constant.MIN_PRICE, min_price == null ? "" : min_price)//最低价格
+//                .addParams(Constant.MAX_PRICE, max_price == null ? "" : max_price)//最高价格
                 .addParams(Constant.MIN_MILEAGE, min_mileage == null ? "" : min_mileage)//最低里程
                 .addParams(Constant.MAX_MILEAGE, max_mileage == null ? "" : max_mileage)//最高里程
                 .addParams(Constant.MIN_BOARD_TIME, min_board_time == null ? "" : min_board_time)//最短上牌时间
                 .addParams(Constant.MAX_BOARD_TIME, max_board_time == null ? "" : max_board_time)//最长上牌时间
                 .addParams(Constant.MIN_FORFLOAT, min_pailiang == null ? "" : min_pailiang)//最短上牌时间
                 .addParams(Constant.MAX_FORFLOAT, max_pailiang == null ? "" : max_pailiang)//最长上牌时间
-                .addParams(Constant.HAS_VR, car_vr == 0 ? "" : String.valueOf(car_vr))//是否有VR看车功能  1:是
+                //               .addParams(Constant.HAS_VR, car_vr == 0 ? "" : String.valueOf(car_vr))//是否有VR看车功能  1:是
                 .addParams(Constant.SEARCH_TYPE, String.valueOf(searchType))
-                .addParams(Constant.OLD, new_or_old)//是否新车二手车 1:新车 2 二手车
-                .addParams(Constant.SOURCE, car_source)//车辆来源 1:个人 2 商家
+                .addParams(Constant.CAR_TYPE, new_or_old == null ? "" : new_or_old)//是否新车二手车 1:新车 2 二手车
+                .addParams(Constant.CAR_SOURCE, car_source)//车辆来源 1:个人 2 商家
                 .addParams(Constant.CAR_LEVEL, getIdsByList(car_levels))
                 .addParams(Constant.SEAT_NUM, getIdsByList(seat_nums))
                 .addParams(Constant.FUELTYPE, getIdsByList(car_fueltypes))
@@ -1365,6 +1395,9 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                 .addParams(Constant.FORWARD, forward)
                 .addParams(Constant.ENVIRSTANDARD, getIdsByList(envirstandards))
                 .addParams(Constant.EXTRA_INFO, getIdsByList(extra_infos))
+                .addParams(Constant.CITY_CODE, SPUtils.getInstance().getString(Constant.CITY_CODE, ""))
+                .addParams(Constant.CITY_LAT, SPUtils.getInstance().getString(Constant.CITY_LAT, ""))
+                .addParams(Constant.CITY_LNG, SPUtils.getInstance().getString(Constant.CITY_LNG, ""))
                 .build()
                 .execute(new StringCallback() {
                     @Override
@@ -1374,7 +1407,6 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
 
                     @Override
                     public void onResponse(String response, int id) {
-                        Log.e("aaaaaaaaa", "response: " + response);
                         JSONObject jsonObject = null;
                         try {
                             jsonObject = new JSONObject(response);
@@ -1987,6 +2019,15 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
             location.getBuildingID();    //室内精准定位下，获取楼宇ID
             location.getBuildingName();    //室内精准定位下，获取楼宇名称
             location.getFloor();    //室内精准定位下，获取当前位置所处的楼层信息
+
+            if (!TextUtils.isEmpty(location.getCity())) {
+                if (!TextUtils.isEmpty(location.getCityCode())) {
+                    SPUtils.getInstance().put(Constant.CITY_CODE, location.getCityCode());
+                }
+
+                SPUtils.getInstance().put(Constant.CITY_LAT, String.valueOf(location.getLatitude()));
+                SPUtils.getInstance().put(Constant.CITY_LNG, String.valueOf(location.getLongitude()));
+            }
 
             if (location.getLocType() == BDLocation.TypeGpsLocation) {
 

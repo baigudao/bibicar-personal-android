@@ -129,6 +129,7 @@ public class SelectCarModelFragment extends BaseFragment implements BaseRecycler
                 DataManager.getInstance().setData5(carModelBean.getModel_id());
                 DataManager.getInstance().setData6(carModelBean.getModel_name());
                 goBack();
+                goBack();
             }
         }
     }

@@ -462,8 +462,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
-                android:orientation="horizontal"
-                android:tag="2">
+                android:orientation="horizontal">
 
                 <LinearLayout
                     android:id="@+id/llTwoSeat"
@@ -471,6 +470,7 @@
                     android:layout_height="32dp"
                     android:background="@drawable/back_filter_car_btn_1"
                     android:gravity="center"
+                    android:tag="2"
                     android:orientation="horizontal">
 
                     <ImageView
@@ -1623,7 +1623,7 @@
                     android:background="@drawable/back_filter_car_btn_1"
                     android:gravity="center"
                     android:orientation="horizontal"
-                    android:tag="2">
+                    android:tag="4">
 
                     <ImageView
                         android:layout_width="wrap_content"

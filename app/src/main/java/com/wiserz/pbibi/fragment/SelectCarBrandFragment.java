@@ -209,14 +209,14 @@ public class SelectCarBrandFragment extends BaseFragment implements BaseRecycler
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        if (!hidden) {
-            getView().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    goBack();
-                }
-            }, 300);//此时FragmentManager is already executing transactions，所以要延迟
-        }
+//        if (!hidden) {
+//            getView().postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    goBack();
+//                }
+//            }, 300);//此时FragmentManager is already executing transactions，所以要延迟
+//        }
     }
 
     @Override

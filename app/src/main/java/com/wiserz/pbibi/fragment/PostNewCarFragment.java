@@ -785,6 +785,9 @@ public class PostNewCarFragment extends BaseFragment {
                     .addParams(Constant.CAR_INFO_IDS, carInfoIds)
                     .addParams(Constant.CAR_ID, "")
                     .addParams(Constant.CAR_LEVEL, car_level)
+                    .addParams(Constant.CITY_CODE,SPUtils.getInstance().getString(Constant.CITY_CODE,""))
+                    .addParams(Constant.CITY_LAT,SPUtils.getInstance().getString(Constant.CITY_LAT,""))
+                    .addParams(Constant.CITY_LNG,SPUtils.getInstance().getString(Constant.CITY_LNG,""))
                     .build()
                     .execute(new StringCallback() {
                         @Override
