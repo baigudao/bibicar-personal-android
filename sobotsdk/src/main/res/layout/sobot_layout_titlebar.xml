@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/sobot_layout_titlebar"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/sobot_DIMEN_108PX"
+    android:background="#ffffff">
+
+    <TextView
+        android:id="@+id/sobot_text_title"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="70dp"
+        android:layout_toRightOf="@+id/sobot_tv_left"
+        android:ellipsize="end"
+        android:gravity="center|center_horizontal"
+        android:singleLine="true"
+        android:textColor="#3a3a3a"
+        android:textSize="@dimen/sobot_text_title" />
+
+    <LinearLayout
+        android:id="@+id/sobot_container_conn_status"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="70dp"
+        android:layout_toRightOf="@+id/sobot_tv_left"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:id="@+id/sobot_conn_loading"
+            style="@style/sobot_progress_circle"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/sobot_title_conn_status"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:ellipsize="end"
+            android:gravity="center|center_horizontal"
+            android:singleLine="true"
+            android:text="@string/sobot_conntype_unconnected"
+            android:textColor="#3a3a3a"
+            android:textSize="@dimen/sobot_text_title"
+            android:visibility="visible" />
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/sobot_tv_left"
+        android:layout_width="80dp"
+        android:layout_height="@dimen/sobot_DIMEN_108PX"
+        android:layout_centerVertical="true"
+        android:drawableLeft="@drawable/sobot_webview_toolsbar_back_disable"
+        android:drawablePadding="5dp"
+        android:gravity="center_vertical"
+        android:onClick="onClick"
+        android:paddingLeft="10dp"
+        android:text="@string/sobot_back"
+        android:textColor="#3a3a3a"
+        android:textSize="@dimen/sobot_text_title" />
+
+    <TextView
+        android:id="@+id/sobot_tv_right"
+        android:layout_width="80dp"
+        android:layout_height="@dimen/sobot_DIMEN_108PX"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:drawablePadding="5dp"
+        android:gravity="center_vertical|right"
+        android:paddingRight="10dp"
+        android:textColor="#3a3a3a"
+        android:textSize="@dimen/sobot_text_title"
+        android:visibility="gone" />
+
+</RelativeLayout>

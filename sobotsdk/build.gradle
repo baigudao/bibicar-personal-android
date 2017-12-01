@@ -1,0 +1,26 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 24
+    buildToolsVersion "25.0.2"
+
+    defaultConfig {
+        minSdkVersion 15
+        targetSdkVersion 24
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    provided 'com.squareup.okhttp3:okhttp:3.6.0'
+    provided 'com.android.support:support-v4:24.2.1'
+    provided 'com.squareup.picasso:picasso:2.5.2'
+    provided 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
+    provided 'com.github.bumptech.glide:glide:3.7.0'
+}
