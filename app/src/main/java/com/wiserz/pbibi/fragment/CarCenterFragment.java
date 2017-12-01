@@ -79,6 +79,8 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
     private LinearLayout ll_filter;
     private LinearLayout ll_brand;
 
+    private LinearLayout llTop;
+
 
     private RecyclerView recyclerView;
     private int mPage;
@@ -891,9 +893,11 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                                         ((TextView) ((ViewGroup) view).getChildAt(1)).setTextColor(getResources().getColor(R.color.main_color));
                                     }
                                     if (new_or_old.equals("1")) {
+                                        llRoot.getChildAt(4).setVisibility(View.GONE);
                                         llRoot.getChildAt(6).setVisibility(View.GONE);
                                         llRoot.getChildAt(7).setVisibility(View.GONE);
                                     } else {
+                                        llRoot.getChildAt(4).setVisibility(View.VISIBLE);
                                         llRoot.getChildAt(6).setVisibility(View.VISIBLE);
                                         llRoot.getChildAt(7).setVisibility(View.VISIBLE);
                                     }
@@ -1389,11 +1393,17 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                                     setTotalCar(jsonObjectData.optInt("total"));
                                 }
                             } else {
+                                if (mPage > 0) {
+                                    --mPage;
+                                }
                                 String code = jsonObject.optString("code");
                                 String msg = jsonObjectData.optString("msg");
                                 ToastUtils.showShort("" + msg);
                             }
                         } catch (JSONException e) {
+                            if (mPage > 0) {
+                                --mPage;
+                            }
                             e.printStackTrace();
                         }
                     }
@@ -1469,12 +1479,17 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
 
     private void handlerCarListData(JSONObject jsonObjectData) {
         ArrayList<CarInfoBean> carInfoBeanArrayList = getCarListData(jsonObjectData);
-        baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, carInfoBeanArrayList, CAR_LIST_FOR_CAR_CENTER);
-        mHeaderAndFooterWrapper = new HeaderAndFooterWrapper(baseRecyclerViewAdapter);
-        LinearLayout llTop = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.car_center_topview, null);
-        mHeaderAndFooterWrapper.addHeaderView(llTop);
-        recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
-        recyclerView.setAdapter(mHeaderAndFooterWrapper);
+        if (baseRecyclerViewAdapter == null) {
+            baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, carInfoBeanArrayList, CAR_LIST_FOR_CAR_CENTER);
+            mHeaderAndFooterWrapper = new HeaderAndFooterWrapper(baseRecyclerViewAdapter);
+            llTop = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.car_center_topview, null);
+            mHeaderAndFooterWrapper.addHeaderView(llTop);
+            recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
+            recyclerView.setAdapter(mHeaderAndFooterWrapper);
+        } else {
+            baseRecyclerViewAdapter.setDatas(carInfoBeanArrayList);
+            mHeaderAndFooterWrapper.notifyDataSetChanged();
+        }
         baseRecyclerViewAdapter.setOnItemClickListener(this);
         resetFilterView(llTop, carInfoBeanArrayList == null || carInfoBeanArrayList.isEmpty(), jsonObjectData.optString("custom_url"));
     }
@@ -1535,13 +1550,6 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
             }
         }
 
-        if (!TextUtils.isEmpty(board_add)) {
-            condition = new FilterCondition();
-            condition.type = 6;
-            condition.text = board_add.equals("1") ? "本地牌照" : "外地牌照";
-            list.add(condition);
-        }
-
         if (!car_colors.isEmpty()) {
             for (String str : car_colors) {
                 condition = new FilterCondition();
@@ -1552,28 +1560,36 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                 list.add(condition);
             }
         }
-
-        if (!min_mileage.equals("0") || !TextUtils.isEmpty(max_mileage)) {
-            condition = new FilterCondition();
-            condition.type = 8;
-            if (TextUtils.isEmpty(max_mileage)) {
-                condition.text = min_mileage + "万公里以上";
-            } else {
-                condition.text = min_mileage + "-" + max_mileage + "万公里";
+        if (!new_or_old.equals("1")) {
+            if (!TextUtils.isEmpty(board_add)) {
+                condition = new FilterCondition();
+                condition.type = 6;
+                condition.text = board_add.equals("1") ? "本地牌照" : "外地牌照";
+                list.add(condition);
             }
-            list.add(condition);
+            if (!min_mileage.equals("0") || !TextUtils.isEmpty(max_mileage)) {
+                condition = new FilterCondition();
+                condition.type = 8;
+                if (TextUtils.isEmpty(max_mileage)) {
+                    condition.text = min_mileage + "万公里以上";
+                } else {
+                    condition.text = min_mileage + "-" + max_mileage + "万公里";
+                }
+                list.add(condition);
+            }
+
+            if (!min_board_time.equals("0") || !TextUtils.isEmpty(max_board_time)) {
+                condition = new FilterCondition();
+                condition.type = 9;
+                if (TextUtils.isEmpty(max_board_time)) {
+                    condition.text = min_board_time + "年以上";
+                } else {
+                    condition.text = min_board_time + "-" + max_board_time + "年";
+                }
+                list.add(condition);
+            }
         }
 
-        if (!min_board_time.equals("0") || !TextUtils.isEmpty(max_board_time)) {
-            condition = new FilterCondition();
-            condition.type = 9;
-            if (TextUtils.isEmpty(max_board_time)) {
-                condition.text = min_board_time + "年以上";
-            } else {
-                condition.text = min_board_time + "-" + max_board_time + "年";
-            }
-            list.add(condition);
-        }
 
         if (!min_pailiang.equals("0") || !TextUtils.isEmpty(max_pailiang)) {
             condition = new FilterCondition();

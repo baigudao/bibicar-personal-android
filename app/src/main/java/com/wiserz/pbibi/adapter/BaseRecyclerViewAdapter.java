@@ -207,12 +207,12 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
      *
      * @param dataList
      */
-    public void addDatas(List<T> dataList) {
+    public void setDatas(List<T> dataList) {
         this.mList = dataList;
         notifyDataSetChanged();
     }
 
-    public void setDatas(List<T> dataList) {
+    public void addDatas(List<T> dataList) {
         if (mList == null) {
             mList = new ArrayList<>();
         }

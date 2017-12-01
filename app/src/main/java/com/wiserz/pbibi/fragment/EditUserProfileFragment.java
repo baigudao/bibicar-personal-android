@@ -3,6 +3,7 @@ package com.wiserz.pbibi.fragment;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -30,7 +31,9 @@ import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.engine.impl.GlideEngine;
 import com.zhihu.matisse.filter.Filter;
 import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.builder.PostFormBuilder;
 import com.zhy.http.okhttp.callback.StringCallback;
+import com.zhy.http.okhttp.request.RequestCall;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -193,51 +196,54 @@ public class EditUserProfileFragment extends BaseFragment {
                     }
                 }
             }, null);
+        } else {
+            commitDataToRealServer("");
         }
     }
 
     private void commitDataToRealServer(String hash) {
-        OkHttpUtils.post()
+        PostFormBuilder request = OkHttpUtils.post()
                 .url(Constant.getUserInfoUpdateUrl())
                 .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
                 .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
                 .addParams(Constant.NICKNAME, getNickName())
-                .addParams(Constant.AVATAR, hash)
                 .addParams(Constant.GENDER, getGender().equals("女") ? "0" : "1")
                 .addParams(Constant.SIGNATURE, getSignature())
-                .addParams(Constant.BIRTH, "")
-                .build()
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
+                .addParams(Constant.BIRTH, "");
+        if (!TextUtils.isEmpty(hash)) {
+            request.addParams(Constant.AVATAR, hash);
+        }
+        request.build().execute(new StringCallback() {
+            @Override
+            public void onError(Call call, Exception e, int id) {
 
-                    }
+            }
 
-                    @Override
-                    public void onResponse(String response, int id) {
-                        JSONObject jsonObject = null;
-                        try {
-                            jsonObject = new JSONObject(response);
-                            int status = jsonObject.optInt("status");
-                            JSONObject jsonObjectData = jsonObject.optJSONObject("data");
-                            if (status == 1) {
-                                JSONObject jsonObjectUserInfo = jsonObjectData.optJSONObject("user_info");
-                                Gson gson = new Gson();
-                                LoginBean.UserInfoBean userInfoBean = gson.fromJson(jsonObjectUserInfo.toString(), LoginBean.UserInfoBean.class);
-                                DataManager.getInstance().setUserInfo(userInfoBean);
-                                ToastUtils.showShort("更新成功");
-                                hideLoadingDialog();
-                                goBack();
-                            } else {
-                                String code = jsonObject.optString("code");
-                                String msg = jsonObjectData.optString("msg");
-                                ToastUtils.showShort("" + msg);
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+            @Override
+            public void onResponse(String response, int id) {
+                JSONObject jsonObject = null;
+                try {
+                    jsonObject = new JSONObject(response);
+                    int status = jsonObject.optInt("status");
+                    JSONObject jsonObjectData = jsonObject.optJSONObject("data");
+                    if (status == 1) {
+                        JSONObject jsonObjectUserInfo = jsonObjectData.optJSONObject("user_info");
+                        Gson gson = new Gson();
+                        LoginBean.UserInfoBean userInfoBean = gson.fromJson(jsonObjectUserInfo.toString(), LoginBean.UserInfoBean.class);
+                        DataManager.getInstance().setUserInfo(userInfoBean);
+                        ToastUtils.showShort("更新成功");
+                        hideLoadingDialog();
+                        goBack();
+                    } else {
+                        String code = jsonObject.optString("code");
+                        String msg = jsonObjectData.optString("msg");
+                        ToastUtils.showShort("" + msg);
                     }
-                });
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     private void editGender() {

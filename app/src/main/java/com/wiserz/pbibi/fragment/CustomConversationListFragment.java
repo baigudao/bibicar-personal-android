@@ -15,15 +15,24 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.blankj.utilcode.util.EmptyUtils;
 import com.blankj.utilcode.util.SPUtils;
+import com.sobot.chat.SobotApi;
+import com.sobot.chat.api.enumtype.SobotChatTitleDisplayMode;
+import com.sobot.chat.api.model.ConsultingContent;
+import com.sobot.chat.api.model.Information;
 import com.wiserz.pbibi.BaseApplication;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.adapter.CustomConversationListAdapter;
+import com.wiserz.pbibi.bean.LoginBean;
 import com.wiserz.pbibi.util.Constant;
+import com.wiserz.pbibi.util.DataManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import io.rong.eventbus.EventBus;
 import io.rong.imkit.RongContext;
@@ -1232,6 +1241,10 @@ public class CustomConversationListFragment extends UriFragment implements Adapt
     }
 
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        if (position == 3) {
+            goSobotActivity();
+            return;
+        }
         UIConversation uiConversation = (UIConversation) this.mAdapter.getItem(position);
         Conversation.ConversationType conversationType = uiConversation.getConversationType();
         if (this.getGatherState(conversationType)) {
@@ -1245,6 +1258,29 @@ public class CustomConversationListFragment extends UriFragment implements Adapt
             RongIM.getInstance().startConversation(this.getActivity(), conversationType, uiConversation.getConversationTargetId(), uiConversation.getUIConversationTitle());
         }
 
+    }
+
+    private void goSobotActivity() {
+        Information info = new Information();
+        LoginBean.UserInfoBean userInfoBean = DataManager.getInstance().getUserInfo();
+        if (EmptyUtils.isNotEmpty(userInfoBean)) {
+            if (EmptyUtils.isNotEmpty(userInfoBean.getProfile())) {
+                info.setUname(userInfoBean.getProfile().getNickname());
+                info.setFace(userInfoBean.getProfile().getAvatar());
+            }
+        }
+        info.setUseRobotVoice(false);//这个属性默认都是false。想使用需要付费。付费才可以设置为true。
+        Map<String, String> customInfo = new HashMap<>();
+        customInfo.put("sobot_appkey", "996adc38c4824cc5bea4a82cc4d2955d");
+        info.setCustomInfo(customInfo);
+        info.setConsultingContent(null);
+
+
+        String appkey = "996adc38c4824cc5bea4a82cc4d2955d";
+        if (!TextUtils.isEmpty(appkey)) {
+            info.setAppkey(appkey);
+            SobotApi.startSobotChat(getActivity(), info);
+        }
     }
 
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
