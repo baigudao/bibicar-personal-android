@@ -1,1 +1,1 @@
-include ':app', ':IMLib', ':IMKit', ':ucrop'
+include ':app', ':IMLib', ':IMKit', ':ucrop', ':sobotsdk'
