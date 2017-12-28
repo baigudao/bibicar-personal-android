@@ -190,6 +190,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         switchFragment(fromFragment, toFragment);
     }
 
+    //设置底部按钮的颜色
     private void setCheck(int position) {
         switch (position) {
             case 0:

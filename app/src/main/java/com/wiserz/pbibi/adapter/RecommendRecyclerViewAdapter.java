@@ -209,11 +209,11 @@ public class RecommendRecyclerViewAdapter extends RecyclerView.Adapter implement
         } else if (currentType == NEW_CAR) {
             NewCarViewHolder newCarViewHolder = (NewCarViewHolder) holder;
             newCarViewHolder.tv_more_new_car.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ((BaseActivity) mContext).gotoPager(AllNewCarFragment.class, null);
-                    //                    ((MainActivity) mContext).setCheck((RadioButton) ((MainActivity) mContext).findViewById(R.id.rb_car_center));
-                }
+                    @Override
+                    public void onClick(View v) {
+                        ((BaseActivity) mContext).gotoPager(AllNewCarFragment.class, null);
+                        //                    ((MainActivity) mContext).setCheck((RadioButton) ((MainActivity) mContext).findViewById(R.id.rb_car_center));
+                    }
             });
 
             ArrayList<CarInfoBean> carInfoBeanArrayList = getNewCarData(jsonObjectData);

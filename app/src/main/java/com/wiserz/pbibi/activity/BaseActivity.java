@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.WindowManager;
 
 import com.umeng.analytics.MobclickAgent;
@@ -101,7 +102,7 @@ public class BaseActivity extends AppCompatActivity {
             startActivity(intent);
             return true;
         } else {
-            if (BaseFragment.class.isAssignableFrom(pagerClass)) {
+            if (BaseFragment.class.isAssignableFrom(pagerClass)) {//跳转到fragment
                 String name = pagerClass.getName();
                 if (!isGoTwo) // 使用EmptyActiviy
                 {

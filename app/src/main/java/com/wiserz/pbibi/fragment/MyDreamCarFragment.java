@@ -2,16 +2,18 @@ package com.wiserz.pbibi.fragment;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.blankj.utilcode.util.EmptyUtils;
-import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
+import com.wiserz.pbibi.adapter.HeaderAndFooterWrapper;
 import com.wiserz.pbibi.bean.DreamCarBean;
 import com.wiserz.pbibi.util.Constant;
 import com.wiserz.pbibi.util.DataManager;
@@ -35,7 +37,8 @@ public class MyDreamCarFragment extends BaseFragment {
 
     private static final int DREAM_CAR_DATA_TYPE = 26;
     private int user_id;
-
+    private HeaderAndFooterWrapper mHeaderAndFooterWrapper;
+    private LinearLayout llTop;
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_my_dream_car;
@@ -75,7 +78,6 @@ public class MyDreamCarFragment extends BaseFragment {
 
                     @Override
                     public void onResponse(String response, int id) {
-                        LogUtils.e(response);
                         JSONObject jsonObject = null;
                         try {
                             jsonObject = new JSONObject(response);
@@ -95,18 +97,30 @@ public class MyDreamCarFragment extends BaseFragment {
     }
 
     private void handlerDreamCarData(JSONArray jsonArray) {
+        ArrayList<DreamCarBean> dreamCarBeanArrayList = null;
         if (EmptyUtils.isNotEmpty(jsonArray)) {
             Gson gson = new Gson();
-            ArrayList<DreamCarBean> dreamCarBeanArrayList = gson.fromJson(jsonArray.toString(), new TypeToken<ArrayList<DreamCarBean>>() {
+            dreamCarBeanArrayList = gson.fromJson(jsonArray.toString(), new TypeToken<ArrayList<DreamCarBean>>() {
             }.getType());
-            if (EmptyUtils.isNotEmpty(dreamCarBeanArrayList) && getView() != null) {
-                RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.recyclerView);
-                BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, dreamCarBeanArrayList, DREAM_CAR_DATA_TYPE);
-                recyclerView.setAdapter(baseRecyclerViewAdapter);
-                recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
-            }
-        } else {
-            ToastUtils.showShort("你还没有梦想中的车型");
+        }
+
+            RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.recyclerView);
+            BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, dreamCarBeanArrayList, DREAM_CAR_DATA_TYPE);
+            llTop = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.car_center_topview, null);//作为头布局存放过滤条件
+            mHeaderAndFooterWrapper = new HeaderAndFooterWrapper(baseRecyclerViewAdapter);
+            mHeaderAndFooterWrapper.addHeaderView(llTop);
+            recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
+            recyclerView.setAdapter(mHeaderAndFooterWrapper);
+
+        setView(llTop, dreamCarBeanArrayList == null || dreamCarBeanArrayList.isEmpty());
+    }
+
+    private void setView(LinearLayout linearLayout, boolean isNoData) {
+        linearLayout.removeAllViews();
+
+        if (isNoData) {//没有符合条件的车辆
+            View noDataView = LayoutInflater.from(getActivity()).inflate(R.layout.layout_no_car, null);
+            linearLayout.addView(noDataView);
         }
     }
 }

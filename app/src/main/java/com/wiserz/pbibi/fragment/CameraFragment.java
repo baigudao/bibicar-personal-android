@@ -15,23 +15,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.wiserz.pbibi.activity.BaseActivity;
+import com.blankj.utilcode.util.ToastUtils;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.adapter.SelectedPhotoAdapter;
 import com.wiserz.pbibi.hardwrare.CameraManager;
 import com.wiserz.pbibi.hardwrare.OnCameraListener;
 import com.wiserz.pbibi.hardwrare.SensorControler;
 import com.wiserz.pbibi.util.CommonUtil;
-import com.wiserz.pbibi.util.Constant;
 import com.wiserz.pbibi.util.DataManager;
 import com.wiserz.pbibi.view.SquareCameraContainer;
 
 import java.io.File;
-import java.util.ArrayList;
 
-/**
+/** 拍照
  * Created by gigabud on 15-12-23.
  */
 public class CameraFragment extends BaseFragment implements View.OnTouchListener {
@@ -45,8 +42,10 @@ public class CameraFragment extends BaseFragment implements View.OnTouchListener
     private boolean mUsingCamera;
 
     private SelectedPhotoAdapter mSelectedPhotoAdapter;
-
     private SelectPhotoFragment mSelectPhotoFragment;
+    private RecyclerView recyclerView;
+    private LinearLayoutManager llManager;
+    private TextView tvPos;
 
     private static final String CAMERA_PERMISSION = Manifest.permission.CAMERA;
     private static final int EXTERNAL_STORAGE_REQ_CODE = 10;//权限请求码
@@ -76,12 +75,15 @@ public class CameraFragment extends BaseFragment implements View.OnTouchListener
         view.findViewById(R.id.btnFlashlight).setOnClickListener(this);
         view.findViewById(R.id.btnSwitchCamera).setOnClickListener(this);
         view.findViewById(R.id.tvNext).setOnClickListener(this);
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.selectPhotoView);
-        LinearLayoutManager linearLayoutManagerHorizontal = new LinearLayoutManager(getActivity());
-        linearLayoutManagerHorizontal.setOrientation(LinearLayoutManager.HORIZONTAL);
-        recyclerView.setLayoutManager(linearLayoutManagerHorizontal);
+
+        tvPos = (TextView) view.findViewById(R.id.tvPos);
+        recyclerView = (RecyclerView) view.findViewById(R.id.selectPhotoView);
+        llManager = new LinearLayoutManager(getActivity());
+        llManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        recyclerView.setLayoutManager(llManager);
         recyclerView.setAdapter(getSelectedPhotoAdapter());
         getSelectedPhotoAdapter().setDataList(mSelectPhotoFragment.getSelectedPhotos());
+
         requestPermission();
     }
 
@@ -91,8 +93,15 @@ public class CameraFragment extends BaseFragment implements View.OnTouchListener
             mSelectedPhotoAdapter.setOnPhotoDelete(new SelectedPhotoAdapter.OnPhotoOperator() {
                 @Override
                 public void onDelete(int position) {
+                    mSelectPhotoFragment.getSelectedPhotos().remove(position+1);
                     showView();
                 }
+
+                @Override
+                public void onItemClick(int position) {
+                    tvPos.setText(getResources().getStringArray(R.array.car_img_type)[position]);
+                }
+
             });
         }
         return mSelectedPhotoAdapter;
@@ -104,12 +113,12 @@ public class CameraFragment extends BaseFragment implements View.OnTouchListener
         super.onResume();
         requestPermission();
         if (mSelectPhotoFragment.getCurrentItem() == 0) {
-            if (DataManager.getInstance().getObject() != null && DataManager.getInstance().getData1() != null) {
+            if (DataManager.getInstance().getObject() != null && DataManager.getInstance().getData1() != null) {//编辑照片后返回
                 String newPath = (String) DataManager.getInstance().getObject();
                 int index = (int) DataManager.getInstance().getData1();
-                mSelectPhotoFragment.getSelectedPhotos().set(index, new File(newPath));
+                mSelectPhotoFragment.getSelectedPhotos().put(index, new File(newPath));
                 getSelectedPhotoAdapter().notifyDataSetChanged();
-            } else if (DataManager.getInstance().getData8() != null) {
+            } else if (DataManager.getInstance().getData8() != null) {//删除照片后返回
                 int index = (int) DataManager.getInstance().getData8();
                 mSelectPhotoFragment.getSelectedPhotos().remove(index);
                 getSelectedPhotoAdapter().notifyDataSetChanged();
@@ -118,6 +127,7 @@ public class CameraFragment extends BaseFragment implements View.OnTouchListener
             DataManager.getInstance().setData1(null);
             DataManager.getInstance().setData8(null);
         }
+        showView();
     }
 
     @Override
@@ -135,7 +145,7 @@ public class CameraFragment extends BaseFragment implements View.OnTouchListener
         }
         mUsingCamera = false;
         mCameraContainer = null;
-        showView();
+
     }
 
     private void requestPermission() {
@@ -234,17 +244,19 @@ public class CameraFragment extends BaseFragment implements View.OnTouchListener
                 showSwitchCameraIcon();
                 break;
             case R.id.btnBack:
+                DataManager.getInstance().setObject(mSelectPhotoFragment.getSelectedPhotos());
                 getActivity().finish();
                 break;
             case R.id.btnTakePhoto:
                 if (mUsingCamera){
                     return;
                 }
-                int currentNum=mSelectPhotoFragment.getSelectedPhotos().size() + mSelectPhotoFragment.getCurrentPhotoNum();
-                if (currentNum == Constant.MAX_UPLOAD_PHOTO_NUM) {
-                    Toast.makeText(getActivity(),"最多可以上传"+(Constant.MAX_UPLOAD_PHOTO_NUM-mSelectPhotoFragment.getCurrentPhotoNum())+"张照片",Toast.LENGTH_SHORT).show();
+
+                if(mSelectPhotoFragment.getSelectedPhotos().get(getSelectedPhotoAdapter().getSelectIndex()+1)!=null){
+                    ToastUtils.showShort(getString(R.string.only_a_photo));
                     return;
                 }
+
                 mUsingCamera = true;
                 boolean isSuccessful = mCameraContainer.takePicture(new OnCameraListener() {
                     @Override
@@ -260,14 +272,17 @@ public class CameraFragment extends BaseFragment implements View.OnTouchListener
                                         getActivity().finish();
                                         return;
                                     }
-                                    getView().findViewById(R.id.selectPhotoView).setVisibility(View.VISIBLE);
-                                    mSelectPhotoFragment.getSelectedPhotos().add(new File(path));
+                                    //将拍下来的照片保存到指定位置
+                                    int  index = getSelectedPhotoAdapter().getSelectIndex();
+                                    mSelectPhotoFragment.getSelectedPhotos().put(index+1,new File(path));
+                                    if(index < 11){//自动跳到下一个,最大是11
+                                        ++ index;
+                                        getSelectedPhotoAdapter().setSelectIndex(index);
+                                        llManager.scrollToPositionWithOffset(index,0);
+                                        tvPos.setText(getResources().getStringArray(R.array.car_img_type)[index]);
+                                    }
                                     getSelectedPhotoAdapter().setDataList(mSelectPhotoFragment.getSelectedPhotos());
                                     showView();
-                                    int currentNum=mSelectPhotoFragment.getSelectedPhotos().size() + mSelectPhotoFragment.getCurrentPhotoNum();
-                                    if (currentNum == Constant.MAX_UPLOAD_PHOTO_NUM) {
-                                        Toast.makeText(getActivity(),"最多可以上传"+(Constant.MAX_UPLOAD_PHOTO_NUM-mSelectPhotoFragment.getCurrentPhotoNum())+"张照片",Toast.LENGTH_SHORT).show();
-                                    }
                                 }
                                 SensorControler.getInstance().unlockFocus();
                                 mUsingCamera = false;
@@ -295,14 +310,11 @@ public class CameraFragment extends BaseFragment implements View.OnTouchListener
 
     private void showView() {
         if (mSelectPhotoFragment.getSelectedPhotos().size() > 0) {
-            getView().findViewById(R.id.selectPhotoView).setVisibility(View.VISIBLE);
             getView().findViewById(R.id.tvPhotoNum).setVisibility(View.VISIBLE);
             ((TextView) getView().findViewById(R.id.tvPhotoNum)).setText(String.valueOf(mSelectPhotoFragment.getSelectedPhotos().size()));
             getView().findViewById(R.id.tvNext).setVisibility(View.VISIBLE);
             mSelectPhotoFragment.setViewPagerCanScroll(false);
         } else {
-
-            getView().findViewById(R.id.selectPhotoView).setVisibility(View.GONE);
             getView().findViewById(R.id.tvPhotoNum).setVisibility(View.GONE);
             getView().findViewById(R.id.tvNext).setVisibility(View.GONE);
             mSelectPhotoFragment.setViewPagerCanScroll(true);

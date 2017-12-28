@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/black">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="8dp">
+
 
     <ImageView
         android:id="@+id/iv_image_all"
-        android:layout_width="80dp"
-        android:layout_height="58dp"
+        android:layout_width="98dp"
+        android:layout_height="70dp"
         android:layout_gravity="center_horizontal"
         android:layout_margin="5dp"
         android:scaleType="centerCrop"
@@ -15,11 +16,37 @@
 
     <ImageView
         android:id="@+id/iv_close"
+        android:layout_width="19dp"
+        android:layout_height="19dp"
+        android:layout_alignRight="@id/iv_image_all"
+        android:layout_alignTop="@id/iv_image_all"
+        android:clickable="true"
+        android:src="@drawable/close"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/tvPos"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:padding="2dp"
+        android:layout_alignLeft="@id/iv_image_all"
+        android:layout_alignTop="@id/iv_image_all"
+        android:text="正前"
+        android:textSize="12sp"
+        android:textColor="#fff"
+        android:background="#000"/>
+
+
+    <RelativeLayout
+        android:id="@+id/rlSelect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/iv_image_all"
+        android:layout_alignTop="@id/iv_image_all"
         android:layout_alignRight="@id/iv_image_all"
-        android:layout_margin="6dp"
-        android:clickable="true"
-        android:src="@drawable/close"/>
+        android:layout_alignBottom="@id/iv_image_all"
+        android:background="@drawable/select_photo_bg"
+        android:visibility="gone">
+    </RelativeLayout>
 
 </RelativeLayout>

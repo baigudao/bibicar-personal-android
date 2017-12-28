@@ -28,7 +28,8 @@ public class MorePopupWindow extends PopupWindow implements View.OnClickListener
         TYPE_ADD_PICTURE_MODEL,
         TYPE_IN_MY_LOVE_CAR,
         TYPE_IN_MY_SALE_CAR,
-        TYPE_SAVE_PHOTO
+        TYPE_SAVE_PHOTO,
+        TYPE_EIDT_SALE_CAR
     }
 
     private MorePopupWindowClickListener listener;
@@ -156,6 +157,9 @@ public class MorePopupWindow extends PopupWindow implements View.OnClickListener
         } else if (type == MORE_POPUP_WINDOW_TYPE.TYPE_SAVE_PHOTO) {
             getSecondBtn().setVisibility(View.GONE);
             getFirstBtn().setText(context.getResources().getString(R.string.save_to_album));
+        }else if(type == MORE_POPUP_WINDOW_TYPE.TYPE_EIDT_SALE_CAR){
+            getFirstBtn().setText(context.getResources().getString(R.string.edit));
+            getSecondBtn().setText(context.getResources().getString(R.string.delete));
         }
 
         getCancelBtn().setOnClickListener(this);

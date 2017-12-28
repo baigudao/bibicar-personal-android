@@ -22,12 +22,12 @@ public class EmptyActivity extends BaseActivity {
 
     @Override
     protected void onNewIntent(Intent intent) {
-        String fragmentName = intent.getStringExtra(Constant.FRAGMENT_NAME);
+        String fragmentName = intent.getStringExtra(Constant.FRAGMENT_NAME);//要展示的新fragment名字
         BaseFragment fragment = (BaseFragment) Fragment.instantiate(this, fragmentName);
         Bundle bundle = intent.getExtras();
         fragment.setArguments(bundle);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        Fragment currentFragment = getVisibleFragment();
+        Fragment currentFragment = getVisibleFragment();//之前显示的fragment
         if (currentFragment != null) {
             ft.hide(currentFragment);
         }

@@ -25,7 +25,7 @@
     	各个平台注册应用信息的地址如下：
 			新浪微博        http://open.weibo.com
 			腾讯微博        http://dev.t.qq.com
-			QQ空间          http://connect.qq.com/intro/login/
+			QQ空间          0
 			微信好友        http://open.weixin.qq.com
 			Facebook       https://developers.facebook.com
 			Twitter        https://dev.twitter.com
@@ -81,5 +81,23 @@
     <!--微信收藏-->
     <WechatFavorite AppId="wx8bac6dd603d47d15" AppSecret="dcc4740804b9c5b19686cb4b1fd5eb8e"
         Enable="true" Id="4" SortId="4" />
+
+    <!--BypassApproval是绕过审核的标记，设置为true后AppId将被忽略，不经过审核的应用也可以执行分享，但是仅限于分享文字和图片，不能分享链接， -->
+    <QQ
+        Id="5"
+        SortId="5"
+        AppId="1105701274"
+        AppKey="zuBAT31m7yOJ0yS8"
+        BypassApproval="false"
+        ShareByAppClient="true"
+        Enable="true" />
+
+    <QZone
+        Id="6"
+        SortId="6"
+        AppId="1105701274"
+        AppKey="zuBAT31m7yOJ0yS8"
+        BypassApproval="false"
+        Enable="true" />
 
 </DevInfor>

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -15,7 +14,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.activity.BaseActivity;
-import com.wiserz.pbibi.activity.RegisterAndLoginActivity;
 import com.wiserz.pbibi.bean.FeedBean;
 import com.wiserz.pbibi.bean.TopicInfoBean;
 import com.wiserz.pbibi.fragment.AllTopicFragment;
@@ -101,7 +99,19 @@ public class HallRecyclerViewAdapter extends RecyclerView.Adapter implements Bas
             });
             ArrayList<TopicInfoBean> topicInfoBeanArrayList = getJoinTopicData(jsonObjectData);
             if (EmptyUtils.isNotEmpty(topicInfoBeanArrayList) && topicInfoBeanArrayList.size() != 0) {
-                BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, topicInfoBeanArrayList, MY_TOPIC_DATA_TYPE);
+
+                BaseRecyclerViewAdapter baseRecyclerViewAdapter;
+
+                if(topicInfoBeanArrayList.size()>3){//只显示三条参与的话题
+                    ArrayList<TopicInfoBean> tempList = new ArrayList<>();
+                    for(int i = 0;i < 3;i++){
+                        tempList.add(topicInfoBeanArrayList.get(i));
+                    }
+                    baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, tempList, MY_TOPIC_DATA_TYPE);
+                }else{
+                    baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, topicInfoBeanArrayList, MY_TOPIC_DATA_TYPE);
+
+                }
                 myJoinTopicViewHolder.recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
                 myJoinTopicViewHolder.recyclerView.setAdapter(baseRecyclerViewAdapter);
                 baseRecyclerViewAdapter.setOnItemClickListener(this);
@@ -119,6 +129,7 @@ public class HallRecyclerViewAdapter extends RecyclerView.Adapter implements Bas
         }
     }
 
+    //未登录时没有加入的话题这一项
     @Override
     public int getItemCount() {
         return CommonUtil.isHadLogin() ? 3 : 2;

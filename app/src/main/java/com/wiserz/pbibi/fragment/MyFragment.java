@@ -67,6 +67,9 @@ public class MyFragment extends BaseFragment implements OnRefreshListener {
 
     public void onResume(){
         super.onResume();
+        if (EmptyUtils.isNotEmpty(user_id)) {
+            getDataFromNet();
+        }
     }
 
     @Override

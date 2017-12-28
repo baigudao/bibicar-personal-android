@@ -516,6 +516,7 @@
                     android:background="@color/pure_white_color">
 
                     <TextView
+                        android:id="@+id/textLength"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
@@ -531,9 +532,11 @@
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="15dp"
-                        android:text="1821mm"
+                        android:text="1821mmx1535mmx4564mm"
                         android:textColor="@color/second_text_color"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"
+                        android:maxLength="23"
+                        android:maxLines="2"/>
 
                 </RelativeLayout>
 

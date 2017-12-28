@@ -39,14 +39,14 @@ public class CommunityFragment extends BaseFragment {
         mBaseFragment.add(new FollowFragment());
 
         mRg_main.setOnCheckedChangeListener(new MyOnCheckedChangeListener());
-        //设置默认选中常用框架
+        //设置默认选中大厅
         mRg_main.check(R.id.rb_hall);
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.tv_create_topic:
+            case R.id.tv_create_topic: //创建话题
                 if(!CommonUtil.isHadLogin()) {
                     gotoPager(RegisterAndLoginActivity.class, null);
                     return;

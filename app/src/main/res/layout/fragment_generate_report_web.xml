@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <com.github.lzyzsd.jsbridge.BridgeWebView
+        android:id="@+id/webView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+    </com.github.lzyzsd.jsbridge.BridgeWebView>
+
+
+
+    <!-- 选择日期 -->
+    <RelativeLayout
+        android:id="@+id/rl_date"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/black"
+            android:alpha="0.75"/>
+
+
+        <LinearLayout
+            android:id="@+id/llBtns"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="20dp"
+            android:background="@color/pure_white_color"
+            android:gravity="center_horizontal"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal">
+
+
+            <TextView
+                android:id="@+id/tvCancel"
+                android:layout_width="100dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/back_select_date_btn"
+                android:gravity="center"
+                android:text="@string/cancel"
+                android:textColor="@color/pure_white_color"
+                android:textSize="15sp"/>
+
+
+            <TextView
+                android:id="@+id/tvSure"
+                android:layout_width="100dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/back_select_date_btn"
+                android:gravity="center"
+                android:layout_marginLeft="15dp"
+                android:text="@string/sure"
+                android:textColor="@color/pure_white_color"
+                android:textSize="15sp"/>
+
+        </LinearLayout>
+
+        <DatePicker
+            android:id="@+id/datePicker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:datePickerMode="spinner"
+            android:calendarViewShown="false"
+            android:layout_above="@id/llBtns"
+            android:background="@color/pure_white_color"></DatePicker>
+    </RelativeLayout>
+
+</RelativeLayout>

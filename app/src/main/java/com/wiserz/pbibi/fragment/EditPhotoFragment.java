@@ -2,17 +2,15 @@ package com.wiserz.pbibi.fragment;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.tencent.mm.opensdk.utils.Log;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.activity.BaseActivity;
 import com.wiserz.pbibi.util.CommonUtil;
@@ -31,6 +29,7 @@ import java.io.File;
 public class EditPhotoFragment extends BaseFragment {
     private String mPhotoPath, mCropPath;
     private int mEditIndex;
+    private int key;
 
     private OperatorType mCurrentOperatorType;
 
@@ -50,15 +49,21 @@ public class EditPhotoFragment extends BaseFragment {
     @Override
     protected void initView(View view) {
         mPhotoPath = (String) DataManager.getInstance().getObject();
+        Log.i("TESTLOG","EDITPHOTO mPhotoPath="+mPhotoPath);
         if (TextUtils.isEmpty(mPhotoPath)) {
             return;
         }
         mEditIndex = (int) DataManager.getInstance().getData1();
         int size = (int) DataManager.getInstance().getData2();
+        Object data3 = DataManager.getInstance().getData3();
+        if(data3 != null){
+            key = (int) data3;
+        }
         ((TextView) view.findViewById(R.id.tvTitle)).setText((mEditIndex + 1) + "/" + size);
         DataManager.getInstance().setObject(null);
         DataManager.getInstance().setData1(null);
         DataManager.getInstance().setData2(null);
+        DataManager.getInstance().setData3(null);
         view.findViewById(R.id.btnCancel).setOnClickListener(this);
         view.findViewById(R.id.btnDone).setOnClickListener(this);
         view.findViewById(R.id.ivDelete).setOnClickListener(this);
@@ -68,6 +73,9 @@ public class EditPhotoFragment extends BaseFragment {
         DisplayMetrics dm = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
         Bitmap bmp = CommonUtil.getBitmapFromFile(new File(mPhotoPath), dm.widthPixels, dm.heightPixels);
+
+        if(bmp == null)
+            getActivity().finish();
 
         mCurrentOperatorType = OperatorType.TYPE_NONE;
         MosaicView mosaicView = (MosaicView) view.findViewById(R.id.mosaicView);
@@ -193,14 +201,14 @@ public class EditPhotoFragment extends BaseFragment {
                 String newPath = CommonUtil.saveJpeg(bitmap, getActivity());
                 bitmap.recycle();
                 DataManager.getInstance().setObject(newPath);
-                DataManager.getInstance().setData1(mEditIndex);
+                DataManager.getInstance().setData1(key);
                 View rlOperator = getView().findViewById(R.id.rlOperator);
                 rlOperator.requestLayout();
                 new File(mPhotoPath).delete();
                 goBack();
                 break;
             case R.id.ivDelete:
-                DataManager.getInstance().setData8(mEditIndex);
+                DataManager.getInstance().setData8(key);
                 new File(mPhotoPath).delete();
                 goBack();
                 break;

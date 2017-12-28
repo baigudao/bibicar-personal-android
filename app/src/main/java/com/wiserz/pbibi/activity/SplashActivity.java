@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -39,6 +40,14 @@ import java.util.Random;
 
 import okhttp3.Call;
 
+/* 闪屏启动页
+*  1. 倒计时
+*  2. 设置闪屏页图片背景
+*  3. 6.0以上申请权限
+*  4. 从网络更新闪屏图片信息
+*  5. 初次运行上传手机信息
+*  6. 初次运行进入GuideActivity,否则进入MainActivity
+ */
 public class SplashActivity extends AppCompatActivity {
 
     private static final String[] APP_NEED_PERMISSIONS = new String[]{
@@ -90,8 +99,8 @@ public class SplashActivity extends AppCompatActivity {
             }
         });
         countDownView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+                @Override
+                public void onClick(View v) {
                 flag = 1;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     //SDK版本大于等于23，也就是Android 6.0
@@ -223,6 +232,8 @@ public class SplashActivity extends AppCompatActivity {
                     });
         }
 
+        Log.i("TESTLOG","SplashActivity ready enter ");
+
         Intent intent;
         boolean isEnterGuideView = SPUtils.getInstance().getBoolean(Constant.IS_ENTER_GUIDE_VIEW);
 //        boolean is_user_login = SPUtils.getInstance().getBoolean(Constant.IS_USER_LOGIN);
@@ -230,6 +241,7 @@ public class SplashActivity extends AppCompatActivity {
 //            //如果进入了引导页面
 //            if (is_user_login) {
 //                //如果用户登录过，就直接进入主页面
+            Log.i("TESTLOG","SplashActivity ready enter MainActivity");
                 intent = new Intent(SplashActivity.this, MainActivity.class);
 //            } else {
 //                //如果用户没有登录过，就进入登录注册页面
@@ -237,6 +249,7 @@ public class SplashActivity extends AppCompatActivity {
 //            }
         } else {
             //如果没有进入引导页面，就进入引导页面
+            Log.i("TESTLOG","SplashActivity ready enter GuideActivity");
             intent = new Intent(SplashActivity.this, GuideActivity.class);
         }
         startActivity(intent);

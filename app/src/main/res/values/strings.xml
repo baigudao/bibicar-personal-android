@@ -33,7 +33,7 @@
     <string name="errcode_deny">支付被拒绝</string>
     <string name="errcode_unsupported">不支持错误</string>
     <string name="errcode_unknown">未知错误</string>
-    <string name="share_to">分享到</string>
+    <string name="share_to">分享至</string>
     <string name="cancel">取消</string>
     <string name="share">分享</string>
     <string name="car_sales_volume">销量：%1$s</string>
@@ -132,4 +132,36 @@
     <string name="car_model">车型</string>
     <string name="not_seleted">未选择  ></string>
     <string name="not_write">未填写</string>
+    <string name="not_write_choose">未填写(选填)</string>
+    
+    <string name="history_offer">历史报价</string>
+    <string name="generate_offering_list">生成报价单</string>
+    <string name="history_offer_title">历史报价单</string>
+    <string name="show_report">报价单</string>
+    <string name="report_welcome">很高兴您选择BiBiCar,我们一直奉行在全国范围内帮客户寻找最具价格竞争力的全品牌车型。目前已代理多家品牌授权经销商，并与4S之间建立紧密合作关系，可在全国范围内为您寻车、调车。</string>
+    <string name="report_promise">我司承诺所售车辆均与4S店售车一致，享有国家三包政策，全国保修。</string>
+    <string name="report_remark">1、购置税由国家税务机关统一收取，所列费用为预估费用。\n2、客户若在限购城市购车上牌，自行提供指标。如若需要代为竞拍指标，本公司实行实报实销制度，费用由客户承担。</string>
+    <string name="limit_day">(有效期3天)</string>
+    <string name="input_consultant_name">请输入销售顾问的姓名</string>
+    <string name="input_consultant_tel">请输入销售顾问的联系电话</string>
+    <string name="input_guide_price">请输入指导价</string>
+    <string name="input_promise">请输入承诺</string>
+    <string name="input_total_price">请输入合计总价</string>
+    <string name="input_purchase_tax">请输入购置税</string>
+    <string name="set_report_time">请设置报价时间</string>
+    <string name="input_car_type">请输入车辆型号</string>
+    <string name="input_car_color">请输入颜色</string>
+    <string name="input_car_info">请输入车辆简介</string>
+    <string name="input_insurance">请输入保险费</string>
+    <string name="input_premium">请输入上牌费</string>
+    <string name="input_other">请输入其他费用</string>
+    <string name="input_receive_account">请输入收款账号</string>
+    <string name="input_account_name">请输入开户名</string>
+    <string name="input_account_bank">请输入开户行</string>
+    <string name="copy_link_success">链接复制成功~</string>
+    <string name="choose_write">选填</string>
+    <string name="promise_text">尊敬的客户:\n感谢您对%1$s汽车和我司的信赖，现就您咨询的%2$s购车费用详细报价如下：</string>
+
+    <string name="only_a_photo">每个角度只能上传一张照片~</string>
+
 </resources>

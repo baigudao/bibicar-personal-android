@@ -5,6 +5,7 @@
               android:background="@color/background_color"
               android:orientation="vertical">
 
+    <!-- 推荐关注 -->
     <LinearLayout
         android:id="@+id/ll_recommend_follow"
         android:layout_width="match_parent"
@@ -52,6 +53,7 @@
 
     </LinearLayout>
 
+    <!-- 关注用户的动态 -->
     <android.support.v7.widget.RecyclerView
         android:id="@+id/my_follow_recyclerView"
         android:layout_width="match_parent"

@@ -13,6 +13,7 @@
 
     <include layout="@layout/title_bar" />
 
+    <!-- 头部（基本信息、详细配置） -->
     <RelativeLayout
         android:id="@+id/rl"
         android:layout_width="match_parent"
@@ -76,6 +77,7 @@
         android:layout_below="@id/rl"
         android:background="@color/divider_color" />
 
+    <!-- 警告信息 -->
     <RelativeLayout
         android:id="@+id/rlWarning"
         android:layout_width="match_parent"

@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.wiserz.pbibi.BaseApplication;
 import com.wiserz.pbibi.R;
@@ -63,7 +62,7 @@ public class ShowMediasAdapter extends BaseAdapter {
             viewHolder = new ViewHolder();
             viewHolder.iv = (ImageView) convertView.findViewById(R.id.iv);
             viewHolder.rlSelect = convertView.findViewById(R.id.rlSelect);
-            viewHolder.tvPhotoIndex = (TextView) convertView.findViewById(R.id.tvPhotoIndex);
+//            viewHolder.tvPhotoIndex = (TextView) convertView.findViewById(R.id.tvPhotoIndex);
             RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) viewHolder.iv.getLayoutParams();
             lp.width = mItemWidth;
             lp.height = mItemWidth;
@@ -76,7 +75,7 @@ public class ShowMediasAdapter extends BaseAdapter {
         viewHolder.iv.setTag(R.id.tag, mediaInfo);
         if (mediaInfo.isSelected) {
             viewHolder.rlSelect.setVisibility(View.VISIBLE);
-            viewHolder.tvPhotoIndex.setText(String.valueOf(mediaInfo.index + 1));
+//            viewHolder.tvPhotoIndex.setText(String.valueOf(mediaInfo.index + 1));//右上角数量标志
         } else {
             viewHolder.rlSelect.setVisibility(View.INVISIBLE);
         }
@@ -86,6 +85,6 @@ public class ShowMediasAdapter extends BaseAdapter {
     class ViewHolder {
         ImageView iv;
         View rlSelect;
-        TextView tvPhotoIndex;
+//        TextView tvPhotoIndex;
     }
 }

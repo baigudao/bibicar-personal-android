@@ -3,6 +3,7 @@ package com.wiserz.pbibi.fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -63,6 +64,7 @@ public class SelectCarColorFragment extends BaseFragment implements BaseRecycler
     @Override
     public void onItemClick(Object data, int position) {
         if (data.getClass().getSimpleName().equals("String")) {
+            Log.i("TESTLOG","onItemClick ===");
             DataManager.getInstance().setData7(position);
             goBack();
         }

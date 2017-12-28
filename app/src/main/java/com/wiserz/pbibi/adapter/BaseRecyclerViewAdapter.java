@@ -1,12 +1,13 @@
 package com.wiserz.pbibi.adapter;
 
 import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,6 +19,8 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -52,23 +55,28 @@ import com.wiserz.pbibi.bean.DreamCarBean;
 import com.wiserz.pbibi.bean.FeedBean;
 import com.wiserz.pbibi.bean.FriendshipBean;
 import com.wiserz.pbibi.bean.GuaranteeHistoryBean;
+import com.wiserz.pbibi.bean.HistoryReportBean;
 import com.wiserz.pbibi.bean.LikeListBean;
 import com.wiserz.pbibi.bean.LoveCarBean;
 import com.wiserz.pbibi.bean.MyCarRentOrderBean;
-import com.wiserz.pbibi.bean.MySellingCarBean;
 import com.wiserz.pbibi.bean.PeccancyHistoryBean;
 import com.wiserz.pbibi.bean.PeccancyRecordBean;
 import com.wiserz.pbibi.bean.RecommendUserInfoBean;
 import com.wiserz.pbibi.bean.SellingAndSoldCarListBean;
 import com.wiserz.pbibi.bean.ThemeUserBean;
 import com.wiserz.pbibi.bean.TopicInfoBean;
+import com.wiserz.pbibi.bean.TypeBean;
 import com.wiserz.pbibi.bean.UserBean;
 import com.wiserz.pbibi.bean.UserInfoForSalesConsultant;
 import com.wiserz.pbibi.bean.VideoBean;
 import com.wiserz.pbibi.fragment.CarDetailFragment;
+import com.wiserz.pbibi.fragment.GenerateReportWebFragment;
+import com.wiserz.pbibi.fragment.HistoryCarReportFragment;
 import com.wiserz.pbibi.fragment.MyFragmentForCompany;
 import com.wiserz.pbibi.fragment.MyHomePageFragment;
 import com.wiserz.pbibi.fragment.OtherHomePageFragment;
+import com.wiserz.pbibi.fragment.PostNewCarFragment;
+import com.wiserz.pbibi.fragment.PostSecondHandCarFragment;
 import com.wiserz.pbibi.fragment.ShowAllImageFragment;
 import com.wiserz.pbibi.fragment.StateDetailFragment;
 import com.wiserz.pbibi.fragment.VideoDetailFragment;
@@ -76,6 +84,8 @@ import com.wiserz.pbibi.util.CommonUtil;
 import com.wiserz.pbibi.util.Constant;
 import com.wiserz.pbibi.util.DataManager;
 import com.wiserz.pbibi.view.CircleColorView;
+import com.wiserz.pbibi.view.MorePopupWindow;
+import com.wiserz.pbibi.view.ShareHistoryReportPopupWindow;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -88,13 +98,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import cn.sharesdk.onekeyshare.OnekeyShare;
+import cn.sharesdk.onekeyshare.OnekeyShareTheme;
 import io.rong.imkit.RongIM;
 import io.rong.imlib.model.Conversation;
 import io.rong.imlib.model.UserInfo;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 import okhttp3.Call;
 
-import static com.wiserz.pbibi.R.id.ivColor;
 import static com.wiserz.pbibi.R.id.tvCarColor;
 
 /**
@@ -194,6 +205,10 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
 
     private static final int CAR_LIST_FOR_CAR_CENTER = 100;//汽车中心的汽车列表
 
+    private static final int CAR_REPORT_ITEM = 101;//历史报价单列表
+
+    private static final int REPORT_CAR_PHOTO_ITEM = 102;
+
     private ArrayList<String> topic_string = new ArrayList<>();
 
     public BaseRecyclerViewAdapter(Context context, List<T> tList, int dataType) {
@@ -226,7 +241,7 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
         if (dataType == FOLLOW_AND_FAN_DATA_TYPE) {
             viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_follow_and_fan, null));
         } else if (dataType == MY_SELLING_CAR_DATA_TYPE) {
-            viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_car_center_car_list, null));
+            viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_my_selling_car, null));
         } else if (dataType == LOVE_CAR_DATA_TYPE) {
             viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_car_center_car_list, null));
         } else if (dataType == LIKE_LIST_DATA_TYPE) {
@@ -309,6 +324,11 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
             viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_my_car_rent_order, null));
         } else if (dataType == CAR_RENT_RECOMMEND_DATA_TYPE) {
             viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_car_rent_recommend, null));
+        } else if (dataType == CAR_REPORT_ITEM){
+            viewHolder = new ViewHolder(View.inflate(mContext, R.layout.item_car_center_car_list, null));
+        } else if(dataType == REPORT_CAR_PHOTO_ITEM){
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_car_detail_photo, parent,false);//解决宽度不能铺满
+            viewHolder = new ViewHolder(view);
         } else {
             viewHolder = null;
         }
@@ -630,27 +650,10 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                 }
             }
         } else if (dataType == MY_SELLING_CAR_DATA_TYPE) {
-            ArrayList<MySellingCarBean> mySellingCarBeanArrayList = (ArrayList<MySellingCarBean>) mList;
-
-            if (EmptyUtils.isNotEmpty(mySellingCarBeanArrayList)) {
-                MySellingCarBean mySellingCarBean = mySellingCarBeanArrayList.get(position);
-                if (EmptyUtils.isNotEmpty(mySellingCarBean)) {
-                    Glide.with(mContext)
-                            .load(mySellingCarBean.getCar_info().getFile_img())
-                            .placeholder(R.drawable.default_bg_ratio_1)
-                            .error(R.drawable.default_bg_ratio_1)
-                            .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
-                            .into(holder.iv_item1);
-                    holder.tv_item1.setText(mySellingCarBean.getCar_info().getBrand_info().getBrand_name() + " " + mySellingCarBean.getCar_info().getSeries_info().getSeries_name() + " " + mySellingCarBean.getCar_info().getModel_info().getModel_name());
-                    holder.tv_item2.setText(mySellingCarBean.getCar_info().getModel_info().getModel_year() + "年/排量" + mySellingCarBean.getCar_info().getModel_detail().getEngine_ExhaustForFloat());
-                    holder.tv_item3.setText(mContext.getString(R.string._wan, String.format(Locale.CHINA, "%.2f", mySellingCarBean.getCar_info().getPrice())));
-                }
-            }
-        } else if (dataType == CAR_LIST_FOR_CAR_CENTER) {
             ArrayList<CarInfoBean> carInfoBeanArrayList = (ArrayList<CarInfoBean>) mList;
 
             if (EmptyUtils.isNotEmpty(carInfoBeanArrayList)) {
-                CarInfoBean carInfoBean = carInfoBeanArrayList.get(position);
+                final CarInfoBean carInfoBean = carInfoBeanArrayList.get(position);
 
                 if (EmptyUtils.isNotEmpty(carInfoBean)) {
                     Glide.with(mContext)
@@ -659,6 +662,23 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                             .error(R.drawable.default_bg_ratio_1)
                             .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
                             .into(holder.iv_item1);
+                    Glide.with(mContext)
+                            .load(carInfoBean.getVerify_status()==4?R.drawable.cartype_sold:carInfoBean.getCar_type()==0?R.drawable.cartype_new:R.drawable.cartype_used)
+                            .placeholder(R.drawable.cartype_new)
+                            .error(R.drawable.cartype_new)
+                            .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
+                            .into(holder.iv_item2);
+
+                    if(carInfoBean.getVerify_status()==4){//售出状态
+                        holder.tv_item1.setTextColor(mContext.getResources().getColor(R.color.second_text_color));
+                        holder.tv_item2.setTextColor(mContext.getResources().getColor(R.color.second_text_color));
+                        holder.tv_item3.setTextColor(mContext.getResources().getColor(R.color.second_text_color));
+                    }else{
+                        holder.tv_item1.setTextColor(mContext.getResources().getColor(R.color.main_text_color));
+                        holder.tv_item2.setTextColor(mContext.getResources().getColor(R.color.second_text_color));
+                        holder.tv_item3.setTextColor(mContext.getResources().getColor(R.color.main_color));
+                    }
+
                     holder.tv_item1.setText(carInfoBean.getCar_name());
                     if(carInfoBean.getCar_type()==0){
                         holder.tv_item2.setText("销量 :  "+carInfoBean.getSales_volume());
@@ -666,8 +686,94 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                         holder.tv_item2.setText(carInfoBean.getModel_info().getModel_year() + "/" + carInfoBean.getMileage() + "万公里");
                     }
                     holder.tv_item3.setText(mContext.getString(R.string._wan, String.format(Locale.CHINA, "%.2f", carInfoBean.getPrice())));
+
+                    //底部三个点击事件
+                    //历史报价
+                    holder.tv_item4.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Bundle bundle = new Bundle();
+                            bundle.putInt(Constant.CAR_ID, carInfoBean.getId());
+                            ((BaseActivity) mContext).gotoPager(HistoryCarReportFragment.class, bundle);
+                        }
+                    });
+
+                    //生成报价单
+                    holder.tv_item5.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Bundle bundle = new Bundle();
+                            bundle.putString(Constant.CAR_ID, carInfoBean.getCar_id());
+                            ((BaseActivity) mContext).gotoPager(GenerateReportWebFragment.class, bundle);
+                        }
+                    });
+
+                    //编辑
+                    holder.tv_item6.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            //弹出弹窗，选择编辑或者删除
+                            showEditPopWindow(carInfoBean.getCar_id(),position,carInfoBean.getCar_type());
+                        }
+                    });
+
+                    //进入车辆详情
+                    holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Log.i("TESTLOG","selling onitem click car_id");
+                            String car_id = carInfoBean.getCar_id();
+                            Bundle bundle = new Bundle();
+                            bundle.putBoolean(Constant.FROM_SELL,true);
+                            bundle.putString(Constant.CAR_ID, car_id);
+                            ((BaseActivity) mContext).gotoPager(CarDetailFragment.class, bundle);
+
+                        }
+                    });
+
                 }
             }
+
+        } else if (dataType == CAR_LIST_FOR_CAR_CENTER) {
+            ArrayList<CarInfoBean> carInfoBeanArrayList = (ArrayList<CarInfoBean>) mList;
+
+            if (EmptyUtils.isNotEmpty(carInfoBeanArrayList)) {
+                CarInfoBean carInfoBean = carInfoBeanArrayList.get(position);
+
+                if (EmptyUtils.isNotEmpty(carInfoBean)) {
+//                    Log.i("TESTLOG","position=="+position+"carInfoBean.getFiles_img() ===="+carInfoBean.getFiles_img());
+                    Glide.with(mContext)
+                            .load(carInfoBean.getFiles_img())
+                            .placeholder(R.drawable.default_bg_ratio_1)
+                            .error(R.drawable.default_bg_ratio_1)
+                            .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
+                            .into(holder.iv_item1);
+                    holder.tv_item1.setText(carInfoBean.getCar_name());
+                    if(carInfoBean.getCar_type()==0){
+//                        holder.tv_item2.setText("销量 :  "+carInfoBean.getSales_volume());
+                        holder.tv_item2.setVisibility(View.GONE);
+                    }else {
+                        holder.tv_item2.setVisibility(View.VISIBLE);
+                        holder.tv_item2.setText(carInfoBean.getModel_info().getModel_year() + "/" + carInfoBean.getMileage() + "万公里");
+                    }
+                    holder.tv_item3.setText(mContext.getString(R.string._wan, String.format(Locale.CHINA, "%.2f", carInfoBean.getPrice())));
+                }
+            }
+        } else if(dataType == REPORT_CAR_PHOTO_ITEM){
+            Log.i("TESTLOG","REPORT_CAR_PHOTO_ITEM");
+            Log.i("TESTLOG","mList == "+mList.size());
+            ArrayList<TypeBean> typeList = (ArrayList<TypeBean>) mList;
+            if (EmptyUtils.isNotEmpty(typeList)) {
+                Log.i("TESTLOG","REPORT_CAR_PHOTO_ITEM not empty");
+                TypeBean typeBean = typeList.get(position);
+
+                Glide.with(mContext)
+                        .load(typeBean.getFile_url())
+                        .placeholder(R.drawable.user_photo)
+                        .error(R.drawable.default_bg_ratio_1)
+                        .into(holder.iv_item1);
+            }
+
         } else if (dataType == USER_SEARCH_DATA_TYPE) {
             ArrayList<UserBean> userBeanArrayList = (ArrayList<UserBean>) mList;
 
@@ -1124,6 +1230,7 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                                 .load(carInfoBean.getFiles().get(0).getFile_url())
                                 .placeholder(R.drawable.default_bg_ratio_1)
                                 .error(R.drawable.default_bg_ratio_1)
+                                //圆角处理
                                 .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
                                 .into(holder.iv_item1);
                         holder.tv_item1.setText(carInfoBean.getCar_name());
@@ -1191,59 +1298,61 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                     holder.tv_item2.setText(carInfoBean.getPrice() + "万");
                 }
             }
-        } else if (dataType == CAR_SURFACE_DATA_TYPE) {
-            ArrayList<CarInfoBean.FilesBean.Type1Bean> type1BeanArrayList = (ArrayList<CarInfoBean.FilesBean.Type1Bean>) mList;
-
-            if (EmptyUtils.isNotEmpty(type1BeanArrayList)) {
-                CarInfoBean.FilesBean.Type1Bean type1Bean = type1BeanArrayList.get(position);
-
-                Glide.with(mContext)
-                        .load(type1Bean.getFile_url())
-                        .placeholder(R.drawable.default_bg_ratio_1)
-                        .error(R.drawable.default_bg_ratio_1)
-                        .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
-                        .into(holder.iv_item1);
-            }
-        } else if (dataType == CAR_INSIDE_DATA_TYPE) {
-            ArrayList<CarInfoBean.FilesBean.Type2Bean> type2BeanArrayList = (ArrayList<CarInfoBean.FilesBean.Type2Bean>) mList;
-
-            if (EmptyUtils.isNotEmpty(type2BeanArrayList)) {
-                CarInfoBean.FilesBean.Type2Bean type2Bean = type2BeanArrayList.get(position);
-
-                Glide.with(mContext)
-                        .load(type2Bean.getFile_url())
-                        .placeholder(R.drawable.default_bg_ratio_1)
-                        .error(R.drawable.default_bg_ratio_1)
-                        .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
-                        .into(holder.iv_item1);
-            }
-        } else if (dataType == CAR_STRUCTURE_DATA_TYPE) {
-            ArrayList<CarInfoBean.FilesBean.Type3Bean> type3BeanArrayList = (ArrayList<CarInfoBean.FilesBean.Type3Bean>) mList;
-
-            if (EmptyUtils.isNotEmpty(type3BeanArrayList)) {
-                CarInfoBean.FilesBean.Type3Bean type3Bean = type3BeanArrayList.get(position);
-
-                Glide.with(mContext)
-                        .load(type3Bean.getFile_url())
-                        .placeholder(R.drawable.default_bg_ratio_1)
-                        .error(R.drawable.default_bg_ratio_1)
-                        .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
-                        .into(holder.iv_item1);
-            }
-        } else if (dataType == CAR_MORE_DETAIL_DATA_TYPE) {
-            ArrayList<CarInfoBean.FilesBean.Type4Bean> type4BeanArrayList = (ArrayList<CarInfoBean.FilesBean.Type4Bean>) mList;
-
-            if (EmptyUtils.isNotEmpty(type4BeanArrayList)) {
-                CarInfoBean.FilesBean.Type4Bean type4Bean = type4BeanArrayList.get(position);
-
-                Glide.with(mContext)
-                        .load(type4Bean.getFile_url())
-                        .placeholder(R.drawable.default_bg_ratio_1)
-                        .error(R.drawable.default_bg_ratio_1)
-                        .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
-                        .into(holder.iv_item1);
-            }
-        } else if (dataType == MY_STATE_DATA_TYPE) {
+        }
+//        else if (dataType == CAR_SURFACE_DATA_TYPE) {
+//            ArrayList<CarInfoBean.FilesBean.Type1Bean> type1BeanArrayList = (ArrayList<CarInfoBean.FilesBean.Type1Bean>) mList;
+//
+//            if (EmptyUtils.isNotEmpty(type1BeanArrayList)) {
+//                CarInfoBean.FilesBean.Type1Bean type1Bean = type1BeanArrayList.get(position);
+//
+//                Glide.with(mContext)
+//                        .load(type1Bean.getFile_url())
+//                        .placeholder(R.drawable.default_bg_ratio_1)
+//                        .error(R.drawable.default_bg_ratio_1)
+//                        .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
+//                        .into(holder.iv_item1);
+//            }
+//        } else if (dataType == CAR_INSIDE_DATA_TYPE) {
+//            ArrayList<CarInfoBean.FilesBean.Type2Bean> type2BeanArrayList = (ArrayList<CarInfoBean.FilesBean.Type2Bean>) mList;
+//
+//            if (EmptyUtils.isNotEmpty(type2BeanArrayList)) {
+//                CarInfoBean.FilesBean.Type2Bean type2Bean = type2BeanArrayList.get(position);
+//
+//                Glide.with(mContext)
+//                        .load(type2Bean.getFile_url())
+//                        .placeholder(R.drawable.default_bg_ratio_1)
+//                        .error(R.drawable.default_bg_ratio_1)
+//                        .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
+//                        .into(holder.iv_item1);
+//            }
+//        } else if (dataType == CAR_STRUCTURE_DATA_TYPE) {
+//            ArrayList<CarInfoBean.FilesBean.Type3Bean> type3BeanArrayList = (ArrayList<CarInfoBean.FilesBean.Type3Bean>) mList;
+//
+//            if (EmptyUtils.isNotEmpty(type3BeanArrayList)) {
+//                CarInfoBean.FilesBean.Type3Bean type3Bean = type3BeanArrayList.get(position);
+//
+//                Glide.with(mContext)
+//                        .load(type3Bean.getFile_url())
+//                        .placeholder(R.drawable.default_bg_ratio_1)
+//                        .error(R.drawable.default_bg_ratio_1)
+//                        .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
+//                        .into(holder.iv_item1);
+//            }
+//        } else if (dataType == CAR_MORE_DETAIL_DATA_TYPE) {
+//            ArrayList<CarInfoBean.FilesBean.Type4Bean> type4BeanArrayList = (ArrayList<CarInfoBean.FilesBean.Type4Bean>) mList;
+//
+//            if (EmptyUtils.isNotEmpty(type4BeanArrayList)) {
+//                CarInfoBean.FilesBean.Type4Bean type4Bean = type4BeanArrayList.get(position);
+//
+//                Glide.with(mContext)
+//                        .load(type4Bean.getFile_url())
+//                        .placeholder(R.drawable.default_bg_ratio_1)
+//                        .error(R.drawable.default_bg_ratio_1)
+//                        .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
+//                        .into(holder.iv_item1);
+//            }
+//        }
+        else if (dataType == MY_STATE_DATA_TYPE) {
             final ArrayList<FeedBean> feedBeanArrayList = (ArrayList<FeedBean>) mList;
 
             if (EmptyUtils.isNotEmpty(feedBeanArrayList)) {
@@ -2008,8 +2117,243 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                     holder.tv_item2.setText(friendshipBean.getProfile().getNickname());
                 }
             }
+        }else if (dataType == CAR_REPORT_ITEM){
+            ArrayList<HistoryReportBean.HistoryBean> historyReportBeanArrayList = (ArrayList<HistoryReportBean.HistoryBean>) mList;
+
+            if (EmptyUtils.isNotEmpty(historyReportBeanArrayList)) {
+                final HistoryReportBean.HistoryBean historyReportBean = historyReportBeanArrayList.get(position);
+                if (EmptyUtils.isNotEmpty(historyReportBean)) {
+                    Glide.with(mContext)
+                            .load(historyReportBean.getFile_img())
+                            .placeholder(R.drawable.default_bg_ratio_1)
+                            .error(R.drawable.default_bg_ratio_1)
+                            .into(holder.iv_item1);
+                    holder.tv_item1.setText(historyReportBean.getCar_name());
+                    holder.tv_item2.setText("报价日期："+ CommonUtil.timeToDate(String.valueOf(historyReportBean.getReport_time())));
+                    holder.tv_item3.setText("报价金额："+ historyReportBean.getTotal_price());
+
+                    holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                             //分享
+                            showSharePlatformPopWindow(historyReportBean);
+                        }
+                    });
+                }
+            }
+
         }
     }
+
+    private void showEditPopWindow(final String carId, final int position, final int carType) {
+        MorePopupWindow morePopupWindow = new MorePopupWindow((BaseActivity)mContext, new MorePopupWindow.MorePopupWindowClickListener(){
+
+            @Override
+            public void onFirstBtnClicked() {
+                 //编辑
+                if(carType ==0 ){ //新车
+                    Bundle bundle = new Bundle();
+                    bundle.putString(Constant.CAR_ID, carId);
+                    bundle.putBoolean(Constant.FROM_SELL, true);
+                    ((BaseActivity) mContext).gotoPager(PostNewCarFragment.class,bundle);
+                }else if(carType == 1){ //二手车
+                    Bundle bundle = new Bundle();
+                    bundle.putString(Constant.CAR_ID, carId);
+                    bundle.putBoolean(Constant.FROM_SELL, true);
+                    ((BaseActivity) mContext).gotoPager(PostSecondHandCarFragment.class,bundle);
+                }
+
+            }
+
+            @Override
+            public void onSecondBtnClicked() {
+                //删除
+                deleteMyCar(carId,position);
+            }
+
+            @Override
+            public void onThirdBtnClicked() {
+
+            }
+
+            @Override
+            public void onFourthBtnClicked() {
+
+            }
+
+            @Override
+            public void onCancelBtnClicked() {
+
+            }
+        },MorePopupWindow.MORE_POPUP_WINDOW_TYPE.TYPE_EIDT_SALE_CAR);
+        morePopupWindow.initView();
+        morePopupWindow.showAtLocation(((BaseActivity) mContext).getVisibleFragment().getView(), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+    }
+
+    private void deleteMyCar(String carId, final int position) {
+        OkHttpUtils.post()
+                .url(Constant.getDeleteMyCarUrl())
+                .addParams(Constant.DEVICE_IDENTIFIER, SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER))
+                .addParams(Constant.SESSION_ID, SPUtils.getInstance().getString(Constant.SESSION_ID))
+                .addParams(Constant.CAR_ID, carId)
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        Log.i("TESTLOG","deleteMyCar onError==="+e.getMessage());
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+                        Log.i("TESTLOG","deleteMyCar response==="+response);
+                        JSONObject jsonObject = null;
+                        try {
+                            jsonObject = new JSONObject(response);
+                            int status = jsonObject.optInt("status");
+                            JSONObject jsonObjectData = jsonObject.optJSONObject("data");
+                            if (status == 1) {
+                                ToastUtils.showShort("删除成功");
+                                mList.remove(position);
+                                setDatas(mList);
+                            } else {
+                                String code = jsonObject.optString("code");
+                                String msg = jsonObjectData.optString("msg");
+                                ToastUtils.showShort("" + msg);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+    }
+
+    private void showSharePlatformPopWindow(final HistoryReportBean.HistoryBean historyReportBean) {
+        ShareHistoryReportPopupWindow shareReportPopupWindow = new ShareHistoryReportPopupWindow(mContext, new ShareHistoryReportPopupWindow.ShareReportListener() {
+            @Override
+            public void onSinaWeiboClicked() {
+                if (!CommonUtil.isHadLogin()) {
+                    ((BaseActivity) mContext).gotoPager(RegisterAndLoginActivity.class, null);
+                    return;
+                }
+                showShare(mContext, "SinaWeibo", true,historyReportBean);
+            }
+
+            @Override
+            public void onWeChatClicked() {
+                if (!CommonUtil.isHadLogin()) {
+                    ((BaseActivity) mContext).gotoPager(RegisterAndLoginActivity.class, null);
+                    return;
+                }
+                showShare(mContext, "Wechat", true,historyReportBean);
+            }
+
+            @Override
+            public void onWechatMomentsClicked() {
+                if (!CommonUtil.isHadLogin()) {
+                    ((BaseActivity) mContext).gotoPager(RegisterAndLoginActivity.class, null);
+                    return;
+                }
+                showShare(mContext, "WechatMoments", true,historyReportBean);
+            }
+
+            @Override
+            public void onQQClicked() {
+                if (!CommonUtil.isHadLogin()) {
+                    ((BaseActivity) mContext).gotoPager(RegisterAndLoginActivity.class, null);
+                    return;
+                }
+                showShare(mContext, "QQ", true,historyReportBean);
+            }
+
+            @Override
+            public void onQQZoneClicked() {
+                if (!CommonUtil.isHadLogin()) {
+                    ((BaseActivity) mContext).gotoPager(RegisterAndLoginActivity.class, null);
+                    return;
+                }
+                showShare(mContext, "QZone", true,historyReportBean);
+            }
+
+            @Override
+            public void onCopyLinkClicke() {
+                if (!CommonUtil.isHadLogin()) {
+                    ((BaseActivity) mContext).gotoPager(RegisterAndLoginActivity.class, null);
+                    return;
+                }
+                ClipboardManager clipboardManager = (ClipboardManager)  ((BaseActivity) mContext).getSystemService(Context.CLIPBOARD_SERVICE);
+                //创建ClipData对象
+                ClipData clipData = ClipData.newPlainText("simple text copy", historyReportBean.getShare_url());
+                //添加ClipData对象到剪切板中
+                clipboardManager.setPrimaryClip(clipData);
+                ToastUtils.showShort(mContext.getString(R.string.copy_link_success));
+            }
+
+            @Override
+            public void onCancelBtnClicked() {
+
+            }
+
+            @Override
+            public void onSavePicClicked() {
+
+            }
+
+            @Override
+            public void onSharePicClicked() {
+
+
+            }
+        },historyReportBean.getBrand_name());
+        shareReportPopupWindow.initView();
+        shareReportPopupWindow.showAtLocation(((BaseActivity) mContext).getVisibleFragment().getView(), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+    }
+
+    /**
+     * 演示调用ShareSDK执行分享
+     *
+     * @param context
+     * @param platformToShare 指定直接分享平台名称（一旦设置了平台名称，则九宫格将不会显示）
+     * @param showContentEdit 是否显示编辑页
+     */
+    private void showShare(Context context, String platformToShare, boolean showContentEdit,HistoryReportBean.HistoryBean historyReportBean) {
+        Log.i("TESTLOG","share  url==="+historyReportBean.getShare_url());
+        Log.i("TESTLOG","Share_img()==="+historyReportBean.getShare_img());
+
+        OnekeyShare oks = new OnekeyShare();
+        oks.setSilent(!showContentEdit);
+        if (platformToShare != null) {
+            oks.setPlatform(platformToShare);
+        }
+        //ShareSDK快捷分享提供两个界面第一个是九宫格 CLASSIC  第二个是SKYBLUE
+        oks.setTheme(OnekeyShareTheme.CLASSIC);
+        // 令编辑页面显示为Dialog模式
+        //        oks.setDialogMode();
+        // 在自动授权时可以禁用SSO方式
+        oks.disableSSOWhenAuthorize();
+
+        oks.setTitle(historyReportBean.getShare_title());
+        if (platformToShare.equalsIgnoreCase("SinaWeibo")) {
+            oks.setText(historyReportBean.getShare_txt() + "\n" + historyReportBean.getShare_url());
+        } else if(platformToShare.equalsIgnoreCase("QQ")){
+            oks.setImageUrl(historyReportBean.getShare_img());
+            oks.setTitleUrl(historyReportBean.getShare_url());
+            oks.setText(historyReportBean.getShare_txt());
+        } else if(platformToShare.equalsIgnoreCase("QZone")){
+            oks.setImageUrl(historyReportBean.getShare_img());
+            oks.setTitleUrl(historyReportBean.getShare_url());
+            oks.setText(historyReportBean.getShare_txt());
+            oks.setSite("BibiCar");
+            oks.setSiteUrl("www.bibicar.cn");
+        }else {
+            oks.setText(historyReportBean.getShare_txt());
+            oks.setImageUrl(historyReportBean.getShare_img());
+            oks.setUrl(historyReportBean.getShare_url());
+        }
+
+        // 启动分享
+        oks.show(context);
+    }
+
 
     private void showCallPhoneDialog(final String contact_phone) {
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
@@ -2377,16 +2721,21 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                     public void onClick(View v) {
                         if (mOnItemClickListener != null) {
                             int position = getLayoutPosition();
-                            mOnItemClickListener.onItemClick(mList.get(position), position);
+                            mOnItemClickListener.onItemClick(mList.get(position - 1), position - 1);
+
                         }
                     }
                 });
             } else if (dataType == MY_SELLING_CAR_DATA_TYPE) {
                 iv_item1 = (ImageView) itemView.findViewById(R.id.ivCarIcon);
+                iv_item2 = (ImageView) itemView.findViewById(R.id.ivCarType);
                 tv_item1 = (TextView) itemView.findViewById(R.id.tvCarName);
                 tv_item2 = (TextView) itemView.findViewById(R.id.tvCarDistance);
                 tv_item3 = (TextView) itemView.findViewById(R.id.tvPrice);
-
+                tv_item4 = (TextView) itemView.findViewById(R.id.tv_history_offer);
+                tv_item5 = (TextView) itemView.findViewById(R.id.tv_generate_offer);
+                tv_item6 = (TextView) itemView.findViewById(R.id.tv_edit);
+                relativeLayout = (RelativeLayout) itemView.findViewById(R.id.relativeLayout);
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -2411,7 +2760,10 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                         }
                     }
                 });
-            } else if (dataType == USER_SEARCH_DATA_TYPE) {
+            } else if(dataType == REPORT_CAR_PHOTO_ITEM){
+                iv_item1 = (ImageView) itemView.findViewById(R.id.ivPhoto);
+
+            }else if (dataType == USER_SEARCH_DATA_TYPE) {
                 iv_item1 = (ImageView) itemView.findViewById(R.id.iv_circle_image);
                 tv_item1 = (TextView) itemView.findViewById(R.id.tv_name);
                 tv_item2 = (TextView) itemView.findViewById(R.id.tv_fan_and_follow);
@@ -2801,6 +3153,23 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
                         if (mOnItemClickListener != null) {
                             int position = getLayoutPosition();
                             mOnItemClickListener.onItemClick(mList.get(position), position);
+                        }
+                    }
+                });
+            }else if (dataType == CAR_REPORT_ITEM){
+                iv_item1 = (ImageView) itemView.findViewById(R.id.ivCarIcon);
+                tv_item1 = (TextView) itemView.findViewById(R.id.tvCarName);
+                tv_item2 = (TextView) itemView.findViewById(R.id.tvCarDistance);
+                tv_item3 = (TextView) itemView.findViewById(R.id.tvPrice);
+                tv_item4 = (TextView) itemView.findViewById(R.id.tvShare);
+                tv_item4.setVisibility(View.VISIBLE);
+                relativeLayout = (RelativeLayout) itemView.findViewById(R.id.rl_share);
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnItemClickListener != null) {
+                            int position = getLayoutPosition();
+                            mOnItemClickListener.onItemClick(mList.get(position - 1), position - 1);
                         }
                     }
                 });

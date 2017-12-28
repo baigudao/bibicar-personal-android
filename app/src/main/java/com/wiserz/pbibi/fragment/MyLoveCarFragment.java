@@ -3,7 +3,9 @@ package com.wiserz.pbibi.fragment;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.blankj.utilcode.util.EmptyUtils;
 import com.blankj.utilcode.util.SPUtils;
@@ -12,6 +14,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
+import com.wiserz.pbibi.adapter.HeaderAndFooterWrapper;
 import com.wiserz.pbibi.bean.LoveCarBean;
 import com.wiserz.pbibi.util.Constant;
 import com.wiserz.pbibi.util.DataManager;
@@ -37,7 +40,8 @@ public class MyLoveCarFragment extends BaseFragment implements BaseRecyclerViewA
     private int mPage;
 
     private RecyclerView recyclerView;
-
+    private HeaderAndFooterWrapper mHeaderAndFooterWrapper;
+    private LinearLayout llTop;
     private static final int LOVE_CAR_DATA_TYPE = 43;
 
     @Override
@@ -104,22 +108,35 @@ public class MyLoveCarFragment extends BaseFragment implements BaseRecyclerViewA
     }
 
     private void handlerData(JSONObject jsonObjectData) {
+        ArrayList<LoveCarBean> loveCarBeanArrayList = null;
+
         if (EmptyUtils.isNotEmpty(jsonObjectData)) {
             JSONArray jsonArray = jsonObjectData.optJSONObject("list").optJSONArray("car_list");
             if (EmptyUtils.isNotEmpty(jsonArray)) {
                 Gson gson = new Gson();
-                ArrayList<LoveCarBean> loveCarBeanArrayList = gson.fromJson(jsonArray.toString(), new TypeToken<ArrayList<LoveCarBean>>() {
+                loveCarBeanArrayList = gson.fromJson(jsonArray.toString(), new TypeToken<ArrayList<LoveCarBean>>() {
                 }.getType());
-
-                if (EmptyUtils.isNotEmpty(loveCarBeanArrayList) && loveCarBeanArrayList.size() != 0) {
-                    BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, loveCarBeanArrayList, LOVE_CAR_DATA_TYPE);
-                    recyclerView.setAdapter(baseRecyclerViewAdapter);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
-                    baseRecyclerViewAdapter.setOnItemClickListener(this);
-                }
-            } else {
-                ToastUtils.showShort("你还没有爱车");
             }
+        }
+
+
+            BaseRecyclerViewAdapter baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, loveCarBeanArrayList, LOVE_CAR_DATA_TYPE);
+            mHeaderAndFooterWrapper = new HeaderAndFooterWrapper(baseRecyclerViewAdapter);
+            llTop = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.car_center_topview, null);//作为头布局存放过滤条件
+            mHeaderAndFooterWrapper.addHeaderView(llTop);
+            recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
+            recyclerView.setAdapter(mHeaderAndFooterWrapper);
+            baseRecyclerViewAdapter.setOnItemClickListener(this);
+
+            setView(llTop, loveCarBeanArrayList == null || loveCarBeanArrayList.isEmpty());
+    }
+
+    private void setView(LinearLayout linearLayout, boolean isNoData) {
+        linearLayout.removeAllViews();
+
+        if (isNoData) {//没有符合条件的车辆
+            View noDataView = LayoutInflater.from(getActivity()).inflate(R.layout.layout_no_car, null);
+            linearLayout.addView(noDataView);
         }
     }
 

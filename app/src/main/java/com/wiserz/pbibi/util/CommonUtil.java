@@ -32,6 +32,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -218,6 +222,39 @@ public class CommonUtil {
 
     /**
      * 保存到相册
+     *
+     * @param bmp
+     */
+    public static String saveReportPicToAppAlbum(Bitmap bmp, Context context,String reportId) {
+        String folder = createReportImagePath(context,reportId);
+        FileOutputStream fout = null;
+        BufferedOutputStream bos = null;
+        try {
+            fout = new FileOutputStream(folder);
+            bos = new BufferedOutputStream(fout);
+            bmp.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (fout != null) {
+                    fout.close();
+                }
+                if (bos != null) {
+                    bos.flush();
+                    bos.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, mContentValues);
+        mContentValues = null;
+        return folder;
+    }
+
+    /**
+     * 保存到相册
      */
     public static String saveGifToAppAlbum(byte[] bytes, Context context) {
         String folder = createAppGifAlbumImagePath(context);
@@ -250,6 +287,25 @@ public class CommonUtil {
     public static String createAppAlbumImagePath(Context context) {
         String title = UUID.randomUUID().toString();
         String filename = title + IMAGE_EXTENSION;
+
+        String dirPath = Environment.getExternalStorageDirectory() + "/" + context.getString(R.string.app_name);
+        File file = new File(dirPath);
+        if (!file.exists() || !file.isDirectory())
+            file.mkdirs();
+        String filePath = dirPath + "/" + filename;
+        ContentValues values = new ContentValues(7);
+        values.put(MediaStore.Images.ImageColumns.TITLE, title);
+        values.put(MediaStore.Images.ImageColumns.DISPLAY_NAME, filename);
+        values.put(MediaStore.Images.ImageColumns.DATE_TAKEN, System.currentTimeMillis());
+        values.put(MediaStore.Images.ImageColumns.MIME_TYPE, "image/jpeg");
+        values.put(MediaStore.Images.ImageColumns.DATA, filePath);
+        mContentValues = values;
+        return filePath;
+    }
+
+    public static String createReportImagePath(Context context,String reportId) {
+        String title = reportId;
+        String filename = reportId + IMAGE_EXTENSION;
 
         String dirPath = Environment.getExternalStorageDirectory() + "/" + context.getString(R.string.app_name);
         File file = new File(dirPath);
@@ -655,4 +711,65 @@ public class CommonUtil {
             return false;
         }
     }
-}
+
+    //时间戳转日期
+    public static String timeToDate(String time) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(Long.valueOf(time) * 1000);
+        SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");//这里的格式可换"yyyy年-MM月dd日-HH时mm分ss秒"等等格式
+
+        String date = sf.format(calendar.getTime());
+        Log.i("TESTLOG","timeToDate =="+date);
+        return date;
+    }
+
+    /*
+  * 将时间转换为时间戳
+  */
+    public static String dateToStamp(String s){
+        String res;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = null;
+        try {
+            date = simpleDateFormat.parse(s);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        long ts = date.getTime()/1000;
+        res = String.valueOf(ts);
+        Log.i("TESTLOG","dateToStamp =="+res);
+        return res;
+    }
+
+    public static boolean isDebug = true;// 是否需要打印bug，可以在application的onCreate函数里面初始化
+    private static final String TAG = "TESTLOG";
+    public static void i(String msg)
+    {
+        if (isDebug)
+            Log.i(TAG, msg);
+    }
+    /**
+     * 分段打印出较长log文本
+     * @param logContent  打印文本
+     * @param showLength  规定每段显示的长度（AndroidStudio控制台打印log的最大信息量大小为4k）
+     * @param tag         打印log的标记
+     */
+    public static void showLargeLog(String logContent, int showLength){
+        if(logContent.length() > showLength){
+            String show = logContent.substring(0, showLength);
+            i(show);
+            /*剩余的字符串如果大于规定显示的长度，截取剩余字符串进行递归，否则打印结果*/
+            if((logContent.length() - showLength) > showLength){
+                String partLog = logContent.substring(showLength,logContent.length());
+                showLargeLog(partLog, showLength);
+            }else{
+                String printLog = logContent.substring(showLength, logContent.length());
+                i(printLog);
+            }
+
+        }else{
+            i(logContent);
+        }
+    }
+
+    }

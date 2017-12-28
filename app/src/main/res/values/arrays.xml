@@ -32,4 +32,22 @@
         <item>\u2606</item>
         <item>\u0023</item>
     </array>
+
+
+    <string-array name="car_img_type">
+        <item>左前45°</item>
+        <item>正前</item>
+        <item>正侧</item>
+        <item>正后</item>
+        <item>车门</item>
+        <item>前排</item>
+        <item>中控</item>
+        <item>后排</item>
+        <item>仪表盘</item>
+        <item>变速杆</item>
+        <item>轮胎</item>
+        <item>发动机</item>
+    </string-array>
+
+
 </resources>

@@ -16,7 +16,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
 
-import com.blankj.utilcode.util.EncryptUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.google.gson.Gson;
 import com.wiserz.pbibi.BaseApplication;
@@ -59,8 +58,8 @@ public class CompanyRegisterFragment extends BaseFragment {
         numberProgressBar = (NumberProgressBar) view.findViewById(R.id.numberProgressBar);
 
         WebView wb = (WebView) view.findViewById(R.id.webview_company_register);
-        String webview_company_register = base_url + "?ident=" + EncryptUtils.encryptMD5ToString(SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER));
-
+//        String webview_company_register = base_url + "?ident=" + EncryptUtils.encryptMD5ToString(SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER));
+        String webview_company_register = "http://share.bibicar.cn/views/center/register.html"+ "?ident=" + SPUtils.getInstance().getString(Constant.DEVICE_IDENTIFIER);
         if (!TextUtils.isEmpty(webview_company_register)) {
 
             WebSettings mWebSettings = wb.getSettings();

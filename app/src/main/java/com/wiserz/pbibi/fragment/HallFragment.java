@@ -2,7 +2,6 @@ package com.wiserz.pbibi.fragment;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 
 import com.blankj.utilcode.util.SPUtils;
@@ -88,13 +87,13 @@ public class HallFragment extends BaseFragment implements OnRefreshListener, OnL
                             if (status == 1) {
                                 switch (refresh_or_load) {
                                     case 0:
-                                        smartRefreshLayout.finishRefresh();
+                                        smartRefreshLayout.finishRefresh();//刷新
                                         hallRecyclerViewAdapter = new HallRecyclerViewAdapter(mContext, jsonObjectData);
                                         recyclerView.setAdapter(hallRecyclerViewAdapter);
                                         recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
                                         break;
                                     case 1:
-                                        smartRefreshLayout.finishLoadmore();
+                                        smartRefreshLayout.finishLoadmore();//加载更多
                                         hallRecyclerViewAdapter.addData(jsonObjectData);
                                         break;
                                     default:

@@ -227,6 +227,7 @@ public class SelectCarBrandFragment extends BaseFragment implements BaseRecycler
                 //设置brand信息
                 DataManager.getInstance().setData1(brandInfoBean.getBrand_id());
                 DataManager.getInstance().setData2(brandInfoBean.getBrand_name());
+                DataManager.getInstance().setData7(brandInfoBean.getBrand_url());
                 if (brandInfoBean.getBrand_id() == 0) {
                     DataManager.getInstance().setData3(0);
                     DataManager.getInstance().setData4("不限");

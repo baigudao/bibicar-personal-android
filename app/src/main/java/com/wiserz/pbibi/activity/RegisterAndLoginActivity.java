@@ -1,5 +1,6 @@
 package com.wiserz.pbibi.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -8,10 +9,12 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.blankj.utilcode.util.EmptyUtils;
 import com.blankj.utilcode.util.RegexUtils;
 import com.blankj.utilcode.util.SPUtils;
@@ -61,6 +64,8 @@ public class RegisterAndLoginActivity extends BaseActivity implements View.OnCli
     private TextView tv_get_verfication_code;
     private Button btn_login;
 
+    private InputMethodManager imm;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,21 +106,31 @@ public class RegisterAndLoginActivity extends BaseActivity implements View.OnCli
                 }
             }
         });
+
+        imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_back:
+                //如果键盘弹出则隐藏键盘
+                imm.hideSoftInputFromWindow(et_verfication_code_login.getWindowToken(), 0);
                 finish();
                 break;
             case R.id.btn_register:
                 gotoPager(CompanyRegisterFragment.class, null);
                 break;
             case R.id.btn_login:
+                //如果键盘弹出则隐藏键盘
+                imm.hideSoftInputFromWindow(et_verfication_code_login.getWindowToken(), 0);
+
                 login();
                 break;
             case R.id.btn_user_protocol:
+                //如果键盘弹出则隐藏键盘
+                imm.hideSoftInputFromWindow(et_verfication_code_login.getWindowToken(), 0);
+
                 gotoPager(UserProtocolFragment.class, null);
                 break;
             case R.id.tv_get_verfication_code:
@@ -123,9 +138,13 @@ public class RegisterAndLoginActivity extends BaseActivity implements View.OnCli
                 getCode();
                 break;
             case R.id.image_btn_weixin_login:
+                imm.hideSoftInputFromWindow(et_verfication_code_login.getWindowToken(), 0);
+
                 login("Wechat");
                 break;
             case R.id.image_btn_weibo_login:
+                imm.hideSoftInputFromWindow(et_verfication_code_login.getWindowToken(), 0);
+
                 login("SinaWeibo");
                 break;
             default:
@@ -268,8 +287,11 @@ public class RegisterAndLoginActivity extends BaseActivity implements View.OnCli
         super.onDestroy();
         if (mTimer != null) {
             mTimer.cancel();
+            mTimer = null;
         }
-        mTimer = null;
+
+        imm.hideSoftInputFromWindow(et_verfication_code_login.getWindowToken(), 0);
+
     }
 
     /**

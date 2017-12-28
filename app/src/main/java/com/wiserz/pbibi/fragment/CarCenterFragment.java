@@ -10,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -21,10 +22,10 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import com.baidu.location.BDAbstractLocationListener;
-import com.baidu.location.BDLocation;
-import com.baidu.location.LocationClient;
-import com.baidu.location.LocationClientOption;
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationClientOption;
+import com.amap.api.location.AMapLocationListener;
 import com.blankj.utilcode.util.EmptyUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.SizeUtils;
@@ -35,7 +36,6 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.wiserz.pbibi.BaseApplication;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.activity.RegisterAndLoginActivity;
 import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
@@ -67,9 +67,16 @@ import okhttp3.Call;
  */
 public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewAdapter.OnItemClickListener, OnLoadmoreListener, OnRefreshListener {
 
-    public LocationClient mLocationClient;
-    //BDAbstractLocationListener为7.2版本新增的Abstract类型的监听接口，原有BDLocationListener接口暂时同步保留。具体介绍请参考后文中的说明
-    public BDAbstractLocationListener myListener = new MyLocationListener();
+//    public LocationClient mLocationClient;
+//    //BDAbstractLocationListener为7.2版本新增的Abstract类型的监听接口，原有BDLocationListener接口暂时同步保留。具体介绍请参考后文中的说明
+//    public BDAbstractLocationListener myListener = new MyLocationListener();
+
+    //声明AMapLocationClient类对象
+    public AMapLocationClient mLocationClient = null;
+    //声明定位回调监听器
+    public AMapLocationListener mLocationListener = new GaoDeLocationListener();
+    //声明AMapLocationClientOption对象
+    public AMapLocationClientOption mLocationOption = null;
 
     private TextView tvLocation;
     private LinearLayout ll_select;
@@ -82,7 +89,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
 
 
     private RecyclerView recyclerView;
-    private int mPage;
+    private int mPage;//请求车列表的第几页信息
 
     private String order_id;
 
@@ -149,11 +156,22 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
 
     @Override
     protected void initView(View view) {
+
         tvLocation = (TextView) view.findViewById(R.id.tvLocation);
-        mLocationClient = new LocationClient(BaseApplication.getAppContext());//声明LocationClient类
-        mLocationClient.registerLocationListener(myListener);//注册监听函数
+//        mLocationClient = new LocationClient(BaseApplication.getAppContext());//声明LocationClient类
+//        mLocationClient.registerLocationListener(myListener);//注册监听函数
+//        initLocation();
+//        mLocationClient.start();//开始定位
+
+        //初始化定位
+        mLocationClient = new AMapLocationClient(getActivity());
+        //设置定位回调监听
+        mLocationClient.setLocationListener(mLocationListener);
+        //初始化AMapLocationClientOption对象
+        mLocationOption = new AMapLocationClientOption();
         initLocation();
-        mLocationClient.start();//开始定位
+        //启动定位
+        mLocationClient.startLocation();
 
         view.findViewById(R.id.ivRight).setOnClickListener(this);
         ll_select = (LinearLayout) view.findViewById(R.id.ll_select);
@@ -187,26 +205,26 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.ivRight:
+            case R.id.ivRight: //上传
                 if (!CommonUtil.isHadLogin()) {
                     gotoPager(RegisterAndLoginActivity.class, null);
                     return;
                 }
                 showPostCarWindow();
                 break;
-            case R.id.ll_sort:
+            case R.id.ll_sort:  //默认排序
                 flag = 0;
                 resetHeaderView();
                 View car_sort_view = View.inflate(mContext, R.layout.item_car_sort, null);
                 carSelectPopupWindow(car_sort_view);
                 break;
-            case R.id.ll_price:
+            case R.id.ll_price:    //价格
                 flag = 1;
                 resetHeaderView();
                 View car_price_view = View.inflate(mContext, R.layout.item_car_price, null);
                 carSelectPopupWindow(car_price_view);
                 break;
-            case R.id.ll_filter:
+            case R.id.ll_filter:  //筛选
                 flag = 2;
                 if (mCarConfigurationList == null || mCarConfigurationList.isEmpty()) {
                     getCarExtraInfo();
@@ -216,12 +234,12 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                 tvTotalCar = (TextView) car_filter_view.findViewById(R.id.tvTotalCar);
                 carSelectPopupWindow(car_filter_view);
                 break;
-            case R.id.ll_brand:
+            case R.id.ll_brand:  //品牌
                 Bundle bundle = new Bundle();
                 bundle.putString("fromClass", this.getClass().getName());
                 gotoPager(SelectCarBrandFragment.class, bundle);
                 break;
-            case R.id.tvSearch:
+            case R.id.tvSearch:  //搜索
                 gotoPager(SearchFragment.class, null);
                 break;
             default:
@@ -231,9 +249,12 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
 
     public void onResume() {
         super.onResume();
+        //获取车的基本配置信息
         if (mCarConfigurationList == null || mCarConfigurationList.isEmpty()) {
             getCarExtraInfo();
         }
+
+
         Object data1 = DataManager.getInstance().getData1();
         Object data2 = DataManager.getInstance().getData2();
         Object data3 = DataManager.getInstance().getData3();
@@ -269,6 +290,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
         }
     }
 
+    //重置排序头部
     private void resetHeaderView() {
         if (getView() != null) {
             switch (flag) {
@@ -290,6 +312,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
         }
     }
 
+    //顶部筛选
     private void carSelectPopupWindow(final View view) {
         final PopupWindow popupWindow = new PopupWindow(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         //外部是否可以点击
@@ -312,13 +335,13 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
             public boolean onKey(View view, int i, KeyEvent keyEvent) {
                 if (i == KeyEvent.KEYCODE_BACK) {
                     popupWindow.dismiss();
-                    new_or_old = "";
-                    car_source = "";
-                    car_levels.clear();
-                    seat_nums.clear();
-                    car_colors.clear();
-                    car_fueltypes.clear();
-                    envirstandards.clear();
+                    new_or_old = ""; //车况
+                    car_source = ""; //车源
+                    car_levels.clear(); //车辆级别
+                    seat_nums.clear(); //座位数
+                    car_colors.clear(); //颜色
+                    car_fueltypes.clear(); //燃油类型
+                    envirstandards.clear(); //环保标准
                     board_add = "";
                     forward = "";
                     min_mileage = "0";
@@ -543,12 +566,12 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                     }
                 });
                 break;
-            case 2:
+            case 2: //筛选
                 final ArrayList<View> viewList = new ArrayList<>();
                 final ViewPager viewPager = (ViewPager) view.findViewById(R.id.customViewPager);
                 LayoutInflater inflater = LayoutInflater.from(getActivity());
-                viewList.add(inflater.inflate(R.layout.layout_car_filter_1, null));
-                viewList.add(inflater.inflate(R.layout.item_post_car_detail_msg, null));
+                viewList.add(inflater.inflate(R.layout.layout_car_filter_1, null)); //基本信息界面
+                viewList.add(inflater.inflate(R.layout.item_post_car_detail_msg, null)); //详细配置页面
                 resetBasicMsg(viewList.get(0));
                 resetCarConfigurations(viewList.get(1), mCarConfigurationList);
                 view.findViewById(R.id.rl).setOnClickListener(new View.OnClickListener() {
@@ -688,6 +711,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
         }
     }
 
+    //基本信息
     private void resetBasicMsg(View view) {
         new_or_old = "";
         car_source = "";
@@ -710,7 +734,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
         final LinearLayout llRoot = (LinearLayout) view.findViewById(R.id.llRoot);
         int childCount = llRoot.getChildCount();
         for (int i = 0; i < childCount; ++i) {
-            if (i == 6) {
+            if (i == 6) {//里程
                 final TextView tvDistanceNum = (TextView) view.findViewById(R.id.tvDistanceNum);
                 tvDistanceNum.setText(getResources().getString(R.string.no_limit));
                 RangeSeekBar<Integer> distanceBar = (RangeSeekBar<Integer>) view.findViewById(R.id.distanceBar);
@@ -743,7 +767,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                     }
                 });
                 continue;
-            } else if (i == 7) {
+            } else if (i == 7) {//车龄
                 final TextView tvAgeNum = (TextView) view.findViewById(R.id.tvAgeNum);
                 tvAgeNum.setText(getResources().getString(R.string.no_limit));
                 RangeSeekBar<Integer> ageBar = (RangeSeekBar<Integer>) view.findViewById(R.id.ageBar);
@@ -776,7 +800,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                     }
                 });
                 continue;
-            } else if (i == 8) {
+            } else if (i == 8) {//排量
                 final TextView tvPailiangNum = (TextView) view.findViewById(R.id.tvPailiangNum);
                 tvPailiangNum.setText(getResources().getString(R.string.no_limit));
                 RangeSeekBar<Integer> pailiangBar = (RangeSeekBar<Integer>) view.findViewById(R.id.pailiangBar);
@@ -812,7 +836,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
             }
             ViewGroup itemView = (ViewGroup) llRoot.getChildAt(i);
             int count = itemView.getChildCount();
-            if (i == 2 || i == 3 || i == 5 || i == 9 || i == 11) {
+            if (i == 2 || i == 3 || i == 5 || i == 9 || i == 11) {//这几个是可以展开全部显示的
                 ViewGroup viewGroup = (ViewGroup) itemView.getChildAt(0);
                 ((ImageView) viewGroup.getChildAt(1)).setImageResource(R.drawable.v2_expand3x);
                 ((TextView) viewGroup.getChildAt(2)).setText("全部");
@@ -1174,6 +1198,8 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
         }
     }
 
+
+    //详细配置
     private void resetCarConfigurations(View view, ArrayList<CarConfiguration> list) {
         extra_infos.clear();
         LinearLayout llDetailMsg = (LinearLayout) view.findViewById(R.id.llDetailMsg);
@@ -1363,6 +1389,8 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
         getCarListDataFromNet(2);
     }
 
+
+    //获取车信息列表
     private void getCarListDataFromNet(final int searchType) {
         OkHttpUtils.post()
                 .url(Constant.getCarListUrl())
@@ -1407,6 +1435,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
 
                     @Override
                     public void onResponse(String response, int id) {
+                        Log.i("TESTLOG","getcarlist =="+response);
                         JSONObject jsonObject = null;
                         try {
                             jsonObject = new JSONObject(response);
@@ -1421,7 +1450,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                                         smartRefreshLayout.finishLoadmore();
                                         handlerCarListMoreData(jsonObjectData);
                                     }
-                                } else {
+                                } else { //筛选中找到多少辆符合条件的车
                                     setTotalCar(jsonObjectData.optInt("total"));
                                 }
                             } else {
@@ -1514,7 +1543,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
         if (baseRecyclerViewAdapter == null) {
             baseRecyclerViewAdapter = new BaseRecyclerViewAdapter(mContext, carInfoBeanArrayList, CAR_LIST_FOR_CAR_CENTER);
             mHeaderAndFooterWrapper = new HeaderAndFooterWrapper(baseRecyclerViewAdapter);
-            llTop = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.car_center_topview, null);
+            llTop = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.car_center_topview, null);//作为头布局存放过滤条件
             mHeaderAndFooterWrapper.addHeaderView(llTop);
             recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
             recyclerView.setAdapter(mHeaderAndFooterWrapper);
@@ -1526,6 +1555,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
         resetFilterView(llTop, carInfoBeanArrayList == null || carInfoBeanArrayList.isEmpty(), jsonObjectData.optString("custom_url"));
     }
 
+    //过滤条件
     public class FilterCondition {
         int type;
         String text;
@@ -1692,7 +1722,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
 
     private void onFilterCondition(View view) {
         FilterCondition condition = (FilterCondition) view.getTag(R.id.tag);
-        switch (condition.type) {
+        switch (condition.type) {//通过type区分点击了不同的过滤条件（删除该过滤条件）
             case -1:
                 price_id = -1;
                 min_price = "0";
@@ -1768,36 +1798,37 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
         getCarListDataFromNet(2);
     }
 
+    //重置过滤条件头部
     private void resetFilterView(LinearLayout linearLayout, boolean isNoData, String dingzhiUrl) {
         if (mHeaderAndFooterWrapper == null) {
             return;
         }
         linearLayout.removeAllViews();
 
-        ArrayList<FilterCondition> list = getFilterConditions();
-        int itemCount = list.size();
+        ArrayList<FilterCondition> list = getFilterConditions();//获取过滤条件对象集合
+        int itemCount = list.size();//过滤条件的个数
         LinearLayout itemLayout;
         LinearLayout llName1, llName2, llName3;
-        int index = 0;
-        int charCount;
+        int index = 0;//记录已经加入到头部的过滤条件个数
+        int charCount;//记录过滤条件的总长度
         for (int j = 0; j < Integer.MAX_VALUE; ++j) {
             charCount = 0;
             itemLayout = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.item_filter_conditicion, null);
-            linearLayout.addView(itemLayout);
+            linearLayout.addView(itemLayout);//先添加一行（3个过滤条件）
             llName1 = (LinearLayout) itemLayout.getChildAt(0);
             llName2 = (LinearLayout) itemLayout.getChildAt(1);
             llName3 = (LinearLayout) itemLayout.getChildAt(2);
-            if (index < itemCount) {
+            if (index < itemCount) {//已经加入的个数小于总个数，为第一个item赋值
                 charCount += list.get(index).text.length();
                 ((TextView) llName1.getChildAt(0)).setText(list.get(index).text);
-                llName1.setTag(R.id.tag, list.get(index));
+                llName1.setTag(R.id.tag, list.get(index));//设置tag,将item布局和过滤条件FilterCondition绑定
                 llName1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         onFilterCondition(view);
                     }
                 });
-                if (index == itemCount - 1) {
+                if (index == itemCount - 1) {//如果是最后一个，则是重置
                     ((ImageView) llName1.getChildAt(1)).setImageResource(R.drawable.chongzhi);
                 }
             } else {
@@ -1807,7 +1838,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                 break;
             }
             ++index;
-            if (index < itemCount) {
+            if (index < itemCount) {//已经加入的个数小于总个数，为第二个item赋值
                 charCount += list.get(index).text.length();
                 ((TextView) llName2.getChildAt(0)).setText(list.get(index).text);
                 llName2.setTag(R.id.tag, list.get(index));
@@ -1826,8 +1857,8 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
                 break;
             }
             ++index;
-            if (index < itemCount) {
-                if (charCount + list.get(index).text.length() > 16) {
+            if (index < itemCount) {//已经加入的个数小于总个数，为第三个item赋值
+                if (charCount + list.get(index).text.length() > 16) {//如果前面两个item的长度加上第三个item的长度超过16个字，则不显示第三个，换行
                     llName3.setVisibility(View.GONE);
                     continue;
                 }
@@ -1849,7 +1880,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
             ++index;
         }
 
-        if (isNoData) {
+        if (isNoData) {//没有符合条件的车辆，显示定制按钮
             View noDataView = LayoutInflater.from(getActivity()).inflate(R.layout.layout_car_dingzhi, null);
             linearLayout.addView(noDataView);
             noDataView.findViewById(R.id.tvDingzhi).setTag(dingzhiUrl);
@@ -1866,6 +1897,7 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
     }
 
 
+    //将jsonobject用gson解析成CarInfoBean类
     private ArrayList<CarInfoBean> getCarListData(JSONObject jsonObjectData) {
         ArrayList<CarInfoBean> list = null;
         if (jsonObjectData == null) {
@@ -1948,182 +1980,281 @@ public class CarCenterFragment extends BaseFragment implements BaseRecyclerViewA
         getCarListDataFromNet(2);
     }
 
+    private void initLocation(){
+        //设置定位模式为AMapLocationMode.Hight_Accuracy，高精度模式。
+        mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
+
+        //设置定位间隔,单位毫秒,默认为2000ms，最低1000ms。
+        mLocationOption.setInterval(2000);
+
+        //设置是否返回地址信息（默认返回地址信息）
+        mLocationOption.setNeedAddress(true);
+
+        //设置是否允许模拟位置,默认为true，允许模拟位置
+        mLocationOption.setMockEnable(true);
+
+        //设置定位请求超时时间.单位是毫秒，默认30000毫秒，建议超时时间不要低于8000毫秒。
+        mLocationOption.setHttpTimeOut(30000);
+
+        //关闭缓存机制
+        mLocationOption.setLocationCacheEnable(true);
+
+        //给定位客户端对象设置定位参数
+        mLocationClient.setLocationOption(mLocationOption);
+    }
+
+
+    private class GaoDeLocationListener implements AMapLocationListener {
+
+        @Override
+        public void onLocationChanged(AMapLocation amapLocation) {
+
+            if (amapLocation != null) {
+                if (amapLocation.getErrorCode() == 0) {
+                    //可在其中解析amapLocation获取相应内容。
+
+                    amapLocation.getLocationType();//获取当前定位结果来源，如网络定位结果，详见定位类型表
+                    amapLocation.getLatitude();//获取纬度
+                    amapLocation.getLongitude();//获取经度
+                    amapLocation.getAccuracy();//获取精度信息
+                    amapLocation.getAddress();//地址，如果option中设置isNeedAddress为false，则没有此结果，网络定位结果中会有地址信息，GPS定位不返回地址信息。
+                    amapLocation.getCountry();//国家信息
+                    amapLocation.getProvince();//省信息
+                    amapLocation.getCity();//城市信息
+                    amapLocation.getDistrict();//城区信息
+                    amapLocation.getStreet();//街道信息
+                    amapLocation.getStreetNum();//街道门牌号信息
+                    amapLocation.getCityCode();//城市编码
+                    amapLocation.getAdCode();//地区编码
+                    amapLocation.getAoiName();//获取当前定位点的AOI信息
+                    amapLocation.getBuildingId();//获取当前室内定位的建筑物Id
+                    amapLocation.getFloor();//获取当前室内定位的楼层
+                    //                    amapLocation.getGpsStatus();//获取GPS的当前状态
+                    //获取定位时间
+                    //                    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    //                    Date date = new Date(amapLocation.getTime());
+                    //                    df.format(date);
+
+                    if (!TextUtils.isEmpty(amapLocation.getCity())) {
+                        if (!TextUtils.isEmpty(amapLocation.getCityCode())) {
+                            SPUtils.getInstance().put(Constant.CITY_CODE, String.valueOf(amapLocation.getCityCode()));
+                        }
+
+                        SPUtils.getInstance().put(Constant.CITY_LAT, String.valueOf(amapLocation.getLatitude()));
+                        SPUtils.getInstance().put(Constant.CITY_LNG, String.valueOf(amapLocation.getLongitude()));
+                    }
+
+
+                    if (amapLocation.getLocationType() != 0) {
+
+                        Message msg = Message.obtain();
+                        msg.what = 0x0001;
+                        msg.obj = amapLocation.getCity();
+                        handler.sendMessage(msg);
+                        return ;
+                    }
+
+                }else {
+                    //定位失败时，可通过ErrCode（错误码）信息来确定失败的原因，errInfo是错误信息，详见错误码表。
+                    Log.e("AmapError","location Error, ErrCode:"
+                            + amapLocation.getErrorCode() + ", errInfo:"
+                            + amapLocation.getErrorInfo());
+
+
+                }
+            }
+
+            //定位失败
+            handler.sendEmptyMessage(0x0002);
+        }
+    }
+
+
+
     /**
      * 配置定位SDK参数
      */
-    private void initLocation() {
-        LocationClientOption option = new LocationClientOption();
-        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
-        //可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
+//    private void initLocation() {
+//        LocationClientOption option = new LocationClientOption();
+//        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
+//        //可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
+//
+//        option.setCoorType("bd09ll");
+//        //可选，默认gcj02，设置返回的定位结果坐标系
+//
+//        int span = 1000;
+//        option.setScanSpan(span);
+//        //可选，默认0，即仅定位一次，设置发起定位请求的间隔需要大于等于1000ms才是有效的
+//
+//        option.setIsNeedAddress(true);
+//        //可选，设置是否需要地址信息，默认不需要
+//
+//        option.setOpenGps(true);
+//        //可选，默认false,设置是否使用gps
+//
+//        option.setLocationNotify(true);
+//        //可选，默认false，设置是否当GPS有效时按照1S/1次频率输出GPS结果
+//
+//        option.setIsNeedLocationDescribe(true);
+//        //可选，默认false，设置是否需要位置语义化结果，可以在BDLocation.getLocationDescribe里得到，结果类似于“在北京天安门附近”
+//
+//        option.setIsNeedLocationPoiList(true);
+//        //可选，默认false，设置是否需要POI结果，可以在BDLocation.getPoiList里得到
+//
+//        option.setIgnoreKillProcess(false);
+//        //可选，默认true，定位SDK内部是一个SERVICE，并放到了独立进程，设置是否在stop的时候杀死这个进程，默认不杀死
+//
+//        option.SetIgnoreCacheException(false);
+//        //可选，默认false，设置是否收集CRASH信息，默认收集
+//
+//        option.setEnableSimulateGps(false);
+//        //可选，默认false，设置是否需要过滤GPS仿真结果，默认需要
+//
+//        option.setWifiCacheTimeOut(5 * 60 * 1000);
+//        //可选，7.2版本新增能力，如果您设置了这个接口，首次启动定位时，会先判断当前WiFi是否超出有效期，超出有效期的话，会先重新扫描WiFi，然后再定位
+//
+//        mLocationClient.setLocOption(option);
+//    }
+//
+//    private class MyLocationListener extends BDAbstractLocationListener {
+//
+//        @Override
+//        public void onReceiveLocation(BDLocation location) {
+//            //获取定位结果
+//            location.getTime();    //获取定位时间
+//            location.getLocationID();    //获取定位唯一ID，v7.2版本新增，用于排查定位问题
+//            location.getLocType();    //获取定位类型
+//            location.getLatitude();    //获取纬度信息
+//            location.getLongitude();    //获取经度信息
+//            location.getRadius();    //获取定位精准度
+//            location.getAddrStr();    //获取地址信息
+//            location.getCountry();    //获取国家信息
+//            location.getCountryCode();    //获取国家码
+//            location.getCity();    //获取城市信息
+//            location.getCityCode();    //获取城市码
+//            location.getDistrict();    //获取区县信息
+//            location.getStreet();    //获取街道信息
+//            location.getStreetNumber();    //获取街道码
+//            location.getLocationDescribe();    //获取当前位置描述信息
+//            location.getPoiList();    //获取当前位置周边POI信息
+//
+//            location.getBuildingID();    //室内精准定位下，获取楼宇ID
+//            location.getBuildingName();    //室内精准定位下，获取楼宇名称
+//            location.getFloor();    //室内精准定位下，获取当前位置所处的楼层信息
+//
+//            if (!TextUtils.isEmpty(location.getCity())) {
+//                if (!TextUtils.isEmpty(location.getCityCode())) {
+//                    SPUtils.getInstance().put(Constant.CITY_CODE, String.valueOf(location.getCityCode()));
+//                }
+//
+//                SPUtils.getInstance().put(Constant.CITY_LAT, String.valueOf(location.getLatitude()));
+//                SPUtils.getInstance().put(Constant.CITY_LNG, String.valueOf(location.getLongitude()));
+//            }
+//
+//            if (location.getLocType() == BDLocation.TypeGpsLocation) {
+//
+//                //当前为GPS定位结果，可获取以下信息
+//                location.getSpeed();    //获取当前速度，单位：公里每小时
+//                location.getSatelliteNumber();    //获取当前卫星数
+//                location.getAltitude();    //获取海拔高度信息，单位米
+//                location.getDirection();    //获取方向信息，单位度
+//
+//                Message msg = Message.obtain();
+//                msg.what = 0x0001;
+//                msg.obj = location.getCity();
+//                handler.sendMessage(msg);
+//            } else if (location.getLocType() == BDLocation.TypeNetWorkLocation) {
+//
+//                //当前为网络定位结果，可获取以下信息
+//                location.getOperators();    //获取运营商信息
+//
+//                Message msg = Message.obtain();
+//                msg.what = 0x0001;
+//                msg.obj = location.getAddress().city;
+//                handler.sendMessage(msg);
+//            } else if (location.getLocType() == BDLocation.TypeOffLineLocation) {
+//
+//                //当前为网络定位结果
+//
+//                Message msg = Message.obtain();
+//                msg.what = 0x0001;
+//                msg.obj = location.getAddress().city;
+//                handler.sendMessage(msg);
+//            } else if (location.getLocType() == BDLocation.TypeServerError) {
+//
+//                //当前网络定位失败
+//                //可将定位唯一ID、IMEI、定位失败时间反馈至loc-bugs@baidu.com
+//                handler.sendEmptyMessage(0x0002);
+//            } else if (location.getLocType() == BDLocation.TypeNetWorkException) {
+//
+//                //当前网络不通
+//                handler.sendEmptyMessage(0x0002);
+//            } else if (location.getLocType() == BDLocation.TypeCriteriaException) {
+//
+//                //当前缺少定位依据，可能是用户没有授权，建议弹出提示框让用户开启权限
+//                //可进一步参考onLocDiagnosticMessage中的错误返回码
+//                handler.sendEmptyMessage(0x0002);
+//            }
+//        }
+//
+//        /**
+//         * 回调定位诊断信息，开发者可以根据相关信息解决定位遇到的一些问题
+//         * 自动回调，相同的diagnosticType只会回调一次
+//         *
+//         * @param locType           当前定位类型
+//         * @param diagnosticType    诊断类型（1~9）
+//         * @param diagnosticMessage 具体的诊断信息释义
+//         */
+//        public void onLocDiagnosticMessage(int locType, int diagnosticType, String diagnosticMessage) {
+//
+//            if (diagnosticType == LocationClient.LOC_DIAGNOSTIC_TYPE_BETTER_OPEN_GPS) {
+//
+//                //建议打开GPS
+//
+//            } else if (diagnosticType == LocationClient.LOC_DIAGNOSTIC_TYPE_BETTER_OPEN_WIFI) {
+//
+//                //建议打开wifi，不必连接，这样有助于提高网络定位精度！
+//
+//            } else if (diagnosticType == LocationClient.LOC_DIAGNOSTIC_TYPE_NEED_CHECK_LOC_PERMISSION) {
+//
+//                //定位权限受限，建议提示用户授予APP定位权限！
+//
+//            } else if (diagnosticType == LocationClient.LOC_DIAGNOSTIC_TYPE_NEED_CHECK_NET) {
+//
+//                //网络异常造成定位失败，建议用户确认网络状态是否异常！
+//
+//            } else if (diagnosticType == LocationClient.LOC_DIAGNOSTIC_TYPE_NEED_CLOSE_FLYMODE) {
+//
+//                //手机飞行模式造成定位失败，建议用户关闭飞行模式后再重试定位！
+//
+//            } else if (diagnosticType == LocationClient.LOC_DIAGNOSTIC_TYPE_NEED_INSERT_SIMCARD_OR_OPEN_WIFI) {
+//
+//                //无法获取任何定位依据，建议用户打开wifi或者插入sim卡重试！
+//
+//            } else if (diagnosticType == LocationClient.LOC_DIAGNOSTIC_TYPE_NEED_OPEN_PHONE_LOC_SWITCH) {
+//
+//                //无法获取有效定位依据，建议用户打开手机设置里的定位开关后重试！
+//
+//            } else if (diagnosticType == LocationClient.LOC_DIAGNOSTIC_TYPE_SERVER_FAIL) {
+//
+//                //百度定位服务端定位失败
+//                //建议反馈location.getLocationID()和大体定位时间到loc-bugs@baidu.com
+//
+//            } else if (diagnosticType == LocationClient.LOC_DIAGNOSTIC_TYPE_FAIL_UNKNOWN) {
+//
+//                //无法获取有效定位依据，但无法确定具体原因
+//                //建议检查是否有安全软件屏蔽相关定位权限
+//                //或调用LocationClient.restart()重新启动后重试！
+//            }
+//        }
+//    }
 
-        option.setCoorType("bd09ll");
-        //可选，默认gcj02，设置返回的定位结果坐标系
 
-        int span = 1000;
-        option.setScanSpan(span);
-        //可选，默认0，即仅定位一次，设置发起定位请求的间隔需要大于等于1000ms才是有效的
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
 
-        option.setIsNeedAddress(true);
-        //可选，设置是否需要地址信息，默认不需要
-
-        option.setOpenGps(true);
-        //可选，默认false,设置是否使用gps
-
-        option.setLocationNotify(true);
-        //可选，默认false，设置是否当GPS有效时按照1S/1次频率输出GPS结果
-
-        option.setIsNeedLocationDescribe(true);
-        //可选，默认false，设置是否需要位置语义化结果，可以在BDLocation.getLocationDescribe里得到，结果类似于“在北京天安门附近”
-
-        option.setIsNeedLocationPoiList(true);
-        //可选，默认false，设置是否需要POI结果，可以在BDLocation.getPoiList里得到
-
-        option.setIgnoreKillProcess(false);
-        //可选，默认true，定位SDK内部是一个SERVICE，并放到了独立进程，设置是否在stop的时候杀死这个进程，默认不杀死
-
-        option.SetIgnoreCacheException(false);
-        //可选，默认false，设置是否收集CRASH信息，默认收集
-
-        option.setEnableSimulateGps(false);
-        //可选，默认false，设置是否需要过滤GPS仿真结果，默认需要
-
-        option.setWifiCacheTimeOut(5 * 60 * 1000);
-        //可选，7.2版本新增能力，如果您设置了这个接口，首次启动定位时，会先判断当前WiFi是否超出有效期，超出有效期的话，会先重新扫描WiFi，然后再定位
-
-        mLocationClient.setLocOption(option);
-    }
-
-    private class MyLocationListener extends BDAbstractLocationListener {
-
-        @Override
-        public void onReceiveLocation(BDLocation location) {
-
-            //获取定位结果
-            location.getTime();    //获取定位时间
-            location.getLocationID();    //获取定位唯一ID，v7.2版本新增，用于排查定位问题
-            location.getLocType();    //获取定位类型
-            location.getLatitude();    //获取纬度信息
-            location.getLongitude();    //获取经度信息
-            location.getRadius();    //获取定位精准度
-            location.getAddrStr();    //获取地址信息
-            location.getCountry();    //获取国家信息
-            location.getCountryCode();    //获取国家码
-            location.getCity();    //获取城市信息
-            location.getCityCode();    //获取城市码
-            location.getDistrict();    //获取区县信息
-            location.getStreet();    //获取街道信息
-            location.getStreetNumber();    //获取街道码
-            location.getLocationDescribe();    //获取当前位置描述信息
-            location.getPoiList();    //获取当前位置周边POI信息
-
-            location.getBuildingID();    //室内精准定位下，获取楼宇ID
-            location.getBuildingName();    //室内精准定位下，获取楼宇名称
-            location.getFloor();    //室内精准定位下，获取当前位置所处的楼层信息
-
-            if (!TextUtils.isEmpty(location.getCity())) {
-                if (!TextUtils.isEmpty(location.getCityCode())) {
-                    SPUtils.getInstance().put(Constant.CITY_CODE, location.getCityCode());
-                }
-
-                SPUtils.getInstance().put(Constant.CITY_LAT, String.valueOf(location.getLatitude()));
-                SPUtils.getInstance().put(Constant.CITY_LNG, String.valueOf(location.getLongitude()));
-            }
-
-            if (location.getLocType() == BDLocation.TypeGpsLocation) {
-
-                //当前为GPS定位结果，可获取以下信息
-                location.getSpeed();    //获取当前速度，单位：公里每小时
-                location.getSatelliteNumber();    //获取当前卫星数
-                location.getAltitude();    //获取海拔高度信息，单位米
-                location.getDirection();    //获取方向信息，单位度
-
-                Message msg = Message.obtain();
-                msg.what = 0x0001;
-                msg.obj = location.getCity();
-                handler.sendMessage(msg);
-            } else if (location.getLocType() == BDLocation.TypeNetWorkLocation) {
-
-                //当前为网络定位结果，可获取以下信息
-                location.getOperators();    //获取运营商信息
-
-                Message msg = Message.obtain();
-                msg.what = 0x0001;
-                msg.obj = location.getAddress().city;
-                handler.sendMessage(msg);
-            } else if (location.getLocType() == BDLocation.TypeOffLineLocation) {
-
-                //当前为网络定位结果
-
-                Message msg = Message.obtain();
-                msg.what = 0x0001;
-                msg.obj = location.getAddress().city;
-                handler.sendMessage(msg);
-            } else if (location.getLocType() == BDLocation.TypeServerError) {
-
-                //当前网络定位失败
-                //可将定位唯一ID、IMEI、定位失败时间反馈至loc-bugs@baidu.com
-                handler.sendEmptyMessage(0x0002);
-            } else if (location.getLocType() == BDLocation.TypeNetWorkException) {
-
-                //当前网络不通
-                handler.sendEmptyMessage(0x0002);
-            } else if (location.getLocType() == BDLocation.TypeCriteriaException) {
-
-                //当前缺少定位依据，可能是用户没有授权，建议弹出提示框让用户开启权限
-                //可进一步参考onLocDiagnosticMessage中的错误返回码
-                handler.sendEmptyMessage(0x0002);
-            }
-        }
-
-        /**
-         * 回调定位诊断信息，开发者可以根据相关信息解决定位遇到的一些问题
-         * 自动回调，相同的diagnosticType只会回调一次
-         *
-         * @param locType           当前定位类型
-         * @param diagnosticType    诊断类型（1~9）
-         * @param diagnosticMessage 具体的诊断信息释义
-         */
-        public void onLocDiagnosticMessage(int locType, int diagnosticType, String diagnosticMessage) {
-
-            if (diagnosticType == LocationClient.LOC_DIAGNOSTIC_TYPE_BETTER_OPEN_GPS) {
-
-                //建议打开GPS
-
-            } else if (diagnosticType == LocationClient.LOC_DIAGNOSTIC_TYPE_BETTER_OPEN_WIFI) {
-
-                //建议打开wifi，不必连接，这样有助于提高网络定位精度！
-
-            } else if (diagnosticType == LocationClient.LOC_DIAGNOSTIC_TYPE_NEED_CHECK_LOC_PERMISSION) {
-
-                //定位权限受限，建议提示用户授予APP定位权限！
-
-            } else if (diagnosticType == LocationClient.LOC_DIAGNOSTIC_TYPE_NEED_CHECK_NET) {
-
-                //网络异常造成定位失败，建议用户确认网络状态是否异常！
-
-            } else if (diagnosticType == LocationClient.LOC_DIAGNOSTIC_TYPE_NEED_CLOSE_FLYMODE) {
-
-                //手机飞行模式造成定位失败，建议用户关闭飞行模式后再重试定位！
-
-            } else if (diagnosticType == LocationClient.LOC_DIAGNOSTIC_TYPE_NEED_INSERT_SIMCARD_OR_OPEN_WIFI) {
-
-                //无法获取任何定位依据，建议用户打开wifi或者插入sim卡重试！
-
-            } else if (diagnosticType == LocationClient.LOC_DIAGNOSTIC_TYPE_NEED_OPEN_PHONE_LOC_SWITCH) {
-
-                //无法获取有效定位依据，建议用户打开手机设置里的定位开关后重试！
-
-            } else if (diagnosticType == LocationClient.LOC_DIAGNOSTIC_TYPE_SERVER_FAIL) {
-
-                //百度定位服务端定位失败
-                //建议反馈location.getLocationID()和大体定位时间到loc-bugs@baidu.com
-
-            } else if (diagnosticType == LocationClient.LOC_DIAGNOSTIC_TYPE_FAIL_UNKNOWN) {
-
-                //无法获取有效定位依据，但无法确定具体原因
-                //建议检查是否有安全软件屏蔽相关定位权限
-                //或调用LocationClient.restart()重新启动后重试！
-            }
-        }
+        mLocationClient.stopLocation();//停止定位后，本地定位服务并不会被销毁
+        mLocationClient.onDestroy();//销毁定位客户端，同时销毁本地定位服务。
     }
 }

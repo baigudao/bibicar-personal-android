@@ -56,6 +56,7 @@ public class Constant {
     public static final String USER_ID = "user_id";
     public static final String MY_USER_INFO = "my_user_info";
     public static final String CAR_ID = "car_id";
+    public static final String SELLING_CAR = "selling_car";
     public static final String RENTAL_TIME_START = "rental_time_start";
     public static final String RENTAL_TIME_END = "rental_time_end";
     public static final String PAY_TYPE = "pay_type";
@@ -111,8 +112,8 @@ public class Constant {
     public static final String FUELTYPE = "fueltype";
     public static final String EXTRA_INFO = "extra_info";
     public static final String CITY_CODE = "city_code";
-    public static final String CITY_LAT = "city_lat";
-    public static final String CITY_LNG = "city_lng";
+    public static final String CITY_LAT = "latitude";
+    public static final String CITY_LNG = "longitude";
     public static final String AVATAR = "avatar";
     public static final String COMPANY_ID = "company_id";
     public static final String THEME_ID = "theme_id";
@@ -136,15 +137,31 @@ public class Constant {
     public static final String ADVERTISEMENT_IMAGE = "advertisement_image";
     public static final String ADVERTISEMENT_IMAGE_NUM = "advertisement_image_num";
     public static final String DESCRIPTION = "description";
-
+    public static final String FILE_TYPE = "file_type";
+    public static final String HASH = "hash";
+    public static final String GUIDE_PRICE = "guide_price";
+    public static final String BOARD_FEE = "board_fee";
+    public static final String INSURANCE_FEE = "insurance_fee";
+    public static final String OTHER_FEE = "other_fee";
+    public static final String OTHER_FEE_INTRO = "other_fee_intro";
+    public static final String BANK_NO = "bank_no";
+    public static final String BANK_NAME = "bank_name";
+    public static final String BANK_ACCOUNT = "bank_account";
+    public static final String PROMISE = "promise";
+    public static final String TOTAL_PRICE = "total_price";
+    public static final String PURCH_FEE = "purch_fee";
+    public static final String REPORT_TIME = "report_time";
+    public static final String STATUS = "status";
+    public static final String REPORT_ID = "report_id";
+    public static final String FROM_SELL = "from_sell";
 
     public static final String HOST_IMAGE_URL = "http://img.bibicar.cn/";//http://img.bibicar.cn/Fja6zKmICAz6l6QCd7-Z0pC-bjt8
 
-    public static final int MAX_UPLOAD_PHOTO_NUM = 9;
+    public static final int MAX_UPLOAD_PHOTO_NUM = 12;
 
     //URL常量
-    private final static String hostUrl = "https://api.bibicar.cn/";//正式环境
-    //private static final String hostUrl = "https://testapi.bibicar.cn/";//测试环境
+//    private final static String hostUrl = "https://api.bibicar.cn/";//正式环境
+    private static final String hostUrl = "http://testapi.bibicar.cn/";//测试环境
 
     private static final String registerApp = hostUrl + "app/register";//App注册
     private static final String verificationCodeUrl = hostUrl + "v3/user/sendcode";//得到验证码
@@ -171,7 +188,7 @@ public class Constant {
     private final static String uploadTokenUrl = hostUrl + "app/uploadtoken";//上传文件的Token
 
     private final static String carListUrl = hostUrl + "v4/car/newlist";//车辆列表
-    private final static String carDetailUrl = hostUrl + "v4/car/index";//车辆详情  v4接口
+    private final static String carDetailUrl = hostUrl + "v5/car/index";//车辆详情  v5接口
 
     private final static String videoListUrl = hostUrl + "v3/Video/list";//视频列表
     private static final String videoDetailUrl = hostUrl + "v3/Video/index";//视频详情
@@ -250,8 +267,8 @@ public class Constant {
 
     private static final String likeCarListUrl = hostUrl + "v3/Favoritecar/list";//喜欢的车辆
 
-    private static final String publishNewCarUrl = hostUrl + "v3/publishcar/newCar";//上传新车
-    private static final String publishSecondCarUrl = hostUrl + "v3/publishcar/create";//上传二手车
+    private static final String publishNewCarUrl = hostUrl + "v5/publishcar/newCar";//上传新车
+    private static final String publishSecondCarUrl = hostUrl + "v5/publishcar/create";//上传二手车
 
     private static final String createFollowUrl = hostUrl + "v3/friendship/create";//关注
     private static final String deleteFollowUrl = hostUrl + "v3/friendship/delete";//取消关注
@@ -273,12 +290,37 @@ public class Constant {
     private static final String richDeleteLikeUrl = hostUrl + "v4/user/cancelrichboardlike";//排行点赞取消
 
     private static final String mySellingCarUrl = hostUrl + "v4/Publishcar/list";//我的售车
+    private static final String reportListUrl = hostUrl + "v4/carreport/list";//历史报价
+    private static final String reportViewUrl = hostUrl + "v5/carreport/view";//报价单详情
+    private static final String reportCreateUrl = hostUrl + "v5/carreport/create";//生成报价单
+    private static final String deleteMyCarUrl = hostUrl + "v3/car/delete";//删除车辆
+    private static final String updateCarUrl =  hostUrl + "v4/Publishcar/update";//更新车辆
 
     private static final String friendShipListUrl = hostUrl + "v3/friendship/list";//关注和粉丝列表
 
     private static final String mobileFriend = hostUrl + "v3/user/checkreport";
 
     private final static String suggestUrl = hostUrl + "app/suggest";//意见反馈
+
+    public static String getUpdateCarUrl() {
+        return updateCarUrl;
+    }
+
+    public static String getDeleteMyCarUrl() {
+        return deleteMyCarUrl;
+    }
+
+    public static String getReportListUrl() {
+        return reportListUrl;
+    }
+
+    public static String getReportViewUrl() {
+        return reportViewUrl;
+    }
+
+    public static String getReportCreateUrl() {
+        return reportCreateUrl;
+    }
 
     public static String getRegisterApp() {
         return registerApp;
@@ -672,5 +714,7 @@ public class Constant {
     public static String getSuggestUrl() {
         return suggestUrl;
     }
+
+
 
 }

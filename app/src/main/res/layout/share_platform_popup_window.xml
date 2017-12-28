@@ -1,23 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:weightSum="1">
-
-    <View
-        android:id="@+id/view_bg"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:alpha="0"
-        android:background="@android:color/black"
-        android:orientation="vertical" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/half_transparent"
+                android:weightSum="1">
 
     <LinearLayout
         android:id="@+id/pop_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/background_color"
+        android:background="@color/pure_white_color"
         android:gravity="center_horizontal"
         android:orientation="vertical">
 

@@ -2,7 +2,6 @@ package com.wiserz.pbibi.fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -146,7 +145,11 @@ public class ConcreteParameterFragment extends BaseFragment {
             tv_car_most_engine.setText(EmptyUtils.isEmpty(modelDetailBean.getEngine_horsepower()) ? "****" : modelDetailBean.getEngine_horsepower());
             tv_car_most_distance.setText(EmptyUtils.isEmpty(modelDetailBean.getEngine_MaxNJ()) ? "****" : modelDetailBean.getEngine_MaxNJ());
             tv_car_environment_standard.setText(EmptyUtils.isEmpty(modelDetailBean.getEngine_EnvirStandard()) ? "****" : modelDetailBean.getEngine_EnvirStandard());
-            tv_car_vol.setText(EmptyUtils.isEmpty(modelDetailBean.getOutSet_Width()) ? "****" : modelDetailBean.getOutSet_Width());
+
+            tv_car_vol.setText((EmptyUtils.isEmpty(modelDetailBean.getOutSet_Length()) ? "****" : modelDetailBean.getOutSet_Length()) + "x" +
+                    (EmptyUtils.isEmpty(modelDetailBean.getOutSet_Width()) ? "****" : modelDetailBean.getOutSet_Width()) + "x" +
+                    (EmptyUtils.isEmpty(modelDetailBean.getOutSet_Width()) ? "****" : modelDetailBean.getOutSet_Width()));//长x宽x高
+
             tv_car_ground_distance.setText(EmptyUtils.isEmpty(modelDetailBean.getOutSet_MinGapFromEarth()) ? "****" : modelDetailBean.getOutSet_MinGapFromEarth());
             tv_car_distance.setText(EmptyUtils.isEmpty(modelDetailBean.getOutSet_WheelBase()) ? "****" : modelDetailBean.getOutSet_WheelBase());
             tv_car_box_vol.setText(EmptyUtils.isEmpty(modelDetailBean.getOil_FuelCapacity()) ? "****" : modelDetailBean.getOil_FuelCapacity());

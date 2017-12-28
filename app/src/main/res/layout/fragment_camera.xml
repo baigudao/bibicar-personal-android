@@ -49,6 +49,25 @@
             android:text="@string/open"
             android:textColor="@color/main_color"
             android:textSize="15sp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_pos"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="@android:color/black"
+        android:layout_below="@id/topView">
+
+        <TextView
+            android:id="@+id/tvPos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:text="左前45°"
+            android:textColor="@color/pure_white_color"
+            android:layout_centerHorizontal="true"/>
+
     </RelativeLayout>
 
     <View
@@ -56,7 +75,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/selectPhotoView"
-        android:layout_below="@id/topView"
+        android:layout_below="@id/rl_pos"
         android:background="@android:color/transparent" />
 
     <android.support.v7.widget.RecyclerView
@@ -64,7 +83,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/bottomView"
-        android:alpha="0.75"
         android:background="@android:color/black">
 
     </android.support.v7.widget.RecyclerView>

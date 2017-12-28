@@ -1,0 +1,654 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:background="#F0000000">
+
+   <ImageView
+       android:id="@+id/ivClose"
+       android:src="@drawable/close"
+       android:layout_width="25dp"
+       android:layout_height="25dp"
+       android:layout_marginTop="20dp"
+       android:layout_marginLeft="10dp"/>
+
+    <com.wiserz.pbibi.view.MyScrollView
+        android:id="@+id/scrollBasicMsg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <LinearLayout
+            android:id="@+id/ll_root"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/back_report"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:clickable="false"
+            android:padding="5dp">
+
+            <!-- 头部 尊敬的客户 -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <!-- 头部图片 -->
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/report_header"/>
+
+                <!-- 品牌图标和名称 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="60dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/iv_brand"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:src="@drawable/default_bg_ratio_1"/>
+
+                    <TextView
+                        android:id="@+id/tv_car_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="center"
+                        android:textSize="18sp"
+                        android:textColor="@color/main_text_color"
+                        android:text="保时捷911"/>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+            <!-- 头部以下-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:orientation="vertical">
+
+                <!-- 承诺 -->
+                <TextView
+                    android:id="@+id/tvPromise"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:lineSpacingMultiplier="1.2"
+                    android:layout_marginBottom="20dp"
+                    android:text="@string/promise_text"
+                    android:textColor="@color/main_text_color"
+                    android:textSize="14sp"
+                    android:visibility="gone"/>
+
+
+                <!-- 个性化报价单 -->
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:src="@drawable/report_individuation"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    >
+
+                    <TextView
+                        android:id="@+id/limitday"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:text="@string/limit_day"
+                        android:textColor="@color/second_text_color"
+                        android:textSize="12sp"/>
+
+                    <TextView
+                        android:id="@+id/showReportDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="3dp"
+                        android:layout_marginRight="3dp"
+                        android:layout_toLeftOf="@id/limitday"
+                        android:text="2017-12-12"
+                        android:textColor="@color/main_text_color"
+                        android:textSize="12sp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_toLeftOf="@+id/showReportDate"
+                        android:layout_toStartOf="@+id/showReportDate"
+                        android:text="报价日期:"
+                        android:textColor="@color/second_text_color"
+                        android:textSize="12sp"/>
+
+                </RelativeLayout>
+
+                <!-- 表格 -->
+                <TableLayout
+                    android:id="@+id/table"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+
+                    android:background="@color/second_text_color"
+                    android:shrinkColumns="1">
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="1dp"
+                        android:layout_marginRight="1dp"
+                        android:layout_marginTop="1dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@color/pure_white_color"
+                            android:gravity="center"
+                            android:text="车辆型号"
+                            android:textColor="@color/second_text_color"
+                            android:textSize="12sp"/>
+
+                        <TextView
+                            android:id="@+id/showCarType"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="1dp"
+                            android:layout_weight="1.5"
+                            android:background="@color/pure_white_color"
+                            android:ellipsize="end"
+                            android:gravity="center"
+                            android:text="宝马么么么么吗买买买买买买密码"
+                            android:textColor="@color/main_text_color"
+                            android:textSize="12sp"/>
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="45dp"
+                            android:layout_marginLeft="1dp"
+                            android:layout_weight="1"
+                            android:background="@color/pure_white_color"
+                            android:gravity="center"
+                            android:text="指导价"
+                            android:textColor="@color/second_text_color"
+                            android:textSize="12sp"/>
+
+                        <TextView
+                            android:id="@+id/showGuidePrice"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="1dp"
+                            android:layout_weight="1"
+                            android:background="@color/pure_white_color"
+                            android:ellipsize="end"
+                            android:gravity="center"
+                            android:textColor="@color/main_text_color"
+                            android:textSize="12sp"/>
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="1dp"
+                        android:layout_marginRight="1dp"
+                        android:layout_marginTop="1dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="45dp"
+                            android:layout_weight="1"
+                            android:background="@color/pure_white_color"
+                            android:gravity="center"
+                            android:text="颜色"
+                            android:textColor="@color/second_text_color"
+                            android:textSize="12sp"/>
+
+                        <TextView
+                            android:id="@+id/showCarColor"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="1dp"
+                            android:layout_weight="1.5"
+                            android:background="@color/pure_white_color"
+                            android:ellipsize="end"
+                            android:gravity="center"
+                            android:textColor="@color/main_text_color"
+                            android:textSize="12sp"/>
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="45dp"
+                            android:layout_marginLeft="1dp"
+                            android:layout_weight="1"
+                            android:background="@color/pure_white_color"
+                            android:gravity="center"
+                            android:text="购置税"
+                            android:textColor="@color/second_text_color"
+                            android:textSize="12sp"/>
+
+                        <TextView
+                            android:id="@+id/showPurchaseTax"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="1dp"
+                            android:layout_weight="1"
+                            android:background="@color/pure_white_color"
+                            android:ellipsize="end"
+                            android:gravity="center"
+                            android:textColor="@color/main_text_color"
+                            android:textSize="12sp"/>
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="1dp"
+                        android:layout_marginRight="1dp"
+                        android:layout_marginTop="1dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="45dp"
+                            android:layout_weight="1"
+                            android:background="@color/pure_white_color"
+                            android:gravity="center"
+                            android:text="保险费"
+                            android:textColor="@color/second_text_color"
+                            android:textSize="12sp"/>
+
+                        <TextView
+                            android:id="@+id/showInsurance"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="1dp"
+                            android:layout_weight="1.5"
+                            android:background="@color/pure_white_color"
+                            android:ellipsize="end"
+                            android:gravity="center"
+                            android:textColor="@color/main_text_color"
+                            android:textSize="12sp"/>
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="45dp"
+                            android:layout_marginLeft="1dp"
+                            android:layout_weight="1"
+                            android:background="@color/pure_white_color"
+                            android:gravity="center"
+                            android:text="上牌费"
+                            android:textColor="@color/second_text_color"
+                            android:textSize="12sp"/>
+
+                        <TextView
+                            android:id="@+id/showPremium"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="1dp"
+                            android:layout_weight="1"
+                            android:background="@color/pure_white_color"
+                            android:ellipsize="end"
+                            android:gravity="center"
+                            android:textColor="@color/main_text_color"
+                            android:textSize="12sp"/>
+                    </TableRow>
+
+
+                </TableLayout>
+
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/second_text_color"
+                    android:shrinkColumns="1">
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="1dp"
+                        android:layout_marginRight="1dp"
+                        android:layout_marginTop="1dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_weight="1"
+                            android:background="@color/pure_white_color"
+                            android:gravity="center"
+                            android:text="其他费用"
+                            android:textColor="@color/second_text_color"
+                            android:textSize="12sp"/>
+
+                        <TextView
+                            android:id="@+id/showOtherCost"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="1dp"
+                            android:layout_weight="3.5"
+                            android:background="@color/pure_white_color"
+                            android:ellipsize="end"
+                            android:gravity="center"
+                            android:textColor="@color/main_text_color"
+                            android:textSize="12sp"/>
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="1dp"
+                        android:layout_marginRight="1dp"
+                        android:layout_marginTop="1dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_weight="1"
+                            android:background="@color/pure_white_color"
+                            android:gravity="center"
+                            android:text="配置详情"
+                            android:textColor="@color/second_text_color"
+                            android:textSize="12sp"/>
+
+                        <TextView
+                            android:id="@+id/showDetail"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="1dp"
+                            android:layout_weight="3.5"
+                            android:background="@color/pure_white_color"
+                            android:ellipsize="end"
+                            android:gravity="center"
+                            android:textColor="@color/main_text_color"
+                            android:textSize="12sp"/>
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="1dp"
+                        android:layout_marginRight="1dp"
+                        android:layout_marginTop="1dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="50dp"
+                            android:layout_weight="1"
+                            android:background="@color/pure_white_color"
+                            android:gravity="center"
+                            android:text="其他"
+                            android:textColor="@color/second_text_color"
+                            android:textSize="12sp"/>
+
+                        <TextView
+                            android:id="@+id/showOther"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="1dp"
+                            android:layout_weight="3.5"
+                            android:background="@color/pure_white_color"
+                            android:ellipsize="end"
+                            android:gravity="center"
+                            android:textColor="@color/main_text_color"
+                            android:textSize="12sp"/>
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="1dp"
+                        android:layout_marginLeft="1dp"
+                        android:layout_marginRight="1dp"
+                        android:layout_marginTop="1dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="45dp"
+                            android:layout_weight="1"
+                            android:background="@color/pure_white_color"
+                            android:gravity="center"
+                            android:text="合计总价"
+                            android:textColor="@color/second_text_color"
+                            android:textSize="12sp"/>
+
+                        <TextView
+                            android:id="@+id/showTotalPrice"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="1dp"
+                            android:layout_weight="3.5"
+                            android:background="@color/pure_white_color"
+                            android:gravity="center"
+                            android:textColor="@color/main_color"
+                            android:textSize="14sp"/>
+                    </TableRow>
+
+                </TableLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    >
+
+                    <TextView
+                        android:id="@+id/showConsultTel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:text="1700000023131"
+                        android:textColor="@color/main_text_color"
+                        android:textSize="12sp"/>
+
+                    <TextView
+                        android:id="@+id/tel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="3dp"
+                        android:layout_toLeftOf="@id/showConsultTel"
+                        android:text="联系电话:"
+                        android:textColor="@color/second_text_color"
+                        android:textSize="12sp"/>
+
+                    <TextView
+                        android:id="@+id/showConsultName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toLeftOf="@id/tel"
+                        android:text="bibicar"
+                        android:textColor="@color/main_text_color"
+                        android:textSize="12sp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_toLeftOf="@+id/showConsultName"
+                        android:text="销售顾问:"
+                        android:textColor="@color/second_text_color"
+                        android:textSize="12sp"/>
+
+                </RelativeLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/ll_photo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <!-- 实拍图片 -->
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp"
+                        android:layout_marginTop="30dp"
+                        android:src="@drawable/report_pics"/>
+
+                    <LinearLayout
+                        android:id="@+id/llCarPhotos"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="vertical">
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!-- 备注 -->
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="30dp"
+                    android:src="@drawable/report_info"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:lineSpacingMultiplier="1.2"
+                    android:text="@string/report_remark"
+                    android:textColor="@color/main_text_color"
+                    android:textSize="14sp"/>
+
+            </LinearLayout>
+
+            <!-- 收款账户 -->
+            <LinearLayout
+                android:id="@+id/ll_receive"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="110dp"
+                android:layout_marginRight="20dp"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="收款账号:"
+                    android:textColor="@color/main_text_color"
+                    android:textSize="12sp"/>
+
+                <TextView
+                    android:id="@+id/showReceiveAccount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:textColor="@color/main_text_color"
+                    android:textSize="12sp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_account_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="110dp"
+                android:layout_marginRight="20dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="开户名:"
+                    android:textColor="@color/main_text_color"
+                    android:textSize="12sp"/>
+
+                <TextView
+                    android:id="@+id/showAccountName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:textColor="@color/main_text_color"
+                    android:textSize="12sp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_account_bank"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="110dp"
+                android:layout_marginRight="20dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="开户行:"
+                    android:textColor="@color/main_text_color"
+                    android:textSize="12sp"/>
+
+                <TextView
+                    android:id="@+id/showAccountBank"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:textColor="@color/main_text_color"
+                    android:textSize="12sp"/>
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="20dp">
+
+                <ImageView
+                    android:id="@+id/bibicar"
+                    android:layout_width="120dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/bibicar"
+                    android:layout_centerInParent="true"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_qr"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="30dp"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/download_qr"
+                    android:layout_width="90dp"
+                    android:layout_height="90dp"
+                    android:src="@drawable/app_download_qr"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="识别二维码查看更多"
+                    android:textColor="@color/main_text_color"
+                    android:textSize="10sp"
+                    android:layout_marginTop="5dp"
+                    android:layout_below="@id/download_qr"/>
+
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+    </com.wiserz.pbibi.view.MyScrollView>
+
+</LinearLayout>

@@ -20,6 +20,7 @@
         android:layout_height="1dp"
         android:background="@color/divider_color"/>
 
+    <!-- 选择排序列 -->
     <LinearLayout
         android:id="@+id/ll_select"
         android:layout_width="match_parent"

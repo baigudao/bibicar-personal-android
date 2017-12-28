@@ -311,6 +311,7 @@
 
     </LinearLayout>
 
+    <!-- 点赞用户列表 -->
     <RelativeLayout
         android:id="@+id/rl_zan_user"
         android:layout_width="match_parent"
@@ -369,6 +370,7 @@
 
     </RelativeLayout>
 
+    <!-- 评论列表（显示两条） -->
     <LinearLayout
         android:id="@+id/ll_comment"
         android:layout_width="match_parent"

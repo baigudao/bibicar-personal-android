@@ -17,15 +17,13 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.blankj.utilcode.util.ToastUtils;
 import com.wiserz.pbibi.R;
-import com.wiserz.pbibi.activity.BaseActivity;
 import com.wiserz.pbibi.adapter.MediaFileAdapter;
 import com.wiserz.pbibi.adapter.SelectedPhotoAdapter;
 import com.wiserz.pbibi.adapter.ShowMediasAdapter;
 import com.wiserz.pbibi.util.CommonUtil;
-import com.wiserz.pbibi.util.Constant;
 import com.wiserz.pbibi.util.DataManager;
 import com.wiserz.pbibi.util.GBExecutionPool;
 
@@ -33,8 +31,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 
-/**
+/** 相册选择
  * Created by gigabud on 16-6-21.
  */
 public class AlbumFragment extends BaseFragment {
@@ -48,7 +48,7 @@ public class AlbumFragment extends BaseFragment {
 
     private static final String CAMERA_PATH = Environment.getExternalStorageDirectory() + "/" + Environment.DIRECTORY_DCIM;
 
-    public class MediaInfo {
+    public class MediaInfo {//选中的item对象
         public File mediaFile;
         public long mediaAddTime;
         public boolean isSelected;
@@ -59,11 +59,10 @@ public class AlbumFragment extends BaseFragment {
     private Cursor mCursor;
     private ShowMediasAdapter mMediasAdapter;
     private MediaFileAdapter mMediaFileAdapter;
-
     private SelectedPhotoAdapter mSelectedPhotoAdapter;
-    private ArrayList<MediaInfo> mSelectedMediaInfos;
-
+    private Map<Integer,MediaInfo> mSelectedMediaInfos;//存放选择的相片对象
     private SelectPhotoFragment mSelectPhotoFragment;
+    private LinearLayoutManager llManager;
 
     public BaseFragment setParentFragment(SelectPhotoFragment selectPhotoFragment) {
         mSelectPhotoFragment = selectPhotoFragment;
@@ -93,10 +92,11 @@ public class AlbumFragment extends BaseFragment {
         view.findViewById(R.id.alphaView).setVisibility(View.GONE);
 
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.selectPhotoView);
-        LinearLayoutManager linearLayoutManagerHorizontal = new LinearLayoutManager(getActivity());
-        linearLayoutManagerHorizontal.setOrientation(LinearLayoutManager.HORIZONTAL);
-        recyclerView.setLayoutManager(linearLayoutManagerHorizontal);
+        llManager = new LinearLayoutManager(getActivity());
+        llManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        recyclerView.setLayoutManager(llManager);
         recyclerView.setAdapter(getSelectedPhotoAdapter());
+        getSelectedPhotoAdapter().setDataList(mSelectPhotoFragment.getSelectedPhotos());
     }
 
     private SelectedPhotoAdapter getSelectedPhotoAdapter() {
@@ -105,23 +105,33 @@ public class AlbumFragment extends BaseFragment {
             mSelectedPhotoAdapter.setOnPhotoDelete(new SelectedPhotoAdapter.OnPhotoOperator() {
                 @Override
                 public void onDelete(int position) {
-                    MediaInfo mediaInfo = getSelectedMediaInfos().remove(position);
-                    mediaInfo.isSelected = false;
-                    int index = 0;
-                    for (MediaInfo info : getSelectedMediaInfos()) {
-                        info.index = (index++);
+                    mSelectPhotoFragment.getSelectedPhotos().remove(position+1);
+                    MediaInfo mediaInfo = getSelectedMediaInfos().remove(position+1);
+                    if(mediaInfo!=null){//删除的照片是选中状态，如果是重新进来的话，照片不是选择状态
+                        mediaInfo.isSelected = false;
+                        //                    int index = 0;
+                        //                    for (MediaInfo info : getSelectedMediaInfos()) {
+                        //                        info.index = (index++);
+                        //                    }
+                        mMediasAdapter.notifyDataSetChanged();
                     }
-                    mMediasAdapter.notifyDataSetChanged();
+
                     showView();
                 }
+
+                @Override
+                public void onItemClick(int position) {
+
+                }
+
             });
         }
         return mSelectedPhotoAdapter;
     }
 
-    private ArrayList<MediaInfo> getSelectedMediaInfos() {
+    private Map<Integer,MediaInfo> getSelectedMediaInfos() {
         if (mSelectedMediaInfos == null) {
-            mSelectedMediaInfos = new ArrayList<>();
+            mSelectedMediaInfos = new HashMap<Integer,MediaInfo>();
         }
         return mSelectedMediaInfos;
     }
@@ -133,7 +143,7 @@ public class AlbumFragment extends BaseFragment {
             getView().findViewById(R.id.tvOk).setVisibility(View.VISIBLE);
             ((TextView) getView().findViewById(R.id.tvOk)).setText(getString(R.string.make_sure) + " (" + mSelectPhotoFragment.getSelectedPhotos().size() + ")");
         } else {
-            getView().findViewById(R.id.selectPhotoView).setVisibility(View.GONE);
+//            getView().findViewById(R.id.selectPhotoView).setVisibility(View.GONE);
             mSelectPhotoFragment.setViewPagerCanScroll(true);
             getView().findViewById(R.id.tvOk).setVisibility(View.INVISIBLE);
         }
@@ -190,7 +200,7 @@ public class AlbumFragment extends BaseFragment {
             if (DataManager.getInstance().getObject() != null && DataManager.getInstance().getData1() != null) {
                 String newPath = (String) DataManager.getInstance().getObject();
                 int index = (int) DataManager.getInstance().getData1();
-                mSelectPhotoFragment.getSelectedPhotos().set(index, new File(newPath));
+                mSelectPhotoFragment.getSelectedPhotos().put(index, new File(newPath));
                 getSelectedPhotoAdapter().notifyDataSetChanged();
             } else if (DataManager.getInstance().getData8() != null) {
                 int index = (int) DataManager.getInstance().getData8();
@@ -198,9 +208,9 @@ public class AlbumFragment extends BaseFragment {
                 getSelectedPhotoAdapter().notifyDataSetChanged();
                 MediaInfo mediaInfo = getSelectedMediaInfos().remove(index);
                 mediaInfo.isSelected = false;
-                for (MediaInfo info : getSelectedMediaInfos()) {
-                    info.index = (index++);
-                }
+//                for (MediaInfo info : getSelectedMediaInfos()) {
+//                    info.index = (index++);
+//                }
                 mMediasAdapter.notifyDataSetChanged();
             }
             DataManager.getInstance().setObject(null);
@@ -327,26 +337,36 @@ public class AlbumFragment extends BaseFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ImageView iv = (ImageView) view.findViewById(R.id.iv);
                 final MediaInfo info = (MediaInfo) iv.getTag(R.id.tag);
-                if (info != null && info.isSelected) {
-                    info.isSelected = false;
-                    mSelectPhotoFragment.getSelectedPhotos().remove(info.index);
-                    getSelectedPhotoAdapter().notifyDataSetChanged();
-                    getSelectedMediaInfos().remove(info);
-                    int index = 0;
-                    for (MediaInfo mediaInfo : getSelectedMediaInfos()) {
-                        mediaInfo.index = (index++);
-                    }
-                    mMediasAdapter.notifyDataSetChanged();
-                    showView();
-                    return;
-                }
-                int currentNum=mSelectPhotoFragment.getSelectedPhotos().size() + mSelectPhotoFragment.getCurrentPhotoNum();
-                if (currentNum == Constant.MAX_UPLOAD_PHOTO_NUM) {
-                    Toast.makeText(getActivity(),"最多可以上传"+(Constant.MAX_UPLOAD_PHOTO_NUM-mSelectPhotoFragment.getCurrentPhotoNum())+"张照片",Toast.LENGTH_SHORT).show();
+//                if (info != null && info.isSelected) {//取消选中
+//
+//                    if(info.index != getSelectedPhotoAdapter().getSelectIndex()){//只能操作选中的角度index对应的图片
+//                        return ;
+//                    }
+//
+//                    info.isSelected = false;
+//                    mSelectPhotoFragment.getSelectedPhotos().remove(info.index);
+//                    getSelectedPhotoAdapter().notifyDataSetChanged();
+//                    getSelectedMediaInfos().remove(info);
+//                    int index = 0;
+//                    for (MediaInfo mediaInfo : getSelectedMediaInfos()) {
+//                        mediaInfo.index = (index++);
+//                    }
+//                    mMediasAdapter.notifyDataSetChanged();
+//                    showView();
+//                    return;
+//                }
+//                int currentNum=mSelectPhotoFragment.getSelectedPhotos().size() + mSelectPhotoFragment.getCurrentPhotoNum();
+//                if (currentNum == Constant.MAX_UPLOAD_PHOTO_NUM) {
+//                    Toast.makeText(getActivity(),"最多可以上传"+(Constant.MAX_UPLOAD_PHOTO_NUM-mSelectPhotoFragment.getCurrentPhotoNum())+"张照片",Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+
+                if(mSelectPhotoFragment.getSelectedPhotos().get(getSelectedPhotoAdapter().getSelectIndex()+1)!=null){
+                    ToastUtils.showShort(getString(R.string.only_a_photo));
                     return;
                 }
 
-                if (info != null && !info.isSelected && iv.getDrawable() != null) {
+                if (info != null && !info.isSelected && iv.getDrawable() != null) {//选中
                     DisplayMetrics dm = new DisplayMetrics();
                     getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
                     Bitmap bmp = CommonUtil.getBitmapFromFile(info.mediaFile, dm.widthPixels, dm.heightPixels);
@@ -355,22 +375,33 @@ public class AlbumFragment extends BaseFragment {
                     }
                     String path = CommonUtil.saveJpeg(bmp, getActivity());
                     bmp.recycle();
-                    if (mSelectPhotoFragment.getCurrentPhotoNum() == -1) {
+                    if (mSelectPhotoFragment.getCurrentPhotoNum() == -1) {//vin
                         DataManager.getInstance().setData9(path);
                         getActivity().finish();
                         return;
                     }
-                    getView().findViewById(R.id.selectPhotoView).setVisibility(View.VISIBLE);
-                    mSelectPhotoFragment.getSelectedPhotos().add(new File(path));
-                    getSelectedPhotoAdapter().setDataList(mSelectPhotoFragment.getSelectedPhotos());
+
+                    //当前选中的角度index
+                    int  index = getSelectedPhotoAdapter().getSelectIndex();
+
+                    //更新中间照片的选中状态
                     info.isSelected = true;
-                    info.index = mSelectPhotoFragment.getSelectedPhotos().size() - 1;
-                    getSelectedMediaInfos().add(info);
+                    getSelectedMediaInfos().put(index+1,info);
                     mMediasAdapter.notifyDataSetChanged();
-                    showView();
-                    if (mSelectPhotoFragment.getSelectedPhotos().size() + mSelectPhotoFragment.getCurrentPhotoNum() == Constant.MAX_UPLOAD_PHOTO_NUM) {
-                        Toast.makeText(getActivity(),"最多可以上传"+(Constant.MAX_UPLOAD_PHOTO_NUM-mSelectPhotoFragment.getCurrentPhotoNum())+"张照片",Toast.LENGTH_SHORT).show();
+
+                    //更新底部recyclerview
+                    mSelectPhotoFragment.getSelectedPhotos().put(index+1,new File(path));
+                    if(index < 11){//自动跳到下一个,最大是11
+                        ++ index;
+                        getSelectedPhotoAdapter().setSelectIndex(index);
+                        llManager.scrollToPositionWithOffset(index,0);
                     }
+                    getSelectedPhotoAdapter().setDataList(mSelectPhotoFragment.getSelectedPhotos());
+
+                    showView();
+//                    if (mSelectPhotoFragment.getSelectedPhotos().size() + mSelectPhotoFragment.getCurrentPhotoNum() == Constant.MAX_UPLOAD_PHOTO_NUM) {
+//                        Toast.makeText(getActivity(),"最多可以上传"+(Constant.MAX_UPLOAD_PHOTO_NUM-mSelectPhotoFragment.getCurrentPhotoNum())+"张照片",Toast.LENGTH_SHORT).show();
+//                    }
                 }
             }
         });
@@ -457,6 +488,7 @@ public class AlbumFragment extends BaseFragment {
                 getView().findViewById(R.id.list).setVisibility(View.GONE);
                 break;
             case R.id.btnBack:
+                DataManager.getInstance().setObject(mSelectPhotoFragment.getSelectedPhotos());
                 getActivity().finish();
                 break;
             case R.id.tvOk:

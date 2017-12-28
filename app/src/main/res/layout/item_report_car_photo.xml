@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:paddingBottom="3dp"
+    android:background="@android:color/transparent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="2dp"
+        android:layout_weight="1">
+        <com.wiserz.pbibi.view.RatioImageView
+            android:id="@+id/ivPhoto1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            app:ratio="0.71"
+            android:src="@drawable/default_bg_ratio_1"/>
+
+        <ImageView
+            android:id="@+id/ivClose1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@id/ivPhoto1"
+            android:clickable="true"
+            android:layout_margin="6dp"
+            android:src="@drawable/close"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="2dp"
+        android:layout_weight="1">
+        <com.wiserz.pbibi.view.RatioImageView
+            android:id="@+id/ivPhoto2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            app:ratio="0.71"
+            android:src="@drawable/default_bg_ratio_1"/>
+
+        <ImageView
+            android:id="@+id/ivClose2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@id/ivPhoto2"
+            android:clickable="true"
+            android:layout_margin="6dp"
+            android:src="@drawable/close"/>
+    </RelativeLayout>
+
+
+
+
+</LinearLayout>

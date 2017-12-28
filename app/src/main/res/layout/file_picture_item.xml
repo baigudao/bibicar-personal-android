@@ -18,7 +18,7 @@
         android:layout_alignRight="@id/iv"
         android:layout_alignBottom="@id/iv"
         android:background="@drawable/select_photo_bg">
-
+<!--
         <TextView
             android:id="@+id/tvPhotoIndex"
             android:layout_width="20dp"
@@ -30,8 +30,8 @@
             android:layout_marginTop="10dp"
             android:layout_marginRight="10dp"
             android:background="@drawable/point_bg"
-            android:text="3"/>
-
+            android:text="0"/>
+-->
     </RelativeLayout>
 
 </RelativeLayout>

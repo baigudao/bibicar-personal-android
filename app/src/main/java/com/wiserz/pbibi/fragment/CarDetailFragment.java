@@ -35,7 +35,6 @@ import com.google.zxing.EncodeHintType;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
-import com.tencent.mm.opensdk.utils.Log;
 import com.wiserz.pbibi.R;
 import com.wiserz.pbibi.activity.BaseActivity;
 import com.wiserz.pbibi.activity.RegisterAndLoginActivity;
@@ -43,6 +42,8 @@ import com.wiserz.pbibi.activity.VRWatchCarActivity;
 import com.wiserz.pbibi.adapter.BaseRecyclerViewAdapter;
 import com.wiserz.pbibi.bean.CarConfiguration;
 import com.wiserz.pbibi.bean.CarInfoBean;
+import com.wiserz.pbibi.bean.LoginBean;
+import com.wiserz.pbibi.bean.TypeBean;
 import com.wiserz.pbibi.util.CommonUtil;
 import com.wiserz.pbibi.util.Constant;
 import com.wiserz.pbibi.util.DataManager;
@@ -85,11 +86,15 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
     private CarInfoBean carInfoBean;
 
     private ImageView iv_like_image;
+    private TextView btn_line_contact;
+    private TextView btn_phone_contact;
 
     private static final int SAME_STYLE_CAR_DATA_TYPE = 28;
     private int is_fav;
 
-    private ArrayList<String> mAllImageUrls = new ArrayList<>();
+    private ArrayList<TypeBean> mAllImageUrls = new ArrayList<>();
+    private boolean from_sell = false;
+    private int userId = 0;
 
     @Override
     protected int getLayoutId() {
@@ -100,6 +105,8 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
     protected void initView(View view) {
         Bundle bundle = getArguments();
         car_id = bundle.getString(Constant.CAR_ID);
+        from_sell = bundle.getBoolean(Constant.FROM_SELL);
+
         view.findViewById(R.id.iv_back).setOnClickListener(this);
         ((TextView) view.findViewById(R.id.tv_title)).setText("车辆详情");
         ImageView iv_image = (ImageView) view.findViewById(R.id.iv_image);
@@ -111,8 +118,23 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
         iv_like_image.setVisibility(View.VISIBLE);
         iv_like_image.setOnClickListener(this);
         view.findViewById(R.id.btn_watch_vr).setOnClickListener(this);
-        view.findViewById(R.id.btn_line_contact).setOnClickListener(this);
-        view.findViewById(R.id.btn_phone_contact).setOnClickListener(this);
+
+        btn_line_contact = (TextView) view.findViewById(R.id.btn_line_contact);
+        btn_phone_contact = (TextView) view.findViewById(R.id.btn_phone_contact);
+        btn_line_contact.setOnClickListener(this);
+        btn_phone_contact.setOnClickListener(this);
+
+        //填写联系人信息
+        LoginBean.UserInfoBean userInfoBean = DataManager.getInstance().getUserInfo();
+        if (userInfoBean != null) {
+            userId = userInfoBean.getUser_id();
+        }
+
+        if(from_sell){
+            btn_line_contact.setText("编辑");
+            btn_phone_contact.setText("报价");
+        }
+
     }
 
     @Override
@@ -137,18 +159,50 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
                     ToastUtils.showShort("该车暂未拍摄");
                     return;
                 } else {
-                    gotoPager(VRWatchCarActivity.class, null);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("vr_url",vr_url);
+                    gotoPager(VRWatchCarActivity.class, bundle);
                 }
                 break;
             case R.id.btn_line_contact:
-                goContactFragment();
+                if(from_sell){//编辑
+                    if(EmptyUtils.isNotEmpty(carInfoBean)){
+                        //编辑
+                        if(carInfoBean.getCar_type() ==0 ){ //新车
+                            Bundle bundle = new Bundle();
+                            bundle.putString(Constant.CAR_ID, carInfoBean.getCar_id());
+                            bundle.putBoolean(Constant.FROM_SELL, true);
+                            ((BaseActivity) mContext).gotoPager(PostNewCarFragment.class,bundle);
+                        }else if(carInfoBean.getCar_type() == 1){ //二手车
+                            Bundle bundle = new Bundle();
+                            bundle.putString(Constant.CAR_ID, carInfoBean.getCar_id());
+                            bundle.putBoolean(Constant.FROM_SELL, true);
+                            ((BaseActivity) mContext).gotoPager(PostSecondHandCarFragment.class,bundle);
+                        }
+                    }else{
+                        ToastUtils.showShort("车辆信息正在加载中，请稍后");
+                    }
+
+                }else{
+                    goContactFragment();
+                }
                 break;
             case R.id.btn_phone_contact:
-                if (EmptyUtils.isEmpty(contact_phone)) {
-                    ToastUtils.showShort("该车主没有联系方式");
-                    return;
-                } else {
-                    showCallPhoneDialog(contact_phone);
+                if(from_sell){//报价
+                    if(EmptyUtils.isNotEmpty(carInfoBean)){
+                        Bundle bundle = new Bundle();
+                        bundle.putString(Constant.CAR_ID, carInfoBean.getCar_id());
+                        ((BaseActivity) mContext).gotoPager(GenerateReportFragment.class, bundle);
+                    }else{
+                        ToastUtils.showShort("车辆信息正在加载中，请稍后");
+                    }
+                }else{
+                    if (EmptyUtils.isEmpty(contact_phone)) {
+                        ToastUtils.showShort("该车主没有联系方式");
+                        return;
+                    } else {
+                        showCallPhoneDialog(contact_phone);
+                    }
                 }
                 break;
             default:
@@ -289,6 +343,7 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
 
                     @Override
                     public void onResponse(String response, int id) {
+                        CommonUtil.showLargeLog(response,3900);
                         JSONObject jsonObject = null;
                         try {
                             jsonObject = new JSONObject(response);
@@ -372,6 +427,14 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
         carInfoBean = gson.fromJson(car_info.toString(), CarInfoBean.class);
 
         if (EmptyUtils.isNotEmpty(carInfoBean) && getView() != null) {
+
+            int id = carInfoBean.getUser_info().getUser_id();
+            if(userId == id){//该车属于登录的用户
+                from_sell = true;
+                btn_line_contact.setText("编辑");
+                btn_phone_contact.setText("报价");
+            }
+
             vr_url = carInfoBean.getVr_url();
             contact_phone = carInfoBean.getContact_phone();
             ((TextView) getView().findViewById(R.id.tv_title)).setText(carInfoBean.getBrand_info().getBrand_name() + " " + carInfoBean.getSeries_info().getSeries_name());
@@ -390,123 +453,31 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
                 }
             }
 
-            final CarInfoBean.FilesBean filesBean = carInfoBean.getFiles();
+            final ArrayList<String> picUrlList = new ArrayList<>();
+            final ArrayList<TypeBean> filesBean = carInfoBean.getFiles();
             if (EmptyUtils.isNotEmpty(filesBean)) {
-
-                ArrayList<CarInfoBean.FilesBean.Type1Bean> type1BeanArrayList = (ArrayList<CarInfoBean.FilesBean.Type1Bean>) carInfoBean.getFiles().getType1();
-                ArrayList<CarInfoBean.FilesBean.Type2Bean> type2BeanArrayList = (ArrayList<CarInfoBean.FilesBean.Type2Bean>) carInfoBean.getFiles().getType2();
-                ArrayList<CarInfoBean.FilesBean.Type3Bean> type3BeanArrayList = (ArrayList<CarInfoBean.FilesBean.Type3Bean>) carInfoBean.getFiles().getType3();
-                ArrayList<CarInfoBean.FilesBean.Type4Bean> type4BeanArrayList = (ArrayList<CarInfoBean.FilesBean.Type4Bean>) carInfoBean.getFiles().getType4();
-
-                // ArrayList<String> stringImageUrl = new ArrayList<>();
                 mAllImageUrls.clear();
-                //车辆照片类型 (1:外观 2:中控内饰 3:发动机及结构 4:更多细节)
-                if (EmptyUtils.isNotEmpty(type1BeanArrayList) && type1BeanArrayList.size() != 0) {
-//                    //外观
-//                    ImageView iv_car_surface = (ImageView) getView().findViewById(R.id.iv_car_surface);
-//                    Glide.with(mContext)
-//                            .load(type1BeanArrayList.get(0).getFile_url())
-//                            .placeholder(R.drawable.default_bg_ratio_1)
-//                            .error(R.drawable.default_bg_ratio_1)
-//                            .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
-//                            .into(iv_car_surface);
-//                    iv_car_surface.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                            DataManager.getInstance().setData1(filesBean);
-//                            gotoPager(AllImageFragment.class, null);
-//                        }
-//                    });
-//                    int size = type1BeanArrayList.size();
-//                    ((TextView) getView().findViewById(R.id.tv_car_surface_num)).setText("(" + size + ")");
+                mAllImageUrls.addAll(filesBean);
 
-                    for (int i = 0; i < type1BeanArrayList.size(); i++) {
-                        mAllImageUrls.add(type1BeanArrayList.get(i).getFile_url());
-                    }
-                }
-                if (EmptyUtils.isNotEmpty(type2BeanArrayList) && type2BeanArrayList.size() != 0) {
-//                    //中控内饰
-//                    ImageView iv_car_inside = (ImageView) getView().findViewById(R.id.iv_car_inside);
-//                    Glide.with(mContext)
-//                            .load(type2BeanArrayList.get(0).getFile_url())
-//                            .placeholder(R.drawable.default_bg_ratio_1)
-//                            .error(R.drawable.default_bg_ratio_1)
-//                            .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
-//                            .into(iv_car_inside);
-//                    iv_car_inside.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                            DataManager.getInstance().setData1(filesBean);
-//                            gotoPager(AllImageFragment.class, null);
-//                        }
-//                    });
-//                    int size = type2BeanArrayList.size();
-//                    ((TextView) getView().findViewById(R.id.tv_car_inside)).setText("(" + size + ")");
-
-                    for (int i = 0; i < type2BeanArrayList.size(); i++) {
-                        mAllImageUrls.add(type2BeanArrayList.get(i).getFile_url());
-                    }
-                }
-                if (EmptyUtils.isNotEmpty(type3BeanArrayList) && type3BeanArrayList.size() != 0) {
-//                    //发动机及结构
-//                    ImageView iv_car_structure = (ImageView) getView().findViewById(R.id.iv_car_structure);
-//                    Glide.with(mContext)
-//                            .load(type3BeanArrayList.get(0).getFile_url())
-//                            .placeholder(R.drawable.default_bg_ratio_1)
-//                            .error(R.drawable.default_bg_ratio_1)
-//                            .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
-//                            .into(iv_car_structure);
-//                    iv_car_structure.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                            DataManager.getInstance().setData1(filesBean);
-//                            gotoPager(AllImageFragment.class, null);
-//                        }
-//                    });
-//                    int size = type3BeanArrayList.size();
-//                    ((TextView) getView().findViewById(R.id.tv_car_structure)).setText("(" + size + ")");
-
-                    for (int i = 0; i < type3BeanArrayList.size(); i++) {
-                        mAllImageUrls.add(type3BeanArrayList.get(i).getFile_url());
-                    }
-                }
-                if (EmptyUtils.isNotEmpty(type4BeanArrayList) && type4BeanArrayList.size() != 0) {
-                    //更多细节
-//                    ImageView iv_car_more_detail = (ImageView) getView().findViewById(R.id.iv_car_more_detail);
-//                    Glide.with(mContext)
-//                            .load(type4BeanArrayList.get(0).getFile_url())
-//                            .placeholder(R.drawable.default_bg_ratio_1)
-//                            .error(R.drawable.default_bg_ratio_1)
-//                            .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
-//                            .into(iv_car_more_detail);
-//                    iv_car_more_detail.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                            DataManager.getInstance().setData1(filesBean);
-//                            gotoPager(AllImageFragment.class, null);
-//                        }
-//                    });
-//                    int size = type4BeanArrayList.size();
-//                    ((TextView) getView().findViewById(R.id.tv_car_more_detail)).setText("(" + size + ")");
-
-                    for (int i = 0; i < type4BeanArrayList.size(); i++) {
-                        mAllImageUrls.add(type4BeanArrayList.get(i).getFile_url());
-                    }
+                for(TypeBean bean : filesBean){//存储图片url
+                    picUrlList.add(bean.getFile_url());
                 }
 
                 showCarDetailPhotos(false);
+            }
 
-                ConvenientBanner convenientBanner = (ConvenientBanner) getView().findViewById(R.id.convenientBanner);
-                if (EmptyUtils.isNotEmpty(mAllImageUrls) && mAllImageUrls.size() != 0) {
+
+            ConvenientBanner convenientBanner = (ConvenientBanner) getView().findViewById(R.id.convenientBanner);
+            if (EmptyUtils.isNotEmpty(picUrlList) && picUrlList.size() != 0) {
                     //自定义你的Holder，实现更多复杂的界面，不一定是图片翻页，其他任何控件翻页亦可。
                     //            convenientBanner.startTurning(5000);
-                    ((TextView)getView().findViewById(R.id.tvCarPhoneIndex)).setText("1/"+mAllImageUrls.size());
+                    ((TextView)getView().findViewById(R.id.tvCarPhoneIndex)).setText("1/"+picUrlList.size());
                     convenientBanner.setPages(new CBViewHolderCreator<LocalImageHolderView>() {
                         @Override
                         public LocalImageHolderView createHolder() {
                             return new LocalImageHolderView();
                         }
-                    }, mAllImageUrls)
+                    }, picUrlList)
                             //设置两个点图片作为翻页指示器，不设置则没有指示器，可以根据自己需求自行配合自己的指示器,不需要圆点指示器可用不设
                             //                    .setPageIndicator(new int[]{R.drawable.point_normal1, R.drawable.point_checked})
                             //设置指示器的方向
@@ -526,7 +497,7 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
 
                         @Override
                         public void onPageSelected(int position) {
-                            ((TextView)getView().findViewById(R.id.tvCarPhoneIndex)).setText((position+1)+"/"+mAllImageUrls.size());
+                            ((TextView)getView().findViewById(R.id.tvCarPhoneIndex)).setText((position+1)+"/"+picUrlList.size());
                         }
 
                         @Override
@@ -623,8 +594,8 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
                     gotoPager(CarServiceFragment.class, null);
                 }
             });
-        }
     }
+
 
     private void resetCarConfigs(ArrayList<CarConfiguration.Configuration> list) {
         LinearLayout llConfigs = (LinearLayout) getView().findViewById(R.id.llConfigs);
@@ -686,6 +657,7 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
 
     }
 
+    //显示车辆图片
     private void showCarDetailPhotos(boolean isShowAll) {
         LinearLayout llAllCarPhotos = (LinearLayout) getView().findViewById(R.id.llAllCarPhotos);
         llAllCarPhotos.removeAllViews();
@@ -708,11 +680,16 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
             itemView = inflater.inflate(R.layout.item_car_detail_photo, null);
             llAllCarPhotos.addView(itemView);
             Glide.with(mContext)
-                    .load(mAllImageUrls.get(i))
+                    .load(mAllImageUrls.get(i).getFile_url())
                     .placeholder(R.drawable.default_bg_ratio_1)
                     .error(R.drawable.default_bg_ratio_1)
                     .bitmapTransform(new RoundedCornersTransformation(mContext, 8, 0, RoundedCornersTransformation.CornerType.ALL))
                     .into((ImageView) itemView.findViewById(R.id.ivPhoto));
+            TextView tv = (TextView) itemView.findViewById(R.id.imgType);
+            int type = mAllImageUrls.get(i).getFile_type();
+            if(type<=12){
+                tv.setText(getResources().getStringArray(R.array.car_img_type)[type-1]);
+            }
         }
     }
 
@@ -827,6 +804,7 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
         sharePlatformPopWindow.showAtLocation(getView(), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
     }
 
+    //生成二维码图片
     private Bitmap generateBitmap(String content, int width, int height) {
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
         HashMap<EncodeHintType, String> hints = new HashMap<>();
@@ -875,7 +853,7 @@ public class CarDetailFragment extends BaseFragment implements BaseRecyclerViewA
         if (platformToShare.equalsIgnoreCase("SinaWeibo")) {
             oks.setText(share_txt + "\n" + share_url);
         } else {
-            oks.setText(share_img);
+            oks.setText(share_txt);
             oks.setImageUrl(share_img);
             oks.setUrl(share_url);
         }
